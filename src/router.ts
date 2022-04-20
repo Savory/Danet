@@ -38,7 +38,7 @@ function removeTrailingSlash(path: string) {
   return path;
 }
 
-export class DWFRouter {
+export class DeNestRouter {
   public router = new Router()
   methodsMap = new Map([
     ["DELETE", this.router.delete],

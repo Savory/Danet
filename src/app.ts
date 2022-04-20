@@ -3,13 +3,13 @@ import {
   Router,
 } from "https://deno.land/x/oak@v9.0.1/mod.ts";
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
-import { DWFRouter } from './router.ts';
+import { DeNestRouter } from './router.ts';
 import { Constructor } from './utils/constructor.ts';
 
 
-export class DWFApplication {
+export class DeNestApplication {
   private app = new Application();
-  private dwfRouter = new DWFRouter();
+  private dwfRouter = new DeNestRouter();
 
 
   registerControllers(Controllers: Constructor[]) {

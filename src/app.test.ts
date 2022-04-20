@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertNotEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
-import { DWFApplication } from './app.ts';
+import { DeNestApplication } from './app.ts';
 import { Controller, Get, Post } from './controller/decorator.ts';
 
 Deno.test('register controllers', () => {
@@ -15,7 +15,7 @@ Deno.test('register controllers', () => {
 
       }
   }
-  const app = new DWFApplication();
+  const app = new DeNestApplication();
   app.registerControllers([FirstController]);
   const keys = app.router.keys();
   const firstRouter = keys.next().value;
