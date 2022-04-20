@@ -2,7 +2,7 @@ import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
 import { Constructor } from '../utils/constructor.ts';
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-export function Controller<T>(endpoint: string) {
+export function Controller<T>(endpoint = '') {
   return (Type: Constructor<T>): void => {
     Reflect.defineMetadata('endpoint', endpoint, Type);
   };

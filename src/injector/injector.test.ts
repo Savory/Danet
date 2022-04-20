@@ -53,7 +53,7 @@ Deno.test('inject singleton properly', () => {
       this.id = crypto.randomUUID();
     }
   }
-  @Controller()
+  @Controller('')
   class ParentWithSingleton1 {
     constructor(public singleton: Singleton) {
     }
