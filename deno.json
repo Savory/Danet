@@ -5,7 +5,9 @@
       "exclude": ["node_modules/"]
     },
     "rules": {
-      "tags": ["recommended"]
+      "tags": ["recommended"],
+      "include": ["ban-untagged-todo"],
+      "exclude": ["no-unused-vars"]
     }
   }
 }
