@@ -9,7 +9,7 @@ import { Constructor } from './utils/constructor.ts';
 
 export class DeNestApplication {
   private app = new Application();
-  private dwfRouter = new DeNestRouter();
+  private deNestRouter = new DeNestRouter();
 
 
   registerControllers(Controllers: Constructor[]) {
@@ -20,12 +20,12 @@ export class DeNestApplication {
     const basePath = Reflect.getMetadata("endpoint", Controller);
     const methods = Object.getOwnPropertyNames(Controller.prototype);
     methods.forEach((methodName) => {
-      this.dwfRouter.createRoute(methodName, Controller, basePath);
+      this.deNestRouter.createRoute(methodName, Controller, basePath);
     });
   }
 
   get router(): Router {
-    return this.dwfRouter.router;
+    return this.deNestRouter.router;
   }
 }
 
