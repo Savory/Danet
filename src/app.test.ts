@@ -1,8 +1,7 @@
 import { assertEquals, assertInstanceOf, assertThrows } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { DeNestApplication } from './app.ts';
-import { Controller, Get, Post } from './controller/decorator.ts';
+import { Controller, Get, Post } from './router/controller/decorator.ts';
 import { Injectable, SCOPE } from './injectable/decorator.ts';
-import { Injector } from './injector/injector.ts';
 import { Module } from './module/decorator.ts';
 
 Deno.test('app init', async (testContext) => {
