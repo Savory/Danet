@@ -1,4 +1,5 @@
 import { assertEquals, assertInstanceOf, assertThrows } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
+import { Route } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { DeNestApplication } from './app.ts';
 import { Controller, Get, Post } from './router/controller/decorator.ts';
 import { Injectable, SCOPE } from './injectable/decorator.ts';
@@ -17,7 +18,7 @@ Deno.test('app init', async (testContext) => {
     }
   }
 
-  @Controller('controller-endpoint')
+  @Controller('first-controller')
   class FirstController {
     constructor(public child1: Child1, public child2: Child2) {
     }
@@ -31,11 +32,33 @@ Deno.test('app init', async (testContext) => {
 
     }
   }
+  @Controller('second-controller')
+  class SecondController {
+    constructor(public child1: Child1, public child2: Child2) {
+    }
+    @Get('')
+    getMethod() {
+
+    }
+
+    @Post('post')
+    postMethod() {
+
+    }
+  }
+
   @Module({
+    controllers: [SecondController],
+    injectables: [Child1, Child2]
+  })
+  class SecondModule {}
+
+  @Module({
+    imports: [SecondModule],
     controllers: [FirstController],
     injectables: [Child1, Child2]
   })
-  class MyModule {}
+  class FirstModule {}
 
   @Module({
     controllers: [FirstController],
@@ -44,21 +67,30 @@ Deno.test('app init', async (testContext) => {
   class ModuleWithMissingProvider {}
 
   const app = new DeNestApplication();
-  app.bootstrap(MyModule);
-  await testContext.step('it registers module controllers', () => {
-    const keys = app.router.keys();
+  app.bootstrap(FirstModule);
+
+  function expectControllerRouterToExist(keys: IterableIterator<Route>, controllerEndpoint: string) {
     const firstRouter = keys.next().value;
-    assertEquals(firstRouter.path, 'controller-endpoint');
-    assertEquals(firstRouter.methods, ['HEAD', 'GET']);
+    assertEquals(firstRouter.path, controllerEndpoint);
+    assertEquals(firstRouter.methods, [ 'HEAD', 'GET' ]);
     const secondRouter = keys.next().value;
-    assertEquals(secondRouter.path, 'controller-endpoint/post');
-    assertEquals(secondRouter.methods, ['POST']);
+    assertEquals(secondRouter.path, controllerEndpoint + '/post');
+    assertEquals(secondRouter.methods, [ 'POST' ]);
+  }
+
+  await testContext.step('it registers all module controllers', () => {
+    const keys = app.router.keys();
+    expectControllerRouterToExist(keys,'second-controller');
+    expectControllerRouterToExist(keys,'first-controller');
   });
 
-  await testContext.step('it inject controllers dependencies if they are provider in module context or global', () => {
+  await testContext.step('it inject controllers dependencies if they are provided by current module or previously loaded module', () => {
     const firstController = app.get(FirstController)!;
     assertInstanceOf(firstController.child1, Child1);
     assertInstanceOf(firstController.child2, Child2);
+    const secondController = app.get(SecondController)!;
+    assertInstanceOf(secondController.child1, Child1);
+    assertInstanceOf(secondController.child2, Child2);
   });
 
   await testContext.step('it throws if controllers dependencies are not available in context or globally', () => {

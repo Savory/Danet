@@ -4,7 +4,7 @@ import {
 } from "https://deno.land/x/oak@v9.0.1/mod.ts";
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
 import { Injector } from './injector/injector.ts';
-import { moduleMetadataKey } from './module/decorator.ts';
+import { moduleMetadataKey, ModuleOptions } from './module/decorator.ts';
 import { DeNestRouter } from './router/router.ts';
 import { Constructor } from './utils/constructor.ts';
 
@@ -19,9 +19,12 @@ export class DeNestApplication {
   }
 
   bootstrap(Module: Constructor) {
-    const { controllers } = Reflect.getMetadata(moduleMetadataKey, Module);
+    const metadata: ModuleOptions = Reflect.getMetadata(moduleMetadataKey, Module);
+    metadata.imports?.forEach((NestedModule) => {
+      this.bootstrap(NestedModule);
+    })
     this.injector.bootstrap(Module);
-    this.registerControllers(controllers);
+    this.registerControllers(metadata.controllers);
   }
 
   registerControllers(Controllers: Constructor[]) {
