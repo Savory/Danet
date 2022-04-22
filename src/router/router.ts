@@ -1,17 +1,16 @@
-import { Body } from 'https://deno.land/x/oak@v9.0.1/body.ts';
 import { Context } from 'https://deno.land/x/oak@v9.0.1/context.ts';
 import { Router } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
 import { Constructor } from '../utils/constructor.ts';
+import { ControllerConstructor } from './controller/constructor.ts';
+import { argumentResolverFunctionsMetadataKey, Resolver } from './controller/params/decorators.ts';
 import { removeTrailingSlash } from './utils.ts';
 
 
-type BodyFunction = () => Body | Promise<Body>;
-type Callback = (
-  context: Context
-) => Promise<Body | BodyFunction> | Body | BodyFunction;
+// deno-lint-ignore no-explicit-any
+type Callback = (...args: any[]) => unknown;
 
-type HttpContext = Context;
+export type HttpContext = Context;
 
 export class DeNestRouter {
   public router = new Router()
@@ -43,14 +42,20 @@ export class DeNestRouter {
     if (!routerFn)
       throw new Error(`The method ${httpMethod} can not be handled by.`);
 
-    routerFn.call(this.router, path, this.handleRoute(method));
+    routerFn.call(this.router, path, this.handleRoute(Controller, method));
   }
 
-  handleRoute(ControllerMethod: Callback) {
+  handleRoute(Controller: ControllerConstructor, ControllerMethod: Callback) {
     return async (context: HttpContext) => {
       try {
-        const response = await ControllerMethod(context);
-        context.response.body = response;
+        const paramResolverMap: Map<number, Resolver> = Reflect.getOwnMetadata(argumentResolverFunctionsMetadataKey, Controller.prototype, ControllerMethod.name);
+        const params: unknown[] = [];
+        for (const [key, value] of paramResolverMap) {
+          params[key] = await value(context);
+        }
+        const response = (await ControllerMethod(...params)) as Record<string, unknown> | string;
+        if (response)
+          context.response.body = response;
       } catch (error) {
         const status = error.status || 500;
         const message = error.message || "Internal server error!";
