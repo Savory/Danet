@@ -1,5 +1,5 @@
-<h1 align="center">DestJS</h1>
-<p align="center">Make beautiful APIs with the NestJS inspired framework for Deno</p>
+<h1 align="center">Danet</h1>
+<p align="center">A web framework heavily inspired by Nest.</p>
 
 <p align="center">
 <a href="http://commitizen.github.io/cz-cli/">
