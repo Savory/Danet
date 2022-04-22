@@ -11,12 +11,18 @@ export const createParamDecorator = (resolver: Resolver) => () => (target: Contr
   Reflect.defineMetadata(argumentResolverFunctionsMetadataKey, argumentsResolverMap, target, propertyKey);
 }
 
-
 export const Req = createParamDecorator((context: HttpContext) => {
   return context.request;
 })
 
-
 export const Res = createParamDecorator((context: HttpContext) => {
   return context.response;
 })
+
+export const Body = (prop?: string) => createParamDecorator((context: HttpContext) => {
+  if (prop)
+    // deno-lint-ignore no-explicit-any
+    return (context.request.body as any)[prop];
+  else
+    return context.request.body;
+})();
