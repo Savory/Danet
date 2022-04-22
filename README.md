@@ -12,12 +12,14 @@
 
 ## Goals
 
-| Goal                                                                            | State |
-|---------------------------------------------------------------------------------| ----------- |
-| Controllers and routes creation with Decorators (GET, PUT, DELETE, POST, PATCH) | Complete ✅  |
-| Module with dependency injection                                                | Complete ✅  |
-| Url params injection in Controllers with Decorators                             | In Progress ⛔ |
-| Logger                                                                          | Waiting |
-| Create documentation                                                            | Waiting |
-| Handle OPTIONS and HEAD                                                         | Waiting |
-| Anything we have in mind                                                        | Waiting |
+| Goal                                                                             | State |
+|----------------------------------------------------------------------------------| ----------- |
+| Controllers and routes creation with Decorators (GET, PUT, DELETE, POST, PATCH)  | Complete ✅  |
+| Module with dependency injection                                                 | Complete ✅  |
+| Request, Response and Body injection in Routes via decorators                    | Complete ✅  |
+| Route parameter decorator factory to easily create param decorators (even async) | Complete ✅  |
+| Url params injection in Controllers with Decorators                              | In Progress ⛔ |
+| Logger                                                                           | Waiting |
+| Create documentation                                                             | Waiting |
+| Handle OPTIONS and HEAD                                                          | Waiting |
+| Anything we have in mind                                                         | Waiting |
