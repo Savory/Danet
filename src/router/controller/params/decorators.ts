@@ -26,3 +26,7 @@ export const Body = (prop?: string) => createParamDecorator((context: HttpContex
   else
     return context.request.body;
 })();
+
+export const Param = (paramName: string) => createParamDecorator((context: HttpContext) => {
+    return context.request.url.searchParams.get(paramName);
+})();
