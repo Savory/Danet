@@ -39,8 +39,7 @@ export class DanetRouter {
 
     basePath = removeTrailingSlash(basePath);
     endpoint = removeTrailingSlash(endpoint);
-    let path = basePath + '/' + endpoint;
-    path = removeTrailingSlash(path);
+    const path = basePath + '/' + endpoint;
 
     const routerFn = this.methodsMap.get(httpMethod);
     if (!routerFn)
