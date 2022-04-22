@@ -28,19 +28,13 @@ export class DanetRouter {
   public createRoute(methodName: string, Controller: Constructor<unknown>, basePath: string) {
     if (methodName === 'constructor') return;
     const method = Controller.prototype[methodName];
-    let endpoint = Reflect.getMetadata(
-      'endpoint',
-      method
-    ) as string;
-    const httpMethod = Reflect.getMetadata(
-      'method',
-      method
-    ) as string;
+    let endpoint = Reflect.getMetadata('endpoint', method) as string;
 
     basePath = removeTrailingSlash(basePath);
     endpoint = removeTrailingSlash(endpoint);
     const path = basePath + '/' + endpoint;
 
+    const httpMethod = Reflect.getMetadata('method', method) as string;
     const routerFn = this.methodsMap.get(httpMethod);
     if (!routerFn)
       throw new Error(`The method ${httpMethod} can not be handled by.`);
@@ -55,8 +49,10 @@ export class DanetRouter {
         const controllerInstance = this.injector.get(Controller) as any;
         const params = await this.resolveMethodParam(Controller, ControllerMethod, context);
         const response = (await controllerInstance[ControllerMethod.name](...params)) as Record<string, unknown> | string;
+
         if (response)
           context.response.body = response;
+
       } catch (error) {
         const status = error.status || 500;
         const message = error.message || "Internal server error!";
