@@ -12,14 +12,18 @@ export class Injector {
   public get<T>(Type: Constructor<T>): T {
     if (this.resolved.has(Type))
       return this.resolved.get(Type)!() as T;
-    throw Error('type not injected');
+    throw Error(`Type ${Type} not injected`);
   }
 
   public bootstrap(ModuleType: ModuleConstructor) {
       const { controllers, injectables } = Reflect.getMetadata(moduleMetadataKey, ModuleType);
-      this.availableTypes = this.availableTypes.concat(...injectables);
+      this.addAvailableInjectable(injectables);
       this.registerInjectables(injectables);
       this.resolveControllers(controllers);
+  }
+
+  public addAvailableInjectable(injectables: InjectableConstructor[]) {
+    this.availableTypes = this.availableTypes.concat(...injectables);
   }
 
   public registerInjectables(Injectables: InjectableConstructor[]) {
@@ -40,7 +44,8 @@ export class Injector {
       if (!this.resolved.has(DependencyType))
         throw new Error(`${Type.name} dependency ${DependencyType.name} is not available in injection context. Did you provide it in module ?`);
     });
-    this.resolved.set(Type, () => new Type(...dependencies.map((Dep) => this.resolved.get(Dep)!())))
+    const instance = new Type(...dependencies.map((Dep) => this.resolved.get(Dep)!()));
+    this.resolved.set(Type, () => instance)
   }
 
   private prepareInjectable(Type: InjectableConstructor) {

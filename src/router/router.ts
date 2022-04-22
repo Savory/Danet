@@ -1,6 +1,7 @@
 import { Context } from 'https://deno.land/x/oak@v9.0.1/context.ts';
 import { Router } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
+import { Injector } from '../injector/injector.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { ControllerConstructor } from './controller/constructor.ts';
 import { argumentResolverFunctionsMetadataKey, Resolver } from './controller/params/decorators.ts';
@@ -13,7 +14,9 @@ type Callback = (...args: any[]) => unknown;
 export type HttpContext = Context;
 
 export class DanetRouter {
-  public router = new Router()
+  public router = new Router();
+  constructor(private injector: Injector) {
+  }
   methodsMap = new Map([
     ["DELETE", this.router.delete],
     ["GET", this.router.get],
@@ -48,12 +51,16 @@ export class DanetRouter {
   handleRoute(Controller: ControllerConstructor, ControllerMethod: Callback) {
     return async (context: HttpContext) => {
       try {
+        // deno-lint-ignore no-explicit-any
+        const controllerInstance = this.injector.get(Controller) as any;
         const paramResolverMap: Map<number, Resolver> = Reflect.getOwnMetadata(argumentResolverFunctionsMetadataKey, Controller.prototype, ControllerMethod.name);
         const params: unknown[] = [];
-        for (const [key, value] of paramResolverMap) {
-          params[key] = await value(context);
+        if (paramResolverMap) {
+          for (const [ key, value ] of paramResolverMap) {
+            params[key] = await value(context);
+          }
         }
-        const response = (await ControllerMethod(...params)) as Record<string, unknown> | string;
+        const response = (await controllerInstance[ControllerMethod.name](...params)) as Record<string, unknown> | string;
         if (response)
           context.response.body = response;
       } catch (error) {

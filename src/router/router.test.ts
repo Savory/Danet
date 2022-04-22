@@ -2,12 +2,12 @@
 
 import { assertEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { Response, Request } from 'https://deno.land/x/oak@v9.0.1/mod.ts';
+import { Injector } from '../injector/injector.ts';
 import { Controller, Get, Post } from './controller/decorator.ts';
 import { Body, Param, Req, Res } from './controller/params/decorators.ts';
 import { DanetRouter } from './router.ts';
 
 Deno.test('router.handleRoute inject params into method', async (testContext) => {
-  const router = new DanetRouter();
 
   @Controller('my-path')
   class MyController {
@@ -35,8 +35,11 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
     testQueryParam(@Param('id') id: string) {
       return id;
     }
-
   }
+  const injector = new Injector();
+  injector.resolveControllers([MyController]);
+  const router = new DanetRouter(injector);
+
   const context = { response : { body: ''}, request: {  url : { searchParams: new Map([['id', 3]])}, body: { whatisit: 'testbody' }}};
 
   await testContext.step('@Res decorator works', async () => {

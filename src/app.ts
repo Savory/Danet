@@ -11,8 +11,8 @@ import { Constructor } from './utils/constructor.ts';
 
 export class DanetApplication {
   private app = new Application();
-  private DanetRouter = new DanetRouter();
   private injector = new Injector();
+  private DanetRouter = new DanetRouter(this.injector);
 
   get<T>(Type: Constructor<T>): T {
     return this.injector.get(Type);
@@ -25,6 +25,11 @@ export class DanetApplication {
     })
     this.injector.bootstrap(Module);
     this.registerControllers(metadata.controllers);
+  }
+
+  listen(port = 3000) {
+    this.app.use(this.DanetRouter.router.routes());
+    return this.app.listen({ port });
   }
 
   registerControllers(Controllers: Constructor[]) {

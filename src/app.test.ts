@@ -16,6 +16,10 @@ Deno.test('app init', async (testContext) => {
   class Child1 {
     constructor(public child: Child2) {
     }
+
+    sayHelloWorld() {
+      return 'helloWorld';
+    }
   }
 
   @Controller('first-controller')
@@ -87,6 +91,7 @@ Deno.test('app init', async (testContext) => {
   await testContext.step('it inject controllers dependencies if they are provided by current module or previously loaded module', () => {
     const firstController = app.get(FirstController)!;
     assertInstanceOf(firstController.child1, Child1);
+    assertEquals(firstController.child1.sayHelloWorld(), 'helloWorld');
     assertInstanceOf(firstController.child2, Child2);
     const secondController = app.get(SecondController)!;
     assertInstanceOf(secondController.child1, Child1);
