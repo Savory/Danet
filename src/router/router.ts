@@ -12,7 +12,7 @@ type Callback = (...args: any[]) => unknown;
 
 export type HttpContext = Context;
 
-export class DeNestRouter {
+export class DanetRouter {
   public router = new Router()
   methodsMap = new Map([
     ["DELETE", this.router.delete],

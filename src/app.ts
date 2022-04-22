@@ -5,13 +5,13 @@ import {
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
 import { Injector } from './injector/injector.ts';
 import { moduleMetadataKey, ModuleOptions } from './module/decorator.ts';
-import { DeNestRouter } from './router/router.ts';
+import { DanetRouter } from './router/router.ts';
 import { Constructor } from './utils/constructor.ts';
 
 
-export class DeNestApplication {
+export class DanetApplication {
   private app = new Application();
-  private deNestRouter = new DeNestRouter();
+  private DanetRouter = new DanetRouter();
   private injector = new Injector();
 
   get<T>(Type: Constructor<T>): T {
@@ -35,12 +35,12 @@ export class DeNestApplication {
     const basePath = Reflect.getMetadata("endpoint", Controller);
     const methods = Object.getOwnPropertyNames(Controller.prototype);
     methods.forEach((methodName) => {
-      this.deNestRouter.createRoute(methodName, Controller, basePath);
+      this.DanetRouter.createRoute(methodName, Controller, basePath);
     });
   }
 
   get router(): Router {
-    return this.deNestRouter.router;
+    return this.DanetRouter.router;
   }
 }
 

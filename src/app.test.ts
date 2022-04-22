@@ -1,6 +1,6 @@
 import { assertEquals, assertInstanceOf, assertThrows } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { Route } from 'https://deno.land/x/oak@v9.0.1/router.ts';
-import { DeNestApplication } from './app.ts';
+import { DanetApplication } from './app.ts';
 import { Controller, Get, Post } from './router/controller/decorator.ts';
 import { Injectable, SCOPE } from './injectable/decorator.ts';
 import { Module } from './module/decorator.ts';
@@ -66,7 +66,7 @@ Deno.test('app init', async (testContext) => {
   })
   class ModuleWithMissingProvider {}
 
-  const app = new DeNestApplication();
+  const app = new DanetApplication();
   app.bootstrap(FirstModule);
 
   function expectControllerRouterToExist(keys: IterableIterator<Route>, controllerEndpoint: string) {
@@ -94,7 +94,7 @@ Deno.test('app init', async (testContext) => {
   });
 
   await testContext.step('it throws if controllers dependencies are not available in context or globally', () => {
-    const failingApp = new DeNestApplication();
+    const failingApp = new DanetApplication();
     assertThrows(() => failingApp.bootstrap(ModuleWithMissingProvider));
   });
 });
