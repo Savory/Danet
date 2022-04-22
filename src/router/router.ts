@@ -1,3 +1,4 @@
+import { State } from 'https://deno.land/x/oak@v9.0.1/application.ts';
 import { Context } from 'https://deno.land/x/oak@v9.0.1/context.ts';
 import { Router } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
@@ -53,13 +54,7 @@ export class DanetRouter {
       try {
         // deno-lint-ignore no-explicit-any
         const controllerInstance = this.injector.get(Controller) as any;
-        const paramResolverMap: Map<number, Resolver> = Reflect.getOwnMetadata(argumentResolverFunctionsMetadataKey, Controller.prototype, ControllerMethod.name);
-        const params: unknown[] = [];
-        if (paramResolverMap) {
-          for (const [ key, value ] of paramResolverMap) {
-            params[key] = await value(context);
-          }
-        }
+        const params = await this.resolveMethodParam(Controller, ControllerMethod, context);
         const response = (await controllerInstance[ControllerMethod.name](...params)) as Record<string, unknown> | string;
         if (response)
           context.response.body = response;
@@ -75,5 +70,17 @@ export class DanetRouter {
         context.response.status = status;
       }
     };
+  }
+
+  // deno-lint-ignore no-explicit-any
+  private async resolveMethodParam(Controller: ControllerConstructor, ControllerMethod: (...args: any[]) => unknown, context: Context<State, Record<string, any>>) {
+    const paramResolverMap: Map<number, Resolver> = Reflect.getOwnMetadata(argumentResolverFunctionsMetadataKey, Controller.prototype, ControllerMethod.name);
+    const params: unknown[] = [];
+    if (paramResolverMap) {
+      for (const [ key, value ] of paramResolverMap) {
+        params[key] = await value(context);
+      }
+    }
+    return params;
   }
 }
