@@ -1,6 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
 
-import { assertEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
+import { assertThrowsAsync } from 'https://deno.land/std@0.105.0/testing/asserts.ts';
+import { assertEquals, assertThrows } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { Response, Request } from 'https://deno.land/x/oak@v9.0.1/mod.ts';
 import { GLOBAL_GUARD } from '../guard/constants.ts';
 import { UseGuard } from '../guard/decorator.ts';
@@ -61,13 +62,18 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
     testQueryParam(@Param('id') id: string) {
       return id;
     }
+
+    @Post('/:id')
+    throwingRoute() {
+      throw Error('anerror')
+    }
   }
   const injector = new Injector();
   injector.registerInjectables([new TokenInjector(GlobalGuard, GLOBAL_GUARD)]);
   injector.resolveControllers([MyController]);
   const router = new DanetRouter(injector);
 
-  const context = { response : { body: ''}, state: { user: '', something: '', globalguardAssignedVariable: ''}, request: {  url : { searchParams: new Map([['id', 3]])}, body: { whatisit: 'testbody' }}};
+  const context = { response : { body: '', status: 200}, state: { user: '', something: '', globalguardAssignedVariable: ''}, request: {  url : { searchParams: new Map([['id', 3]])}, body: { whatisit: 'testbody' }}};
 
   await testContext.step('@Res decorator works', async () => {
     await router.handleRoute(MyController, MyController.prototype.testResFunction)(context as any);
@@ -109,5 +115,10 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
     await router.handleRoute(MyController, MyController.prototype.testQueryParam)(context as any);
     assertEquals(context.state.globalguardAssignedVariable, "coucou");
   });
+
+  await testContext.step('answer 500 when there is an unexpected error', async () => {
+    await router.handleRoute(MyController, MyController.prototype.throwingRoute)(context as any);
+    assertEquals(context.response.status, 500);
+  })
 
 })
