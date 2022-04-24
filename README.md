@@ -20,8 +20,8 @@
 | Route parameter decorator factory to easily create param decorators (even async) | Complete ✅   |
 | Url params injection in Controllers with Decorators               | Complete ✅   |
 | Guards implementations for controllers and methods                | Complete ✅   |
-| Global guard                                                      | In Progress ⌛ |
+| Global guard                                                      | Complete ✅   |
+| Create documentation                                              | In progress ⌛ |
 | Logger                                                            | Waiting      |
-| Create documentation                                              | Waiting      |
 | Handle OPTIONS and HEAD                                           | Waiting      |
 | Anything we have in mind                                          | Waiting      |
