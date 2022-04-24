@@ -2,6 +2,8 @@ import { State } from 'https://deno.land/x/oak@v9.0.1/application.ts';
 import { Context } from 'https://deno.land/x/oak@v9.0.1/context.ts';
 import { Router } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
+import { guardMetadataKey } from '../guard/decorator.ts';
+import { AuthGuard } from '../guard/interface.ts';
 import { Injector } from '../injector/injector.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { ControllerConstructor } from './controller/constructor.ts';
@@ -47,6 +49,7 @@ export class DanetRouter {
       try {
         // deno-lint-ignore no-explicit-any
         const controllerInstance = this.injector.get(Controller) as any;
+        await this.executeControllerAndMethodAuthGuards(context, Controller, ControllerMethod);
         const params = await this.resolveMethodParam(Controller, ControllerMethod, context);
         const response = (await controllerInstance[ControllerMethod.name](...params)) as Record<string, unknown> | string;
         if (response)
@@ -64,6 +67,15 @@ export class DanetRouter {
         context.response.status = status;
       }
     };
+  }
+
+  async executeControllerAndMethodAuthGuards(context: HttpContext, Controller: ControllerConstructor, ControllerMethod: Callback) {
+    const controllerGuard: AuthGuard = Reflect.getMetadata(guardMetadataKey, Controller);
+    if (controllerGuard)
+      await controllerGuard.canActivate(context);
+    const methodGuard: AuthGuard = Reflect.getMetadata(guardMetadataKey, ControllerMethod);
+    if (methodGuard)
+      await methodGuard.canActivate(context);
   }
 
   // deno-lint-ignore no-explicit-any

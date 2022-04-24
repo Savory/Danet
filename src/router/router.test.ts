@@ -2,13 +2,27 @@
 
 import { assertEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { Response, Request } from 'https://deno.land/x/oak@v9.0.1/mod.ts';
+import { UseGuard } from '../guard/decorator.ts';
+import { AuthGuard } from '../guard/interface.ts';
 import { Injector } from '../injector/injector.ts';
 import { Controller, Get, Post } from './controller/decorator.ts';
 import { Body, Param, Req, Res } from './controller/params/decorators.ts';
-import { DanetRouter } from './router.ts';
+import { DanetRouter, HttpContext } from './router.ts';
 
 Deno.test('router.handleRoute inject params into method', async (testContext) => {
 
+  class ControllerGuard implements AuthGuard  {
+    canActivate(context: HttpContext){
+      context.state.user = 'coucou';
+    }
+  }
+  class MethodGuard implements AuthGuard  {
+    canActivate(context: HttpContext){
+      context.state.something = 'coucou';
+    }
+  }
+
+  @UseGuard(ControllerGuard)
   @Controller('my-path')
   class MyController {
     @Get('/')
@@ -31,6 +45,7 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
       return fullBody;
     }
 
+    @UseGuard(MethodGuard)
     @Post('/:id')
     testQueryParam(@Param('id') id: string) {
       return id;
@@ -40,7 +55,7 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
   injector.resolveControllers([MyController]);
   const router = new DanetRouter(injector);
 
-  const context = { response : { body: ''}, request: {  url : { searchParams: new Map([['id', 3]])}, body: { whatisit: 'testbody' }}};
+  const context = { response : { body: ''}, state: { user: '', something: ''}, request: {  url : { searchParams: new Map([['id', 3]])}, body: { whatisit: 'testbody' }}};
 
   await testContext.step('@Res decorator works', async () => {
     await router.handleRoute(MyController, MyController.prototype.testResFunction)(context as any);
@@ -66,6 +81,16 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
   await testContext.step('@Param decorator works', async () => {
     await router.handleRoute(MyController, MyController.prototype.testQueryParam)(context as any);
     assertEquals(context.response.body, 3);
+  });
+
+  await testContext.step('@UseAuthGuard controller decorator works', async () => {
+    await router.handleRoute(MyController, MyController.prototype.testQueryParam)(context as any);
+    assertEquals(context.state.user, "coucou");
+  });
+
+  await testContext.step('@UseAuthGuard method\'s decorator works', async () => {
+    await router.handleRoute(MyController, MyController.prototype.testQueryParam)(context as any);
+    assertEquals(context.state.something, "coucou");
   });
 
 })

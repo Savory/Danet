@@ -1,6 +1,5 @@
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
 import { HttpContext } from '../../router.ts';
-import { ControllerConstructor } from '../constructor.ts';
 
 export type Resolver = (context: HttpContext) => unknown | Promise<unknown>;
 
