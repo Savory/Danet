@@ -12,9 +12,9 @@ import { Constructor } from './utils/constructor.ts';
 export class DanetApplication {
   private app = new Application();
   private injector = new Injector();
-  private DanetRouter = new DanetRouter(this.injector);
+  public DanetRouter = new DanetRouter(this.injector);
 
-  get<T>(Type: Constructor<T>): T {
+  get<T>(Type: Constructor<T>| string): T {
     return this.injector.get(Type);
   }
 

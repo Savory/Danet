@@ -2,7 +2,8 @@ import { State } from 'https://deno.land/x/oak@v9.0.1/application.ts';
 import { Context } from 'https://deno.land/x/oak@v9.0.1/context.ts';
 import { Router } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
-import { guardMetadataKey } from '../guard/decorator.ts';
+import { GLOBAL_GUARD } from '../guard/constants.ts';
+import { GuardExecutor } from '../guard/executor.ts';
 import { AuthGuard } from '../guard/interface.ts';
 import { Injector } from '../injector/injector.ts';
 import { Constructor } from '../utils/constructor.ts';
@@ -12,13 +13,13 @@ import { removeTrailingSlash } from './utils.ts';
 
 
 // deno-lint-ignore no-explicit-any
-type Callback = (...args: any[]) => unknown;
+export type Callback = (...args: any[]) => unknown;
 
 export type HttpContext = Context;
 
 export class DanetRouter {
   public router = new Router();
-  constructor(private injector: Injector) {
+  constructor(private injector: Injector, private guardExecutor: GuardExecutor = new GuardExecutor()) {
   }
   methodsMap = new Map([
     ["DELETE", this.router.delete],
@@ -49,6 +50,7 @@ export class DanetRouter {
       try {
         // deno-lint-ignore no-explicit-any
         const controllerInstance = this.injector.get(Controller) as any;
+        await this.executeGlobalGuard(context);
         await this.executeControllerAndMethodAuthGuards(context, Controller, ControllerMethod);
         const params = await this.resolveMethodParam(Controller, ControllerMethod, context);
         const response = (await controllerInstance[ControllerMethod.name](...params)) as Record<string, unknown> | string;
@@ -69,13 +71,14 @@ export class DanetRouter {
     };
   }
 
+  async executeGlobalGuard(context: HttpContext) {
+    const globalGuard: AuthGuard = this.injector.get(GLOBAL_GUARD);
+    await this.guardExecutor.executeGuard(globalGuard, context);
+  }
+
   async executeControllerAndMethodAuthGuards(context: HttpContext, Controller: ControllerConstructor, ControllerMethod: Callback) {
-    const controllerGuard: AuthGuard = Reflect.getMetadata(guardMetadataKey, Controller);
-    if (controllerGuard)
-      await controllerGuard.canActivate(context);
-    const methodGuard: AuthGuard = Reflect.getMetadata(guardMetadataKey, ControllerMethod);
-    if (methodGuard)
-      await methodGuard.canActivate(context);
+    await this.guardExecutor.executeGuardFromMetadata(context, Controller);
+    await this.guardExecutor.executeGuardFromMetadata(context, ControllerMethod);
   }
 
   // deno-lint-ignore no-explicit-any

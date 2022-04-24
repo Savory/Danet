@@ -1,11 +1,22 @@
 import { assertEquals, assertInstanceOf, assertThrows } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { Route } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { DanetApplication } from './app.ts';
+import { GLOBAL_GUARD } from './guard/constants.ts';
+import { AuthGuard } from './guard/interface.ts';
+import { TokenInjector } from './injectable/constructor.ts';
 import { Controller, Get, Post } from './router/controller/decorator.ts';
 import { Injectable, SCOPE } from './injectable/decorator.ts';
 import { Module } from './module/decorator.ts';
+import { HttpContext } from './router/router.ts';
 
 Deno.test('app init', async (testContext) => {
+
+  @Injectable()
+  class GlobalGuard implements AuthGuard {
+    canActivate(context: HttpContext): void {
+      context.state.coucou = 'coucou';
+    }
+  }
 
   @Injectable({ scope: SCOPE.REQUEST })
   class Child2 {
@@ -60,7 +71,7 @@ Deno.test('app init', async (testContext) => {
   @Module({
     imports: [SecondModule],
     controllers: [FirstController],
-    injectables: [Child1, Child2]
+    injectables: [Child1, Child2, new TokenInjector(GlobalGuard, GLOBAL_GUARD)]
   })
   class FirstModule {}
 
@@ -98,8 +109,16 @@ Deno.test('app init', async (testContext) => {
     assertInstanceOf(secondController.child2, Child2);
   });
 
+  await testContext.step('it inject GLOBAL_GUARD', () => {
+    const globalGuard = app.get(GLOBAL_GUARD);
+    assertInstanceOf(globalGuard, GlobalGuard);
+  });
+
   await testContext.step('it throws if controllers dependencies are not available in context or globally', () => {
     const failingApp = new DanetApplication();
     assertThrows(() => failingApp.bootstrap(ModuleWithMissingProvider));
+  });
+
+  await testContext.step('it inject GLOBAL_GUARD and router us eit', () => {
   });
 });

@@ -2,14 +2,25 @@
 
 import { assertEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { Response, Request } from 'https://deno.land/x/oak@v9.0.1/mod.ts';
+import { GLOBAL_GUARD } from '../guard/constants.ts';
 import { UseGuard } from '../guard/decorator.ts';
 import { AuthGuard } from '../guard/interface.ts';
+import { TokenInjector } from '../injectable/constructor.ts';
+import { Injectable } from '../injectable/decorator.ts';
 import { Injector } from '../injector/injector.ts';
 import { Controller, Get, Post } from './controller/decorator.ts';
 import { Body, Param, Req, Res } from './controller/params/decorators.ts';
 import { DanetRouter, HttpContext } from './router.ts';
 
 Deno.test('router.handleRoute inject params into method', async (testContext) => {
+
+
+  @Injectable()
+  class GlobalGuard implements AuthGuard {
+    canActivate(context: HttpContext): void {
+      context.state.globalguardAssignedVariable = 'coucou';
+    }
+  }
 
   class ControllerGuard implements AuthGuard  {
     canActivate(context: HttpContext){
@@ -52,10 +63,11 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
     }
   }
   const injector = new Injector();
+  injector.registerInjectables([new TokenInjector(GlobalGuard, GLOBAL_GUARD)]);
   injector.resolveControllers([MyController]);
   const router = new DanetRouter(injector);
 
-  const context = { response : { body: ''}, state: { user: '', something: ''}, request: {  url : { searchParams: new Map([['id', 3]])}, body: { whatisit: 'testbody' }}};
+  const context = { response : { body: ''}, state: { user: '', something: '', globalguardAssignedVariable: ''}, request: {  url : { searchParams: new Map([['id', 3]])}, body: { whatisit: 'testbody' }}};
 
   await testContext.step('@Res decorator works', async () => {
     await router.handleRoute(MyController, MyController.prototype.testResFunction)(context as any);
@@ -91,6 +103,11 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
   await testContext.step('@UseAuthGuard method\'s decorator works', async () => {
     await router.handleRoute(MyController, MyController.prototype.testQueryParam)(context as any);
     assertEquals(context.state.something, "coucou");
+  });
+
+  await testContext.step('Execute global guard', async () => {
+    await router.handleRoute(MyController, MyController.prototype.testQueryParam)(context as any);
+    assertEquals(context.state.globalguardAssignedVariable, "coucou");
   });
 
 })
