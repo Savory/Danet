@@ -6,7 +6,7 @@ import { AuthGuard } from './guard/interface.ts';
 import { TokenInjector } from './injectable/constructor.ts';
 import { Controller, Get, Post } from './router/controller/decorator.ts';
 import { Injectable, SCOPE } from './injectable/decorator.ts';
-import { Module } from './module/decorator.ts';
+import { Module, ModuleOptions } from './module/decorator.ts';
 import { HttpContext } from './router/router.ts';
 
 Deno.test('app init', async (testContext) => {
@@ -47,7 +47,7 @@ Deno.test('app init', async (testContext) => {
 
     }
   }
-  @Controller('second-controller')
+  @Controller('second-controller/')
   class SecondController {
     constructor(public child1: Child1, public child2: Child2) {
     }
@@ -56,7 +56,7 @@ Deno.test('app init', async (testContext) => {
 
     }
 
-    @Post('post')
+    @Post('/post/')
     postMethod() {
 
     }
@@ -68,11 +68,12 @@ Deno.test('app init', async (testContext) => {
   })
   class SecondModule {}
 
-  @Module({
+  const firstModuleOption: ModuleOptions = {
     imports: [SecondModule],
     controllers: [FirstController],
     injectables: [Child1, Child2, new TokenInjector(GlobalGuard, GLOBAL_GUARD)]
-  })
+  };
+  @Module(firstModuleOption)
   class FirstModule {}
 
   @Module({

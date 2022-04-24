@@ -9,7 +9,7 @@ import { Injector } from '../injector/injector.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { ControllerConstructor } from './controller/constructor.ts';
 import { argumentResolverFunctionsMetadataKey, Resolver } from './controller/params/decorators.ts';
-import { removeTrailingSlash } from './utils.ts';
+import { trimSlash } from './utils.ts';
 
 
 // deno-lint-ignore no-explicit-any
@@ -33,8 +33,8 @@ export class DanetRouter {
     const method = Controller.prototype[methodName];
     let endpoint = Reflect.getMetadata('endpoint', method) as string;
 
-    basePath = removeTrailingSlash(basePath);
-    endpoint = removeTrailingSlash(endpoint);
+    basePath = trimSlash(basePath);
+    endpoint = trimSlash(endpoint);
     const path = basePath + (endpoint ? '/' + endpoint  : '');
 
     const httpMethod = Reflect.getMetadata('method', method) as string;
