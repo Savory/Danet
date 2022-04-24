@@ -39,4 +39,10 @@ jobs:
         run: deno lint
 
       - name: Run tests
-        run: deno test -c tsconfig.json -A --unstable src
+        run: deno test -c tsconfig.json -A --unstable --coverage=coverage src
+      - name: Create coverage report
+        run: deno --unstable coverage ./coverage --lcov > coverage.lcov # create coverage report
+      - name: Collect coverage
+        uses: codecov/codecov-action@v1.0.10 # upload the report on Codecov
+        with:
+          file: ./coverage.lcov
