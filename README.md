@@ -5,9 +5,6 @@
 <a href="http://commitizen.github.io/cz-cli/">
     <img src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg" width="121" border="10"/>
 </a>
-<a href="https://www.codefactor.io/repository/github/sorikairox/Danet">
-    <img src="https://www.codefactor.io/repository/github/sorikairox/Danet/badge" width="90" border="10"/>
-</a>
 </p>
 
 ## Goals
