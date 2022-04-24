@@ -32,7 +32,7 @@ export class DanetRouter {
 
     basePath = removeTrailingSlash(basePath);
     endpoint = removeTrailingSlash(endpoint);
-    const path = basePath + '/' + endpoint;
+    const path = basePath + (endpoint ? '/' + endpoint  : '');
 
     const httpMethod = Reflect.getMetadata('method', method) as string;
     const routerFn = this.methodsMap.get(httpMethod);
@@ -49,7 +49,6 @@ export class DanetRouter {
         const controllerInstance = this.injector.get(Controller) as any;
         const params = await this.resolveMethodParam(Controller, ControllerMethod, context);
         const response = (await controllerInstance[ControllerMethod.name](...params)) as Record<string, unknown> | string;
-
         if (response)
           context.response.body = response;
 
@@ -69,7 +68,7 @@ export class DanetRouter {
 
   // deno-lint-ignore no-explicit-any
   private async resolveMethodParam(Controller: ControllerConstructor, ControllerMethod: (...args: any[]) => unknown, context: Context<State, Record<string, any>>) {
-    const paramResolverMap: Map<number, Resolver> = Reflect.getOwnMetadata(argumentResolverFunctionsMetadataKey, Controller.prototype, ControllerMethod.name);
+    const paramResolverMap: Map<number, Resolver> = Reflect.getOwnMetadata(argumentResolverFunctionsMetadataKey, Controller, ControllerMethod.name);
     const params: unknown[] = [];
     if (paramResolverMap) {
       for (const [ key, value ] of paramResolverMap) {

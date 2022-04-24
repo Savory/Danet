@@ -5,10 +5,10 @@ import { ControllerConstructor } from '../constructor.ts';
 export type Resolver = (context: HttpContext) => unknown | Promise<unknown>;
 
 export const argumentResolverFunctionsMetadataKey = 'argumentResolverFunctions';
-export const createParamDecorator = (resolver: Resolver) => () => (target: ControllerConstructor, propertyKey: string | symbol, parameterIndex: number) => {
-  const argumentsResolverMap: Map<number, Resolver> = Reflect.getOwnMetadata(argumentResolverFunctionsMetadataKey, target, propertyKey) || new Map<number, Resolver>();
+export const createParamDecorator = (resolver: Resolver) => () => (target: Record<string, unknown>, propertyKey: string | symbol, parameterIndex: number) => {
+  const argumentsResolverMap: Map<number, Resolver> = Reflect.getOwnMetadata(argumentResolverFunctionsMetadataKey, target.constructor, propertyKey) || new Map<number, Resolver>();
   argumentsResolverMap.set(parameterIndex, resolver);
-  Reflect.defineMetadata(argumentResolverFunctionsMetadataKey, argumentsResolverMap, target, propertyKey);
+  Reflect.defineMetadata(argumentResolverFunctionsMetadataKey, argumentsResolverMap, target.constructor, propertyKey);
 }
 
 export const Req = createParamDecorator((context: HttpContext) => {
