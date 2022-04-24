@@ -1,13 +1,10 @@
 <h1 align="center">Danet</h1>
 <p align="center">A web framework heavily inspired by Nest.</p>
 
-<p align="center">
-<a href="http://commitizen.github.io/cz-cli/">
-    <img src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg" width="121" border="10"/>
-</a>
-</p>
 
-[![Deno](https://github.com/Sorikairox/Danet/actions/workflows/deno.yml/badge.svg)](https://github.com/Sorikairox/Danet/actions/workflows/deno.yml)
+[![Run tests](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![codecov](https://codecov.io/gh/Sorikairox/Danet/branch/main/graph/badge.svg?token=R6WXVC669Z)](https://codecov.io/gh/Sorikairox/Danet)
 ## Goals
 
 | Goal                                                              | State        |
