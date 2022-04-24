@@ -9,5 +9,14 @@
       "include": ["ban-untagged-todo"],
       "exclude": ["no-unused-vars"]
     }
+  },
+  "fmt": {
+    "options": {
+      "singleQuote": true,
+      "useTabs": true
+    },
+    "files": {
+      "exclude": ["node_modules/"]
+    }
   }
 }
