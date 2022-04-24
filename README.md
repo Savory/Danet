@@ -7,6 +7,7 @@
 </a>
 </p>
 
+[![Deno](https://github.com/Sorikairox/Danet/actions/workflows/deno.yml/badge.svg)](https://github.com/Sorikairox/Danet/actions/workflows/deno.yml)
 ## Goals
 
 | Goal                                                              | State        |
