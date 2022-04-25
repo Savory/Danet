@@ -93,3 +93,13 @@ class TodoService {
   // implement yours logic
 }
 ```
+
+
+### Run your app
+
+```Typescript
+const optionalPort = 4000; 
+const app = new DanetApplication();
+app.bootstrap(TodoModule);
+await app.listen(optionalPort); //default to 3000
+```
