@@ -8,7 +8,7 @@ export function Controller<T>(endpoint = '') {
   };
 }
 function createMappingDecorator(method: HttpMethod) {
-  return (endpoint: string): MethodDecorator => {
+  return (endpoint = ''): MethodDecorator => {
     return (_target, _propertyKey, descriptor) => {
       Reflect.defineMetadata("endpoint", endpoint, descriptor.value);
       Reflect.defineMetadata("method", method, descriptor.value);

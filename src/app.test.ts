@@ -37,7 +37,7 @@ Deno.test('app init', async (testContext) => {
   class FirstController {
     constructor(public child1: Child1, public child2: Child2) {
     }
-    @Get('')
+    @Get()
     getMethod() {
 
     }
