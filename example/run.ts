@@ -1,7 +1,7 @@
-import { DanetApplication } from './src/app.ts';
-import { Injectable, SCOPE } from './src/injector/injectable/decorator.ts';
-import { Module } from './src/module/decorator.ts';
-import { Controller, Get, Post } from './src/router/controller/decorator.ts';
+import { DanetApplication } from '../src/app.ts';
+import { Injectable, SCOPE } from '../src/injector/injectable/decorator.ts';
+import { Module } from '../src/module/decorator.ts';
+import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
 
 @Injectable({ scope: SCOPE.REQUEST })
 class Child2 {
