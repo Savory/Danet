@@ -1,4 +1,9 @@
-import { assertEquals, assertInstanceOf, assertThrows } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
+import {
+  assertEquals,
+  assertInstanceOf,
+  assertNotEquals,
+  assertThrows
+} from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { Route } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { DanetApplication } from './app.ts';
 import { GLOBAL_GUARD } from './guard/constants.ts';
@@ -18,7 +23,7 @@ Deno.test('app init', async (testContext) => {
     }
   }
 
-  @Injectable({ scope: SCOPE.REQUEST })
+  @Injectable({ scope: SCOPE.GLOBAL })
   class Child2 {
 
   }
@@ -35,7 +40,8 @@ Deno.test('app init', async (testContext) => {
 
   @Controller('first-controller')
   class FirstController {
-    constructor(public child1: Child1, public child2: Child2) {
+    public id = crypto.randomUUID();
+    constructor(public child1: Child1) {
     }
     @Get()
     getMethod() {
@@ -49,7 +55,8 @@ Deno.test('app init', async (testContext) => {
   }
   @Controller('second-controller/')
   class SecondController {
-    constructor(public child1: Child1, public child2: Child2) {
+    public id = crypto.randomUUID();
+    constructor(public child2: Child2) {
     }
     @Get('')
     getMethod() {
@@ -64,7 +71,7 @@ Deno.test('app init', async (testContext) => {
 
   @Module({
     controllers: [SecondController],
-    injectables: [Child1, Child2]
+    injectables: [Child2]
   })
   class SecondModule {}
 
@@ -104,10 +111,20 @@ Deno.test('app init', async (testContext) => {
     const firstController = app.get(FirstController)!;
     assertInstanceOf(firstController.child1, Child1);
     assertEquals(firstController.child1.sayHelloWorld(), 'helloWorld');
-    assertInstanceOf(firstController.child2, Child2);
     const secondController = app.get(SecondController)!;
-    assertInstanceOf(secondController.child1, Child1);
     assertInstanceOf(secondController.child2, Child2);
+  });
+
+  await testContext.step('controllers are singleton if none of their depency is scoped', () => {
+    const firstInstance = app.get<SecondController>(SecondController)!;
+    const secondInstance = app.get<SecondController>(SecondController)!;
+    assertEquals(firstInstance.id, secondInstance.id);
+  });
+
+  await testContext.step('controllers are not singleton if one of their dependencies is request scoped', () => {
+    const firstInstance = app.get<FirstController>(FirstController)!;
+    const secondInstance = app.get<FirstController>(FirstController)!;
+    assertNotEquals(firstInstance.id, secondInstance.id);
   });
 
   await testContext.step('it inject GLOBAL_GUARD', () => {

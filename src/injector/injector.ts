@@ -28,7 +28,7 @@ export class Injector {
 
   public registerInjectables(Injectables: Array<InjectableConstructor | TokenInjector>) {
     Injectables?.forEach((Provider: InjectableConstructor | TokenInjector) => {
-      this.prepareInjectable(Provider);
+      this.resolveInjectable(Provider, null);
     });
   }
 
@@ -39,40 +39,47 @@ export class Injector {
   }
 
   private resolveControllerDependencies<T>(Type: Constructor<T>) {
+    let canBeSingleton = true;
     const dependencies = this.getDependencies(Type);
     dependencies.forEach((DependencyType) => {
       if (!this.resolved.has(DependencyType))
         throw new Error(`${Type.name} dependency ${DependencyType.name} is not available in injection context. Did you provide it in module ?`);
+      const injectableMetadata = Reflect.getOwnMetadata(dependencyInjectionMetadataKey, DependencyType);
+      if (injectableMetadata?.scope === SCOPE.REQUEST) {
+        canBeSingleton = false;
+      }
     });
-    const instance = new Type(...dependencies.map((Dep) => this.resolved.get(Dep)!()));
-    this.resolved.set(Type, () => instance)
+    if (canBeSingleton) {
+      const instance = new Type(...dependencies.map((Dep) => this.resolved.get(Dep)!()));
+      this.resolved.set(Type, () => instance)
+    } else {
+      this.resolved.set(Type, () => new Type(...dependencies.map((Dep) => this.resolved.get(Dep)!())));
+    }
   }
 
-  private prepareInjectable(Type: InjectableConstructor | TokenInjector) {
-    this.resolveInjectable(Type);
-  }
-
-  private resolveInjectable(Type: InjectableConstructor | TokenInjector) {
+  private resolveInjectable(Type: InjectableConstructor | TokenInjector, ParentConstructor: Constructor | null) {
     const resolvedType = Type instanceof TokenInjector ? Type.useClass : Type;
     const resolvedKey = Type instanceof TokenInjector ? Type.token : Type
     const dependencies = this.getDependencies(resolvedType);
-    this.resolveDependencies(dependencies);
+    this.resolveDependencies(dependencies, resolvedType);
     const injectableMetadata = Reflect.getOwnMetadata(dependencyInjectionMetadataKey, Type);
     if (injectableMetadata?.scope === SCOPE.GLOBAL) {
       const instance = new resolvedType(...dependencies.map((Dep) => this.resolved.get(Dep)!()));
       this.resolved.set(resolvedKey, () => instance);
     } else {
+      if (ParentConstructor)
+        Reflect.defineMetadata(dependencyInjectionMetadataKey, { scope: SCOPE.REQUEST }, ParentConstructor);
       this.resolved.set(resolvedKey, () => new resolvedType(...dependencies.map((Dep) => this.resolved.get(Dep)!())));
     }
   }
 
-  private resolveDependencies(Types: Constructor[]) {
-    Types.forEach((Type) => {
-      if (!this.resolved.get(Type)) {
-        if (this.availableTypes.includes(Type)) {
-          this.resolveInjectable(Type);
+  private resolveDependencies(Dependencies: Constructor[], ParentConstructor: Constructor) {
+    Dependencies.forEach((Dependency) => {
+      if (!this.resolved.get(Dependency)) {
+        if (this.availableTypes.includes(Dependency)) {
+          this.resolveInjectable(Dependency, ParentConstructor);
         } else {
-          throw new Error(`${Type.name} is not available in injection context. Did you provide it in module ?`);
+          throw new Error(`${Dependency.name} is not available in injection context. Did you provide it in module ?`);
         }
       }
     })
