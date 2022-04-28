@@ -49,27 +49,29 @@ export class Injector {
         canBeSingleton = false;
       }
     });
+    const resolvedDependencies = dependencies.map((Dep) => this.resolved.get(Dep)!());
     if (canBeSingleton) {
-      const instance = new Type(...dependencies.map((Dep) => this.resolved.get(Dep)!()));
+      const instance = new Type(...resolvedDependencies);
       this.resolved.set(Type, () => instance)
     } else {
-      this.resolved.set(Type, () => new Type(...dependencies.map((Dep) => this.resolved.get(Dep)!())));
+      this.resolved.set(Type, () => new Type(...resolvedDependencies));
     }
   }
 
   private resolveInjectable(Type: InjectableConstructor | TokenInjector, ParentConstructor?: Constructor) {
-    const resolvedType = Type instanceof TokenInjector ? Type.useClass : Type;
-    const resolvedKey = Type instanceof TokenInjector ? Type.token : Type
-    const dependencies = this.getDependencies(resolvedType);
-    this.resolveDependencies(dependencies, resolvedType);
+    const actualType = Type instanceof TokenInjector ? Type.useClass : Type;
+    const actualKey = Type instanceof TokenInjector ? Type.token : Type
+    const dependencies = this.getDependencies(actualType);
+    this.resolveDependencies(dependencies, actualType);
     const injectableMetadata = Reflect.getOwnMetadata(dependencyInjectionMetadataKey, Type);
+    const resolvedDependencies = dependencies.map((Dep) => this.resolved.get(Dep)!());
     if (injectableMetadata?.scope === SCOPE.GLOBAL) {
-      const instance = new resolvedType(...dependencies.map((Dep) => this.resolved.get(Dep)!()));
-      this.resolved.set(resolvedKey, () => instance);
+      const instance = new actualType(...resolvedDependencies);
+      this.resolved.set(actualKey, () => instance);
     } else {
       if (ParentConstructor)
         Reflect.defineMetadata(dependencyInjectionMetadataKey, { scope: SCOPE.REQUEST }, ParentConstructor);
-      this.resolved.set(resolvedKey, () => new resolvedType(...dependencies.map((Dep) => this.resolved.get(Dep)!())));
+      this.resolved.set(actualKey, () => new actualType(...resolvedDependencies));
     }
   }
 
