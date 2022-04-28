@@ -28,7 +28,7 @@ export class Injector {
 
   public registerInjectables(Injectables: Array<InjectableConstructor | TokenInjector>) {
     Injectables?.forEach((Provider: InjectableConstructor | TokenInjector) => {
-      this.resolveInjectable(Provider, null);
+      this.resolveInjectable(Provider);
     });
   }
 
@@ -57,7 +57,7 @@ export class Injector {
     }
   }
 
-  private resolveInjectable(Type: InjectableConstructor | TokenInjector, ParentConstructor: Constructor | null) {
+  private resolveInjectable(Type: InjectableConstructor | TokenInjector, ParentConstructor?: Constructor) {
     const resolvedType = Type instanceof TokenInjector ? Type.useClass : Type;
     const resolvedKey = Type instanceof TokenInjector ? Type.token : Type
     const dependencies = this.getDependencies(resolvedType);
