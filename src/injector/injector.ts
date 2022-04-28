@@ -1,10 +1,11 @@
-import { Reflect } from "https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts";
-import { ControllerConstructor } from '../router/controller/constructor.ts';
-import { InjectableConstructor, TokenInjector } from '../injectable/constructor.ts';
-import { dependencyInjectionMetadataKey, SCOPE } from '../injectable/decorator.ts';
+import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
 import { ModuleConstructor } from '../module/constructor.ts';
 import { moduleMetadataKey } from '../module/decorator.ts';
+import { ControllerConstructor } from '../router/controller/constructor.ts';
 import { Constructor } from '../utils/constructor.ts';
+import { getInjectionTokenMetadataKey } from './decorator.ts';
+import { InjectableConstructor, TokenInjector } from './injectable/constructor.ts';
+import { dependencyInjectionMetadataKey, SCOPE } from './injectable/decorator.ts';
 
 export class Injector {
   private resolved = new Map<Constructor | string, () => unknown>();
@@ -41,15 +42,15 @@ export class Injector {
   private resolveControllerDependencies<T>(Type: Constructor<T>) {
     let canBeSingleton = true;
     const dependencies = this.getDependencies(Type);
-    dependencies.forEach((DependencyType) => {
-      if (!this.resolved.has(DependencyType))
-        throw new Error(`${Type.name} dependency ${DependencyType.name} is not available in injection context. Did you provide it in module ?`);
+    dependencies.forEach((DependencyType, idx) => {
+      if (!this.resolved.has(this.getParamToken(Type, idx) ?? DependencyType))
+        throw new Error(`${Type.name} dependency ${this.getParamToken(Type, idx) ?? DependencyType.name} is not available in injection context. Did you provide it in module ?`);
       const injectableMetadata = Reflect.getOwnMetadata(dependencyInjectionMetadataKey, DependencyType);
       if (injectableMetadata?.scope === SCOPE.REQUEST) {
         canBeSingleton = false;
       }
     });
-    const resolvedDependencies = dependencies.map((Dep) => this.resolved.get(Dep)!());
+    const resolvedDependencies = dependencies.map((Dep, idx) => this.resolved.get(this.getParamToken(Type, idx) ?? Dep)!());
     if (canBeSingleton) {
       const instance = new Type(...resolvedDependencies);
       this.resolved.set(Type, () => instance)
@@ -64,7 +65,7 @@ export class Injector {
     const dependencies = this.getDependencies(actualType);
     this.resolveDependencies(dependencies, actualType);
     const injectableMetadata = Reflect.getOwnMetadata(dependencyInjectionMetadataKey, Type);
-    const resolvedDependencies = dependencies.map((Dep) => this.resolved.get(Dep)!());
+    const resolvedDependencies = dependencies.map((Dep, idx) => this.resolved.get(this.getParamToken(actualType, idx) ?? Dep)!());
     if (injectableMetadata?.scope === SCOPE.GLOBAL) {
       const instance = new actualType(...resolvedDependencies);
       this.resolved.set(actualKey, () => instance);
@@ -73,6 +74,10 @@ export class Injector {
         Reflect.defineMetadata(dependencyInjectionMetadataKey, { scope: SCOPE.REQUEST }, ParentConstructor);
       this.resolved.set(actualKey, () => new actualType(...resolvedDependencies));
     }
+  }
+
+  private getParamToken(Type: Constructor, paramIndex: number) {
+    return Reflect.getMetadata(getInjectionTokenMetadataKey(paramIndex), Type);
   }
 
   private resolveDependencies(Dependencies: Constructor[], ParentConstructor: Constructor) {

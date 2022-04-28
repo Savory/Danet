@@ -8,13 +8,18 @@ import { Route } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { DanetApplication } from './app.ts';
 import { GLOBAL_GUARD } from './guard/constants.ts';
 import { AuthGuard } from './guard/interface.ts';
-import { TokenInjector } from './injectable/constructor.ts';
+import { Inject } from './injector/decorator.ts';
+import { TokenInjector } from './injector/injectable/constructor.ts';
 import { Controller, Get, Post } from './router/controller/decorator.ts';
-import { Injectable, SCOPE } from './injectable/decorator.ts';
+import { Injectable, SCOPE } from './injector/injectable/decorator.ts';
 import { Module, ModuleOptions } from './module/decorator.ts';
 import { HttpContext } from './router/router.ts';
 
 Deno.test('app init', async (testContext) => {
+
+  interface IDBService {
+    data: string;
+  }
 
   @Injectable()
   class GlobalGuard implements AuthGuard {
@@ -38,6 +43,12 @@ Deno.test('app init', async (testContext) => {
     }
   }
 
+  @Injectable()
+  class DatabaseService implements IDBService{
+    public data = 'coucou';
+    constructor() {}
+  }
+
   @Controller('first-controller')
   class FirstController {
     public id = crypto.randomUUID();
@@ -56,7 +67,7 @@ Deno.test('app init', async (testContext) => {
   @Controller('second-controller/')
   class SecondController {
     public id = crypto.randomUUID();
-    constructor(public child2: Child2) {
+    constructor(public child2: Child2, @Inject('DB_SERVICE') public dbService: IDBService) {
     }
     @Get('')
     getMethod() {
@@ -71,7 +82,7 @@ Deno.test('app init', async (testContext) => {
 
   @Module({
     controllers: [SecondController],
-    injectables: [Child2]
+    injectables: [Child2, new TokenInjector(DatabaseService, 'DB_SERVICE')]
   })
   class SecondModule {}
 
@@ -113,6 +124,7 @@ Deno.test('app init', async (testContext) => {
     assertEquals(firstController.child1.sayHelloWorld(), 'helloWorld');
     const secondController = app.get(SecondController)!;
     assertInstanceOf(secondController.child2, Child2);
+    assertInstanceOf(secondController.dbService, DatabaseService);
   });
 
   await testContext.step('controllers are singleton if none of their depency is scoped', () => {

@@ -1,6 +1,6 @@
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
 import { ControllerConstructor } from '../router/controller/constructor.ts';
-import { InjectableConstructor, TokenInjector } from '../injectable/constructor.ts';
+import { InjectableConstructor, TokenInjector } from '../injector/injectable/constructor.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { ModuleConstructor } from './constructor.ts';
 

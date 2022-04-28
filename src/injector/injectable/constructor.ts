@@ -1,4 +1,4 @@
-import { Constructor } from '../utils/constructor.ts';
+import { Constructor } from '../../utils/constructor.ts';
 
 export type InjectableConstructor = Constructor;
 export class TokenInjector {
