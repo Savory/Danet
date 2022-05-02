@@ -35,6 +35,4 @@ export const Query = (prop?: string) => createParamDecorator((context: HttpConte
     return query;
 })();
 
-export const Param = (paramName: string) => createParamDecorator((context: HttpContext) => {
-    return context.request.url.searchParams.get(paramName);
-})();
+export const Param = (paramName: string) => Query(paramName);
