@@ -1,6 +1,6 @@
 // created from ctix
 
-export * from './constants';
-export * from './decorator';
-export * from './executor';
-export * from './interface';
+export * from './constants.ts';
+export * from './decorator.ts';
+export * from './executor.ts';
+export * from './interface.ts';

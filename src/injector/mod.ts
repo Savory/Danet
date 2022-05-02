@@ -1,5 +1,5 @@
 // created from ctix
 
-export * from './decorator';
-export * from './injector';
-export * from './injectable/mod';
+export * from './decorator.ts';
+export * from './injector.ts';
+export * from './injectable/mod.ts';

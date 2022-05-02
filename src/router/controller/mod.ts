@@ -1,5 +1,5 @@
 // created from ctix
 
-export * from './constructor';
-export * from './decorator';
-export * from './params/mod';
+export * from './constructor.ts';
+export * from './decorator.ts';
+export * from './params/mod.ts';

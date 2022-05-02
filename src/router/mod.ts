@@ -1,5 +1,5 @@
 // created from ctix
 
-export * from './router';
-export * from './utils';
-export * from './controller/mod';
+export * from './router.ts';
+export * from './utils.ts';
+export * from './controller/mod.ts';

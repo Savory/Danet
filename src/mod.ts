@@ -1,8 +1,8 @@
 // created from ctix
 
-export * from './app';
-export * from './utils/mod';
-export * from './router/mod';
-export * from './module/mod';
-export * from './injector/mod';
-export * from './guard/mod';
+export * from './app.ts';
+export * from './utils/mod.ts';
+export * from './router/mod.ts';
+export * from './module/mod.ts';
+export * from './injector/mod.ts';
+export * from './guard/mod.ts';

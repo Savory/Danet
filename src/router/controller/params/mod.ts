@@ -1,3 +1,3 @@
 // created from ctix
 
-export * from './decorators';
+export * from './decorators.ts';

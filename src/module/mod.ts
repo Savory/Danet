@@ -1,4 +1,4 @@
 // created from ctix
 
-export * from './constructor';
-export * from './decorator';
+export * from './constructor.ts';
+export * from './decorator.ts';
