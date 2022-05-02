@@ -10,7 +10,7 @@ import { TokenInjector } from '../injector/injectable/constructor.ts';
 import { Injectable } from '../injector/injectable/decorator.ts';
 import { Injector } from '../injector/injector.ts';
 import { Controller, Get, Post } from './controller/decorator.ts';
-import { Body, Param, Req, Res } from './controller/params/decorators.ts';
+import { Body, Param, Query, Req, Res } from './controller/params/decorators.ts';
 import { DanetRouter, HttpContext } from './router.ts';
 
 Deno.test('router.handleRoute inject params into method', async (testContext) => {
@@ -38,8 +38,10 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
   @Controller('my-path')
   class MyController {
     @Get('/')
-    testResFunction(@Res() res: Response) {
-      res.body = 'managed to get it'
+    testResFunction(@Res() res: Response, @Query('myvalue') myvalue: string) {
+      res.body = {
+        myvalue
+      };
     }
 
     @Post('')
@@ -72,12 +74,14 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
   injector.registerInjectables([new TokenInjector(GlobalGuard, GLOBAL_GUARD)]);
   injector.resolveControllers([MyController]);
   const router = new DanetRouter(injector);
-
-  const context = { response : { body: '', status: 200}, state: { user: '', something: '', globalguardAssignedVariable: ''}, request: {  url : { searchParams: new Map([['id', 3]])}, body: { whatisit: 'testbody' }}};
+  const searchParams = new Map();
+  searchParams.set('id', 3);
+  searchParams.set('myvalue', 'a nice value');
+  const context = { response : { body: '', status: 200}, state: { user: '', something: '', globalguardAssignedVariable: ''}, request: {  url : { searchParams }, body: { whatisit: 'testbody' }}};
 
   await testContext.step('@Res decorator works', async () => {
     await router.handleRoute(MyController, MyController.prototype.testResFunction)(context as any);
-    assertEquals(context.response.body, 'managed to get it');
+    assertEquals(context.response.body, { myvalue: 'a nice value' });
 
   })
 

@@ -1,3 +1,4 @@
+import { getQuery } from 'https://deno.land/x/oak@v9.0.1/helpers.ts';
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
 import { HttpContext } from '../../router.ts';
 
@@ -24,6 +25,14 @@ export const Body = (prop?: string) => createParamDecorator((context: HttpContex
     return (context.request.body as any)[prop];
   else
     return context.request.body;
+})();
+
+export const Query = (prop?: string) => createParamDecorator((context: HttpContext) => {
+  const query = getQuery(context, { mergeParams: true})
+  if (prop)
+    return query?.[prop];
+  else
+    return query;
 })();
 
 export const Param = (paramName: string) => createParamDecorator((context: HttpContext) => {
