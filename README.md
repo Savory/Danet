@@ -33,6 +33,10 @@ Danet - [Deno](https://github.com/denoland) web framework.
 | Anything we have in mind                                                         | Waiting                            |
 
 
+## Docs
+
+Documentation will be available at [https://sorikairox.github.io/Danet/](https://sorikairox.github.io/Danet/)
+
 ## How to use
 
 If you are familiar with Nest (and if you're not, [go check it out](https://nestjs.com/)), you will not be lost.
