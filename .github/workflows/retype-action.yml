@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 4-github-page-for-documentation-with-retype
+      - main
 
 jobs:
   publish:
