@@ -8,7 +8,7 @@ Danet - [Deno](https://github.com/denoland) web framework.
 
 - **Modules** - exactly what you think they are.
 - **Controllers** - To handle requests.
-- **Dependency Injection** - Let Danet take care of instantiating stuff when you it is the most convenient.
+- **Dependency Injection** - Let Danet take care of instantiating stuff for you when it is the most convenient.
 - **AuthGuards** - Handle your Authentication/Authorization. The whole App get guard, Controllers get guard, Methods get guard, and you get a Guard...
 - **Decorators** - Modules, Controllers, Method, Body, Query Params, do more with less code !
 
@@ -100,7 +100,7 @@ class TodoService {
   getTodos() {
     this.databaseService.getMany();
   }
-  // implement yours logic
+  // implement your logic
 }
 ```
 
