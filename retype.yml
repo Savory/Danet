@@ -1,6 +1,6 @@
 input: doc/
 output: .retype
-url: # Add your website address here
+url: https://sorikairox.github.io/Danet/
 branding:
   title: Danet
   label: Docs
