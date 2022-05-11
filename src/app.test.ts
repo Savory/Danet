@@ -23,8 +23,9 @@ Deno.test('app init', async (testContext) => {
 
   @Injectable()
   class GlobalGuard implements AuthGuard {
-    canActivate(context: HttpContext): void {
+    canActivate(context: HttpContext): boolean {
       context.state.coucou = 'coucou';
+      return true;
     }
   }
 

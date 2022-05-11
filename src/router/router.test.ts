@@ -18,19 +18,25 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
 
   @Injectable()
   class GlobalGuard implements AuthGuard {
-    canActivate(context: HttpContext): void {
+    canActivate(context: HttpContext) {
       context.state.globalguardAssignedVariable = 'coucou';
+      return true;
     }
   }
 
+  @Injectable()
   class ControllerGuard implements AuthGuard  {
     canActivate(context: HttpContext){
       context.state.user = 'coucou';
+      return true;
     }
   }
+
+  @Injectable()
   class MethodGuard implements AuthGuard  {
     canActivate(context: HttpContext){
       context.state.something = 'coucou';
+      return true;
     }
   }
 
