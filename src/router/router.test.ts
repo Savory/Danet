@@ -40,6 +40,13 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
     }
   }
 
+  @Injectable()
+  class ThrowingGuard implements AuthGuard  {
+    canActivate(context: HttpContext){
+      return false;
+    }
+  }
+
   @UseGuard(ControllerGuard)
   @Controller('my-path')
   class MyController {
@@ -68,6 +75,12 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
     @UseGuard(MethodGuard)
     @Post('/:id')
     testQueryParam(@Param('id') id: string) {
+      return id;
+    }
+
+    @UseGuard(ThrowingGuard)
+    @Post('/:id')
+    throwingAuthGuardRoute(@Param('id') id: string) {
       return id;
     }
 
@@ -119,6 +132,15 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
   await testContext.step('@UseAuthGuard method\'s decorator works', async () => {
     await router.handleRoute(MyController, MyController.prototype.testQueryParam)(context as any);
     assertEquals(context.state.something, "coucou");
+  });
+
+  await testContext.step('throw 403 when AuthGuard returns false', async () => {
+    await router.handleRoute(MyController, MyController.prototype.throwingAuthGuardRoute)(context as any);
+    assertEquals(context.response.status, 403);
+    assertEquals(context.response.body, {
+      message: 'Forbidden',
+      status: 403,
+    });
   });
 
   await testContext.step('Execute global guard', async () => {
