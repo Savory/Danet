@@ -2,6 +2,7 @@ import { State } from 'https://deno.land/x/oak@v9.0.1/application.ts';
 import { Context } from 'https://deno.land/x/oak@v9.0.1/context.ts';
 import { Router } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
+import { HTTP_STATUS } from '../exception/http/enum.ts';
 import { GLOBAL_GUARD } from '../guard/constants.ts';
 import { GuardExecutor } from '../guard/executor.ts';
 import { AuthGuard } from '../guard/interface.ts';
@@ -58,7 +59,7 @@ export class DanetRouter {
           context.response.body = response;
 
       } catch (error) {
-        const status = error.status || 500;
+        const status = error.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
         const message = error.message || "Internal server error!";
 
         context.response.body = {
