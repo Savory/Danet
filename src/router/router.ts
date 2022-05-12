@@ -2,6 +2,7 @@ import { State } from 'https://deno.land/x/oak@v9.0.1/application.ts';
 import { Context } from 'https://deno.land/x/oak@v9.0.1/context.ts';
 import { Router } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
+import { FilterExecutor } from '../exception/filter/executor.ts';
 import { HTTP_STATUS } from '../exception/http/enum.ts';
 import { GLOBAL_GUARD } from '../guard/constants.ts';
 import { GuardExecutor } from '../guard/executor.ts';
@@ -20,7 +21,7 @@ export type HttpContext = Context;
 
 export class DanetRouter {
   public router = new Router();
-  constructor(private injector: Injector, private guardExecutor: GuardExecutor = new GuardExecutor()) {
+  constructor(private injector: Injector, private guardExecutor: GuardExecutor = new GuardExecutor(), private filterExecutor: FilterExecutor = new FilterExecutor()) {
   }
   methodsMap = new Map([
     ["DELETE", this.router.delete],
@@ -59,6 +60,9 @@ export class DanetRouter {
           context.response.body = response;
 
       } catch (error) {
+        const errorIsCaught = await this.filterExecutor.executeControllerAndMethodFilter(context, error, Controller, ControllerMethod);
+        if (errorIsCaught)
+          return;
         const status = error.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
         const message = error.message || "Internal server error!";
 
