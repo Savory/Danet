@@ -26,7 +26,8 @@ Danet - [Deno](https://github.com/denoland) web framework.
 | Guards implementations for controllers and methods                               | Complete ✅                         |
 | Global guard                                                                     | Complete ✅                         |
 | `@Inject('token')` to use with interfaces                                        | Complete ✅                         |
-| Exceptions Filters                                                               | In progress ⌛ (ETA 15 May) |
+| Exceptions Filters that catch all errors and `@UseFilters` decorator             | Complete ✅ |
+| Exceptions Filters that catch only a specific type of error                      | In progress ⌛ (ETA 15 May) |
 | Create documentation                                                             | In progress ⌛ (does it even end ?) |
 | Logger                                                                           | Waiting                            |
 | Handle OPTIONS and HEAD                                                          | Waiting                            |
