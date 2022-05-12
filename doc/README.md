@@ -1,4 +1,4 @@
-# Danet Main
+# Danet
 
 Danet - [Deno](https://github.com/denoland) web framework.
 
@@ -14,6 +14,10 @@ Danet - [Deno](https://github.com/denoland) web framework.
 
 ---
 
+## Community
+
+Join [our discord](https://discord.gg/tC5qtUJaKP)
+
 ## Roadmap
 
 | Task                                                                             | State                              |
@@ -26,22 +30,32 @@ Danet - [Deno](https://github.com/denoland) web framework.
 | Guards implementations for controllers and methods                               | Complete ✅                         |
 | Global guard                                                                     | Complete ✅                         |
 | `@Inject('token')` to use with interfaces                                        | Complete ✅                         |
-| Exceptions Filters                                                               | In progress ⌛ (ETA 8 May) |
+| Exceptions Filters that catch all errors and `@UseFilters` decorator             | Complete ✅ |
+| Exceptions Filters that catch only a specific type of error                      | In progress ⌛ (ETA 15 May) |
+| `OnAppBootstrap` Lifecycle hook for injectables and controllers               | In progress ⌛ (ETA 25 May) |
 | Create documentation                                                             | In progress ⌛ (does it even end ?) |
 | Logger                                                                           | Waiting                            |
 | Handle OPTIONS and HEAD                                                          | Waiting                            |
 | Anything we have in mind                                                         | Waiting                            |
 
 
+## Docs
+
+Documentation will be available at [https://sorikairox.github.io/Danet/](https://sorikairox.github.io/Danet/)
+
+## Contributing
+
+If you want to contribute, feel free ! Guidelines will be available [here](https://github.com/Sorikairox/Danet/blob/main/CONTRIBUTING.md)
+
 ## How to use
 
 If you are familiar with Nest (and if you're not, [go check it out](https://nestjs.com/)), you will not be lost.
 
-In this simplified example, we are building a todo-app: 
+In this simplified example, we are building a todo-app:
 
 ### Modules
 
-```Typescript
+```ts
 @Module({
   controllers: [TodoController],
   injectables: [TodoService]
@@ -52,7 +66,7 @@ class TodoModule {}
 
 ### Controllers
 
-```Typescript
+```ts
 @Controller('todo')
 class TodoController {
   //todoService will be automatically injected at runtime with DI
@@ -89,7 +103,7 @@ class TodoController {
 
 ### Services
 
-```Typescript
+```ts
 //By default, injectables are singleton
 @Injectable()
 class TodoService {
@@ -108,7 +122,7 @@ class TodoService {
 
 ### Run your app
 
-```Typescript
+```ts
 const optionalPort = 4000; 
 const app = new DanetApplication();
 app.bootstrap(TodoModule);
