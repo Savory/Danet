@@ -45,7 +45,7 @@ In this simplified example, we are building a todo-app:
 
 ### Modules
 
-```Typescript
+```ts
 @Module({
   controllers: [TodoController],
   injectables: [TodoService]
@@ -56,7 +56,7 @@ class TodoModule {}
 
 ### Controllers
 
-```Typescript
+```ts
 @Controller('todo')
 class TodoController {
   //todoService will be automatically injected at runtime with DI
@@ -93,7 +93,7 @@ class TodoController {
 
 ### Services
 
-```Typescript
+```ts
 //By default, injectables are singleton
 @Injectable()
 class TodoService {
@@ -112,7 +112,7 @@ class TodoService {
 
 ### Run your app
 
-```Typescript
+```ts
 const optionalPort = 4000; 
 const app = new DanetApplication();
 app.bootstrap(TodoModule);
