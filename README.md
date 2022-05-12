@@ -16,7 +16,7 @@ Danet - [Deno](https://github.com/denoland) web framework.
 
 ## Community
 
-Join [our discord](https://discord.gg/tC5qtUJaKP)
+Join [our discord](https://discord.gg/Q7ZHuDPgjA)
 
 ## Roadmap
 
