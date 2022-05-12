@@ -1,5 +1,5 @@
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
-import { ForbiddenHttpException } from '../exception/http/Forbidden.ts';
+import { ForbiddenHttpException } from '../exception/http/forbidden.ts';
 import { HttpContext } from '../router/router.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { guardMetadataKey } from './decorator.ts';
