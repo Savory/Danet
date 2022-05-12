@@ -21,7 +21,7 @@ export type HttpContext = Context;
 
 export class DanetRouter {
   public router = new Router();
-  constructor(private injector: Injector, private guardExecutor: GuardExecutor = new GuardExecutor(), private filterExecutor: FilterExecutor = new FilterExecutor()) {
+  constructor(private injector: Injector, private guardExecutor: GuardExecutor = new GuardExecutor(injector), private filterExecutor: FilterExecutor = new FilterExecutor()) {
   }
   methodsMap = new Map([
     ["DELETE", this.router.delete],
@@ -52,8 +52,7 @@ export class DanetRouter {
       try {
         // deno-lint-ignore no-explicit-any
         const controllerInstance = this.injector.get(Controller) as any;
-        await this.executeGlobalGuard(context);
-        await this.executeControllerAndMethodAuthGuards(context, Controller, ControllerMethod);
+        await this.guardExecutor.executeAllRelevantGuards(context, Controller, ControllerMethod);
         const params = await this.resolveMethodParam(Controller, ControllerMethod, context);
         const response = (await controllerInstance[ControllerMethod.name](...params)) as Record<string, unknown> | string;
         if (response)
@@ -74,16 +73,6 @@ export class DanetRouter {
         context.response.status = status;
       }
     };
-  }
-
-  async executeGlobalGuard(context: HttpContext) {
-    const globalGuard: AuthGuard = this.injector.get(GLOBAL_GUARD);
-    await this.guardExecutor.executeGuard(globalGuard, context);
-  }
-
-  async executeControllerAndMethodAuthGuards(context: HttpContext, Controller: ControllerConstructor, ControllerMethod: Callback) {
-    await this.guardExecutor.executeGuardFromMetadata(context, Controller);
-    await this.guardExecutor.executeGuardFromMetadata(context, ControllerMethod);
   }
 
   // deno-lint-ignore no-explicit-any
