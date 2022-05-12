@@ -8,4 +8,4 @@
 For now, please don't be afraid to :
 
 - Create an issue for bug or feature request
-- Join [our discord](https://discord.gg/tC5qtUJaKP)
+- Join [our discord](https://discord.gg/Q7ZHuDPgjA)
