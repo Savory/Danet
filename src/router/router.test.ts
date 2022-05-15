@@ -1,9 +1,9 @@
 // deno-lint-ignore-file no-explicit-any
 
 import { assertThrowsAsync } from 'https://deno.land/std@0.105.0/testing/asserts.ts';
-import { assertEquals, assertThrows } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
+import { assertEquals, assertNotEquals, assertThrows } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { Response, Request } from 'https://deno.land/x/oak@v9.0.1/mod.ts';
-import { UseFilter } from '../exception/filter/decorator.ts';
+import { Catch, UseFilter } from '../exception/filter/decorator.ts';
 import { ExceptionFilter } from '../exception/filter/interface.ts';
 import { GLOBAL_GUARD } from '../guard/constants.ts';
 import { UseGuard } from '../guard/decorator.ts';
@@ -17,6 +17,13 @@ import { DanetRouter, HttpContext } from './router.ts';
 
 Deno.test('router.handleRoute inject params into method', async (testContext) => {
 
+
+  class CustomException extends Error {
+    public customField = 'i am a custom field';
+    constructor(text: string) {
+      super(text);
+    }
+  }
 
   @Injectable()
   class GlobalGuard implements AuthGuard {
@@ -52,7 +59,16 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
   class ErrorFilter implements ExceptionFilter {
     catch(exception: any, context: HttpContext) {
       context.response.body = {
-        wePassedInFilter: true
+        wePassedInFilterCatchingAllErrors: true
+      }
+    }
+  }
+
+  @Catch(CustomException)
+  class CustomErrorFilter implements ExceptionFilter {
+    catch(exception: any, context: HttpContext) {
+      context.response.body = {
+        wePassedInFilterCatchingOnlySomeError: true
       }
     }
   }
@@ -113,6 +129,19 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
     useFilterRoute() {
       throw Error('something');
     }
+
+
+    @Post('/use-filter')
+    @UseFilter(CustomErrorFilter)
+    useFilterWithCatchRouteButWrongError() {
+      throw new Error('something');
+    }
+
+    @Post('/use-filter')
+    @UseFilter(CustomErrorFilter)
+    useFilterWithCatchRoute() {
+      throw new CustomException('something');
+    }
   }
   const injector = new Injector();
   injector.registerInjectables([new TokenInjector(GlobalGuard, GLOBAL_GUARD)]);
@@ -154,17 +183,31 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
     assertEquals(context.state.user, "coucou");
   });
 
+  await testContext.step('Exception Filter with @Catch do not catch unrelated errors', async () => {
+    await router.handleRoute(MyController, MyController.prototype.useFilterWithCatchRouteButWrongError)(context as any);
+    assertNotEquals(context.response.body, {
+      wePassedInFilterCatchingOnlySomeError: true
+    });
+  });
+
+  await testContext.step('Exception Filter with @Catch catch related errors', async () => {
+    await router.handleRoute(MyController, MyController.prototype.useFilterWithCatchRoute)(context as any);
+    assertEquals(context.response.body, {
+      wePassedInFilterCatchingOnlySomeError: true
+    });
+  });
+
   await testContext.step('@UseFilter method decorator works', async () => {
     await router.handleRoute(MyController, MyController.prototype.useFilterRoute)(context as any);
     assertEquals(context.response.body, {
-      wePassedInFilter: true
+      wePassedInFilterCatchingAllErrors: true
     });
   });
 
   await testContext.step('@UseFilter controller decorator works', async () => {
     await router.handleRoute(ControllerWithFilter, ControllerWithFilter.prototype.simpleGet)(context as any);
     assertEquals(context.response.body, {
-      wePassedInFilter: true
+      wePassedInFilterCatchingAllErrors: true
     });
   });
 

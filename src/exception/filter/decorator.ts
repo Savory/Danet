@@ -11,3 +11,10 @@ export const UseFilter = (guard: Constructor) => (target: ControllerConstructor 
   else
     Reflect.defineMetadata(filterExceptionMetadataKey, guardInstance, target);
 }
+
+export const filterCatchTypeMetadataKey = 'filterException';
+export function Catch<T>(ErrorType: Constructor) {
+  return (Type: Constructor<T>): void => {
+    Reflect.defineMetadata(filterCatchTypeMetadataKey, ErrorType, Type);
+  };
+}
