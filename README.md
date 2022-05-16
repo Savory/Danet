@@ -31,7 +31,7 @@ Join [our discord](https://discord.gg/Q7ZHuDPgjA)
 | Global guard                                                                     | Complete ✅                         |
 | `@Inject('token')` to use with interfaces                                        | Complete ✅                         |
 | Exceptions Filters that catch all errors and `@UseFilters` decorator             | Complete ✅ |
-| Exceptions Filters that catch only a specific type of error                      | In progress ⌛ (ETA 15 May) |
+| Exceptions Filters that catch only a specific type of error                      | Complete ✅ |
 | `OnAppBootstrap` Lifecycle hook for injectables and controllers               | In progress ⌛ (ETA 25 May) |
 | Create documentation                                                             | In progress ⌛ (does it even end ?) |
 | Logger                                                                           | Waiting                            |
