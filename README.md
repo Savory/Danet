@@ -18,7 +18,7 @@ Danet - [Deno](https://github.com/denoland) web framework.
 
 Join [our discord](https://discord.gg/Q7ZHuDPgjA)
 
-## Roadmap
+## Feature
 
 | Task                                                                             | State                              |
 |----------------------------------------------------------------------------------|------------------------------------|
@@ -32,7 +32,7 @@ Join [our discord](https://discord.gg/Q7ZHuDPgjA)
 | `@Inject('token')` to use with interfaces                                        | Complete ✅                         |
 | Exceptions Filters that catch all errors and `@UseFilters` decorator             | Complete ✅ |
 | Exceptions Filters that catch only a specific type of error                      | Complete ✅ |
-| `OnAppBootstrap` Lifecycle hook for injectables and controllers               | In progress ⌛ (ETA 25 May) |
+| `OnAppBootstrap` and `OnAppShutdown` Lifecycle hook for injectables and controllers               | In progress ⌛ (ETA 25 May) |
 | Create documentation                                                             | In progress ⌛ (does it even end ?) |
 | Logger                                                                           | Waiting                            |
 | Handle OPTIONS and HEAD                                                          | Waiting                            |
