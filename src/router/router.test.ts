@@ -145,6 +145,9 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
   const injector = new Injector();
   injector.registerInjectables([new TokenInjector(GlobalGuard, GLOBAL_GUARD)]);
   injector.resolveControllers([MyController, ControllerWithFilter]);
+  const injectorWithoutGlobalGuard = new Injector();
+  injectorWithoutGlobalGuard.resolveControllers([MyController, ControllerWithFilter]);
+  const routerWithoutGlobalGuard = new DanetRouter(injectorWithoutGlobalGuard);
   const router = new DanetRouter(injector);
   const searchParams = new Map();
   searchParams.set('id', 3);
@@ -228,6 +231,11 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
   await testContext.step('Execute global guard', async () => {
     await router.handleRoute(MyController, MyController.prototype.testQueryParam)(context as any);
     assertEquals(context.state.globalguardAssignedVariable, "coucou");
+  });
+
+
+  await testContext.step('Work when there is no global guard', async () => {
+    await routerWithoutGlobalGuard.handleRoute(MyController, MyController.prototype.testQueryParam)(context as any);
   });
 
   await testContext.step('answer 500 when there is an unexpected error', async () => {
