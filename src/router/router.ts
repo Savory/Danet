@@ -29,21 +29,21 @@ export class DanetRouter {
     ["POST", this.router.post],
     ["PUT", this.router.put],
   ]);
-  public createRoute(methodName: string, Controller: Constructor<unknown>, basePath: string) {
-    if (methodName === 'constructor') return;
-    const method = Controller.prototype[methodName];
-    let endpoint = MetadataHelper.getMetadata<string>('endpoint', method);
+  public createRoute(handlerName: string, Controller: Constructor<unknown>, basePath: string) {
+    if (handlerName === 'constructor') return;
+    const handler = Controller.prototype[handlerName];
+    let endpoint = MetadataHelper.getMetadata<string>('endpoint', handler);
 
     basePath = trimSlash(basePath);
     endpoint = trimSlash(endpoint);
     const path = basePath + (endpoint ? '/' + endpoint  : '');
 
-    const httpMethod = MetadataHelper.getMetadata<string>('method', method);
+    const httpMethod = MetadataHelper.getMetadata<string>('method', handler);
     const routerFn = this.methodsMap.get(httpMethod);
     if (!routerFn)
       throw new Error(`The method ${httpMethod} can not be handled by.`);
 
-    routerFn.call(this.router, path, this.handleRoute(Controller, method));
+    routerFn.call(this.router, path, this.handleRoute(Controller, handler));
   }
 
   handleRoute(Controller: ControllerConstructor, ControllerMethod: Callback) {
