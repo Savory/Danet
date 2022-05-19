@@ -11,6 +11,11 @@ import { dependencyInjectionMetadataKey, SCOPE } from './injectable/decorator.ts
 export class Injector {
   private resolved = new Map<Constructor | string, () => unknown>();
   private availableTypes: InjectableConstructor[] = [];
+
+  public has<T>(Type: Constructor<T> | string): boolean {
+    return this.resolved.has(Type);
+  }
+
   public get<T>(Type: Constructor<T> | string): T {
     if (this.resolved.has(Type))
       return this.resolved.get(Type)!() as T;

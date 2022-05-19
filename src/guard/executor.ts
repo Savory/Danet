@@ -1,4 +1,3 @@
-
 import { ForbiddenHttpException } from '../exception/http/forbidden.ts';
 import { Injector } from '../injector/injector.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
@@ -20,8 +19,10 @@ export class GuardExecutor {
   }
 
   async executeGlobalGuard(context: HttpContext) {
-    const globalGuard: AuthGuard = this.injector.get(GLOBAL_GUARD);
-    await this.executeGuard(globalGuard, context);
+    if (this.injector.has(GLOBAL_GUARD)) {
+      const globalGuard: AuthGuard = this.injector.get(GLOBAL_GUARD);
+      await this.executeGuard(globalGuard, context);
+    }
   }
 
   async executeControllerAndMethodAuthGuards(context: HttpContext, Controller: ControllerConstructor, ControllerMethod: Callback) {
