@@ -1,5 +1,6 @@
 import { getQuery } from 'https://deno.land/x/oak@v9.0.1/helpers.ts';
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
+import { MetadataHelper } from '../../../metadata/helper.ts';
 import { HttpContext } from '../../router.ts';
 
 export type Resolver = (context: HttpContext) => unknown | Promise<unknown>;
@@ -8,7 +9,7 @@ export const argumentResolverFunctionsMetadataKey = 'argumentResolverFunctions';
 export const createParamDecorator = (resolver: Resolver) => () => (target: Record<string, unknown>, propertyKey: string | symbol, parameterIndex: number) => {
   const argumentsResolverMap: Map<number, Resolver> = Reflect.getOwnMetadata(argumentResolverFunctionsMetadataKey, target.constructor, propertyKey) || new Map<number, Resolver>();
   argumentsResolverMap.set(parameterIndex, resolver);
-  Reflect.defineMetadata(argumentResolverFunctionsMetadataKey, argumentsResolverMap, target.constructor, propertyKey);
+  MetadataHelper.setMetadata(argumentResolverFunctionsMetadataKey, argumentsResolverMap, target.constructor, propertyKey);
 }
 
 export const Req = createParamDecorator((context: HttpContext) => {

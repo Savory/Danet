@@ -1,7 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 
-import { assertThrowsAsync } from 'https://deno.land/std@0.105.0/testing/asserts.ts';
-import { assertEquals, assertNotEquals, assertThrows } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
+import { assertEquals, assertNotEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { Response, Request } from 'https://deno.land/x/oak@v9.0.1/mod.ts';
 import { Catch, UseFilter } from '../exception/filter/decorator.ts';
 import { ExceptionFilter } from '../exception/filter/interface.ts';

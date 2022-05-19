@@ -1,4 +1,5 @@
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
+import { MetadataHelper } from '../metadata/helper.ts';
 import { ControllerConstructor } from '../router/controller/constructor.ts';
 import { InjectableConstructor, TokenInjector } from '../injector/injectable/constructor.ts';
 import { Constructor } from '../utils/constructor.ts';
@@ -14,6 +15,6 @@ export const moduleMetadataKey = 'module';
 
 export function Module<T>(options: ModuleOptions) {
   return (Type: Constructor<T>): void => {
-    Reflect.defineMetadata(moduleMetadataKey, options, Type)
+    MetadataHelper.setMetadata(moduleMetadataKey, options, Type)
   };
 }

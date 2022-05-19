@@ -1,6 +1,7 @@
-import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
+
 import { ForbiddenHttpException } from '../exception/http/forbidden.ts';
 import { Injector } from '../injector/injector.ts';
+import { MetadataHelper } from '../metadata/helper.ts';
 import { ControllerConstructor } from '../router/controller/constructor.ts';
 import { Callback, HttpContext } from '../router/router.ts';
 import { Constructor } from '../utils/constructor.ts';
@@ -39,7 +40,7 @@ export class GuardExecutor {
 
 // deno-lint-ignore ban-types
   async executeGuardFromMetadata(context: HttpContext, constructor: Constructor | Function) {
-    const guard: AuthGuard = Reflect.getMetadata(guardMetadataKey, constructor);
+    const guard: AuthGuard = MetadataHelper.getMetadata<AuthGuard>(guardMetadataKey, constructor);
     await this.executeGuard(guard, context);
   }
 }

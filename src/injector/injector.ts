@@ -1,6 +1,7 @@
 import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
+import { MetadataHelper } from '../metadata/helper.ts';
 import { ModuleConstructor } from '../module/constructor.ts';
-import { moduleMetadataKey } from '../module/decorator.ts';
+import { moduleMetadataKey, ModuleOptions } from '../module/decorator.ts';
 import { ControllerConstructor } from '../router/controller/constructor.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { getInjectionTokenMetadataKey } from './decorator.ts';
@@ -17,7 +18,8 @@ export class Injector {
   }
 
   public bootstrap(ModuleType: ModuleConstructor) {
-      const { controllers, injectables } = Reflect.getMetadata(moduleMetadataKey, ModuleType);
+    // deno-lint-ignore no-explicit-any
+    const { controllers, injectables } = MetadataHelper.getMetadata<any>(moduleMetadataKey, ModuleType);
       this.addAvailableInjectable(injectables);
       this.registerInjectables(injectables);
       this.resolveControllers(controllers);
@@ -71,13 +73,13 @@ export class Injector {
       this.resolved.set(actualKey, () => instance);
     } else {
       if (ParentConstructor)
-        Reflect.defineMetadata(dependencyInjectionMetadataKey, { scope: SCOPE.REQUEST }, ParentConstructor);
+        MetadataHelper.setMetadata(dependencyInjectionMetadataKey, { scope: SCOPE.REQUEST }, ParentConstructor);
       this.resolved.set(actualKey, () => new actualType(...resolvedDependencies));
     }
   }
 
   private getParamToken(Type: Constructor, paramIndex: number) {
-    return Reflect.getMetadata(getInjectionTokenMetadataKey(paramIndex), Type);
+    return MetadataHelper.getMetadata<string>(getInjectionTokenMetadataKey(paramIndex), Type);
   }
 
   private resolveDependencies(Dependencies: Constructor[], ParentConstructor: Constructor) {

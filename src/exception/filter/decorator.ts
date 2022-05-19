@@ -1,4 +1,5 @@
-import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
+
+import { MetadataHelper } from '../../metadata/helper.ts';
 import { ControllerConstructor } from '../../router/controller/constructor.ts';
 import { Constructor } from '../../utils/constructor.ts';
 
@@ -7,14 +8,14 @@ export const filterExceptionMetadataKey = 'filterException';
 export const UseFilter = (guard: Constructor) => (target: ControllerConstructor | Object, propertyKey?: string | symbol, descriptor?: TypedPropertyDescriptor<any>) => {
   const guardInstance = new guard();
   if (propertyKey && descriptor)
-    Reflect.defineMetadata(filterExceptionMetadataKey, guardInstance, descriptor.value);
+    MetadataHelper.setMetadata(filterExceptionMetadataKey, guardInstance, descriptor.value);
   else
-    Reflect.defineMetadata(filterExceptionMetadataKey, guardInstance, target);
+    MetadataHelper.setMetadata(filterExceptionMetadataKey, guardInstance, target);
 }
 
 export const filterCatchTypeMetadataKey = 'filterException';
 export function Catch<T>(ErrorType: Constructor) {
   return (Type: Constructor<T>): void => {
-    Reflect.defineMetadata(filterCatchTypeMetadataKey, ErrorType, Type);
+    MetadataHelper.setMetadata(filterCatchTypeMetadataKey, ErrorType, Type);
   };
 }

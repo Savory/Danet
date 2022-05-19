@@ -1,17 +1,17 @@
-import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
+import { MetadataHelper } from '../../metadata/helper.ts';
 import { Constructor } from '../../utils/constructor.ts';
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 export function Controller<T>(endpoint = '') {
   return (Type: Constructor<T>): void => {
-    Reflect.defineMetadata('endpoint', endpoint, Type);
+    MetadataHelper.setMetadata('endpoint', endpoint, Type);
   };
 }
 function createMappingDecorator(method: HttpMethod) {
   return (endpoint = ''): MethodDecorator => {
     return (_target, _propertyKey, descriptor) => {
-      Reflect.defineMetadata("endpoint", endpoint, descriptor.value);
-      Reflect.defineMetadata("method", method, descriptor.value);
+      MetadataHelper.setMetadata("endpoint", endpoint, descriptor.value);
+      MetadataHelper.setMetadata("method", method, descriptor.value);
       return descriptor;
     };
   };

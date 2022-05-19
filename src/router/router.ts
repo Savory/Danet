@@ -1,13 +1,12 @@
 import { State } from 'https://deno.land/x/oak@v9.0.1/application.ts';
 import { Context } from 'https://deno.land/x/oak@v9.0.1/context.ts';
 import { Router } from 'https://deno.land/x/oak@v9.0.1/router.ts';
-import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
+
 import { FilterExecutor } from '../exception/filter/executor.ts';
 import { HTTP_STATUS } from '../exception/http/enum.ts';
-import { GLOBAL_GUARD } from '../guard/constants.ts';
 import { GuardExecutor } from '../guard/executor.ts';
-import { AuthGuard } from '../guard/interface.ts';
 import { Injector } from '../injector/injector.ts';
+import { MetadataHelper } from '../metadata/helper.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { ControllerConstructor } from './controller/constructor.ts';
 import { argumentResolverFunctionsMetadataKey, Resolver } from './controller/params/decorators.ts';
@@ -33,13 +32,13 @@ export class DanetRouter {
   public createRoute(methodName: string, Controller: Constructor<unknown>, basePath: string) {
     if (methodName === 'constructor') return;
     const method = Controller.prototype[methodName];
-    let endpoint = Reflect.getMetadata('endpoint', method) as string;
+    let endpoint = MetadataHelper.getMetadata<string>('endpoint', method);
 
     basePath = trimSlash(basePath);
     endpoint = trimSlash(endpoint);
     const path = basePath + (endpoint ? '/' + endpoint  : '');
 
-    const httpMethod = Reflect.getMetadata('method', method) as string;
+    const httpMethod = MetadataHelper.getMetadata<string>('method', method);
     const routerFn = this.methodsMap.get(httpMethod);
     if (!routerFn)
       throw new Error(`The method ${httpMethod} can not be handled by.`);
@@ -77,7 +76,7 @@ export class DanetRouter {
 
   // deno-lint-ignore no-explicit-any
   private async resolveMethodParam(Controller: ControllerConstructor, ControllerMethod: (...args: any[]) => unknown, context: Context<State, Record<string, any>>) {
-    const paramResolverMap: Map<number, Resolver> = Reflect.getOwnMetadata(argumentResolverFunctionsMetadataKey, Controller, ControllerMethod.name);
+    const paramResolverMap: Map<number, Resolver> = MetadataHelper.getMetadata(argumentResolverFunctionsMetadataKey, Controller, ControllerMethod.name);
     const params: unknown[] = [];
     if (paramResolverMap) {
       for (const [ key, value ] of paramResolverMap) {

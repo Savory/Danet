@@ -1,4 +1,5 @@
-import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
+
+import { MetadataHelper } from '../../metadata/helper.ts';
 import { ControllerConstructor } from '../../router/controller/constructor.ts';
 import { Callback, HttpContext } from '../../router/router.ts';
 import { Constructor } from '../../utils/constructor.ts';
@@ -8,7 +9,8 @@ import { ExceptionFilter } from './interface.ts';
 export class FilterExecutor {
 
   private getErrorTypeCaughtByExceptionFilter(exceptionConstructor: Constructor) {
-    return Reflect.getMetadata(filterCatchTypeMetadataKey, exceptionConstructor);
+    // deno-lint-ignore ban-types
+    return MetadataHelper.getMetadata<Function>(filterCatchTypeMetadataKey, exceptionConstructor);
   }
 
   private async executeFilter(exceptionFilter: ExceptionFilter, context: HttpContext, error: unknown): Promise<boolean> {
@@ -27,7 +29,7 @@ export class FilterExecutor {
 
   // deno-lint-ignore ban-types
   private executeFilterFromMetadata(context: HttpContext, error: unknown, constructor: Constructor | Function): Promise<boolean> {
-    const filter: ExceptionFilter = Reflect.getMetadata(filterExceptionMetadataKey, constructor);
+    const filter: ExceptionFilter = MetadataHelper.getMetadata<ExceptionFilter>(filterExceptionMetadataKey, constructor);
     return this.executeFilter(filter, context, error);
   }
 
