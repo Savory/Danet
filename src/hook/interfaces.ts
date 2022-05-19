@@ -6,4 +6,7 @@ export interface OnAppClose {
 	onAppClose(): void | Promise<void>;
 }
 
-export type hookName = 'onAppClose' | 'onAppBootstrap';
+export enum hookName {
+	APP_CLOSE = 'onAppClose',
+	APP_BOOTSTRAP = 'onAppBootstrap'
+}

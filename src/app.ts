@@ -1,5 +1,6 @@
 import { Application, Router } from 'https://deno.land/x/oak@v9.0.1/mod.ts';
 import { HookExecutor } from './hook/executor.ts';
+import { hookName } from './hook/interfaces.ts';
 
 import { Injector } from './injector/injector.ts';
 import { MetadataHelper } from './metadata/helper.ts';
@@ -28,11 +29,11 @@ export class DanetApplication {
 		}
 		await this.injector.bootstrap(Module);
 		this.registerControllers(metadata.controllers);
-		await this.hookExecutor.executeHookForEveryInjectable('onAppBootstrap');
+		await this.hookExecutor.executeHookForEveryInjectable(hookName.APP_BOOTSTRAP);
 	}
 
 	async close() {
-		await this.hookExecutor.executeHookForEveryInjectable('onAppClose');
+		await this.hookExecutor.executeHookForEveryInjectable(hookName.APP_CLOSE);
 	}
 
 	listen(port = 3000) {

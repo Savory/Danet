@@ -5,6 +5,7 @@ import { Router } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { FilterExecutor } from '../exception/filter/executor.ts';
 import { HTTP_STATUS } from '../exception/http/enum.ts';
 import { GuardExecutor } from '../guard/executor.ts';
+import { hookName } from '../hook/interfaces.ts';
 import { Injector } from '../injector/injector.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { Constructor } from '../utils/constructor.ts';
@@ -36,11 +37,11 @@ export class DanetRouter {
 		['PUT', this.router.put],
 	]);
 	public createRoute(
-		handlerName: string,
-		Controller: Constructor<unknown>,
+		handlerName: string | hookName,
+		Controller: Constructor,
 		basePath: string,
 	) {
-		if (handlerName === 'constructor' || handlerName === 'onAppBootstrap' || handlerName === 'onAppClose') {
+		if (handlerName === 'constructor' || (Object.values(hookName) as string[]).includes(handlerName)) {
 			return;
 		}
 		const handler = Controller.prototype[handlerName];
