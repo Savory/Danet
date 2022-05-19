@@ -206,7 +206,7 @@ Deno.test('app init', async (testContext) => {
 		await app.close();
 		const injectableWithHook = app.get(SingletonControllerWithHook);
 		const controllerWithHook = app.get(InjectableWithHook);
-		assertEquals(controllerWithHook.appBoostrapCalled, true);
-		assertEquals(injectableWithHook.appBoostrapCalled, true);
+		assertEquals(controllerWithHook.appCloseCalled, true);
+		assertEquals(injectableWithHook.appCloseCalled, true);
 	});
 });

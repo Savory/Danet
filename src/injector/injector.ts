@@ -16,6 +16,10 @@ export class Injector {
 	private resolved = new Map<Constructor | string, () => unknown>();
 	private availableTypes: InjectableConstructor[] = [];
 
+	public getAll() {
+		return this.resolved;
+	}
+
 	public has<T>(Type: Constructor<T> | string): boolean {
 		return this.resolved.has(Type);
 	}
@@ -27,15 +31,7 @@ export class Injector {
 		throw Error(`Type ${Type} not injected`);
 	}
 
-	public async executeAppCloseHook() {
-		for (const [_, value] of this.resolved) {
-			// deno-lint-ignore no-explicit-any
-			const instance: any = value();
-			if (InjectableHelper.isGlobal(instance?.constructor)) {
-				await instance?.onAppBootstrap?.();
-			}
-		}
-	}
+
 
 	public async bootstrap(ModuleType: ModuleConstructor) {
 		// deno-lint-ignore no-explicit-any
