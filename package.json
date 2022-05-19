@@ -1,16 +1,16 @@
 {
-  "devDependencies": {
-    "commitizen": "^4.2.4",
-    "cz-conventional-changelog": "3.3.0",
-    "husky": "^7.0.4"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "scripts": {
-    "prepare": "husky install",
-    "test": "deno test -c tsconfig.json src"
-  }
+	"devDependencies": {
+		"commitizen": "^4.2.4",
+		"cz-conventional-changelog": "3.3.0",
+		"husky": "^7.0.4"
+	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog"
+		}
+	},
+	"scripts": {
+		"prepare": "husky install",
+		"test": "deno test -c tsconfig.json src"
+	}
 }

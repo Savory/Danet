@@ -1,3 +1,3 @@
 export interface OnAppBootstrap {
-  onAppBootstrap(): void | Promise<void>;
+	onAppBootstrap(): void | Promise<void>;
 }

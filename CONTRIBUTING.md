@@ -1,6 +1,5 @@
 # Contributing to Danet
 
-
 🤟 Thanks for coming here and contributing to Danet 🤟
 
 ## Here will lies our guidelines, when we will define them
