@@ -41,7 +41,10 @@ export class DanetRouter {
 		Controller: Constructor,
 		basePath: string,
 	) {
-		if (handlerName === 'constructor' || (Object.values(hookName) as string[]).includes(handlerName)) {
+		if (
+			handlerName === 'constructor' ||
+			(Object.values(hookName) as string[]).includes(handlerName)
+		) {
 			return;
 		}
 		const handler = Controller.prototype[handlerName];

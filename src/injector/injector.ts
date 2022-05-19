@@ -9,7 +9,11 @@ import {
 	InjectableConstructor,
 	TokenInjector,
 } from './injectable/constructor.ts';
-import { InjectableOption, injectionData, SCOPE } from './injectable/decorator.ts';
+import {
+	InjectableOption,
+	injectionData,
+	SCOPE,
+} from './injectable/decorator.ts';
 import { InjectableHelper } from './injectable/helper.ts';
 
 export class Injector {
@@ -30,8 +34,6 @@ export class Injector {
 		}
 		throw Error(`Type ${Type} not injected`);
 	}
-
-
 
 	public async bootstrap(ModuleType: ModuleConstructor) {
 		// deno-lint-ignore no-explicit-any
@@ -101,7 +103,10 @@ export class Injector {
 		const actualKey = Type instanceof TokenInjector ? Type.token : Type;
 		const dependencies = this.getDependencies(actualType);
 		this.resolveDependencies(dependencies, actualType);
-		const injectableMetadata = MetadataHelper.getMetadata<InjectableOption>(injectionData, Type);
+		const injectableMetadata = MetadataHelper.getMetadata<InjectableOption>(
+			injectionData,
+			Type,
+		);
 		const resolvedDependencies = dependencies.map((Dep, idx) =>
 			this.resolved.get(this.getParamToken(actualType, idx) ?? Dep)!()
 		);

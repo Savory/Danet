@@ -29,7 +29,9 @@ export class DanetApplication {
 		}
 		await this.injector.bootstrap(Module);
 		this.registerControllers(metadata.controllers);
-		await this.hookExecutor.executeHookForEveryInjectable(hookName.APP_BOOTSTRAP);
+		await this.hookExecutor.executeHookForEveryInjectable(
+			hookName.APP_BOOTSTRAP,
+		);
 	}
 
 	async close() {

@@ -8,5 +8,5 @@ export interface OnAppClose {
 
 export enum hookName {
 	APP_CLOSE = 'onAppClose',
-	APP_BOOTSTRAP = 'onAppBootstrap'
+	APP_BOOTSTRAP = 'onAppBootstrap',
 }
