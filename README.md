@@ -35,21 +35,22 @@ Join [our discord](https://discord.gg/Q7ZHuDPgjA)
 | `@Inject('token')` to use with interfaces                                           | Complete ✅                         |
 | Exceptions Filters that catch all errors and `@UseFilters` decorator                | Complete ✅                         |
 | Exceptions Filters that catch only a specific type of error                         | Complete ✅                         |
-| `OnAppBootstrap` and `OnAppShutdown` Lifecycle hook for injectables and controllers | In progress ⌛ (ETA 25 May)         |
+| `OnAppClose` and `OnAppBootstrap` Lifecycle hook for injectables and controllers | Complete ✅                         |
 | Create documentation                                                                | In progress ⌛ (does it even end ?) |
 | Logger                                                                              | Waiting                            |
-| Handle OPTIONS and HEAD                                                             | Waiting                            |
+| Handle HEAD                                                             | In progress ⌛                            |
+| Starter repo                                                             | In progress ⌛                            |
 | Anything we have in mind                                                            | Waiting                            |
 
 ## Docs
 
 Documentation will be available at
-[https://sorikairox.github.io/Danet/](https://sorikairox.github.io/Danet/)
+[https://savory.github.io/Danet/](https://savory.github.io/Danet/)
 
 ## Contributing
 
 If you want to contribute, feel free ! Guidelines will be available
-[here](https://github.com/Sorikairox/Danet/blob/main/CONTRIBUTING.md)
+[here](https://github.com/savory/Danet/blob/main/CONTRIBUTING.md)
 
 ## How to use
 
