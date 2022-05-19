@@ -30,12 +30,12 @@
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="/Danet/resources/css/retype.css?v=2.2.706306605890" rel="stylesheet" data-turbo-track="reload" />
+    <link href="/Danet/resources/css/retype.css?v=2.2.706307039082" rel="stylesheet" data-turbo-track="reload" />
 
-    <script type="text/javascript" src="/Danet/resources/js/config.js?v=2.2.706306605890" defer data-turbo-track="reload"></script>
+    <script type="text/javascript" src="/Danet/resources/js/config.js?v=2.2.706307039082" defer data-turbo-track="reload"></script>
     <script type="text/javascript" src="/Danet/resources/js/retype.js?v=2.2" defer data-turbo-track="reload"></script>
-    <script id="lunr-js" type="text/javascript" src="/Danet/resources/js/lunr.js?v=2.2.706306605890" defer></script>
-    <script id="prism-js" type="text/javascript" src="/Danet/resources/js/prism.js?v=2.2.706306605890" defer></script>
+    <script id="lunr-js" type="text/javascript" src="/Danet/resources/js/lunr.js?v=2.2.706307039082" defer></script>
+    <script id="prism-js" type="text/javascript" src="/Danet/resources/js/prism.js?v=2.2.706307039082" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -181,9 +181,12 @@
 <ul>
 <li><strong>Modules</strong> - exactly what you think they are.</li>
 <li><strong>Controllers</strong> - To handle requests.</li>
-<li><strong>Dependency Injection</strong> - Let Danet take care of instantiating stuff for you when it is the most convenient.</li>
-<li><strong>AuthGuards</strong> - Handle your Authentication/Authorization. The whole App get guard, Controllers get guard, Methods get guard, and you get a Guard...</li>
-<li><strong>Decorators</strong> - Modules, Controllers, Method, Body, Query Params, do more with less code !</li>
+<li><strong>Dependency Injection</strong> - Let Danet take care of instantiating stuff for you
+when it is the most convenient.</li>
+<li><strong>AuthGuards</strong> - Handle your Authentication/Authorization. The whole App get
+guard, Controllers get guard, Methods get guard, and you get a Guard...</li>
+<li><strong>Decorators</strong> - Modules, Controllers, Method, Body, Query Params, do more
+with less code !</li>
 </ul>
 <hr />
 <doc-anchor-target id="community">
@@ -277,21 +280,24 @@
         <span>Docs</span>
     </h2>
 </doc-anchor-target>
-<p>Documentation will be available at <a href="https://sorikairox.github.io/Danet/">https://sorikairox.github.io/Danet/</a></p>
+<p>Documentation will be available at
+<a href="https://sorikairox.github.io/Danet/">https://sorikairox.github.io/Danet/</a></p>
 <doc-anchor-target id="contributing">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#contributing">#</doc-anchor-trigger>
         <span>Contributing</span>
     </h2>
 </doc-anchor-target>
-<p>If you want to contribute, feel free ! Guidelines will be available <a href="https://github.com/Sorikairox/Danet/blob/main/CONTRIBUTING.md">here</a></p>
+<p>If you want to contribute, feel free ! Guidelines will be available
+<a href="https://github.com/Sorikairox/Danet/blob/main/CONTRIBUTING.md">here</a></p>
 <doc-anchor-target id="how-to-use">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#how-to-use">#</doc-anchor-trigger>
         <span>How to use</span>
     </h2>
 </doc-anchor-target>
-<p>If you are familiar with Nest (and if you&#x27;re not, <a href="https://nestjs.com/">go check it out</a>), you will not be lost.</p>
+<p>If you are familiar with Nest (and if you&#x27;re not,
+<a href="https://nestjs.com/">go check it out</a>), you will not be lost.</p>
 <p>In this simplified example, we are building a todo-app:</p>
 <doc-anchor-target id="modules">
     <h3>
@@ -301,8 +307,8 @@
 </doc-anchor-target>
 <div class="codeblock-wrapper"><doc-codeblock>
 <pre class="language-typescript"><code v-pre class="language-typescript">@Module({
-  controllers: [TodoController],
-  injectables: [TodoService]
+	controllers: [TodoController],
+	injectables: [TodoService],
 })
 class TodoModule {}</code></pre>
 </doc-codeblock></div>
@@ -315,34 +321,34 @@ class TodoModule {}</code></pre>
 <div class="codeblock-wrapper"><doc-codeblock>
 <pre class="language-typescript"><code v-pre class="language-typescript">@Controller('todo')
 class TodoController {
-  //todoService will be automatically injected at runtime with DI
-  constructor(private todoService: TodoService) {
-  }
+	//todoService will be automatically injected at runtime with DI
+	constructor(private todoService: TodoService) {
+	}
 
-  @Get('')
-  getTodos() {
-    return this.todoService.getTodos();
-  }
+	@Get('')
+	getTodos() {
+		return this.todoService.getTodos();
+	}
 
-  @Get(':id')
-  getOneTodo(@Param('id') todoId: string) {
-    return this.todoService.getOne(todoId);
-  }
+	@Get(':id')
+	getOneTodo(@Param('id') todoId: string) {
+		return this.todoService.getOne(todoId);
+	}
 
-  @Post('')
-  createTodo(@Body() todo) {
-    return this.todoService.createTodo(todo);
-  }
+	@Post('')
+	createTodo(@Body() todo) {
+		return this.todoService.createTodo(todo);
+	}
 
-  @Put('')
-  UpdateTodos(@Body() updatedTodos: Todo[]) {
-    return this.todoService.updateMany(updatedTodos);
-  }
+	@Put('')
+	UpdateTodos(@Body() updatedTodos: Todo[]) {
+		return this.todoService.updateMany(updatedTodos);
+	}
 
-  @Put(':id')
-  UpdateOneTodo(@Param('id') todoId: string, @Body() updatedTodo: Todo) {
-    return this.todoService.updateOneById(todoId, updatedTodo);
-  }
+	@Put(':id')
+	UpdateOneTodo(@Param('id') todoId: string, @Body() updatedTodo: Todo) {
+		return this.todoService.updateOneById(todoId, updatedTodo);
+	}
 }</code></pre>
 </doc-codeblock></div>
 <doc-anchor-target id="services">
@@ -355,15 +361,14 @@ class TodoController {
 <pre class="language-typescript"><code v-pre class="language-typescript">//By default, injectables are singleton
 @Injectable()
 class TodoService {
+	//create  your own DatabaseService to interact with db, it will  be injected
+	constructor(databaseService: DatabaseService) {
+	}
 
-  //create  your own DatabaseService to interact with db, it will  be injected
-  constructor(databaseService: DatabaseService) {
-  }
-
-  getTodos() {
-    this.databaseService.getMany();
-  }
-  // implement your logic
+	getTodos() {
+		this.databaseService.getMany();
+	}
+	// implement your logic
 }</code></pre>
 </doc-codeblock></div>
 <doc-anchor-target id="run-your-app">
@@ -373,7 +378,7 @@ class TodoService {
     </h3>
 </doc-anchor-target>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">const optionalPort = 4000; 
+<pre class="language-typescript"><code v-pre class="language-typescript">const optionalPort = 4000;
 const app = new DanetApplication();
 app.bootstrap(TodoModule);
 await app.listen(optionalPort); //default to 3000</code></pre>
