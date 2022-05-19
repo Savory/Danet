@@ -9,7 +9,7 @@ import {
 	InjectableConstructor,
 	TokenInjector,
 } from './injectable/constructor.ts';
-import { injectionData, SCOPE } from './injectable/decorator.ts';
+import { InjectableOption, injectionData, SCOPE } from './injectable/decorator.ts';
 import { InjectableHelper } from './injectable/helper.ts';
 
 export class Injector {
@@ -78,7 +78,7 @@ export class Injector {
 					} is not available in injection context. Did you provide it in module ?`,
 				);
 			}
-			const injectableMetadata = Reflect.getOwnMetadata(
+			const injectableMetadata = MetadataHelper.getMetadata<InjectableOption>(
 				injectionData,
 				DependencyType,
 			);
@@ -105,7 +105,7 @@ export class Injector {
 		const actualKey = Type instanceof TokenInjector ? Type.token : Type;
 		const dependencies = this.getDependencies(actualType);
 		this.resolveDependencies(dependencies, actualType);
-		const injectableMetadata = Reflect.getOwnMetadata(injectionData, Type);
+		const injectableMetadata = MetadataHelper.getMetadata<InjectableOption>(injectionData, Type);
 		const resolvedDependencies = dependencies.map((Dep, idx) =>
 			this.resolved.get(this.getParamToken(actualType, idx) ?? Dep)!()
 		);
@@ -152,7 +152,7 @@ export class Injector {
 	}
 
 	private getDependencies(Type: Constructor): Constructor[] {
-		return Reflect.getOwnMetadata('design:paramtypes', Type) || [];
+		return MetadataHelper.getMetadata('design:paramtypes', Type) || [];
 	}
 
 	private async executeOnAppBoostrapHook(

@@ -14,7 +14,7 @@ export const createParamDecorator = (resolver: Resolver) =>
 			parameterIndex: number,
 		) => {
 			const argumentsResolverMap: Map<number, Resolver> =
-				Reflect.getOwnMetadata(
+				MetadataHelper.getMetadata(
 					argumentResolverFunctionsMetadataKey,
 					target.constructor,
 					propertyKey,
