@@ -6,7 +6,7 @@ import { Constructor } from '../utils/constructor.ts';
 import { ModuleConstructor } from './constructor.ts';
 
 export class ModuleOptions {
-  imports?: ModuleConstructor[] = [];
+  imports?: Array<ModuleConstructor> = [];
   controllers: ControllerConstructor[] = [];
   injectables: Array<InjectableConstructor | TokenInjector> = [];
 }

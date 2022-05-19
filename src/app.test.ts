@@ -1,13 +1,14 @@
 import {
   assertEquals,
   assertInstanceOf,
-  assertNotEquals,
+  assertNotEquals, assertRejects,
   assertThrows
 } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { Route } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { DanetApplication } from './app.ts';
 import { GLOBAL_GUARD } from './guard/constants.ts';
 import { AuthGuard } from './guard/interface.ts';
+import { OnAppBootstrap } from './hook/interfaces.ts';
 import { Inject } from './injector/decorator.ts';
 import { TokenInjector } from './injector/injectable/constructor.ts';
 import { Controller, Get, Post } from './router/controller/decorator.ts';
@@ -30,13 +31,16 @@ Deno.test('app init', async (testContext) => {
   }
 
   @Injectable({ scope: SCOPE.GLOBAL })
-  class Child2 {
-
+  class InjectableWithHook implements OnAppBootstrap {
+    public appBoostrapCalled = false;
+    onAppBootstrap() {
+      this.appBoostrapCalled = true;
+    }
   }
 
   @Injectable({ scope: SCOPE.REQUEST })
   class Child1 {
-    constructor(public child: Child2) {
+    constructor(public child: InjectableWithHook) {
     }
 
     sayHelloWorld() {
@@ -66,9 +70,14 @@ Deno.test('app init', async (testContext) => {
     }
   }
   @Controller('second-controller/')
-  class SecondController {
+  class SingletonControllerWithHook implements OnAppBootstrap {
     public id = crypto.randomUUID();
-    constructor(public child2: Child2, @Inject('DB_SERVICE') public dbService: IDBService) {
+    public appBoostrapCalled = false;
+    onAppBootstrap(): void | Promise<void> {
+      this.appBoostrapCalled = true;
+    }
+
+    constructor(public child2: InjectableWithHook, @Inject('DB_SERVICE') public dbService: IDBService) {
     }
     @Get('')
     getMethod() {
@@ -82,15 +91,15 @@ Deno.test('app init', async (testContext) => {
   }
 
   @Module({
-    controllers: [SecondController],
-    injectables: [Child2, new TokenInjector(DatabaseService, 'DB_SERVICE')]
+    controllers: [SingletonControllerWithHook],
+    injectables: [InjectableWithHook, new TokenInjector(DatabaseService, 'DB_SERVICE')]
   })
   class SecondModule {}
 
   const firstModuleOption: ModuleOptions = {
     imports: [SecondModule],
     controllers: [FirstController],
-    injectables: [Child1, Child2, new TokenInjector(GlobalGuard, GLOBAL_GUARD)]
+    injectables: [Child1, InjectableWithHook, new TokenInjector(GlobalGuard, GLOBAL_GUARD)]
   };
   @Module(firstModuleOption)
   class FirstModule {}
@@ -102,7 +111,7 @@ Deno.test('app init', async (testContext) => {
   class ModuleWithMissingProvider {}
 
   const app = new DanetApplication();
-  app.bootstrap(FirstModule);
+  await app.bootstrap(FirstModule);
 
   function expectControllerRouterToExist(keys: IterableIterator<Route>, controllerEndpoint: string) {
     const firstRouter = keys.next().value;
@@ -123,14 +132,14 @@ Deno.test('app init', async (testContext) => {
     const firstController = app.get(FirstController)!;
     assertInstanceOf(firstController.child1, Child1);
     assertEquals(firstController.child1.sayHelloWorld(), 'helloWorld');
-    const secondController = app.get(SecondController)!;
-    assertInstanceOf(secondController.child2, Child2);
+    const secondController = app.get(SingletonControllerWithHook)!;
+    assertInstanceOf(secondController.child2, InjectableWithHook);
     assertInstanceOf(secondController.dbService, DatabaseService);
   });
 
   await testContext.step('controllers are singleton if none of their depency is scoped', () => {
-    const firstInstance = app.get<SecondController>(SecondController)!;
-    const secondInstance = app.get<SecondController>(SecondController)!;
+    const firstInstance = app.get<SingletonControllerWithHook>(SingletonControllerWithHook)!;
+    const secondInstance = app.get<SingletonControllerWithHook>(SingletonControllerWithHook)!;
     assertEquals(firstInstance.id, secondInstance.id);
   });
 
@@ -147,9 +156,17 @@ Deno.test('app init', async (testContext) => {
 
   await testContext.step('it throws if controllers dependencies are not available in context or globally', () => {
     const failingApp = new DanetApplication();
-    assertThrows(() => failingApp.bootstrap(ModuleWithMissingProvider));
+    assertRejects(() => failingApp.bootstrap(ModuleWithMissingProvider));
   });
 
-  await testContext.step('it inject GLOBAL_GUARD and router us eit', () => {
+  await testContext.step('call global injectables onAppBootstrap hook', () => {
+    const injectableWithHook = app.get(InjectableWithHook);
+    assertEquals(injectableWithHook.appBoostrapCalled, true);
   });
+
+  await testContext.step('call global controller onAppBootstrap hook', () => {
+    const controllerWithHook = app.get(SingletonControllerWithHook);
+    assertEquals(controllerWithHook.appBoostrapCalled, true);
+  });
+
 });

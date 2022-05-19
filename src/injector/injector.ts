@@ -6,7 +6,8 @@ import { ControllerConstructor } from '../router/controller/constructor.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { getInjectionTokenMetadataKey } from './decorator.ts';
 import { InjectableConstructor, TokenInjector } from './injectable/constructor.ts';
-import { dependencyInjectionMetadataKey, SCOPE } from './injectable/decorator.ts';
+import { injectionData, SCOPE } from './injectable/decorator.ts';
+import { InjectableHelper } from './injectable/helper.ts';
 
 export class Injector {
   private resolved = new Map<Constructor | string, () => unknown>();
@@ -22,12 +23,13 @@ export class Injector {
     throw Error(`Type ${Type} not injected`);
   }
 
-  public bootstrap(ModuleType: ModuleConstructor) {
+  public async bootstrap(ModuleType: ModuleConstructor) {
     // deno-lint-ignore no-explicit-any
     const { controllers, injectables } = MetadataHelper.getMetadata<any>(moduleMetadataKey, ModuleType);
       this.addAvailableInjectable(injectables);
       this.registerInjectables(injectables);
       this.resolveControllers(controllers);
+      await this.executeOnAppBoostrapHook(controllers, injectables);
   }
 
   public addAvailableInjectable(injectables: InjectableConstructor[]) {
@@ -52,7 +54,7 @@ export class Injector {
     dependencies.forEach((DependencyType, idx) => {
       if (!this.resolved.has(this.getParamToken(Type, idx) ?? DependencyType))
         throw new Error(`${Type.name} dependency ${this.getParamToken(Type, idx) ?? DependencyType.name} is not available in injection context. Did you provide it in module ?`);
-      const injectableMetadata = Reflect.getOwnMetadata(dependencyInjectionMetadataKey, DependencyType);
+      const injectableMetadata = Reflect.getOwnMetadata(injectionData, DependencyType);
       if (injectableMetadata?.scope === SCOPE.REQUEST) {
         canBeSingleton = false;
       }
@@ -71,14 +73,14 @@ export class Injector {
     const actualKey = Type instanceof TokenInjector ? Type.token : Type
     const dependencies = this.getDependencies(actualType);
     this.resolveDependencies(dependencies, actualType);
-    const injectableMetadata = Reflect.getOwnMetadata(dependencyInjectionMetadataKey, Type);
+    const injectableMetadata = Reflect.getOwnMetadata(injectionData, Type);
     const resolvedDependencies = dependencies.map((Dep, idx) => this.resolved.get(this.getParamToken(actualType, idx) ?? Dep)!());
     if (injectableMetadata?.scope === SCOPE.GLOBAL) {
       const instance = new actualType(...resolvedDependencies);
       this.resolved.set(actualKey, () => instance);
     } else {
       if (ParentConstructor)
-        MetadataHelper.setMetadata(dependencyInjectionMetadataKey, { scope: SCOPE.REQUEST }, ParentConstructor);
+        MetadataHelper.setMetadata(injectionData, { scope: SCOPE.REQUEST }, ParentConstructor);
       this.resolved.set(actualKey, () => new actualType(...resolvedDependencies));
     }
   }
@@ -101,5 +103,22 @@ export class Injector {
 
   private getDependencies(Type: Constructor): Constructor[] {
     return Reflect.getOwnMetadata("design:paramtypes", Type) || [];
+  }
+
+  private async executeOnAppBoostrapHook(Controllers: ControllerConstructor[], injectables: Array<InjectableConstructor | TokenInjector>) {
+    for (const controller of Controllers) {
+      if (InjectableHelper.isGlobal(controller)) {
+        // deno-lint-ignore no-explicit-any
+        await this.get<any>(controller).onAppBootstrap?.();
+      }
+    }
+    for (const injectable of injectables) {
+      const actualType = injectable instanceof TokenInjector ? injectable.useClass : injectable;
+      const actualKey = injectable instanceof TokenInjector ? injectable.token : injectable
+      if (InjectableHelper.isGlobal(actualType)) {
+        // deno-lint-ignore no-explicit-any
+        await this.get<any>(actualKey).onAppBootstrap?.();
+      }
+    }
   }
 }

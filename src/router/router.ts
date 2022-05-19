@@ -30,7 +30,7 @@ export class DanetRouter {
     ["PUT", this.router.put],
   ]);
   public createRoute(handlerName: string, Controller: Constructor<unknown>, basePath: string) {
-    if (handlerName === 'constructor') return;
+    if (handlerName === 'constructor' || handlerName === 'onAppBootstrap') return;
     const handler = Controller.prototype[handlerName];
     let endpoint = MetadataHelper.getMetadata<string>('endpoint', handler);
 

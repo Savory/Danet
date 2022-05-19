@@ -19,12 +19,13 @@ export class DanetApplication {
     return this.injector.get(Type);
   }
 
-  bootstrap(Module: Constructor) {
-    const metadata: ModuleOptions = MetadataHelper.getMetadata(moduleMetadataKey, Module);
-    metadata.imports?.forEach((NestedModule) => {
-      this.bootstrap(NestedModule);
-    })
-    this.injector.bootstrap(Module);
+  async bootstrap(Module: Constructor) {
+    const metadata: ModuleOptions = MetadataHelper.getMetadata<ModuleOptions>(moduleMetadataKey, Module);
+      for (const module in metadata?.imports) {
+        // deno-lint-ignore no-explicit-any
+        await this.bootstrap(metadata.imports[module as any]);
+      }
+    await this.injector.bootstrap(Module);
     this.registerControllers(metadata.controllers);
   }
 
@@ -44,7 +45,6 @@ export class DanetApplication {
       this.DanetRouter.createRoute(methodName, Controller, basePath);
     });
   }
-
   get router(): Router {
     return this.DanetRouter.router;
   }
