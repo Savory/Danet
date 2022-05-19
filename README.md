@@ -39,7 +39,7 @@ Join [our discord](https://discord.gg/Q7ZHuDPgjA)
 | Create documentation                                                                | In progress ⌛ (does it even end ?) |
 | Logger                                                                              | Waiting                            |
 | Handle HEAD                                                             | In progress ⌛                            |
-| Starter repo                                                             | In progress ⌛                            |
+| Starter repo                                                             | Waiting                          |
 | Anything we have in mind                                                            | Waiting                            |
 
 ## Docs
