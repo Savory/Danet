@@ -9,7 +9,7 @@ import { Route } from 'https://deno.land/x/oak@v9.0.1/router.ts';
 import { DanetApplication } from './app.ts';
 import { GLOBAL_GUARD } from './guard/constants.ts';
 import { AuthGuard } from './guard/interface.ts';
-import { OnAppBootstrap } from './hook/interfaces.ts';
+import { OnAppBootstrap, OnAppClose } from './hook/interfaces.ts';
 import { Inject } from './injector/decorator.ts';
 import { TokenInjector } from './injector/injectable/constructor.ts';
 import { Controller, Get, Post } from './router/controller/decorator.ts';
@@ -31,10 +31,14 @@ Deno.test('app init', async (testContext) => {
 	}
 
 	@Injectable({ scope: SCOPE.GLOBAL })
-	class InjectableWithHook implements OnAppBootstrap {
+	class InjectableWithHook implements OnAppBootstrap, OnAppClose {
 		public appBoostrapCalled = false;
+		public appCloseCalled = false;
 		onAppBootstrap() {
 			this.appBoostrapCalled = true;
+		}
+		onAppClose() {
+			this.appCloseCalled = true;
 		}
 	}
 
@@ -68,11 +72,15 @@ Deno.test('app init', async (testContext) => {
 		}
 	}
 	@Controller('second-controller/')
-	class SingletonControllerWithHook implements OnAppBootstrap {
+	class SingletonControllerWithHook implements OnAppBootstrap, OnAppClose {
 		public id = crypto.randomUUID();
 		public appBoostrapCalled = false;
+		public appCloseCalled = false;
 		onAppBootstrap(): void | Promise<void> {
 			this.appBoostrapCalled = true;
+		}
+		onAppClose() {
+			this.appCloseCalled = true;
 		}
 
 		constructor(
@@ -192,5 +200,13 @@ Deno.test('app init', async (testContext) => {
 	await testContext.step('call global controller onAppBootstrap hook', () => {
 		const controllerWithHook = app.get(SingletonControllerWithHook);
 		assertEquals(controllerWithHook.appBoostrapCalled, true);
+	});
+
+	await testContext.step('call injectables and controllers onAppClosehook when app is closed', async () => {
+		await app.close();
+		const injectableWithHook = app.get(SingletonControllerWithHook);
+		const controllerWithHook = app.get(InjectableWithHook);
+		assertEquals(controllerWithHook.appBoostrapCalled, true);
+		assertEquals(injectableWithHook.appBoostrapCalled, true);
 	});
 });

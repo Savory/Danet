@@ -28,6 +28,10 @@ export class DanetApplication {
 		this.registerControllers(metadata.controllers);
 	}
 
+	async close() {
+		await this.injector.executeAppCloseHook();
+	}
+
 	listen(port = 3000) {
 		this.app.use(this.DanetRouter.router.routes());
 		return this.app.listen({ port });

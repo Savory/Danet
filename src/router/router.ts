@@ -40,7 +40,7 @@ export class DanetRouter {
 		Controller: Constructor<unknown>,
 		basePath: string,
 	) {
-		if (handlerName === 'constructor' || handlerName === 'onAppBootstrap') {
+		if (handlerName === 'constructor' || handlerName === 'onAppBootstrap' || handlerName === 'onAppClose') {
 			return;
 		}
 		const handler = Controller.prototype[handlerName];

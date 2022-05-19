@@ -27,6 +27,16 @@ export class Injector {
 		throw Error(`Type ${Type} not injected`);
 	}
 
+	public async executeAppCloseHook() {
+		for (const [_, value] of this.resolved) {
+			// deno-lint-ignore no-explicit-any
+			const instance: any = value();
+			if (InjectableHelper.isGlobal(instance?.constructor)) {
+				await instance?.onAppBootstrap?.();
+			}
+		}
+	}
+
 	public async bootstrap(ModuleType: ModuleConstructor) {
 		// deno-lint-ignore no-explicit-any
 		const { controllers, injectables } = MetadataHelper.getMetadata<any>(
