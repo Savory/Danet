@@ -28,11 +28,11 @@ export class DanetApplication {
 		}
 		await this.injector.bootstrap(Module);
 		this.registerControllers(metadata.controllers);
-		await this.hookExecutor.executeAppBootstrapHook();
+		await this.hookExecutor.executeHookForEveryInjectable('onAppBootstrap');
 	}
 
 	async close() {
-		await this.hookExecutor.executeAppCloseHook();
+		await this.hookExecutor.executeHookForEveryInjectable('onAppClose');
 	}
 
 	listen(port = 3000) {
