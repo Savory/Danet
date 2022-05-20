@@ -19,6 +19,10 @@
 			"exclude": ["node_modules/", "coverage/"]
 		}
 	},
+	"compilerOptions": {
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true
+},
 	"tasks": {
 		"test": "deno test --allow-net -c tsconfig.json -A --unstable --coverage=coverage spec"
 	}

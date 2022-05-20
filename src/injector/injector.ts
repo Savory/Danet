@@ -1,7 +1,6 @@
-import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { ModuleConstructor } from '../module/constructor.ts';
-import { moduleMetadataKey, ModuleOptions } from '../module/decorator.ts';
+import { moduleMetadataKey } from '../module/decorator.ts';
 import { ControllerConstructor } from '../router/controller/constructor.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { getInjectionTokenMetadataKey } from './decorator.ts';

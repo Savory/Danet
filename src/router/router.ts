@@ -1,6 +1,6 @@
-import { State } from 'https://deno.land/x/oak@v9.0.1/application.ts';
-import { Context } from 'https://deno.land/x/oak@v9.0.1/context.ts';
-import { Router } from 'https://deno.land/x/oak@v9.0.1/router.ts';
+import { State } from 'https://deno.land/x/oak@v10.5.1/application.ts';
+import { Context } from 'https://deno.land/x/oak@v10.5.1/context.ts';
+import { Router } from 'https://deno.land/x/oak@v10.5.1/router.ts';
 
 import { FilterExecutor } from '../exception/filter/executor.ts';
 import { HTTP_STATUS } from '../exception/http/enum.ts';
@@ -57,7 +57,7 @@ export class DanetRouter {
 		const httpMethod = MetadataHelper.getMetadata<string>('method', handler);
 		const routerFn = this.methodsMap.get(httpMethod);
 		if (!routerFn) {
-			throw new Error(`The method ${httpMethod} can not be handled by.`);
+			throw new Error(`The method "${httpMethod}" can not be handled by "${basePath}" of controller "${Controller}".`);
 		}
 
 		routerFn.call(this.router, path, this.handleRoute(Controller, handler));
