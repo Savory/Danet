@@ -1,5 +1,45 @@
 import { assertEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
-import { app } from './app.ts';
+import { DanetApplication } from '../src/app.ts';
+import { Module } from '../src/module/decorator.ts';
+import {
+	Controller,
+	Delete,
+	Get,
+	Post,
+	Put,
+} from '../src/router/controller/decorator.ts';
+
+@Controller('nice-controller')
+class SimpleController {
+	@Get('/')
+	simpleGet() {
+		return 'OK GET';
+	}
+
+	@Post('/')
+	simplePost() {
+		return 'OK POST';
+	}
+
+	@Put('/')
+	simplePut() {
+		return 'OK PUT';
+	}
+
+	@Delete('/')
+	simpleDelete() {
+		return 'OK DELETE';
+	}
+}
+
+@Module({
+	controllers: [SimpleController],
+})
+class MyModule {}
+
+const app = new DanetApplication();
+await app.init(MyModule);
+
 
 Deno.test('HTTP Methods', async (ctx) => {
 	const nonBlockingListen = new Promise(async (resolve) => {
