@@ -38,22 +38,21 @@ class SimpleController {
 class MyModule {}
 
 const app = new DanetApplication();
-await app.init(MyModule);
 
+for (let method of ['GET', 'POST', 'PUT', 'DELETE']) {
+	Deno.test(method, async (ctx) => {
+		await app.init(MyModule);
+		const nonBlockingListen = new Promise(async (resolve) => {
+			await app.listen(3000);
+			resolve(true);
+		});
 
-Deno.test('HTTP Methods', async (ctx) => {
-	const nonBlockingListen = new Promise(async (resolve) => {
-		await app.listen(3000);
-		resolve(true);
+		const res = await fetch('http://localhost:3000/nice-controller', {
+			method: method,
+		});
+		const text = await res.text();
+		assertEquals(text, `OK ${method}`);
+		await app.close();
+		await nonBlockingListen;
 	});
-
-	for (let method of ['GET', 'POST', 'PUT']) {
-			const res = await fetch('http://localhost:3000/nice-controller', {
-				method: method,
-			});
-			const text = await res.text();
-			assertEquals(text, `OK ${method}`);
-	}
-	await app.close();
-	await nonBlockingListen;
-});
+}
