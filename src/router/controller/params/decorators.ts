@@ -1,5 +1,5 @@
-import { getQuery } from 'https://deno.land/x/oak@v9.0.1/helpers.ts';
-import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
+import { getQuery } from 'https://deno.land/x/oak@v10.5.1/helpers.ts';
+import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-1/mod.ts';
 import { MetadataHelper } from '../../../metadata/helper.ts';
 import { HttpContext } from '../../router.ts';
 
@@ -37,13 +37,22 @@ export const Res = createParamDecorator((context: HttpContext) => {
 });
 
 export const Body = (prop?: string) =>
-	createParamDecorator((context: HttpContext) => {
-		if (prop) {
-			// deno-lint-ignore no-explicit-any
-			return (context.request.body as any)[prop];
-		} else {
-			return context.request.body;
+	createParamDecorator(async (context: HttpContext) => {
+		let body;
+		try {
+			if (context.request.body instanceof Function) {
+				body = await context.request.body()?.value;
+			} else {
+				body = await context.request.body;
+			}
+		} catch {
+			return null;
 		}
+
+		if (!body) {
+			return null;
+		}
+		return prop ? body[prop] : body;
 	})();
 
 export const Query = (prop?: string) =>

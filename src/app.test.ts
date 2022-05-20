@@ -3,9 +3,8 @@ import {
 	assertInstanceOf,
 	assertNotEquals,
 	assertRejects,
-	assertThrows,
 } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
-import { Route } from 'https://deno.land/x/oak@v9.0.1/router.ts';
+import { Route } from 'https://deno.land/x/oak@v10.5.1/router.ts';
 import { DanetApplication } from './app.ts';
 import { GLOBAL_GUARD } from './guard/constants.ts';
 import { AuthGuard } from './guard/interface.ts';
@@ -128,7 +127,7 @@ Deno.test('app init', async (testContext) => {
 	await app.bootstrap(FirstModule);
 
 	function expectControllerRouterToExist(
-		keys: IterableIterator<Route>,
+		keys: IterableIterator<Route<string>>,
 		controllerEndpoint: string,
 	) {
 		const firstRouter = keys.next().value;

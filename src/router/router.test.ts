@@ -4,7 +4,7 @@ import {
 	assertEquals,
 	assertNotEquals,
 } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
-import { Request, Response } from 'https://deno.land/x/oak@v9.0.1/mod.ts';
+import { Request, Response } from 'https://deno.land/x/oak@v10.5.1/mod.ts';
 import { Catch, UseFilter } from '../exception/filter/decorator.ts';
 import { ExceptionFilter } from '../exception/filter/interface.ts';
 import { GLOBAL_GUARD } from '../guard/constants.ts';
@@ -280,7 +280,6 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
 			MyController,
 			MyController.prototype.throwingAuthGuardRoute,
 		)(context as any);
-		console.log(context.response);
 		assertEquals(context.response.status, 403);
 		assertEquals(context.response.body, {
 			message: 'Forbidden',

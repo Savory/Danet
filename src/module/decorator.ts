@@ -1,4 +1,4 @@
-import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
+import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-1/mod.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { ControllerConstructor } from '../router/controller/constructor.ts';
 import {
