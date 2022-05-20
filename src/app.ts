@@ -1,3 +1,4 @@
+import { ServerRequest } from 'https://deno.land/std@0.105.0/http/server.ts';
 import { Application, Router } from 'https://deno.land/x/oak@v9.0.1/mod.ts';
 import { HookExecutor } from './hook/executor.ts';
 import { hookName } from './hook/interfaces.ts';
@@ -13,6 +14,7 @@ export class DanetApplication {
 	private injector = new Injector();
 	private hookExecutor = new HookExecutor(this.injector);
 	public DanetRouter = new DanetRouter(this.injector);
+	private controller: AbortController = new AbortController();
 
 	get<T>(Type: Constructor<T> | string): T {
 		return this.injector.get(Type);
@@ -28,19 +30,27 @@ export class DanetApplication {
 			await this.bootstrap(metadata.imports[module as any]);
 		}
 		await this.injector.bootstrap(Module);
-		this.registerControllers(metadata.controllers);
+		if (metadata.controllers) {
+			this.registerControllers(metadata.controllers);
+		}
 		await this.hookExecutor.executeHookForEveryInjectable(
 			hookName.APP_BOOTSTRAP,
 		);
 	}
 
+	async init(Module: Constructor) {
+		await this.bootstrap(Module);
+		this.app.use(this.DanetRouter.router.routes());
+	}
+
 	async close() {
 		await this.hookExecutor.executeHookForEveryInjectable(hookName.APP_CLOSE);
+		this.controller.abort();
 	}
 
 	listen(port = 3000) {
-		this.app.use(this.DanetRouter.router.routes());
-		return this.app.listen({ port });
+		const { signal } = this.controller;
+		return this.app.listen({ port, signal });
 	}
 
 	registerControllers(Controllers: Constructor[]) {

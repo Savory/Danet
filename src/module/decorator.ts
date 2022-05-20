@@ -10,8 +10,8 @@ import { ModuleConstructor } from './constructor.ts';
 
 export class ModuleOptions {
 	imports?: Array<ModuleConstructor> = [];
-	controllers: ControllerConstructor[] = [];
-	injectables: Array<InjectableConstructor | TokenInjector> = [];
+	controllers?: ControllerConstructor[] = [];
+	injectables?: Array<InjectableConstructor | TokenInjector> = [];
 }
 
 export const moduleMetadataKey = 'module';

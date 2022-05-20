@@ -126,6 +126,6 @@ class TodoService {
 ```ts
 const optionalPort = 4000;
 const app = new DanetApplication();
-app.bootstrap(TodoModule);
+app.init(TodoModule);
 await app.listen(optionalPort); //default to 3000
 ```

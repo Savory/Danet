@@ -20,6 +20,6 @@
 		}
 	},
 	"tasks": {
-		"test": "deno test -c tsconfig.json src"
+		"test": "deno test --allow-net -c tsconfig.json spec"
 	}
 }

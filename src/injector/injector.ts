@@ -41,9 +41,13 @@ export class Injector {
 			moduleMetadataKey,
 			ModuleType,
 		);
-		this.addAvailableInjectable(injectables);
-		this.registerInjectables(injectables);
-		this.resolveControllers(controllers);
+		if (injectables) {
+			this.addAvailableInjectable(injectables);
+			this.registerInjectables(injectables);
+		}
+		if (controllers) {
+			this.resolveControllers(controllers);
+		}
 		await this.executeOnAppBoostrapHook(controllers, injectables);
 	}
 
@@ -157,25 +161,29 @@ export class Injector {
 	}
 
 	private async executeOnAppBoostrapHook(
-		Controllers: ControllerConstructor[],
-		injectables: Array<InjectableConstructor | TokenInjector>,
+		Controllers?: ControllerConstructor[],
+		injectables?: Array<InjectableConstructor | TokenInjector>,
 	) {
-		for (const controller of Controllers) {
-			if (InjectableHelper.isGlobal(controller)) {
-				// deno-lint-ignore no-explicit-any
-				await this.get<any>(controller).onAppBootstrap?.();
+		if (Controllers) {
+			for (const controller of Controllers) {
+				if (InjectableHelper.isGlobal(controller)) {
+					// deno-lint-ignore no-explicit-any
+					await this.get<any>(controller).onAppBootstrap?.();
+				}
 			}
 		}
-		for (const injectable of injectables) {
-			const actualType = injectable instanceof TokenInjector
-				? injectable.useClass
-				: injectable;
-			const actualKey = injectable instanceof TokenInjector
-				? injectable.token
-				: injectable;
-			if (InjectableHelper.isGlobal(actualType)) {
-				// deno-lint-ignore no-explicit-any
-				await this.get<any>(actualKey).onAppBootstrap?.();
+		if (injectables) {
+			for (const injectable of injectables) {
+				const actualType = injectable instanceof TokenInjector
+					? injectable.useClass
+					: injectable;
+				const actualKey = injectable instanceof TokenInjector
+					? injectable.token
+					: injectable;
+				if (InjectableHelper.isGlobal(actualType)) {
+					// deno-lint-ignore no-explicit-any
+					await this.get<any>(actualKey).onAppBootstrap?.();
+				}
 			}
 		}
 	}

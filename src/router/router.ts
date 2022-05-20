@@ -52,7 +52,7 @@ export class DanetRouter {
 
 		basePath = trimSlash(basePath);
 		endpoint = trimSlash(endpoint);
-		const path = basePath + (endpoint ? '/' + endpoint : '');
+		const path = '/' + basePath + (endpoint ? '/' + endpoint : '');
 
 		const httpMethod = MetadataHelper.getMetadata<string>('method', handler);
 		const routerFn = this.methodsMap.get(httpMethod);

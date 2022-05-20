@@ -16,13 +16,13 @@ class Child1 {
 	}
 }
 
-@Controller('')
+@Controller('/my-controller-path')
 class FirstController {
-	constructor(public child1: Child1, public child2: Child2) {
+	constructor() {
 	}
 	@Get('')
 	getMethod() {
-		return this.child1.getHelloWorld();
+		return 'OK';
 	}
 
 	@Post('post')
@@ -31,13 +31,11 @@ class FirstController {
 }
 
 @Module({
-	imports: [],
 	controllers: [FirstController],
-	injectables: [Child1, Child2],
 })
 class FirstModule {}
 
 const app = new DanetApplication();
-app.bootstrap(FirstModule);
-await app.listen();
+await app.init(FirstModule);
+await app.listen(3000);
 console.log('listening on port 3000');

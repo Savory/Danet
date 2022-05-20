@@ -5,23 +5,23 @@ import {
 	assertNotEquals,
 } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { Request, Response } from 'https://deno.land/x/oak@v9.0.1/mod.ts';
-import { Catch, UseFilter } from '../exception/filter/decorator.ts';
-import { ExceptionFilter } from '../exception/filter/interface.ts';
-import { GLOBAL_GUARD } from '../guard/constants.ts';
-import { UseGuard } from '../guard/decorator.ts';
-import { AuthGuard } from '../guard/interface.ts';
-import { TokenInjector } from '../injector/injectable/constructor.ts';
-import { Injectable } from '../injector/injectable/decorator.ts';
-import { Injector } from '../injector/injector.ts';
-import { Controller, Get, Post } from './controller/decorator.ts';
+import { Catch, UseFilter } from '../src/exception/filter/decorator.ts';
+import { ExceptionFilter } from '../src/exception/filter/interface.ts';
+import { GLOBAL_GUARD } from '../src/guard/constants.ts';
+import { UseGuard } from '../src/guard/decorator.ts';
+import { AuthGuard } from '../src/guard/interface.ts';
+import { TokenInjector } from '../src/injector/injectable/constructor.ts';
+import { Injectable } from '../src/injector/injectable/decorator.ts';
+import { Injector } from '../src/injector/injector.ts';
+import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
 import {
 	Body,
 	Param,
 	Query,
 	Req,
 	Res,
-} from './controller/params/decorators.ts';
-import { DanetRouter, HttpContext } from './router.ts';
+} from '../src/router/controller/params/decorators.ts';
+import { DanetRouter, HttpContext } from '../src/router/router.ts';
 
 Deno.test('router.handleRoute inject params into method', async (testContext) => {
 	class CustomException extends Error {
