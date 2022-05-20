@@ -167,14 +167,6 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
 		request: { url: { searchParams }, body: { whatisit: 'testbody' } },
 	};
 
-	await testContext.step('@Res decorator works', async () => {
-		await router.handleRoute(
-			MyController,
-			MyController.prototype.testResFunction,
-		)(context as any);
-		assertEquals(context.response.body, { myvalue: 'a nice value' });
-	});
-
 	await testContext.step('@Req decorator works', async () => {
 		await router.handleRoute(
 			MyController,

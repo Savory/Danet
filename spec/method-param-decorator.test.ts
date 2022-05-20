@@ -40,7 +40,7 @@ class MyModule {}
 
 const app = new DanetApplication();
 
-Deno.test('@Res decorator', async (ctx) => {
+Deno.test('@Res and @Query decorator', async (ctx) => {
 	await app.init(MyModule);
 	const nonBlockingListen = new Promise(async (resolve) => {
 		await app.listen(3000);
