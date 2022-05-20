@@ -22,5 +22,8 @@
 	"compilerOptions": {
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true
+},
+	"tasks": {
+		"test": "deno test -c tsconfig.json src"
 	}
 }
