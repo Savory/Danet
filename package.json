@@ -10,7 +10,6 @@
 		}
 	},
 	"scripts": {
-		"prepare": "husky install",
-		"test": "deno test -c tsconfig.json src"
+		"prepare": "husky install"
 	}
 }

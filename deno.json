@@ -18,5 +18,8 @@
 		"files": {
 			"exclude": ["node_modules/"]
 		}
+	},
+	"tasks": {
+		"test": "deno test -c tsconfig.json src"
 	}
 }
