@@ -20,6 +20,6 @@
 		}
 	},
 	"tasks": {
-		"test": "deno test --allow-net -c tsconfig.json spec"
+		"test": "deno test --allow-net -c tsconfig.json -A --unstable --coverage=coverage spec"
 	}
 }

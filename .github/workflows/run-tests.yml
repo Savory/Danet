@@ -39,7 +39,7 @@ jobs:
         run: deno lint
 
       - name: Run tests
-        run: deno test --allow-net -c tsconfig.json -A --unstable --coverage=coverage spec
+        run: deno task test
       - name: Create coverage report
         run: deno --unstable coverage ./coverage --lcov > coverage.lcov # create coverage report
       - name: Collect coverage
