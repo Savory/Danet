@@ -2,17 +2,18 @@ import { assertEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { app } from './app.ts';
 
 Deno.test('HTTP Methods', async (ctx) => {
-	const running = new Promise(async (resolve) => {
-		const list = app.listen(3000);
-		await list;
+	const nonBlockingListen = new Promise(async (resolve) => {
+		await app.listen(3000);
 		resolve(true);
 	});
 
-	const res = await fetch('http://localhost:3000/nice-controller', {
-		method: 'GET',
-	});
-	assertEquals(await res.text(), 'OK GET');
-
+	for (let method of ['GET', 'POST', 'PUT']) {
+			const res = await fetch('http://localhost:3000/nice-controller', {
+				method: method,
+			});
+			const text = await res.text();
+			assertEquals(text, `OK ${method}`);
+	}
 	await app.close();
-	await running;
+	await nonBlockingListen;
 });
