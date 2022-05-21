@@ -20,31 +20,6 @@ Danet - [Deno](https://github.com/denoland) web framework.
 
 Join [our discord](https://discord.gg/tC5qtUJaKP)
 
-## Roadmap
-
-| Task                                                                             | State                              |
-| -------------------------------------------------------------------------------- | ---------------------------------- |
-| Controllers and routes creation with Decorators (GET, PUT, DELETE, POST, PATCH)  | Complete ✅                         |
-| Module with dependency injection                                                 | Complete ✅                         |
-| Request, Response and Body injection in Routes via decorators                    | Complete ✅                         |
-| Route parameter decorator factory to easily create param decorators (even async) | Complete ✅                         |
-| Url params injection in Controllers with Decorators                              | Complete ✅                         |
-| Guards implementations for controllers and methods                               | Complete ✅                         |
-| Global guard                                                                     | Complete ✅                         |
-| `@Inject('token')` to use with interfaces                                        | Complete ✅                         |
-| Exceptions Filters that catch all errors and `@UseFilters` decorator             | Complete ✅                         |
-| Exceptions Filters that catch only a specific type of error                      | In progress ⌛ (ETA 15 May)         |
-| `OnAppBootstrap` Lifecycle hook for injectables and controllers                  | In progress ⌛ (ETA 25 May)         |
-| Create documentation                                                             | In progress ⌛ (does it even end ?) |
-| Logger                                                                           | Waiting                            |
-| Handle OPTIONS and HEAD                                                          | Waiting                            |
-| Anything we have in mind                                                         | Waiting                            |
-
-## Docs
-
-Documentation will be available at
-[https://sorikairox.github.io/Danet/](https://sorikairox.github.io/Danet/)
-
 ## Contributing
 
 If you want to contribute, feel free ! Guidelines will be available

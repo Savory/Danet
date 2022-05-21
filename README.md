@@ -36,8 +36,7 @@ Join [our discord](https://discord.gg/Q7ZHuDPgjA)
 | Exceptions Filters that catch only a specific type of error                      | Complete ✅                         |
 | `OnAppClose` and `OnAppBootstrap` Lifecycle hook for injectables and controllers | Complete ✅                         |
 | Create documentation                                                             | In progress ⌛ (does it even end ?) |
-| Logger                                                                           | Waiting                            |
-| Handle HEAD                                                                      | In progress ⌛                      |
+| Logger                                                                           | In progress ⌛                            |
 | Starter repo                                                                     | Waiting                            |
 | Anything we have in mind                                                         | Waiting                            |
 
