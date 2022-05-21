@@ -22,8 +22,8 @@
 	"compilerOptions": {
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true
-},
+	},
 	"tasks": {
-		"test": "deno test --allow-net -A --unstable --coverage=coverage spec"
+		"test": "NO_LOG=true deno test --allow-env --allow-net -A --unstable --coverage=coverage spec"
 	}
 }

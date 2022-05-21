@@ -4,7 +4,6 @@ import {
 	white,
 	yellow,
 } from 'https://deno.land/std@0.135.0/fmt/colors.ts';
-import na from 'https://deno.land/x/deno_libphonenumber@v1.9.20/index.js';
 import { Injectable } from './injector/injectable/decorator.ts';
 
 @Injectable()
@@ -32,15 +31,21 @@ export class Logger {
 		} ${colorFunc(text)}`;
 	}
 
+	private printToConsole(text: string, colorFunc: (text: string) => string) {
+		if (Deno.env.get('NO_LOG'))
+			return;
+		console.log(this.concatNamespaceAndText(text, colorFunc));
+	}
+
 	log(text: string) {
-		console.log(this.concatNamespaceAndText(text, green));
+		this.printToConsole(text, green);
 	}
 
 	error(text: string) {
-		console.log(this.concatNamespaceAndText(text, red));
+		this.printToConsole(text, red);
 	}
 
 	warn(text: string) {
-		console.log(this.concatNamespaceAndText(text, yellow));
+		this.printToConsole(text, yellow);
 	}
 }

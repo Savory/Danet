@@ -66,16 +66,15 @@ Deno.test('@Body decorator with attribute', async (ctx) => {
 	const res = await fetch('http://localhost:3000', {
 		method: 'POST',
 		headers: {
-			'content-type': 'application/json'
+			'content-type': 'application/json',
 		},
-		body: '{"whatisit": "batman"}'
+		body: '{"whatisit": "batman"}',
 	});
 	const text = await res.text();
 	assertEquals(text, `batman`);
 	await app.close();
 	await nonBlockingListen;
 });
-
 
 Deno.test('@Body decorator', async (ctx) => {
 	await app.init(MyModule);
@@ -87,14 +86,14 @@ Deno.test('@Body decorator', async (ctx) => {
 	const res = await fetch('http://localhost:3000/full-body/', {
 		method: 'POST',
 		headers: {
-			'content-type': 'application/json'
+			'content-type': 'application/json',
 		},
-		body: '{"whatisit": "batman"}'
+		body: '{"whatisit": "batman"}',
 	});
 	const json = await res.json();
 	assertEquals(json, {
-		whatisit: 'batman'
-});
+		whatisit: 'batman',
+	});
 	await app.close();
 	await nonBlockingListen;
 });

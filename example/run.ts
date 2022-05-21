@@ -1,7 +1,14 @@
 import { DanetApplication } from '../src/mod.ts';
 import { Injectable, SCOPE } from '../src/injector/injectable/mod.ts';
 import { Module } from '../src/module/mod.ts';
-import { All, Body, Controller, Get, Post, Req } from '../src/router/controller/mod.ts';
+import {
+	All,
+	Body,
+	Controller,
+	Get,
+	Post,
+	Req,
+} from '../src/router/controller/mod.ts';
 
 @Injectable({ scope: SCOPE.REQUEST })
 class Child2 {
@@ -32,7 +39,7 @@ class FirstController {
 
 	@All('/all')
 	allHandler(@Req() req: Request) {
-	  return req.method;
+		return req.method;
 	}
 }
 
