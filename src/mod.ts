@@ -7,3 +7,4 @@ export * from './router/mod.ts';
 export * from './module/mod.ts';
 export * from './injector/mod.ts';
 export * from './guard/mod.ts';
+export * from './logger.ts';

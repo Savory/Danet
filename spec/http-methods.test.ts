@@ -5,7 +5,8 @@ import {
 	All,
 	Controller,
 	Delete,
-	Get, Patch,
+	Get,
+	Patch,
 	Post,
 	Put,
 } from '../src/router/controller/decorator.ts';
@@ -50,13 +51,10 @@ class MyModule {}
 
 const app = new DanetApplication();
 for (let method of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
-	const port = Math.round(Math.random() *  10000);
+	const port = Math.round(Math.random() * 10000);
 	Deno.test(method, async (ctx) => {
 		await app.init(MyModule);
-		const nonBlockingListen = new Promise(async (resolve) => {
-			await app.listen(port);
-			resolve(true);
-		});
+		const listen = app.listen(port);
 
 		const res = await fetch(`http://localhost:${port}/nice-controller`, {
 			method: method,
@@ -64,16 +62,13 @@ for (let method of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
 		const text = await res.text();
 		assertEquals(text, `OK ${method}`);
 		await app.close();
-		await nonBlockingListen;
+		await listen;
 	});
 }
 
 Deno.test('ALL', async (ctx) => {
 	await app.init(MyModule);
-	const nonBlockingListen = new Promise(async (resolve) => {
-		await app.listen(3000);
-		resolve(true);
-	});
+	const listen = app.listen(3000);
 
 	for (let method of ['GET', 'POST', 'PUT', 'DELETE']) {
 		const res = await fetch('http://localhost:3000/nice-controller/all', {
@@ -83,5 +78,5 @@ Deno.test('ALL', async (ctx) => {
 		assertEquals(text, `OK ALL`);
 	}
 	await app.close();
-	await nonBlockingListen;
+	await listen;
 });
