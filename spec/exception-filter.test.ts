@@ -102,7 +102,7 @@ Deno.test('throw 500 on unexpected error', async () => {
     method: 'GET',
   });
   assertEquals(500, res.status);
-  const json = await res.json();
+  await res.json();
   await app.close();
 });
 
