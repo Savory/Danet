@@ -1,6 +1,13 @@
 import { MetadataHelper } from '../../metadata/helper.ts';
 import { Constructor } from '../../utils/constructor.ts';
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'HEAD';
+export type HttpMethod =
+	| 'GET'
+	| 'POST'
+	| 'PUT'
+	| 'PATCH'
+	| 'DELETE'
+	| 'OPTIONS'
+	| 'HEAD';
 
 export function Controller<T>(endpoint = '') {
 	return (Type: Constructor<T>): void => {

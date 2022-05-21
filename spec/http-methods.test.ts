@@ -5,7 +5,8 @@ import {
 	All,
 	Controller,
 	Delete,
-	Get, Patch,
+	Get,
+	Patch,
 	Post,
 	Put,
 } from '../src/router/controller/decorator.ts';
@@ -51,7 +52,7 @@ class MyModule {}
 const app = new DanetApplication();
 for (let method of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
 	Deno.test(method, async () => {
-		const port = Math.round(Math.random() *  10000);
+		const port = Math.round(Math.random() * 10000);
 		await app.init(MyModule);
 		app.listen(port);
 

@@ -39,7 +39,7 @@ export const Body = (prop?: string) =>
 	createParamDecorator(async (context: HttpContext) => {
 		let body;
 		try {
-			body = await context.request.body({type: 'json'})?.value;
+			body = await context.request.body({ type: 'json' })?.value;
 		} catch (e) {
 			throw e;
 		}

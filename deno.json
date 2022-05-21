@@ -22,7 +22,7 @@
 	"compilerOptions": {
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true
-},
+	},
 	"tasks": {
 		"test": "deno test --allow-net -A --unstable --coverage=coverage spec"
 	}

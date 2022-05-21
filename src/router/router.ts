@@ -55,12 +55,15 @@ export class DanetRouter {
 
 		basePath = trimSlash(basePath);
 		endpoint = trimSlash(endpoint);
-		const path = (basePath ? ('/' + basePath) : '') + (endpoint ? '/' + endpoint : '');
+		const path = (basePath ? ('/' + basePath) : '') +
+			(endpoint ? '/' + endpoint : '');
 
 		const httpMethod = MetadataHelper.getMetadata<string>('method', handler);
 		const routerFn = this.methodsMap.get(httpMethod || 'ALL');
 		if (!routerFn) {
-			throw new Error(`The method "${httpMethod}" can not be handled by "${basePath}" of controller "${Controller}".`);
+			throw new Error(
+				`The method "${httpMethod}" can not be handled by "${basePath}" of controller "${Controller}".`,
+			);
 		}
 
 		routerFn.call(this.router, path, this.handleRoute(Controller, handler));
