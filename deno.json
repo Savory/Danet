@@ -24,6 +24,6 @@
 		"emitDecoratorMetadata": true
 },
 	"tasks": {
-		"test": "deno test --allow-net -c tsconfig.json -A --unstable --coverage=coverage spec"
+		"test": "deno test --allow-net -A --unstable --coverage=coverage spec"
 	}
 }

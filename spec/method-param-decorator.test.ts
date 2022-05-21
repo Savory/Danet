@@ -27,7 +27,7 @@ class SimpleController {
 		return niceValue;
 	}
 
-	@Post('/')
+	@Post('/full-body')
 	wholeBody(@Body() fullBody: unknown) {
 		return fullBody;
 	}
@@ -52,6 +52,51 @@ Deno.test('@Res and @Query decorator', async (ctx) => {
 	});
 	const text = await res.text();
 	assertEquals(text, `foo`);
+	await app.close();
+	await nonBlockingListen;
+});
+
+Deno.test('@Body decorator with attribute', async (ctx) => {
+	await app.init(MyModule);
+	const nonBlockingListen = new Promise(async (resolve) => {
+		await app.listen(3000);
+		resolve(true);
+	});
+
+	const res = await fetch('http://localhost:3000', {
+		method: 'POST',
+		headers: {
+			'content-type': 'application/json'
+		},
+		body: '{"whatisit": "batman"}'
+	});
+	const text = await res.text();
+	assertEquals(text, `batman`);
+	await app.close();
+	await nonBlockingListen;
+});
+
+
+Deno.test('@Body decorator', async (ctx) => {
+	await app.init(MyModule);
+	const nonBlockingListen = new Promise(async (resolve) => {
+		await app.listen(3000);
+		resolve(true);
+	});
+
+	const res = await fetch('http://localhost:3000/full-body/', {
+		method: 'POST',
+		headers: {
+			'content-type': 'application/json'
+		},
+		body: '{"whatisit": "batman"}'
+	});
+	console.log(res.status);
+	await res.text();
+// 	const json = await res.json();
+// 	assertEquals(json, {
+// 		whatisit: 'batman'
+// });
 	await app.close();
 	await nonBlockingListen;
 });

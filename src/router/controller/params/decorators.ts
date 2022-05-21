@@ -1,5 +1,5 @@
+import b from 'https://deno.land/x/deno_libphonenumber@v1.9.20/index.js';
 import { getQuery } from 'https://deno.land/x/oak@v10.5.1/helpers.ts';
-import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-1/mod.ts';
 import { MetadataHelper } from '../../../metadata/helper.ts';
 import { HttpContext } from '../../router.ts';
 
@@ -40,13 +40,9 @@ export const Body = (prop?: string) =>
 	createParamDecorator(async (context: HttpContext) => {
 		let body;
 		try {
-			if (context.request.body instanceof Function) {
-				body = await context.request.body()?.value;
-			} else {
-				body = await context.request.body;
-			}
-		} catch {
-			return null;
+			body = await context.request.body({type: 'json'})?.value;
+		} catch (e) {
+			throw e;
 		}
 
 		if (!body) {

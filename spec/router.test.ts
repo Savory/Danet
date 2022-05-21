@@ -175,22 +175,6 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
 		assertEquals(context.response.body, { whatisit: 'testbody' });
 	});
 
-	await testContext.step('@Body with param decorator works', async () => {
-		await router.handleRoute(
-			MyController,
-			MyController.prototype.testBodyFunction,
-		)(context as any);
-		assertEquals(context.response.body, 'testbody');
-	});
-
-	await testContext.step('@Body WITHOUT param decorator works', async () => {
-		await router.handleRoute(
-			MyController,
-			MyController.prototype.testBodyWithoutParamFunction,
-		)(context as any);
-		assertEquals(context.response.body, { whatisit: 'testbody' });
-	});
-
 	await testContext.step('@Param decorator works', async () => {
 		await router.handleRoute(
 			MyController,

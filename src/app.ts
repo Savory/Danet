@@ -1,4 +1,3 @@
-import { ServerRequest } from 'https://deno.land/std@0.105.0/http/server.ts';
 import { Application, Router } from 'https://deno.land/x/oak@v10.5.1/mod.ts';
 import { HookExecutor } from './hook/executor.ts';
 import { hookName } from './hook/interfaces.ts';
