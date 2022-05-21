@@ -1,5 +1,4 @@
-import { ServerRequest } from 'https://deno.land/std@0.105.0/http/server.ts';
-import { Application, Router } from 'https://deno.land/x/oak@v9.0.1/mod.ts';
+import { Application, Router } from 'https://deno.land/x/oak@v10.5.1/mod.ts';
 import { HookExecutor } from './hook/executor.ts';
 import { hookName } from './hook/interfaces.ts';
 
@@ -40,7 +39,8 @@ export class DanetApplication {
 
 	async init(Module: Constructor) {
 		await this.bootstrap(Module);
-		this.app.use(this.DanetRouter.router.routes());
+		const routes = this.DanetRouter.router.routes();
+		this.app.use(routes);
 	}
 
 	async close() {

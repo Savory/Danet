@@ -4,7 +4,7 @@ import {
 	assertNotEquals,
 	assertRejects,
 } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
-import { Route } from 'https://deno.land/x/oak@v9.0.1/router.ts';
+import { Route } from 'https://deno.land/x/oak@v10.5.1/router.ts';
 import { DanetApplication } from '../src/app.ts';
 import { GLOBAL_GUARD } from '../src/guard/constants.ts';
 import { AuthGuard } from '../src/guard/interface.ts';
@@ -122,7 +122,7 @@ Deno.test('Injection', async (testContext) => {
 	await app.init(FirstModule);
 
 	function expectControllerRouterToExist(
-		keys: IterableIterator<Route>,
+		keys: IterableIterator<Route<string>>,
 		controllerEndpoint: string,
 	) {
 		const firstRouter = keys.next().value;

@@ -1,4 +1,4 @@
-import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/Reflect.ts';
+import { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
 
 export class MetadataHelper {
 	static getMetadata<T>(
