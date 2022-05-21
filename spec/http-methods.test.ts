@@ -70,7 +70,6 @@ Deno.test('ALL', async (ctx) => {
 		resolve(true);
 	});
 
-
 	for (let method of ['GET', 'POST', 'PUT', 'DELETE']) {
 		const res = await fetch('http://localhost:3000/nice-controller/all', {
 			method: method,
