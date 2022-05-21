@@ -167,33 +167,6 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
 		request: { url: { searchParams }, body: { whatisit: 'testbody' } },
 	};
 
-	await testContext.step('@Req decorator works', async () => {
-		await router.handleRoute(
-			MyController,
-			MyController.prototype.testReqFunction,
-		)(context as any);
-		assertEquals(context.response.body, { whatisit: 'testbody' });
-	});
-
-	await testContext.step('@Param decorator works', async () => {
-		await router.handleRoute(
-			MyController,
-			MyController.prototype.testQueryParam,
-		)(context as any);
-		assertEquals(context.response.body, 3);
-	});
-
-	await testContext.step(
-		'@UseAuthGuard controller decorator works',
-		async () => {
-			await router.handleRoute(
-				MyController,
-				MyController.prototype.testQueryParam,
-			)(context as any);
-			assertEquals(context.state.user, 'coucou');
-		},
-	);
-
 	await testContext.step(
 		'Exception Filter with @Catch do not catch unrelated errors',
 		async () => {
@@ -238,44 +211,6 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
 		assertEquals(context.response.body, {
 			wePassedInFilterCatchingAllErrors: true,
 		});
-	});
-
-	await testContext.step(
-		'@UseAuthGuard method\'s decorator works',
-		async () => {
-			await router.handleRoute(
-				MyController,
-				MyController.prototype.testQueryParam,
-			)(context as any);
-			assertEquals(context.state.something, 'coucou');
-		},
-	);
-
-	await testContext.step('throw 403 when AuthGuard returns false', async () => {
-		await router.handleRoute(
-			MyController,
-			MyController.prototype.throwingAuthGuardRoute,
-		)(context as any);
-		assertEquals(context.response.status, 403);
-		assertEquals(context.response.body, {
-			message: 'Forbidden',
-			status: 403,
-		});
-	});
-
-	await testContext.step('Execute global guard', async () => {
-		await router.handleRoute(
-			MyController,
-			MyController.prototype.testQueryParam,
-		)(context as any);
-		assertEquals(context.state.globalguardAssignedVariable, 'coucou');
-	});
-
-	await testContext.step('Work when there is no global guard', async () => {
-		await routerWithoutGlobalGuard.handleRoute(
-			MyController,
-			MyController.prototype.testQueryParam,
-		)(context as any);
 	});
 
 	await testContext.step(
