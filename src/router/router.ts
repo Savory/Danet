@@ -1,4 +1,3 @@
-import pa from 'https://deno.land/x/deno_libphonenumber@v1.9.20/index.js';
 import { State } from 'https://deno.land/x/oak@v10.5.1/application.ts';
 import { Context } from 'https://deno.land/x/oak@v10.5.1/context.ts';
 import { Router } from 'https://deno.land/x/oak@v10.5.1/router.ts';
