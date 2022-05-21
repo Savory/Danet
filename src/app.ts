@@ -39,7 +39,8 @@ export class DanetApplication {
 
 	async init(Module: Constructor) {
 		await this.bootstrap(Module);
-		this.app.use(this.DanetRouter.router.routes());
+		const routes = this.DanetRouter.router.routes();
+		this.app.use(routes);
 	}
 
 	async close() {

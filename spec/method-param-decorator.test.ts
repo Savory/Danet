@@ -27,7 +27,7 @@ class SimpleController {
 		return niceValue;
 	}
 
-	@Post('/full-body')
+	@Post('full-body')
 	wholeBody(@Body() fullBody: unknown) {
 		return fullBody;
 	}
@@ -91,12 +91,10 @@ Deno.test('@Body decorator', async (ctx) => {
 		},
 		body: '{"whatisit": "batman"}'
 	});
-	console.log(res.status);
-	await res.text();
-// 	const json = await res.json();
-// 	assertEquals(json, {
-// 		whatisit: 'batman'
-// });
+	const json = await res.json();
+	assertEquals(json, {
+		whatisit: 'batman'
+});
 	await app.close();
 	await nonBlockingListen;
 });
