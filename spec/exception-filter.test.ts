@@ -1,11 +1,9 @@
 import { assertEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
-import { Response } from 'https://deno.land/x/oak@v10.5.1/response.ts';
 import { DanetApplication } from '../src/app.ts';
 import { Catch, UseFilter } from '../src/exception/filter/decorator.ts';
 import { ExceptionFilter } from '../src/exception/filter/interface.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
-import { Query, Res } from '../src/router/controller/params/decorators.ts';
 import { HttpContext } from '../src/router/router.ts';
 
 class CustomException extends Error {
