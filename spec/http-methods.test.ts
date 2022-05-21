@@ -5,7 +5,7 @@ import {
 	All,
 	Controller,
 	Delete,
-	Get,
+	Get, Patch,
 	Post,
 	Put,
 } from '../src/router/controller/decorator.ts';
@@ -27,6 +27,11 @@ class SimpleController {
 		return 'OK PUT';
 	}
 
+	@Patch('/')
+	simplePatch() {
+		return 'OK PATCH';
+	}
+
 	@Delete('/')
 	simpleDelete() {
 		return 'OK DELETE';
@@ -44,16 +49,16 @@ class SimpleController {
 class MyModule {}
 
 const app = new DanetApplication();
-
-for (let method of ['GET', 'POST', 'PUT', 'DELETE']) {
+for (let method of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
+	const port = Math.round(Math.random() *  10000);
 	Deno.test(method, async (ctx) => {
 		await app.init(MyModule);
 		const nonBlockingListen = new Promise(async (resolve) => {
-			await app.listen(3000);
+			await app.listen(port);
 			resolve(true);
 		});
 
-		const res = await fetch('http://localhost:3000/nice-controller', {
+		const res = await fetch(`http://localhost:${port}/nice-controller`, {
 			method: method,
 		});
 		const text = await res.text();
