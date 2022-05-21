@@ -2,6 +2,7 @@ import { assertEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { DanetApplication } from '../src/app.ts';
 import { Module } from '../src/module/decorator.ts';
 import {
+	All,
 	Controller,
 	Delete,
 	Get,
@@ -30,6 +31,11 @@ class SimpleController {
 	simpleDelete() {
 		return 'OK DELETE';
 	}
+
+	@All('/all')
+	all() {
+		return 'OK ALL';
+	}
 }
 
 @Module({
@@ -56,3 +62,21 @@ for (let method of ['GET', 'POST', 'PUT', 'DELETE']) {
 		await nonBlockingListen;
 	});
 }
+
+Deno.test('ALL', async (ctx) => {
+	await app.init(MyModule);
+	const nonBlockingListen = new Promise(async (resolve) => {
+		await app.listen(3000);
+		resolve(true);
+	});
+
+	for (let method of ['GET', 'POST', 'PUT', 'DELETE']) {
+		const res = await fetch('http://localhost:3000/nice-controller/all', {
+			method: method,
+		});
+		const text = await res.text();
+		assertEquals(text, `OK ALL`);
+	}
+	await app.close();
+	await nonBlockingListen;
+});

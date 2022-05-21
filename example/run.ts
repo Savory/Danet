@@ -1,7 +1,7 @@
 import { DanetApplication } from '../src/mod.ts';
 import { Injectable, SCOPE } from '../src/injector/injectable/mod.ts';
 import { Module } from '../src/module/mod.ts';
-import { Controller, Get, Post } from '../src/router/controller/mod.ts';
+import { All, Body, Controller, Get, Post, Req } from '../src/router/controller/mod.ts';
 
 @Injectable({ scope: SCOPE.REQUEST })
 class Child2 {
@@ -26,7 +26,13 @@ class FirstController {
 	}
 
 	@Post('post')
-	postMethod() {
+	postMethod(@Body() body: any) {
+		return body;
+	}
+
+	@All('/all')
+	allHandler(@Req() req: Request) {
+	  return req.method;
 	}
 }
 
@@ -37,5 +43,6 @@ class FirstModule {}
 
 const app = new DanetApplication();
 await app.init(FirstModule);
-await app.listen(3000);
+const serve = app.listen(3000);
 console.log('listening on port 3000');
+await serve;
