@@ -2,13 +2,10 @@ import { assertEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { Response } from 'https://deno.land/x/oak@v9.0.1/response.ts';
 import { DanetApplication } from '../src/app.ts';
 import { Module } from '../src/module/decorator.ts';
+import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
 import {
-	Controller,
-	Get,
-	Post,
-} from '../src/router/controller/decorator.ts';
-import {
-	Body, Param,
+	Body,
+	Param,
 	Query,
 	Res,
 } from '../src/router/controller/params/decorators.ts';
@@ -62,15 +59,14 @@ Deno.test('@Body decorator with attribute', async () => {
 	const res = await fetch('http://localhost:3000', {
 		method: 'POST',
 		headers: {
-			'content-type': 'application/json'
+			'content-type': 'application/json',
 		},
-		body: '{"whatisit": "batman"}'
+		body: '{"whatisit": "batman"}',
 	});
 	const text = await res.text();
 	assertEquals(text, `batman`);
 	await app.close();
 });
-
 
 Deno.test('@Body decorator', async () => {
 	await app.init(MyModule);
@@ -79,13 +75,13 @@ Deno.test('@Body decorator', async () => {
 	const res = await fetch('http://localhost:3000/full-body/', {
 		method: 'POST',
 		headers: {
-			'content-type': 'application/json'
+			'content-type': 'application/json',
 		},
-		body: '{"whatisit": "batman"}'
+		body: '{"whatisit": "batman"}',
 	});
 	const json = await res.json();
 	assertEquals(json, {
-		whatisit: 'batman'
+		whatisit: 'batman',
 	});
 	await app.close();
 });
@@ -97,8 +93,8 @@ Deno.test('@Param decorator', async () => {
 	const res = await fetch('http://localhost:3000/batman', {
 		method: 'GET',
 		headers: {
-			'content-type': 'application/json'
-		}
+			'content-type': 'application/json',
+		},
 	});
 	const text = await res.text();
 	assertEquals(text, 'batman');
