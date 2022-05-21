@@ -56,19 +56,6 @@ export class DanetApplication {
 		const listen = new Promise((resolve) => {
 			this.app.listen({ port, signal }).then(resolve);
 		});
-		return listen;
-	}
-
-	registerControllers(Controllers: Constructor[]) {
-		Controllers.forEach((controller) => this.registerController(controller));
-	}
-
-	registerController(Controller: Constructor) {
-		const basePath = MetadataHelper.getMetadata<string>('endpoint', Controller);
-		const methods = Object.getOwnPropertyNames(Controller.prototype);
-		methods.forEach((methodName) => {
-			this.DanetRouter.createRoute(methodName, Controller, basePath);
-		});
 		this.logger.log(`Listening on ${port}`);
 		return listen;
 	}
