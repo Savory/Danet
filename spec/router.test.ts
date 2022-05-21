@@ -223,15 +223,4 @@ Deno.test('router.handleRoute inject params into method', async (testContext) =>
 			assertEquals(context.response.status, 500);
 		},
 	);
-
-	await testContext.step(
-		'answer 500 when there is an unexpected error',
-		async () => {
-			await router.handleRoute(
-				MyController,
-				MyController.prototype.throwingRoute,
-			)(context as any);
-			assertEquals(context.response.status, 500);
-		},
-	);
 });
