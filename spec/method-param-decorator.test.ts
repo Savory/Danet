@@ -4,13 +4,11 @@ import { DanetApplication } from '../src/app.ts';
 import { Module } from '../src/module/decorator.ts';
 import {
 	Controller,
-	Delete,
 	Get,
 	Post,
-	Put,
 } from '../src/router/controller/decorator.ts';
 import {
-	Body,
+	Body, Param,
 	Query,
 	Res,
 } from '../src/router/controller/params/decorators.ts';
@@ -27,6 +25,11 @@ class SimpleController {
 		return niceValue;
 	}
 
+	@Get('/:myparam')
+	queryParam(@Param('myparam') niceValue: string) {
+		return niceValue;
+	}
+
 	@Post('full-body')
 	wholeBody(@Body() fullBody: unknown) {
 		return fullBody;
@@ -40,12 +43,9 @@ class MyModule {}
 
 const app = new DanetApplication();
 
-Deno.test('@Res and @Query decorator', async (ctx) => {
+Deno.test('@Res and @Query decorator', async () => {
 	await app.init(MyModule);
-	const nonBlockingListen = new Promise(async (resolve) => {
-		await app.listen(3000);
-		resolve(true);
-	});
+	app.listen(3000);
 
 	const res = await fetch('http://localhost:3000?myvalue=foo', {
 		method: 'GET',
@@ -53,15 +53,11 @@ Deno.test('@Res and @Query decorator', async (ctx) => {
 	const text = await res.text();
 	assertEquals(text, `foo`);
 	await app.close();
-	await nonBlockingListen;
 });
 
-Deno.test('@Body decorator with attribute', async (ctx) => {
+Deno.test('@Body decorator with attribute', async () => {
 	await app.init(MyModule);
-	const nonBlockingListen = new Promise(async (resolve) => {
-		await app.listen(3000);
-		resolve(true);
-	});
+	app.listen(3000);
 
 	const res = await fetch('http://localhost:3000', {
 		method: 'POST',
@@ -73,16 +69,12 @@ Deno.test('@Body decorator with attribute', async (ctx) => {
 	const text = await res.text();
 	assertEquals(text, `batman`);
 	await app.close();
-	await nonBlockingListen;
 });
 
 
-Deno.test('@Body decorator', async (ctx) => {
+Deno.test('@Body decorator', async () => {
 	await app.init(MyModule);
-	const nonBlockingListen = new Promise(async (resolve) => {
-		await app.listen(3000);
-		resolve(true);
-	});
+	app.listen(3000);
 
 	const res = await fetch('http://localhost:3000/full-body/', {
 		method: 'POST',
@@ -94,7 +86,21 @@ Deno.test('@Body decorator', async (ctx) => {
 	const json = await res.json();
 	assertEquals(json, {
 		whatisit: 'batman'
-});
+	});
 	await app.close();
-	await nonBlockingListen;
+});
+
+Deno.test('@Param decorator', async () => {
+	await app.init(MyModule);
+	app.listen(3000);
+
+	const res = await fetch('http://localhost:3000/batman', {
+		method: 'GET',
+		headers: {
+			'content-type': 'application/json'
+		}
+	});
+	const text = await res.text();
+	assertEquals(text, 'batman');
+	await app.close();
 });

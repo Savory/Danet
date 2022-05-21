@@ -51,7 +51,10 @@ export class DanetApplication {
 	listen(port = 3000) {
 		this.controller = new AbortController();
 		const { signal } = this.controller;
-		return this.app.listen({ port, signal });
+		const listen = new Promise((resolve) => {
+			this.app.listen({ port, signal }).then(resolve);
+		});
+		return listen;
 	}
 
 	registerControllers(Controllers: Constructor[]) {
