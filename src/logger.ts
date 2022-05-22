@@ -26,9 +26,10 @@ export class Logger {
 		text: string,
 		colorFunc: (text: string) => string,
 	) {
-		return `${white(new Date().toUTCString())} ${
-			yellow(this.getNamespaceForDisplay())
-		} ${colorFunc(text)}`;
+		const date = new Date().toUTCString();
+		const context = this.getNamespaceForDisplay();
+
+		return `${white(date)} ${yellow(context)} ${colorFunc(text)}`;
 	}
 
 	private printTo(text: string, colorFunc: (text: string) => string, loggingFunc: (text: string) => any) {
