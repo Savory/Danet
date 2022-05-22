@@ -114,9 +114,15 @@ export class DanetRouter {
 						| Record<string, unknown>
 						| string;
 				if (response) {
-					const fileName = MetadataHelper.getMetadata<string>(rendererViewFile, ControllerMethod);
+					const fileName = MetadataHelper.getMetadata<string>(
+						rendererViewFile,
+						ControllerMethod,
+					);
 					if (fileName) {
-						context.response.body = await this.viewRenderer.render(fileName, response);
+						context.response.body = await this.viewRenderer.render(
+							fileName,
+							response,
+						);
 					} else {
 						context.response.body = response;
 					}

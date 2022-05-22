@@ -23,7 +23,7 @@ Join [our discord](https://discord.gg/Q7ZHuDPgjA)
 ## Feature
 
 | Task                                                                             | State                              |
-|----------------------------------------------------------------------------------|------------------------------------|
+| -------------------------------------------------------------------------------- | ---------------------------------- |
 | Controllers and routes creation with Decorators (GET, PUT, DELETE, POST, PATCH)  | Complete ✅                         |
 | Module with dependency injection                                                 | Complete ✅                         |
 | Request, Response and Body injection in Routes via decorators                    | Complete ✅                         |
@@ -37,8 +37,8 @@ Join [our discord](https://discord.gg/Q7ZHuDPgjA)
 | `OnAppClose` and `OnAppBootstrap` Lifecycle hook for injectables and controllers | Complete ✅                         |
 | Create documentation                                                             | In progress ⌛ (does it even end ?) |
 | Logger                                                                           | Complete ✅                         |
-| Starter repo                                                                     | Help wanted 🆘                       |
-| Support Handlebars engine                                                        | Help wanted 🆘                       |
+| Starter repo                                                                     | Help wanted 🆘                      |
+| Support Handlebars engine                                                        | Help wanted 🆘                      |
 | Anything we have in mind                                                         | Waiting                            |
 
 ## Docs

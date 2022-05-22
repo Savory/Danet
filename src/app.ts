@@ -18,7 +18,12 @@ export class DanetApplication {
 	private injector = new Injector();
 	private hookExecutor = new HookExecutor(this.injector);
 	private actualRenderer = new HandlebarRenderer();
-	public danetRouter = new DanetRouter(this.injector, new GuardExecutor(this.injector), new FilterExecutor(), this.actualRenderer);
+	public danetRouter = new DanetRouter(
+		this.injector,
+		new GuardExecutor(this.injector),
+		new FilterExecutor(),
+		this.actualRenderer,
+	);
 	private controller: AbortController = new AbortController();
 	private logger: Logger = new Logger('DanetApplication');
 
