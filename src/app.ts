@@ -42,8 +42,6 @@ export class DanetApplication {
 
 	async init(Module: Constructor) {
 		await this.bootstrap(Module);
-		const routes = this.router.routes();
-		this.app.use(routes);
 	}
 
 	async close() {
@@ -52,6 +50,8 @@ export class DanetApplication {
 	}
 
 	listen(port = 3000): Promise<ApplicationListenEvent> {
+		const routes = this.router.routes();
+		this.app.use(routes);
 		this.controller = new AbortController();
 		const { signal } = this.controller;
 		const listen = new Promise<ApplicationListenEvent>((resolve) => {
