@@ -42,8 +42,7 @@ const app = new DanetApplication();
 
 Deno.test('@Res and @Query decorator', async () => {
 	await app.init(MyModule);
-	const port = Math.round(Math.random() * 10000);
-	app.listen(port);
+	const port = (await app.listen(0)).port;
 
 	const res = await fetch(`http://localhost:${port}?myvalue=foo`, {
 		method: 'GET',
@@ -55,8 +54,7 @@ Deno.test('@Res and @Query decorator', async () => {
 
 Deno.test('@Body decorator with attribute', async () => {
 	await app.init(MyModule);
-	const port = Math.round(Math.random() * 10000);
-	app.listen(port);
+	const port = (await app.listen(0)).port;
 
 	const res = await fetch(`http://localhost:${port}`, {
 		method: 'POST',
@@ -72,8 +70,7 @@ Deno.test('@Body decorator with attribute', async () => {
 
 Deno.test('@Body decorator', async () => {
 	await app.init(MyModule);
-	const port = Math.round(Math.random() * 10000);
-	app.listen(port);
+	const port = (await app.listen(0)).port;
 
 	const res = await fetch(`http://localhost:${port}/full-body/`, {
 		method: 'POST',
@@ -91,8 +88,7 @@ Deno.test('@Body decorator', async () => {
 
 Deno.test('@Param decorator', async () => {
 	await app.init(MyModule);
-	const port = Math.round(Math.random() * 10000);
-	app.listen(port);
+	const port = (await app.listen(0)).port;
 
 	const res = await fetch(`http://localhost:${port}/batman`, {
 		method: 'GET',

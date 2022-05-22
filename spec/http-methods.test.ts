@@ -52,9 +52,8 @@ class MyModule {}
 const app = new DanetApplication();
 for (let method of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
 	Deno.test(method, async () => {
-		const port = Math.round(Math.random() * 10000);
 		await app.init(MyModule);
-		app.listen(port);
+		const port = (await app.listen(0)).port;
 
 		const res = await fetch(`http://localhost:${port}/nice-controller`, {
 			method: method,
