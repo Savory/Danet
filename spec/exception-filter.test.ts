@@ -61,9 +61,8 @@ class ModuleWithFilter {}
 for (const testName of ['Exception Filter with @Catch catch related errors', 'Method exception filter works']) {
   Deno.test(testName, async () => {
     const app = new DanetApplication();
-    const port = Math.round(Math.random() * 10000);
     await app.init(ModuleWithFilter);
-    app.listen(port);
+    const port = (await app.listen(0)).port;
 
     const res = await fetch(`http://localhost:${port}/custom-error`, {
       method: 'GET',
@@ -78,9 +77,8 @@ for (const testName of ['Exception Filter with @Catch catch related errors', 'Me
 
 Deno.test('Controller filter works', async () => {
   const app = new DanetApplication();
-  const port = Math.round(Math.random() * 10000);
   await app.init(ModuleWithFilter);
-  app.listen(port);
+  const port = (await app.listen(0)).port;
 
   const res = await fetch(`http://localhost:${port}`, {
     method: 'GET',
@@ -94,9 +92,8 @@ Deno.test('Controller filter works', async () => {
 
 Deno.test('throw 500 on unexpected error', async () => {
   const app = new DanetApplication();
-  const port = Math.round(Math.random() * 10000);
   await app.init(ModuleWithFilter);
-  app.listen(port);
+  const port = (await app.listen(0)).port;
 
   const res = await fetch(`http://localhost:${port}/custom-error/unexpected-error`, {
     method: 'GET',
