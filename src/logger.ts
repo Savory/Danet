@@ -32,8 +32,9 @@ export class Logger {
 	}
 
 	private printTo(text: string, colorFunc: (text: string) => string, loggingFunc: (text: string) => any) {
-		if (Deno.env.get('NO_LOG'))
+		if (Deno.env.get('NO_LOG')) {
 			return;
+		}
 		loggingFunc(this.concatNamespaceAndText(text, colorFunc));
 	}
 
