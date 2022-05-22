@@ -1,3 +1,4 @@
+import { Logger } from '../logger.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { ModuleConstructor } from '../module/constructor.ts';
 import { moduleMetadataKey } from '../module/decorator.ts';
@@ -18,6 +19,7 @@ import { InjectableHelper } from './injectable/helper.ts';
 export class Injector {
 	private resolved = new Map<Constructor | string, () => unknown>();
 	private availableTypes: InjectableConstructor[] = [];
+	private logger: Logger = new Logger('Injector');
 
 	public getAll() {
 		return this.resolved;
@@ -35,6 +37,7 @@ export class Injector {
 	}
 
 	public async bootstrap(ModuleType: ModuleConstructor) {
+		this.logger.log(`Bootstraping ${ModuleType.name}`);
 		// deno-lint-ignore no-explicit-any
 		const { controllers, injectables } = MetadataHelper.getMetadata<any>(
 			moduleMetadataKey,

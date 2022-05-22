@@ -42,9 +42,9 @@ const app = new DanetApplication();
 
 Deno.test('@Res and @Query decorator', async () => {
 	await app.init(MyModule);
-	app.listen(3000);
+	const port = (await app.listen(0)).port;
 
-	const res = await fetch('http://localhost:3000?myvalue=foo', {
+	const res = await fetch(`http://localhost:${port}?myvalue=foo`, {
 		method: 'GET',
 	});
 	const text = await res.text();
@@ -54,9 +54,9 @@ Deno.test('@Res and @Query decorator', async () => {
 
 Deno.test('@Body decorator with attribute', async () => {
 	await app.init(MyModule);
-	app.listen(3000);
+	const port = (await app.listen(0)).port;
 
-	const res = await fetch('http://localhost:3000', {
+	const res = await fetch(`http://localhost:${port}`, {
 		method: 'POST',
 		headers: {
 			'content-type': 'application/json',
@@ -70,9 +70,9 @@ Deno.test('@Body decorator with attribute', async () => {
 
 Deno.test('@Body decorator', async () => {
 	await app.init(MyModule);
-	app.listen(3000);
+	const port = (await app.listen(0)).port;
 
-	const res = await fetch('http://localhost:3000/full-body/', {
+	const res = await fetch(`http://localhost:${port}/full-body/`, {
 		method: 'POST',
 		headers: {
 			'content-type': 'application/json',
@@ -88,9 +88,9 @@ Deno.test('@Body decorator', async () => {
 
 Deno.test('@Param decorator', async () => {
 	await app.init(MyModule);
-	app.listen(3000);
+	const port = (await app.listen(0)).port;
 
-	const res = await fetch('http://localhost:3000/batman', {
+	const res = await fetch(`http://localhost:${port}/batman`, {
 		method: 'GET',
 		headers: {
 			'content-type': 'application/json',

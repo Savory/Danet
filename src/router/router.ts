@@ -7,6 +7,7 @@ import { HTTP_STATUS } from '../exception/http/enum.ts';
 import { GuardExecutor } from '../guard/executor.ts';
 import { hookName } from '../hook/interfaces.ts';
 import { Injector } from '../injector/injector.ts';
+import { Logger } from '../logger.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { ControllerConstructor } from './controller/constructor.ts';
@@ -23,6 +24,8 @@ export type HttpContext = Context;
 
 export class DanetRouter {
 	public router = new Router();
+	private logger: Logger = new Logger('Router');
+
 	constructor(
 		private injector: Injector,
 		private guardExecutor: GuardExecutor = new GuardExecutor(injector),
@@ -65,11 +68,29 @@ export class DanetRouter {
 				`The method "${httpMethod}" can not be handled by "${basePath}" of controller "${Controller}".`,
 			);
 		}
-
+		this.logger.log(`Registering [${httpMethod}] ${path ? path : '/'}`);
 		routerFn.call(this.router, path, this.handleRoute(Controller, handler));
 	}
 
-	handleRoute(Controller: ControllerConstructor, ControllerMethod: Callback) {
+	registerControllers(Controllers: Constructor[]) {
+		Controllers.forEach((controller) => this.registerController(controller));
+	}
+
+	private registerController(Controller: Constructor) {
+		const basePath = MetadataHelper.getMetadata<string>('endpoint', Controller);
+		const methods = Object.getOwnPropertyNames(Controller.prototype);
+		this.logger.log(
+			`Registering ${Controller.name} ${basePath ? basePath : '/'}`,
+		);
+		methods.forEach((methodName) => {
+			this.createRoute(methodName, Controller, basePath);
+		});
+	}
+
+	public handleRoute(
+		Controller: ControllerConstructor,
+		ControllerMethod: Callback,
+	) {
 		return async (context: HttpContext) => {
 			try {
 				// deno-lint-ignore no-explicit-any

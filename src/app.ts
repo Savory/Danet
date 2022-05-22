@@ -1,8 +1,10 @@
+import { ApplicationListenEvent } from 'https://deno.land/x/oak@v10.5.1/application.ts';
 import { Application, Router } from 'https://deno.land/x/oak@v10.5.1/mod.ts';
 import { HookExecutor } from './hook/executor.ts';
 import { hookName } from './hook/interfaces.ts';
 
 import { Injector } from './injector/injector.ts';
+import { Logger } from './logger.ts';
 import { MetadataHelper } from './metadata/helper.ts';
 import { moduleMetadataKey, ModuleOptions } from './module/decorator.ts';
 import { DanetRouter } from './router/router.ts';
@@ -12,8 +14,9 @@ export class DanetApplication {
 	private app = new Application();
 	private injector = new Injector();
 	private hookExecutor = new HookExecutor(this.injector);
-	public DanetRouter = new DanetRouter(this.injector);
+	public danetRouter = new DanetRouter(this.injector);
 	private controller: AbortController = new AbortController();
+	private logger: Logger = new Logger('DanetApplication');
 
 	get<T>(Type: Constructor<T> | string): T {
 		return this.injector.get(Type);
@@ -30,7 +33,7 @@ export class DanetApplication {
 		}
 		await this.injector.bootstrap(Module);
 		if (metadata.controllers) {
-			this.registerControllers(metadata.controllers);
+			this.danetRouter.registerControllers(metadata.controllers);
 		}
 		await this.hookExecutor.executeHookForEveryInjectable(
 			hookName.APP_BOOTSTRAP,
@@ -39,7 +42,7 @@ export class DanetApplication {
 
 	async init(Module: Constructor) {
 		await this.bootstrap(Module);
-		const routes = this.DanetRouter.router.routes();
+		const routes = this.router.routes();
 		this.app.use(routes);
 	}
 
@@ -48,27 +51,22 @@ export class DanetApplication {
 		this.controller.abort();
 	}
 
-	listen(port = 3000) {
+	listen(port = 3000): Promise<ApplicationListenEvent> {
 		this.controller = new AbortController();
 		const { signal } = this.controller;
-		const listen = new Promise((resolve) => {
-			this.app.listen({ port, signal }).then(resolve);
+		const listen = new Promise<ApplicationListenEvent>((resolve) => {
+			this.app.addEventListener('listen', (listen) => {
+				this.logger.log(`Listening on ${listen.port}`);
+				resolve(listen);
+			});
+			this.app.listen({ port, signal }).then(() =>
+				this.logger.log('Shutting down')
+			);
 		});
 		return listen;
 	}
 
-	registerControllers(Controllers: Constructor[]) {
-		Controllers.forEach((controller) => this.registerController(controller));
-	}
-
-	registerController(Controller: Constructor) {
-		const basePath = MetadataHelper.getMetadata<string>('endpoint', Controller);
-		const methods = Object.getOwnPropertyNames(Controller.prototype);
-		methods.forEach((methodName) => {
-			this.DanetRouter.createRoute(methodName, Controller, basePath);
-		});
-	}
 	get router(): Router {
-		return this.DanetRouter.router;
+		return this.danetRouter.router;
 	}
 }
