@@ -30,7 +30,6 @@ Deno.test('Hbs renderer', async () => {
 		method: 'GET',
 	});
 	const text = await res.text();
-	console.log(text);
 	assertEquals(text.includes('my title'), true);
 	await app.close();
 });
