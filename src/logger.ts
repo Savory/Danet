@@ -31,21 +31,21 @@ export class Logger {
 		} ${colorFunc(text)}`;
 	}
 
-	private printToConsole(text: string, colorFunc: (text: string) => string) {
+	private printTo(text: string, colorFunc: (text: string) => string, loggingFunc: (text: string) => any) {
 		if (Deno.env.get('NO_LOG'))
 			return;
-		console.log(this.concatNamespaceAndText(text, colorFunc));
+		loggingFunc(this.concatNamespaceAndText(text, colorFunc));
 	}
 
 	log(text: string) {
-		this.printToConsole(text, green);
+		this.printTo(text, green, console.log);
 	}
 
 	error(text: string) {
-		this.printToConsole(text, red);
+		this.printTo(text, red, console.error);
 	}
 
 	warn(text: string) {
-		this.printToConsole(text, yellow);
+		this.printTo(text, yellow, console.warn);
 	}
 }
