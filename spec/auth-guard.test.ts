@@ -97,7 +97,7 @@ class GlobalAuthModule {}
 Deno.test('Global guard', async () => {
 	const app = new DanetApplication();
 	await app.init(GlobalAuthModule);
-		const port = (await app.listen(0)).port;
+	const port = (await app.listen(0)).port;
 	const res = await fetch(`http://localhost:${port}/global-guard`, {
 		method: 'GET',
 	});

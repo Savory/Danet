@@ -55,11 +55,13 @@ export class DanetApplication {
 		this.controller = new AbortController();
 		const { signal } = this.controller;
 		const listen = new Promise<ApplicationListenEvent>((resolve) => {
-				this.app.addEventListener('listen', (listen) => {
-					this.logger.log(`Listening on ${listen.port}`);
-					resolve(listen);
-				});
-				this.app.listen({ port, signal }).then(() => this.logger.log('Shutting down'));
+			this.app.addEventListener('listen', (listen) => {
+				this.logger.log(`Listening on ${listen.port}`);
+				resolve(listen);
+			});
+			this.app.listen({ port, signal }).then(() =>
+				this.logger.log('Shutting down')
+			);
 		});
 		return listen;
 	}

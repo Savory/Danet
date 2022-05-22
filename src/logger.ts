@@ -32,7 +32,11 @@ export class Logger {
 		return `${white(date)} ${yellow(context)} ${colorFunc(text)}`;
 	}
 
-	private printTo(text: string, colorFunc: (text: string) => string, loggingFunc: (text: string) => void) {
+	private printTo(
+		text: string,
+		colorFunc: (text: string) => string,
+		loggingFunc: (text: string) => void,
+	) {
 		if (Deno.env.get('NO_LOG')) {
 			return;
 		}
