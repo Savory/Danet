@@ -1,3 +1,4 @@
+import { ApplicationListenEvent } from 'https://deno.land/x/oak@v10.5.1/application.ts';
 import { Application, Router } from 'https://deno.land/x/oak@v10.5.1/mod.ts';
 import { HookExecutor } from './hook/executor.ts';
 import { hookName } from './hook/interfaces.ts';
@@ -50,13 +51,16 @@ export class DanetApplication {
 		this.controller.abort();
 	}
 
-	listen(port = 3000) {
+	listen(port = 3000): Promise<ApplicationListenEvent> {
 		this.controller = new AbortController();
 		const { signal } = this.controller;
-		const listen = new Promise((resolve) => {
-			this.app.listen({ port, signal }).then(resolve);
+		const listen = new Promise<ApplicationListenEvent>((resolve) => {
+				this.app.addEventListener('listen', (listen) => {
+					this.logger.log(`Listening on ${listen.port}`);
+					resolve(listen);
+				});
+				this.app.listen({ port, signal }).then(() => this.logger.log('Shutting down'));
 		});
-		this.logger.log(`Listening on ${port}`);
 		return listen;
 	}
 
