@@ -99,30 +99,22 @@ Routes with static paths won't work when you need to accept **dynamic data** as 
 
 ```ts
 @Get(':id')
-findOne(@Param() params): string {
-  console.log(params.id);
-  return `This action returns a #${params.id} cat`;
+findOne(@Param('id') id: string): string {
+  return `This action returns a #${id} cat`;
 }
 ```
 
-`@Param()` is used to decorate a method parameter (`params` in the example above), and makes the **route** parameters available as properties of that decorated method parameter inside the body of the method. As seen in the code above, we can access the `id` parameter by referencing `params.id`. You can also pass in a particular parameter token to the decorator, and then reference the route parameter directly by name in the method body.
+`@Param()` is used to decorate a method parameter by giving a particular parameter token to the decorator.
 
 !!!info Hint 
 Import `Param` from the `https://deno.land/x/danet/mod.ts` package.
 !!!
 
-```typescript
-@@filename()
-@Get(':id')
-findOne(@Param('id') id: string): string {
-  return `This action returns a #${id} cat`;
-}
-```
 ### Scopes
 
 For people coming from different programming language backgrounds, it might be unexpected to learn that in Danet, almost everything is shared across incoming requests. We have a connection pool to the database, singleton services with global state, etc.
 
-However, there are edge-cases when request-based lifetime of the controller may be the desired behavior, for example request tracking or multi-tenancy. Learn how to control scopes [here](/fundamentals/injection-scopes).
+However, there are edge-cases when request-based lifetime of the controller may be the desired behavior, for example request tracking or multi-tenancy. Documentation page will be created to explain how to do that.
 
 ### Asynchronicity
 
