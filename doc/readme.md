@@ -1,7 +1,6 @@
 ---
 label: Welcome
-layout: page
-order: 1
+order: 100
 ---
 Danet is a framework heavily inspired by a NodeJS Framework called [Nest](https://docs.nestjs.com/). We aim to provide the same efficiency, but in [Deno](https://deno.land/). Of course, Nest is way more mature, think of it as a hero that we look up to.
 

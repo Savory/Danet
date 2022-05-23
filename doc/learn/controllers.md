@@ -8,8 +8,8 @@ In order to create a basic controller, we use classes and **decorators**. Decora
 
 In the following example we'll use the `@Controller()` decorator, which is **required** to define a basic controller. We'll specify an optional route path prefix of `cats`. Using a path prefix in a `@Controller()` decorator allows us to easily group a set of related routes, and minimize repetitive code. For example, we may choose to group a set of routes that manage interactions with a customer entity under the route `/customers`. In that case, we could specify the path prefix `customers` in the `@Controller()` decorator so that we don't have to repeat that portion of the path for each route in the file.
 
-```typescript cats.controller.ts
-import { Controller, Get } from 'https://deno.land/x/danet@v0.6.0/mod.ts';
+```ts cats.controller.ts
+import { Controller, Get } from 'https://deno.land/x/danet/mod.ts';
 
 @Controller('cats')
 export class CatsController {
@@ -30,8 +30,8 @@ This method will return a 200 status code and the associated response, which in 
 
 Handlers often need access to the client **request** details. Danet provides access to the [request object](https://doc.deno.land/https://deno.land/x/oak@v10.6.0/mod.ts/~/Request). We can access the request object by instructing Danet to inject it by adding the `@Req()` decorator to the handler's signature.
 
-```typescript cats.controller.ts
-import { Controller, Get, Req } from 'https://deno.land/x/danet@v0.6.0/mod.ts';
+```ts cats.controller.ts
+import { Controller, Get, Req } from 'https://deno.land/x/danet/mod.ts';
 import { Request } from 'express';
 
 @Controller('cats')
@@ -74,8 +74,8 @@ The request object represents the HTTP request and has properties for the reques
 
 Earlier, we defined an endpoint to fetch the cats resource (**GET** route). We'll typically also want to provide an endpoint that creates new records. For this, let's create the **POST** handler:
 
-```typescript cats.controller.ts
-import { Controller, Get, Post } from 'https://deno.land/x/danet@v0.6.0/mod.ts';
+```ts cats.controller.ts
+import { Controller, Get, Post } from 'https://deno.land/x/danet/mod.ts';
 
 @Controller('cats')
 export class CatsController {
@@ -97,7 +97,7 @@ It's that simple. Danet provides decorators for almost all of the standard HTTP 
 
 Routes with static paths won't work when you need to accept **dynamic data** as part of the request (e.g., `GET /cats/1` to get cat with id `1`). In order to define routes with parameters, we can add route parameter **tokens** in the path of the route to capture the dynamic value at that position in the request URL. The route parameter token in the `@Get()` decorator example below demonstrates this usage. Route parameters declared in this way can be accessed using the `@Param()` decorator, which should be added to the method signature.
 
-```typescript
+```ts
 @Get(':id')
 findOne(@Param() params): string {
   console.log(params.id);
@@ -108,7 +108,7 @@ findOne(@Param() params): string {
 `@Param()` is used to decorate a method parameter (`params` in the example above), and makes the **route** parameters available as properties of that decorated method parameter inside the body of the method. As seen in the code above, we can access the `id` parameter by referencing `params.id`. You can also pass in a particular parameter token to the decorator, and then reference the route parameter directly by name in the method body.
 
 !!!info Hint 
-Import `Param` from the `https://deno.land/x/danet@v0.6.0/mod.ts` package.
+Import `Param` from the `https://deno.land/x/danet/mod.ts` package.
 !!!
 
 ```typescript
@@ -134,7 +134,7 @@ Learn more about `async / await` feature [here](https://kamilmysliwiec.com/types
 
 Every async function has to return a `Promise`. This means that you can return a deferred value that Danet will be able to resolve by itself. Let's see an example of this:
 
-```typescript cats.controller.ts
+```ts cats.controller.ts
 @Get()
 async findAll(): Promise<any[]> {
   return [];
@@ -148,8 +148,8 @@ There's a separate chapter about handling errors (i.e., working with exceptions)
 
 Below is an example that makes use of several of the available decorators to create a basic controller. This controller exposes a couple of methods to access and manipulate internal data.
 
-```typescript cats.controller.ts
-import { Controller, Get, Query, Post, Body, Put, Param, Delete } from 'https://deno.land/x/danet@v0.6.0/mod.ts';
+```ts cats.controller.ts
+import { Controller, Get, Query, Post, Body, Put, Param, Delete } from 'https://deno.land/x/danet/mod.ts';
 import { CreateCatDto, UpdateCatDto, ListAllEntities } from './dto';
 
 @Controller('cats')
@@ -182,8 +182,8 @@ With the above controller fully defined, Danet still doesn't know that `CatsCont
 
 Controllers always belong to a module, which is why we include the `controllers` array within the `@Module()` decorator. Since we haven't yet defined any other modules except the root `AppModule`, we'll use that to introduce the `CatsController`:
 
-```typescript app.module.ts
-import { Module } from 'https://deno.land/x/danet@v0.6.0/mod.ts';
+```ts app.module.ts
+import { Module } from 'https://deno.land/x/danet/mod.ts';
 import { CatsController } from './cats/cats.controller';
 
 @Module({
