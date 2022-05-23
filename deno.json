@@ -24,6 +24,6 @@
 		"emitDecoratorMetadata": true
 	},
 	"tasks": {
-		"test": "NO_LOG=true deno test --allow-env --allow-net -A --unstable --coverage=coverage spec"
+		"test": "NO_LOG=true deno test --allow-env --allow-net --allow-read -A --unstable --coverage=coverage spec"
 	}
 }

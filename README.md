@@ -22,24 +22,24 @@ Join [our discord](https://discord.gg/Q7ZHuDPgjA)
 
 ## Feature
 
-| Task                                                                             | State                           |
-|----------------------------------------------------------------------------------|---------------------------------|
-| Controllers and routes creation with Decorators (GET, PUT, DELETE, POST, PATCH)  | Complete ✅                      |
-| Module with dependency injection                                                 | Complete ✅                      |
-| Request, Response and Body injection in Routes via decorators                    | Complete ✅                      |
-| Route parameter decorator factory to easily create param decorators (even async) | Complete ✅                      |
-| Url params injection in Controllers with Decorators                              | Complete ✅                      |
-| Guards implementations for controllers and methods                               | Complete ✅                      |
-| Global guard                                                                     | Complete ✅                      |
-| `@Inject('token')` to use with interfaces                                        | Complete ✅                      |
-| Exceptions Filters that catch all errors and `@UseFilters` decorator             | Complete ✅                      |
-| Exceptions Filters that catch only a specific type of error                      | Complete ✅                      |
-| `OnAppClose` and `OnAppBootstrap` Lifecycle hook for injectables and controllers | Complete ✅                      |
-| Create documentation                                                             | Help wanted 🆘 |
-| Logger                                                                           | Complete ✅                      |
-| Starter repo                                                                     | Help wanted 🆘                    |
-| Support Handlebars engine                                                        | Help wanted 🆘                    |
-| Anything we have in mind                                                         | Waiting                         |
+| Task                                                                             | State                              |
+| -------------------------------------------------------------------------------- | ---------------------------------- |
+| Controllers and routes creation with Decorators (GET, PUT, DELETE, POST, PATCH)  | Complete ✅                         |
+| Module with dependency injection                                                 | Complete ✅                         |
+| Request, Response and Body injection in Routes via decorators                    | Complete ✅                         |
+| Route parameter decorator factory to easily create param decorators (even async) | Complete ✅                         |
+| Url params injection in Controllers with Decorators                              | Complete ✅                         |
+| Guards implementations for controllers and methods                               | Complete ✅                         |
+| Global guard                                                                     | Complete ✅                         |
+| `@Inject('token')` to use with interfaces                                        | Complete ✅                         |
+| Exceptions Filters that catch all errors and `@UseFilters` decorator             | Complete ✅                         |
+| Exceptions Filters that catch only a specific type of error                      | Complete ✅                         |
+| `OnAppClose` and `OnAppBootstrap` Lifecycle hook for injectables and controllers | Complete ✅                         |
+| Create documentation                                                             | In progress ⌛ (does it even end ?) |
+| Logger                                                                           | Complete ✅                         |
+| Starter repo                                                                     | Help wanted 🆘                      |
+| Support Handlebars engine                                                        | Help wanted 🆘                      |
+| Anything we have in mind                                                         | Waiting                            |
 
 ## Docs
 
