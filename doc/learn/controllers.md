@@ -134,8 +134,8 @@ async findAll(): Promise<any[]> {
 ```
 ### Handling errors
 
-There's a separate chapter about handling errors (i.e., working with exceptions) [here](/exception-filters).
-
+There's a separate chapter about handling errors (i.e., working with exceptions):
+[!ref](exception-filters.md)
 ### Full resource sample
 
 Below is an example that makes use of several of the available decorators to create a basic controller. This controller exposes a couple of methods to access and manipulate internal data.
