@@ -5,4 +5,4 @@ branding:
   title: Danet
   label: Docs
 footer:
-  copyright: "&copy; Copyright {{ year }}. All rights reserved."
+  copyright: "&copy; MIT LICENSE"
