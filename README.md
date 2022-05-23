@@ -38,7 +38,8 @@ Join [our discord](https://discord.gg/Q7ZHuDPgjA)
 | Create documentation                                                             | In progress ⌛ (does it even end ?) |
 | Logger                                                                           | Complete ✅                         |
 | Starter repo                                                                     | Help wanted 🆘                      |
-| Support Handlebars engine                                                        | Help wanted 🆘                      |
+| Render Static Files                                                              | Help wanted 🆘                      |
+| Support Handlebars engine                                                        | Complete ✅                         |
 | Anything we have in mind                                                         | Waiting                            |
 
 ## Docs
