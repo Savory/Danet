@@ -20,8 +20,10 @@ Join [our discord](https://discord.gg/Q7ZHuDPgjA)
 
 ## Docs
 
-Documentation will be available at
+Documentation is available at
 [https://savory.github.io/Danet/](https://savory.github.io/Danet/)
+
+It is obviously still a WIP.
 
 ## Contributing
 
