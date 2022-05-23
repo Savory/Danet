@@ -7,6 +7,9 @@ import { hookName } from '../hook/interfaces.ts';
 import { Injector } from '../injector/injector.ts';
 import { Logger } from '../logger.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
+import { rendererViewFile } from '../renderer/decorator.ts';
+import { HandlebarRenderer } from '../renderer/handlebar.ts';
+import { Renderer } from '../renderer/interface.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { ControllerConstructor } from './controller/constructor.ts';
 import {
@@ -28,6 +31,7 @@ export class DanetRouter {
 		private injector: Injector,
 		private guardExecutor: GuardExecutor = new GuardExecutor(injector),
 		private filterExecutor: FilterExecutor = new FilterExecutor(),
+		private viewRenderer: Renderer = new HandlebarRenderer(),
 	) {
 	}
 	methodsMap = new Map([
@@ -108,7 +112,18 @@ export class DanetRouter {
 						| Record<string, unknown>
 						| string;
 				if (response) {
-					context.response.body = response;
+					const fileName = MetadataHelper.getMetadata<string>(
+						rendererViewFile,
+						ControllerMethod,
+					);
+					if (fileName) {
+						context.response.body = await this.viewRenderer.render(
+							fileName,
+							response,
+						);
+					} else {
+						context.response.body = response;
+					}
 				}
 			} catch (error) {
 				const errorIsCaught = await this.filterExecutor

@@ -1,5 +1,6 @@
 import { ApplicationListenEvent, Application, Router} from './deps.ts';
-
+import { FilterExecutor } from './exception/filter/executor.ts';
+import { GuardExecutor } from './guard/executor.ts';
 import { HookExecutor } from './hook/executor.ts';
 import { hookName } from './hook/interfaces.ts';
 
@@ -7,6 +8,7 @@ import { Injector } from './injector/injector.ts';
 import { Logger } from './logger.ts';
 import { MetadataHelper } from './metadata/helper.ts';
 import { moduleMetadataKey, ModuleOptions } from './module/decorator.ts';
+import { HandlebarRenderer } from './renderer/handlebar.ts';
 import { DanetRouter } from './router/router.ts';
 import { Constructor } from './utils/constructor.ts';
 
@@ -14,7 +16,13 @@ export class DanetApplication {
 	private app = new Application();
 	private injector = new Injector();
 	private hookExecutor = new HookExecutor(this.injector);
-	public danetRouter = new DanetRouter(this.injector);
+	private renderer = new HandlebarRenderer();
+	public danetRouter = new DanetRouter(
+		this.injector,
+		new GuardExecutor(this.injector),
+		new FilterExecutor(),
+		this.renderer,
+	);
 	private controller: AbortController = new AbortController();
 	private logger: Logger = new Logger('DanetApplication');
 
@@ -68,5 +76,9 @@ export class DanetApplication {
 
 	get router(): Router {
 		return this.danetRouter.router;
+	}
+
+	setViewEngineDir(path: string) {
+		this.renderer.setRootDir(path);
 	}
 }

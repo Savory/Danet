@@ -7,99 +7,105 @@ import { Controller, Get } from '../src/router/controller/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
 
 class CustomException extends Error {
-  public customField = 'i am a custom field';
-  constructor(text: string) {
-    super(text);
-  }
+	public customField = 'i am a custom field';
+	constructor(text: string) {
+		super(text);
+	}
 }
 
 class ErrorFilter implements ExceptionFilter {
-  catch(exception: any, context: HttpContext) {
-    context.response.body = {
-      wePassedInFilterCatchingAllErrors: true,
-    };
-  }
+	catch(exception: any, context: HttpContext) {
+		context.response.body = {
+			wePassedInFilterCatchingAllErrors: true,
+		};
+	}
 }
 
 @Catch(CustomException)
 class CustomErrorFilter implements ExceptionFilter {
-  catch(exception: any, context: HttpContext) {
-    context.response.body = {
-      wePassedInFilterCatchingOnlySomeError: true,
-    };
-  }
+	catch(exception: any, context: HttpContext) {
+		context.response.body = {
+			wePassedInFilterCatchingOnlySomeError: true,
+		};
+	}
 }
 
 @UseFilter(ErrorFilter)
 @Controller('')
 class ControllerWithFilter {
-
-  @Get('/')
-  simpleGet() {
-    throw Error('an error');
-  }
+	@Get('/')
+	simpleGet() {
+		throw Error('an error');
+	}
 }
 
 @Controller('custom-error')
 class ControllerWithCustomFilter {
-  @UseFilter(CustomErrorFilter)
-  @Get('')
-  customError() {
-    throw new CustomException('an error');
-  }
+	@UseFilter(CustomErrorFilter)
+	@Get('')
+	customError() {
+		throw new CustomException('an error');
+	}
 
-  @Get('unexpected-error')
-  unexpectedError() {
-    throw Error('unexpected');
-  }
+	@Get('unexpected-error')
+	unexpectedError() {
+		throw Error('unexpected');
+	}
 }
 @Module({
-  controllers: [ControllerWithFilter, ControllerWithCustomFilter]
+	controllers: [ControllerWithFilter, ControllerWithCustomFilter],
 })
 class ModuleWithFilter {}
 
-for (const testName of ['Exception Filter with @Catch catch related errors', 'Method exception filter works']) {
-  Deno.test(testName, async () => {
-    const app = new DanetApplication();
-    await app.init(ModuleWithFilter);
-    const port = (await app.listen(0)).port;
+for (
+	const testName of [
+		'Exception Filter with @Catch catch related errors',
+		'Method exception filter works',
+	]
+) {
+	Deno.test(testName, async () => {
+		const app = new DanetApplication();
+		await app.init(ModuleWithFilter);
+		const port = (await app.listen(0)).port;
 
-    const res = await fetch(`http://localhost:${port}/custom-error`, {
-      method: 'GET',
-    });
-    const json = await res.json();
-    assertEquals(json, {
-      wePassedInFilterCatchingOnlySomeError: true,
-    });
-    await app.close();
-  });
+		const res = await fetch(`http://localhost:${port}/custom-error`, {
+			method: 'GET',
+		});
+		const json = await res.json();
+		assertEquals(json, {
+			wePassedInFilterCatchingOnlySomeError: true,
+		});
+		await app.close();
+	});
 }
 
 Deno.test('Controller filter works', async () => {
-  const app = new DanetApplication();
-  await app.init(ModuleWithFilter);
-  const port = (await app.listen(0)).port;
+	const app = new DanetApplication();
+	await app.init(ModuleWithFilter);
+	const port = (await app.listen(0)).port;
 
-  const res = await fetch(`http://localhost:${port}`, {
-    method: 'GET',
-  });
-  const json = await res.json();
-  assertEquals(json, {
-    wePassedInFilterCatchingAllErrors: true,
-  });
-  await app.close();
+	const res = await fetch(`http://localhost:${port}`, {
+		method: 'GET',
+	});
+	const json = await res.json();
+	assertEquals(json, {
+		wePassedInFilterCatchingAllErrors: true,
+	});
+	await app.close();
 });
 
 Deno.test('throw 500 on unexpected error', async () => {
-  const app = new DanetApplication();
-  await app.init(ModuleWithFilter);
-  const port = (await app.listen(0)).port;
+	const app = new DanetApplication();
+	await app.init(ModuleWithFilter);
+	const port = (await app.listen(0)).port;
 
-  const res = await fetch(`http://localhost:${port}/custom-error/unexpected-error`, {
-    method: 'GET',
-  });
-  assertEquals(500, res.status);
-  await res.json();
-  await app.close();
+	const res = await fetch(
+		`http://localhost:${port}/custom-error/unexpected-error`,
+		{
+			method: 'GET',
+		},
+	);
+	assertEquals(500, res.status);
+	await res.json();
+	await app.close();
 });
-
