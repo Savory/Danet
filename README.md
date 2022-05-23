@@ -1,6 +1,4 @@
-# Danet
-
-## A savory web framework for [Deno](https://deno.land/) heavily inspired by [Nest](https://github.com/nestjs/nest)
+# Danet - A savory web framework for [Deno](https://deno.land/) heavily inspired by [Nest](https://github.com/nestjs/nest)
 
 [![Run tests](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml)
 [![codecov](https://codecov.io/gh/Sorikairox/Danet/branch/main/graph/badge.svg?token=R6WXVC669Z)](https://codecov.io/gh/Sorikairox/Danet)
