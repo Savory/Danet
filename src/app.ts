@@ -17,12 +17,12 @@ export class DanetApplication {
 	private app = new Application();
 	private injector = new Injector();
 	private hookExecutor = new HookExecutor(this.injector);
-	private actualRenderer = new HandlebarRenderer();
+	private renderer = new HandlebarRenderer();
 	public danetRouter = new DanetRouter(
 		this.injector,
 		new GuardExecutor(this.injector),
 		new FilterExecutor(),
-		this.actualRenderer,
+		this.renderer,
 	);
 	private controller: AbortController = new AbortController();
 	private logger: Logger = new Logger('DanetApplication');
@@ -80,6 +80,6 @@ export class DanetApplication {
 	}
 
 	setViewEngineDir(path: string) {
-		this.actualRenderer.setRootDir(path);
+		this.renderer.setRootDir(path);
 	}
 }
