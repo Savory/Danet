@@ -28,12 +28,12 @@
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="/Danet/resources/css/retype.css?v=2.2.706660896480" rel="stylesheet" data-turbo-track="reload" />
+    <link href="/Danet/resources/css/retype.css?v=2.2.706661289263" rel="stylesheet" data-turbo-track="reload" />
 
-    <script type="text/javascript" src="/Danet/resources/js/config.js?v=2.2.706660896480" defer data-turbo-track="reload"></script>
+    <script type="text/javascript" src="/Danet/resources/js/config.js?v=2.2.706661289263" defer data-turbo-track="reload"></script>
     <script type="text/javascript" src="/Danet/resources/js/retype.js?v=2.2" defer data-turbo-track="reload"></script>
-    <script id="lunr-js" type="text/javascript" src="/Danet/resources/js/lunr.js?v=2.2.706660896480" defer></script>
-    <script id="prism-js" type="text/javascript" src="/Danet/resources/js/prism.js?v=2.2.706660896480" defer></script>
+    <script id="lunr-js" type="text/javascript" src="/Danet/resources/js/lunr.js?v=2.2.706661289263" defer></script>
+    <script id="prism-js" type="text/javascript" src="/Danet/resources/js/prism.js?v=2.2.706661289263" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -259,12 +259,11 @@ export class CatsController {
 <p>Routes with static paths won&#x27;t work when you need to accept <strong>dynamic data</strong> as part of the request (e.g., <code v-pre>GET /cats/1</code> to get cat with id <code v-pre>1</code>). In order to define routes with parameters, we can add route parameter <strong>tokens</strong> in the path of the route to capture the dynamic value at that position in the request URL. The route parameter token in the <code v-pre>@Get()</code> decorator example below demonstrates this usage. Route parameters declared in this way can be accessed using the <code v-pre>@Param()</code> decorator, which should be added to the method signature.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <pre class="language-typescript"><code v-pre class="language-typescript">@Get(':id')
-findOne(@Param() params): string {
-  console.log(params.id);
-  return `This action returns a #${params.id} cat`;
+findOne(@Param('id') id: string): string {
+  return `This action returns a #${id} cat`;
 }</code></pre>
 </doc-codeblock></div>
-<p><code v-pre>@Param()</code> is used to decorate a method parameter (<code v-pre>params</code> in the example above), and makes the <strong>route</strong> parameters available as properties of that decorated method parameter inside the body of the method. As seen in the code above, we can access the <code v-pre>id</code> parameter by referencing <code v-pre>params.id</code>. You can also pass in a particular parameter token to the decorator, and then reference the route parameter directly by name in the method body.</p>
+<p><code v-pre>@Param()</code> is used to decorate a method parameter by giving a particular parameter token to the decorator.</p>
 <div class="flex mb-6">
     <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
     <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
@@ -283,13 +282,6 @@ findOne(@Param() params): string {
         </div>
     </div>
 </div>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">@@filename()
-@Get(':id')
-findOne(@Param('id') id: string): string {
-  return `This action returns a #${id} cat`;
-}</code></pre>
-</doc-codeblock></div>
 <doc-anchor-target id="scopes">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#scopes">#</doc-anchor-trigger>
@@ -297,7 +289,7 @@ findOne(@Param('id') id: string): string {
     </h3>
 </doc-anchor-target>
 <p>For people coming from different programming language backgrounds, it might be unexpected to learn that in Danet, almost everything is shared across incoming requests. We have a connection pool to the database, singleton services with global state, etc.</p>
-<p>However, there are edge-cases when request-based lifetime of the controller may be the desired behavior, for example request tracking or multi-tenancy. Learn how to control scopes <a href="/fundamentals/injection-scopes">here</a>.</p>
+<p>However, there are edge-cases when request-based lifetime of the controller may be the desired behavior, for example request tracking or multi-tenancy. Documentation page will be created to explain how to do that.</p>
 <doc-anchor-target id="asynchronicity">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#asynchronicity">#</doc-anchor-trigger>
