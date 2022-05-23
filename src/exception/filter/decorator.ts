@@ -27,7 +27,7 @@ export const UseFilter = (guard: Constructor) =>
 		}
 	};
 
-export const filterCatchTypeMetadataKey = 'filterException';
+export const filterCatchTypeMetadataKey = 'errorCaught';
 export function Catch<T>(ErrorType: Constructor) {
 	return (Type: Constructor<T>): void => {
 		MetadataHelper.setMetadata(filterCatchTypeMetadataKey, ErrorType, Type);
