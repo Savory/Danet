@@ -15,7 +15,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 
-### [NestJs Documentation](https://github.com/nestjs/docs.nestjs.com) that we heavily copied content from
+### [NestJs Documentation](https://github.com/nestjs/docs.nestjs.com) which we heavily copy content from
 Copyright (c) 2017-2022 Kamil Myśliwiec <http://kamilmysliwiec.com>
 
 Permission is hereby granted, free of charge, to any person obtaining
