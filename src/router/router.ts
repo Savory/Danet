@@ -1,6 +1,4 @@
-import { State } from 'https://deno.land/x/oak@v10.5.1/application.ts';
-import { Context } from 'https://deno.land/x/oak@v10.5.1/context.ts';
-import { Router } from 'https://deno.land/x/oak@v10.5.1/router.ts';
+import { Router, Context, State } from '../deps.ts';
 
 import { FilterExecutor } from '../exception/filter/executor.ts';
 import { HTTP_STATUS } from '../exception/http/enum.ts';

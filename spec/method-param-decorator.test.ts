@@ -1,5 +1,5 @@
-import { assertEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
-import { Response } from 'https://deno.land/x/oak@v9.0.1/response.ts';
+import { assertEquals } from '../src/deps_test.ts';
+import { Response } from '../src/deps.ts';
 import { DanetApplication } from '../src/app.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get, Post } from '../src/router/controller/decorator.ts';

@@ -1,4 +1,4 @@
-import { getQuery } from 'https://deno.land/x/oak@v10.5.1/helpers.ts';
+import { getQuery } from '../../../deps.ts';
 import { MetadataHelper } from '../../../metadata/helper.ts';
 import { HttpContext } from '../../router.ts';
 
