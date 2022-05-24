@@ -212,7 +212,7 @@ export class NotImplementedException extends HttpException {
 	constructor() {
 		super(
 			HTTP_STATUS.NOT_IMPLEMENTED,
-			'Not implemented'
+			'Not implemented',
 		);
 	}
 }
