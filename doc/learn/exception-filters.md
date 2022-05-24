@@ -21,7 +21,6 @@ Let's create an exception filter that is responsible for catching exceptions whi
 
 ```ts custom-exception.filter.ts
 import { ExceptionFilter, Catch, HttpContext } from 'https://deno.land/x/danet/mod.ts';
-import { Request, Response } from 'express';
 
 @Catch(CustomException)
 export class CustomExceptionFilter implements ExceptionFilter {
