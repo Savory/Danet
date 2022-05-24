@@ -2,10 +2,10 @@ import { HTTP_STATUS } from './enum.ts';
 
 export class HttpException extends Error {
 	constructor(
-		readonly statusCode: number,
-		readonly description: string,
+		readonly status: number,
+		description: string,
 	) {
-		super(`${statusCode} - ${description}`);
+		super(`${status} - ${description}`);
 		this.name = this.constructor.name;
 	}
 }

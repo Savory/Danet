@@ -1,4 +1,4 @@
-import { ForbiddenHttpException } from '../exception/http/forbidden.ts';
+import { ForbiddenException } from '../exception/http/mod.ts';
 import { Injector } from '../injector/injector.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { ControllerConstructor } from '../router/controller/constructor.ts';
@@ -45,7 +45,7 @@ export class GuardExecutor {
 		if (guard) {
 			const canActivate = await guard.canActivate(context);
 			if (!canActivate) {
-				throw new ForbiddenHttpException();
+				throw new ForbiddenException();
 			}
 		}
 	}
