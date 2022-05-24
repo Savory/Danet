@@ -1,4 +1,4 @@
-import { HTTP_STATUS } from "./enum.ts";
+import { HTTP_STATUS } from './enum.ts';
 
 export class HttpException {
   constructor(readonly status: number, readonly message: string) {}
