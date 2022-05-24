@@ -32,7 +32,6 @@ Handlers often need access to the client **request** details. Danet provides acc
 
 ```ts cats.controller.ts
 import { Controller, Get, Req } from 'https://deno.land/x/danet/mod.ts';
-import { Request } from 'express';
 
 @Controller('cats')
 export class CatsController {
