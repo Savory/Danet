@@ -139,7 +139,8 @@ Deno.test('403 when guard is throwing', async () => {
 	assertEquals(errorStatus, 403);
 	const json = await res.json();
 	assertEquals(json, {
-		message: 'Forbidden',
+		message: '403 - Forbidden',
+		name: 'ForbiddenException',
 		status: 403,
 	});
 	await app.close();

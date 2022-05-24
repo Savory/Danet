@@ -1,9 +1,4 @@
-import {
-	green,
-	red,
-	white,
-	yellow,
-} from './deps.ts';
+import { green, red, white, yellow } from './deps.ts';
 import { Injectable } from './injector/injectable/decorator.ts';
 
 @Injectable()
