@@ -19,6 +19,33 @@ filter generates the following default JSON response:
 property will be properly populated and send back as a response (instead of the
 default `InternalServerError` for unrecognized exceptions). !!!
 
+
+#### Built-in HTTP exceptions
+
+Danet provides a set of standard exceptions that inherit from the base `HttpException` and represent many of the most common HTTP exceptions:
+
+- `BadRequestException`
+- `UnauthorizedException`
+- `NotFoundException`
+- `ForbiddenException`
+- `NotAcceptableException`
+- `RequestTimeoutException`
+- `ConflictException`
+- `GoneException`
+- `HttpVersionNotSupportedException`
+- `PayloadTooLargeException`
+- `UnsupportedMediaTypeException`
+- `UnprocessableEntityException`
+- `InternalServerErrorException`
+- `NotImplementedException`
+- `ImATeapotException`
+- `MethodNotAllowedException`
+- `BadGatewayException`
+- `ServiceUnavailableException`
+- `GatewayTimeoutException`
+- `PreconditionFailedException`
+
+
 ### Exception filters
 
 While the base (built-in) exception filter can automatically handle many cases
