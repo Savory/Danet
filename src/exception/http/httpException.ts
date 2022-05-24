@@ -1,7 +1,7 @@
 import { HTTP_STATUS } from "./enum.ts";
 
 export class HttpException {
-  constructor(readonly status: Number, readonly message: String) {}
+  constructor(readonly status: number, readonly message: string) {}
 }
 
 export class ForbiddenHttpException extends HttpException {
