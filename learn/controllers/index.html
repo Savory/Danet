@@ -28,12 +28,12 @@
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="/Danet/resources/css/retype.css?v=2.2.706715174002" rel="stylesheet" data-turbo-track="reload" />
+    <link href="/Danet/resources/css/retype.css?v=2.2.706747393099" rel="stylesheet" data-turbo-track="reload" />
 
-    <script type="text/javascript" src="/Danet/resources/js/config.js?v=2.2.706715174002" defer data-turbo-track="reload"></script>
+    <script type="text/javascript" src="/Danet/resources/js/config.js?v=2.2.706747393099" defer data-turbo-track="reload"></script>
     <script type="text/javascript" src="/Danet/resources/js/retype.js?v=2.2" defer data-turbo-track="reload"></script>
-    <script id="lunr-js" type="text/javascript" src="/Danet/resources/js/lunr.js?v=2.2.706715174002" defer></script>
-    <script id="prism-js" type="text/javascript" src="/Danet/resources/js/prism.js?v=2.2.706715174002" defer></script>
+    <script id="lunr-js" type="text/javascript" src="/Danet/resources/js/lunr.js?v=2.2.706747393099" defer></script>
+    <script id="prism-js" type="text/javascript" src="/Danet/resources/js/prism.js?v=2.2.706747393099" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -156,16 +156,29 @@
         <span>Controllers</span>
     </h1>
 </doc-anchor-target>
-<p>Controllers are responsible for handling incoming <strong>requests</strong> and returning <strong>responses</strong> to the client.</p>
-<p>A controller&#x27;s purpose is to receive specific requests for the application. The <strong>routing</strong> mechanism controls which controller receives which requests. Frequently, each controller has more than one route, and different routes can perform different actions.</p>
-<p>In order to create a basic controller, we use classes and <strong>decorators</strong>. Decorators associate classes with required metadata and enable Danet to create a routing map (tie requests to the corresponding controllers).</p>
+<p>Controllers are responsible for handling incoming <strong>requests</strong> and returning
+<strong>responses</strong> to the client.</p>
+<p>A controller&#x27;s purpose is to receive specific requests for the application. The
+<strong>routing</strong> mechanism controls which controller receives which requests.
+Frequently, each controller has more than one route, and different routes can
+perform different actions.</p>
+<p>In order to create a basic controller, we use classes and <strong>decorators</strong>.
+Decorators associate classes with required metadata and enable Danet to create a
+routing map (tie requests to the corresponding controllers).</p>
 <doc-anchor-target id="routing">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#routing">#</doc-anchor-trigger>
         <span>Routing</span>
     </h3>
 </doc-anchor-target>
-<p>In the following example we&#x27;ll use the <code v-pre>@Controller()</code> decorator, which is <strong>required</strong> to define a basic controller. We&#x27;ll specify an optional route path prefix of <code v-pre>cats</code>. Using a path prefix in a <code v-pre>@Controller()</code> decorator allows us to easily group a set of related routes, and minimize repetitive code. For example, we may choose to group a set of routes that manage interactions with a customer entity under the route <code v-pre>/customers</code>. In that case, we could specify the path prefix <code v-pre>customers</code> in the <code v-pre>@Controller()</code> decorator so that we don&#x27;t have to repeat that portion of the path for each route in the file.</p>
+<p>In the following example we&#x27;ll use the <code v-pre>@Controller()</code> decorator, which is
+<strong>required</strong> to define a basic controller. We&#x27;ll specify an optional route path
+prefix of <code v-pre>cats</code>. Using a path prefix in a <code v-pre>@Controller()</code> decorator allows us
+to easily group a set of related routes, and minimize repetitive code. For
+example, we may choose to group a set of routes that manage interactions with a
+customer entity under the route <code v-pre>/customers</code>. In that case, we could specify the
+path prefix <code v-pre>customers</code> in the <code v-pre>@Controller()</code> decorator so that we don&#x27;t have
+to repeat that portion of the path for each route in the file.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">cats.controller.ts</div>
 <pre class="language-typescript"><code v-pre class="language-typescript">import { Controller, Get } from 'https://deno.land/x/danet/mod.ts';
@@ -178,16 +191,36 @@ export class CatsController {
   }
 }</code></pre>
 </doc-codeblock></div>
-<p>The <code v-pre>@Get()</code> HTTP request method decorator before the <code v-pre>findAll()</code> method tells Danet to create a handler for a specific endpoint for HTTP requests. The endpoint corresponds to the HTTP request method (GET in this case) and the route path. What is the route path? The route path for a handler is determined by concatenating the (optional) prefix declared for the controller, and any path specified in the method&#x27;s decorator. Since we&#x27;ve declared a prefix for every route ( <code v-pre>cats</code>), and haven&#x27;t added any path information in the decorator, Danet will map <code v-pre>GET /cats</code> requests to this handler. As mentioned, the path includes both the optional controller path prefix <strong>and</strong> any path string declared in the request method decorator. For example, a path prefix of <code v-pre>customers</code> combined with the decorator <code v-pre>@Get('profile')</code> would produce a route mapping for requests like <code v-pre>GET /customers/profile</code>.</p>
-<p>In our example above, when a GET request is made to this endpoint, Danet routes the request to our user-defined <code v-pre>findAll()</code> method. Note that the method name we choose here is completely arbitrary. We obviously must declare a method to bind the route to, but Danet doesn&#x27;t attach any significance to the method name chosen.</p>
-<p>This method will return a 200 status code and the associated response, which in this case is just a string.</p>
+<p>The <code v-pre>@Get()</code> HTTP request method decorator before the <code v-pre>findAll()</code> method tells
+Danet to create a handler for a specific endpoint for HTTP requests. The
+endpoint corresponds to the HTTP request method (GET in this case) and the route
+path. What is the route path? The route path for a handler is determined by
+concatenating the (optional) prefix declared for the controller, and any path
+specified in the method&#x27;s decorator. Since we&#x27;ve declared a prefix for every
+route ( <code v-pre>cats</code>), and haven&#x27;t added any path information in the decorator, Danet
+will map <code v-pre>GET /cats</code> requests to this handler. As mentioned, the path includes
+both the optional controller path prefix <strong>and</strong> any path string declared in the
+request method decorator. For example, a path prefix of <code v-pre>customers</code> combined
+with the decorator <code v-pre>@Get('profile')</code> would produce a route mapping for requests
+like <code v-pre>GET /customers/profile</code>.</p>
+<p>In our example above, when a GET request is made to this endpoint, Danet routes
+the request to our user-defined <code v-pre>findAll()</code> method. Note that the method name we
+choose here is completely arbitrary. We obviously must declare a method to bind
+the route to, but Danet doesn&#x27;t attach any significance to the method name
+chosen.</p>
+<p>This method will return a 200 status code and the associated response, which in
+this case is just a string.</p>
 <doc-anchor-target id="request-object">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#request-object">#</doc-anchor-trigger>
         <span>Request object</span>
     </h3>
 </doc-anchor-target>
-<p>Handlers often need access to the client <strong>request</strong> details. Danet provides access to the <a href="https://doc.deno.land/https://deno.land/x/oak@v10.6.0/mod.ts/%7E/Request">request object</a>. We can access the request object by instructing Danet to inject it by adding the <code v-pre>@Req()</code> decorator to the handler&#x27;s signature.</p>
+<p>Handlers often need access to the client <strong>request</strong> details. Danet provides
+access to the
+<a href="https://doc.deno.land/https://deno.land/x/oak@v10.6.0/mod.ts/%7E/Request">request object</a>.
+We can access the request object by instructing Danet to inject it by adding the
+<code v-pre>@Req()</code> decorator to the handler&#x27;s signature.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">cats.controller.ts</div>
 <pre class="language-typescript"><code v-pre class="language-typescript">import { Controller, Get, Req } from 'https://deno.land/x/danet/mod.ts';
@@ -200,7 +233,12 @@ export class CatsController {
   }
 }</code></pre>
 </doc-codeblock></div>
-<p>The request object represents the HTTP request and has properties for the request query string, parameters, HTTP headers, and body. In most cases, it&#x27;s not necessary to grab these properties manually. We can use dedicated decorators instead, such as <code v-pre>@Body()</code> or <code v-pre>@Query()</code>, which are available out of the box. Below is a list of the provided decorators and the plain platform-specific objects they represent.</p>
+<p>The request object represents the HTTP request and has properties for the
+request query string, parameters, HTTP headers, and body. In most cases, it&#x27;s
+not necessary to grab these properties manually. We can use dedicated decorators
+instead, such as <code v-pre>@Body()</code> or <code v-pre>@Query()</code>, which are available out of the box.
+Below is a list of the provided decorators and the plain platform-specific
+objects they represent.</p>
 <table>
   <tbody>
     <tr>
@@ -230,7 +268,9 @@ export class CatsController {
         <span>Resources</span>
     </h3>
 </doc-anchor-target>
-<p>Earlier, we defined an endpoint to fetch the cats resource (<strong>GET</strong> route). We&#x27;ll typically also want to provide an endpoint that creates new records. For this, let&#x27;s create the <strong>POST</strong> handler:</p>
+<p>Earlier, we defined an endpoint to fetch the cats resource (<strong>GET</strong> route).
+We&#x27;ll typically also want to provide an endpoint that creates new records. For
+this, let&#x27;s create the <strong>POST</strong> handler:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">cats.controller.ts</div>
 <pre class="language-typescript"><code v-pre class="language-typescript">import { Controller, Get, Post } from 'https://deno.land/x/danet/mod.ts';
@@ -248,21 +288,30 @@ export class CatsController {
   }
 }</code></pre>
 </doc-codeblock></div>
-<p>It&#x27;s that simple. Danet provides decorators for almost all of the standard HTTP methods: <code v-pre>@Get()</code>, <code v-pre>@Post()</code>, <code v-pre>@Put()</code>, <code v-pre>@Delete()</code>, <code v-pre>@Patch()</code>. In addition, <code v-pre>@All()</code> defines an endpoint that handles all of them.</p>
+<p>It&#x27;s that simple. Danet provides decorators for almost all of the standard HTTP
+methods: <code v-pre>@Get()</code>, <code v-pre>@Post()</code>, <code v-pre>@Put()</code>, <code v-pre>@Delete()</code>, <code v-pre>@Patch()</code>. In addition,
+<code v-pre>@All()</code> defines an endpoint that handles all of them.</p>
 <doc-anchor-target id="route-parameters">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#route-parameters">#</doc-anchor-trigger>
         <span>Route parameters</span>
     </h3>
 </doc-anchor-target>
-<p>Routes with static paths won&#x27;t work when you need to accept <strong>dynamic data</strong> as part of the request (e.g., <code v-pre>GET /cats/1</code> to get cat with id <code v-pre>1</code>). In order to define routes with parameters, we can add route parameter <strong>tokens</strong> in the path of the route to capture the dynamic value at that position in the request URL. The route parameter token in the <code v-pre>@Get()</code> decorator example below demonstrates this usage. Route parameters declared in this way can be accessed using the <code v-pre>@Param()</code> decorator, which should be added to the method signature.</p>
+<p>Routes with static paths won&#x27;t work when you need to accept <strong>dynamic data</strong> as
+part of the request (e.g., <code v-pre>GET /cats/1</code> to get cat with id <code v-pre>1</code>). In order to
+define routes with parameters, we can add route parameter <strong>tokens</strong> in the path
+of the route to capture the dynamic value at that position in the request URL.
+The route parameter token in the <code v-pre>@Get()</code> decorator example below demonstrates
+this usage. Route parameters declared in this way can be accessed using the
+<code v-pre>@Param()</code> decorator, which should be added to the method signature.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <pre class="language-typescript"><code v-pre class="language-typescript">@Get(':id')
 findOne(@Param('id') id: string): string {
   return `This action returns a #${id} cat`;
 }</code></pre>
 </doc-codeblock></div>
-<p><code v-pre>@Param()</code> is used to decorate a method parameter by giving a particular parameter token to the decorator.</p>
+<p><code v-pre>@Param()</code> is used to decorate a method parameter by giving a particular
+parameter token to the decorator.</p>
 <div class="flex mb-6">
     <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
     <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
@@ -276,8 +325,7 @@ findOne(@Param('id') id: string): string {
             </svg>
         </div>
         <div class="pr-5 ml-3 w-full">
-            <h5>Hint</h5>
-<p>Import <code v-pre>Param</code> from the <code v-pre>https://deno.land/x/danet/mod.ts</code> package.</p>
+            <h5>Hint Import <code v-pre>Param</code> from the <code v-pre>https://deno.land/x/danet/mod.ts</code> package.</h5>
         </div>
     </div>
 </div>
@@ -287,15 +335,22 @@ findOne(@Param('id') id: string): string {
         <span>Scopes</span>
     </h3>
 </doc-anchor-target>
-<p>For people coming from different programming language backgrounds, it might be unexpected to learn that in Danet, almost everything is shared across incoming requests. We have a connection pool to the database, singleton services with global state, etc.</p>
-<p>However, there are edge-cases when request-based lifetime of the controller may be the desired behavior, for example request tracking or multi-tenancy. Documentation page will be created to explain how to do that.</p>
+<p>For people coming from different programming language backgrounds, it might be
+unexpected to learn that in Danet, almost everything is shared across incoming
+requests. We have a connection pool to the database, singleton services with
+global state, etc.</p>
+<p>However, there are edge-cases when request-based lifetime of the controller may
+be the desired behavior, for example request tracking or multi-tenancy.
+Documentation page will be created to explain how to do that.</p>
 <doc-anchor-target id="asynchronicity">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#asynchronicity">#</doc-anchor-trigger>
         <span>Asynchronicity</span>
     </h3>
 </doc-anchor-target>
-<p>Being a modern framework, we know that data extraction is mostly <strong>asynchronous</strong>. That&#x27;s why Danet supports and works well with <code v-pre>async</code> functions.</p>
+<p>Being a modern framework, we know that data extraction is mostly
+<strong>asynchronous</strong>. That&#x27;s why Danet supports and works well with <code v-pre>async</code>
+functions.</p>
 <div class="flex mb-6">
     <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
     <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
@@ -309,12 +364,11 @@ findOne(@Param('id') id: string): string {
             </svg>
         </div>
         <div class="pr-5 ml-3 w-full">
-            <h5>Hint</h5>
-<p>Learn more about <code v-pre>async / await</code> feature <a href="https://kamilmysliwiec.com/typescript-2-1-introduction-async-await">here</a></p>
-        </div>
-    </div>
-</div>
-<p>Every async function has to return a <code v-pre>Promise</code>. This means that you can return a deferred value that Danet will be able to resolve by itself. Let&#x27;s see an example of this:</p>
+            <h5>Hint Learn more about <code v-pre>async / await</code> feature</h5>
+<p><a href="https://kamilmysliwiec.com/typescript-2-1-introduction-async-await">here</a> !!!</p>
+<p>Every async function has to return a <code v-pre>Promise</code>. This means that you can return a
+deferred value that Danet will be able to resolve by itself. Let&#x27;s see an
+example of this:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">cats.controller.ts</div>
 <pre class="language-typescript"><code v-pre class="language-typescript">@Get()
@@ -328,7 +382,8 @@ async findAll(): Promise&lt;any[]&gt; {
         <span>Handling errors</span>
     </h3>
 </doc-anchor-target>
-<p>There&#x27;s a separate chapter about handling errors (i.e., working with exceptions):
+<p>There&#x27;s a separate chapter about handling errors (i.e., working with
+exceptions): 
 <div class="mb-6 px-5 py-4 flex justify-between relative border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded transition-colors duration-150">
     <div class="flex items-center text-blue-500 dark:text-blue-400">
         <span class="inline-block mb-px">
@@ -348,7 +403,9 @@ async findAll(): Promise&lt;any[]&gt; {
         <span>Full resource sample</span>
     </h3>
 </doc-anchor-target>
-<p>Below is an example that makes use of several of the available decorators to create a basic controller. This controller exposes a couple of methods to access and manipulate internal data.</p>
+<p>Below is an example that makes use of several of the available decorators to
+create a basic controller. This controller exposes a couple of methods to access
+and manipulate internal data.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">cats.controller.ts</div>
 <pre class="language-typescript"><code v-pre class="language-typescript">import { Controller, Get, Query, Post, Body, Put, Param, Delete } from 'https://deno.land/x/danet/mod.ts';
@@ -383,8 +440,12 @@ export class CatsController {
         <span>Getting up and running</span>
     </h3>
 </doc-anchor-target>
-<p>With the above controller fully defined, Danet still doesn&#x27;t know that <code v-pre>CatsController</code> exists and as a result won&#x27;t create an instance of this class.</p>
-<p>Controllers always belong to a module, which is why we include the <code v-pre>controllers</code> array within the <code v-pre>@Module()</code> decorator. Since we haven&#x27;t yet defined any other modules except the root <code v-pre>AppModule</code>, we&#x27;ll use that to introduce the <code v-pre>CatsController</code>:</p>
+<p>With the above controller fully defined, Danet still doesn&#x27;t know that
+<code v-pre>CatsController</code> exists and as a result won&#x27;t create an instance of this class.</p>
+<p>Controllers always belong to a module, which is why we include the <code v-pre>controllers</code>
+array within the <code v-pre>@Module()</code> decorator. Since we haven&#x27;t yet defined any other
+modules except the root <code v-pre>AppModule</code>, we&#x27;ll use that to introduce the
+<code v-pre>CatsController</code>:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">app.module.ts</div>
 <pre class="language-typescript"><code v-pre class="language-typescript">import { Module } from 'https://deno.land/x/danet/mod.ts';
@@ -395,7 +456,11 @@ import { CatsController } from './cats/cats.controller';
 })
 export class AppModule {}</code></pre>
 </doc-codeblock></div>
-<p>We attached the metadata to the module class using the <code v-pre>@Module()</code> decorator, and Danet can now easily reflect which controllers have to be mounted.</p>
+<p>We attached the metadata to the module class using the <code v-pre>@Module()</code> decorator,
+and Danet can now easily reflect which controllers have to be mounted.</p>
+        </div>
+    </div>
+</div>
 
                                 
                                 <!-- Required only on API pages -->

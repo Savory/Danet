@@ -12,28 +12,28 @@
     <!-- Primary Meta Tags -->
     <title>Exception filters</title>
     <meta name="title" content="Exception filters">
-    <meta name="description" content="Danet comes with a built-in exceptions layer which is responsible for processing all unhandled exceptions across an application." />
+    <meta name="description" content="Danet comes with a built-in exceptions layer which is responsible for processing all unhandled exceptions across an application. When an exception is" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://savory.github.io/Danet/learn/exception-filters/">
     <meta property="og:title" content="Exception filters">
-    <meta property="og:description" content="Danet comes with a built-in exceptions layer which is responsible for processing all unhandled exceptions across an application.">
+    <meta property="og:description" content="Danet comes with a built-in exceptions layer which is responsible for processing all unhandled exceptions across an application. When an exception is">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://savory.github.io/Danet/learn/exception-filters/">
     <meta property="twitter:title" content="Exception filters">
-    <meta property="twitter:description" content="Danet comes with a built-in exceptions layer which is responsible for processing all unhandled exceptions across an application.">
+    <meta property="twitter:description" content="Danet comes with a built-in exceptions layer which is responsible for processing all unhandled exceptions across an application. When an exception is">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="/Danet/resources/css/retype.css?v=2.2.706715174002" rel="stylesheet" data-turbo-track="reload" />
+    <link href="/Danet/resources/css/retype.css?v=2.2.706747393099" rel="stylesheet" data-turbo-track="reload" />
 
-    <script type="text/javascript" src="/Danet/resources/js/config.js?v=2.2.706715174002" defer data-turbo-track="reload"></script>
+    <script type="text/javascript" src="/Danet/resources/js/config.js?v=2.2.706747393099" defer data-turbo-track="reload"></script>
     <script type="text/javascript" src="/Danet/resources/js/retype.js?v=2.2" defer data-turbo-track="reload"></script>
-    <script id="lunr-js" type="text/javascript" src="/Danet/resources/js/lunr.js?v=2.2.706715174002" defer></script>
-    <script id="prism-js" type="text/javascript" src="/Danet/resources/js/prism.js?v=2.2.706715174002" defer></script>
+    <script id="lunr-js" type="text/javascript" src="/Danet/resources/js/lunr.js?v=2.2.706747393099" defer></script>
+    <script id="prism-js" type="text/javascript" src="/Danet/resources/js/prism.js?v=2.2.706747393099" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -156,12 +156,18 @@
         <span>Exception filters</span>
     </h1>
 </doc-anchor-target>
-<p>Danet comes with a built-in <strong>exceptions layer</strong> which is responsible for processing all unhandled exceptions across an application. When an exception is not handled by your application code, it is caught by this layer, which then automatically sends an appropriate user-friendly response.</p>
-<p>Out of the box, this action is performed by a built-in <strong>global exception filter</strong>, which handles all exceptions. When an exception is <strong>unrecognized</strong> (does not have <code v-pre>statusCode</code> and <code v-pre>message</code> properties), the built-in exception filter generates the following default JSON response:</p>
+<p>Danet comes with a built-in <strong>exceptions layer</strong> which is responsible for
+processing all unhandled exceptions across an application. When an exception is
+not handled by your application code, it is caught by this layer, which then
+automatically sends an appropriate user-friendly response.</p>
+<p>Out of the box, this action is performed by a built-in <strong>global exception
+filter</strong>, which handles all exceptions. When an exception is <strong>unrecognized</strong>
+(does not have <code v-pre>statusCode</code> and <code v-pre>message</code> properties), the built-in exception
+filter generates the following default JSON response:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <pre class="language-json"><code v-pre class="language-json">{
-  &quot;statusCode&quot;: 500,
-  &quot;message&quot;: &quot;Internal server error!&quot;
+	&quot;statusCode&quot;: 500,
+	&quot;message&quot;: &quot;Internal server error!&quot;
 }</code></pre>
 </doc-codeblock></div>
 <div class="flex mb-6">
@@ -177,19 +183,54 @@
             </svg>
         </div>
         <div class="pr-5 ml-3 w-full">
-            <h5><strong>Hint</strong></h5>
-<p>Any thrown exception containing the <code v-pre>statusCode</code> and <code v-pre>message</code> property will be properly populated and send back as a response (instead of the default <code v-pre>InternalServerError</code> for unrecognized exceptions).</p>
-        </div>
-    </div>
-</div>
+            <h5><strong>Hint</strong> Any thrown exception containing the <code v-pre>statusCode</code> and <code v-pre>message</code></h5>
+<p>property will be properly populated and send back as a response (instead of the
+default <code v-pre>InternalServerError</code> for unrecognized exceptions). !!!</p>
+<doc-anchor-target id="built-in-http-exceptions">
+    <h4>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#built-in-http-exceptions">#</doc-anchor-trigger>
+        <span>Built-in HTTP exceptions</span>
+    </h4>
+</doc-anchor-target>
+<p>Danet provides a set of standard exceptions that inherit from the base
+<code v-pre>HttpException</code> and represent many of the most common HTTP exceptions:</p>
+<ul>
+<li><code v-pre>BadRequestException</code></li>
+<li><code v-pre>UnauthorizedException</code></li>
+<li><code v-pre>NotFoundException</code></li>
+<li><code v-pre>ForbiddenException</code></li>
+<li><code v-pre>NotAcceptableException</code></li>
+<li><code v-pre>RequestTimeoutException</code></li>
+<li><code v-pre>ConflictException</code></li>
+<li><code v-pre>GoneException</code></li>
+<li><code v-pre>HttpVersionNotSupportedException</code></li>
+<li><code v-pre>PayloadTooLargeException</code></li>
+<li><code v-pre>UnsupportedMediaTypeException</code></li>
+<li><code v-pre>UnprocessableEntityException</code></li>
+<li><code v-pre>InternalServerErrorException</code></li>
+<li><code v-pre>NotImplementedException</code></li>
+<li><code v-pre>ImATeapotException</code></li>
+<li><code v-pre>MethodNotAllowedException</code></li>
+<li><code v-pre>BadGatewayException</code></li>
+<li><code v-pre>ServiceUnavailableException</code></li>
+<li><code v-pre>GatewayTimeoutException</code></li>
+<li><code v-pre>PreconditionFailedException</code></li>
+</ul>
 <doc-anchor-target id="exception-filters">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#exception-filters">#</doc-anchor-trigger>
         <span>Exception filters</span>
     </h3>
 </doc-anchor-target>
-<p>While the base (built-in) exception filter can automatically handle many cases for you, you may want <strong>full control</strong> over the exceptions layer. For example, you may want to add logging or use a different JSON schema based on some dynamic factors. <strong>Exception filters</strong> are designed for exactly this purpose. They let you control the exact flow of control and the content of the response sent back to the client.</p>
-<p>Let&#x27;s create an exception filter that is responsible for catching exceptions which are an instance of the <code v-pre>CustomException</code> class, and implementing custom response logic for them.</p>
+<p>While the base (built-in) exception filter can automatically handle many cases
+for you, you may want <strong>full control</strong> over the exceptions layer. For example,
+you may want to add logging or use a different JSON schema based on some dynamic
+factors. <strong>Exception filters</strong> are designed for exactly this purpose. They let
+you control the exact flow of control and the content of the response sent back
+to the client.</p>
+<p>Let&#x27;s create an exception filter that is responsible for catching exceptions
+which are an instance of the <code v-pre>CustomException</code> class, and implementing custom
+response logic for them.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">custom-exception.filter.ts</div>
 <pre class="language-typescript"><code v-pre class="language-typescript">import { ExceptionFilter, Catch, HttpContext } from 'https://deno.land/x/danet/mod.ts';
@@ -210,14 +251,18 @@ export class CustomExceptionFilter implements ExceptionFilter {
   }
 }</code></pre>
 </doc-codeblock></div>
-<p>The <code v-pre>@Catch(CustomException)</code> decorator binds the required metadata to the exception filter, telling Danet that this particular filter is looking for exceptions of type <code v-pre>CustomException</code> and nothing else. The <code v-pre>@Catch()</code> decorator takes a single parameter.</p>
+<p>The <code v-pre>@Catch(CustomException)</code> decorator binds the required metadata to the
+exception filter, telling Danet that this particular filter is looking for
+exceptions of type <code v-pre>CustomException</code> and nothing else. The <code v-pre>@Catch()</code> decorator
+takes a single parameter.</p>
 <doc-anchor-target id="binding-filters">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#binding-filters">#</doc-anchor-trigger>
         <span>Binding filters</span>
     </h3>
 </doc-anchor-target>
-<p>Let&#x27;s tie our new <code v-pre>CustomExceptionFilter</code> to the <code v-pre>CatsController</code>&#x27;s <code v-pre>create()</code> method.</p>
+<p>Let&#x27;s tie our new <code v-pre>CustomExceptionFilter</code> to the <code v-pre>CatsController</code>&#x27;s <code v-pre>create()</code>
+method.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">cats.controller.ts</div>
 <pre class="language-typescript"><code v-pre class="language-typescript">@Post()
@@ -226,45 +271,56 @@ async create(@Body() createCatDto: CreateCatDto) {
   throw new ForbiddenException();
 }</code></pre>
 </doc-codeblock></div>
-<p>We have used the <code v-pre>@UseFilters()</code> decorator here. Similar to the <code v-pre>@Catch()</code> decorator, it takes the class of your filter, leaving responsibility for instantiation to the framework, and enabling <strong>dependency injection</strong>.</p>
-<p>In the example above, the <code v-pre>CustomException</code> is applied only to the single <code v-pre>create()</code> route handler, making it method-scoped. Exception filters can be scoped at different levels: method-scoped, controller-scoped, or global-scoped. For example, to set up a filter as controller-scoped, you would do the following:</p>
+<p>We have used the <code v-pre>@UseFilters()</code> decorator here. Similar to the <code v-pre>@Catch()</code>
+decorator, it takes the class of your filter, leaving responsibility for
+instantiation to the framework, and enabling <strong>dependency injection</strong>.</p>
+<p>In the example above, the <code v-pre>CustomException</code> is applied only to the single
+<code v-pre>create()</code> route handler, making it method-scoped. Exception filters can be
+scoped at different levels: method-scoped, controller-scoped, or global-scoped.
+For example, to set up a filter as controller-scoped, you would do the
+following:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">cats.controller.ts</div>
 <pre class="language-typescript"><code v-pre class="language-typescript">@UseFilter(CustomExceptionFilter)
 export class CatsController {}</code></pre>
 </doc-codeblock></div>
-<p>This construction sets up the <code v-pre>CustomException</code> for every route handler defined inside the <code v-pre>CatsController</code>.</p>
+<p>This construction sets up the <code v-pre>CustomException</code> for every route handler defined
+inside the <code v-pre>CatsController</code>.</p>
 <doc-anchor-target id="catch-everything">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#catch-everything">#</doc-anchor-trigger>
         <span>Catch everything</span>
     </h3>
 </doc-anchor-target>
-<p>In order to catch <strong>every</strong> unhandled exception (regardless of the exception type), omit <code v-pre>@Catch()</code> decorator.</p>
+<p>In order to catch <strong>every</strong> unhandled exception (regardless of the exception
+type), omit <code v-pre>@Catch()</code> decorator.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <pre class="language-typescript"><code v-pre class="language-typescript">import {
-  ExceptionFilter,
-  Catch,
-  HttpContext,
+	Catch,
+	ExceptionFilter,
+	HttpContext,
 } from 'https://deno.land/x/danet/mod.ts';
 export class AllExceptionsFilter implements ExceptionFilter {
-  constructor() {
-  }
+	constructor() {
+	}
 
-  catch(exception: unknown, ctx: HttpContext): boolean {
-    const response = ctx.response;
-    const request = ctx.request;
-    const status = exception.status;
+	catch(exception: unknown, ctx: HttpContext): boolean {
+		const response = ctx.response;
+		const request = ctx.request;
+		const status = exception.status;
 
-    response.status = status;
-    response.body = {
-      statusCode: status,
-      timestamp: new Date().toISOString(),
-      path: request.url,
-    }
-  }
+		response.status = status;
+		response.body = {
+			statusCode: status,
+			timestamp: new Date().toISOString(),
+			path: request.url,
+		};
+	}
 }</code></pre>
 </doc-codeblock></div>
+        </div>
+    </div>
+</div>
 
                                 
                                 <!-- Required only on API pages -->
