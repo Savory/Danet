@@ -1,4 +1,4 @@
-import { ApplicationListenEvent, Application, Router} from './deps.ts';
+import { Application, ApplicationListenEvent, Router } from './deps.ts';
 import { FilterExecutor } from './exception/filter/executor.ts';
 import { GuardExecutor } from './guard/executor.ts';
 import { HookExecutor } from './hook/executor.ts';

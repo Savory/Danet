@@ -1,191 +1,303 @@
 import { HTTP_STATUS } from './enum.ts';
 
-export class HttpException {
-  constructor(readonly status: number, readonly message: string) {}
+export class HttpException extends Error {
+	constructor(
+		readonly statusCode: number,
+		readonly description: string,
+		readonly name = 'HttpException',
+	) {
+		super(`${statusCode} - ${description}`);
+		this.name = name;
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class ForbiddenHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.FORBIDDEN, "Forbidden");
-  }
+export class ForbiddenException extends HttpException {
+	constructor() {
+		super(HTTP_STATUS.FORBIDDEN, 'Forbidden', 'ForbiddenException');
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class BadRequestHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.BAD_REQUEST, "Bad request");
-  }
+export class BadRequestException extends HttpException {
+	constructor() {
+		super(HTTP_STATUS.BAD_REQUEST, 'Bad request', 'BadRequestException');
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class UnauthorizedHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.UNAUTHORIZED, "Unauthorized");
-  }
+export class UnauthorizedException extends HttpException {
+	constructor() {
+		super(HTTP_STATUS.UNAUTHORIZED, 'Unauthorized', 'UnauthorizedException');
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class PaymentRequiredHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.PAYMENT_REQUIRED, "Payment required");
-  }
+export class PaymentRequiredException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.PAYMENT_REQUIRED,
+			'Payment required',
+			'PaymentRequiredException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class NotFoundHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.NOT_FOUND, "Not found");
-  }
+export class NotFoundException extends HttpException {
+	constructor() {
+		super(HTTP_STATUS.NOT_FOUND, 'Not found', 'NotFoundException');
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class MethodNotAllowedHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.METHOD_NOT_ALLOWED, "Method not allowed");
-  }
+export class MethodNotAllowedException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.METHOD_NOT_ALLOWED,
+			'Method not allowed',
+			'MethodNotAllowedException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class NotAcceptableHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.NOT_ACCEPTABLE, "Not acceptable");
-  }
+export class NotAcceptableException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.NOT_ACCEPTABLE,
+			'Not acceptable',
+			'NotAcceptableException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class ProxyAuthenticationRequiredHttpException extends HttpException {
-  constructor() {
-    super(
-      HTTP_STATUS.PROXY_AUTHENTICATION_REQUIRED,
-      "Proxy authentication required"
-    );
-  }
+export class ProxyAuthenticationRequiredException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.PROXY_AUTHENTICATION_REQUIRED,
+			'Proxy authentication required',
+			'ProxyAuthenticationRequiredException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class RequestTimeoutHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.REQUEST_TIMEOUT, "Request timeout");
-  }
+export class RequestTimeoutException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.REQUEST_TIMEOUT,
+			'Request timeout',
+			'RequestTimeoutException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class ConflictHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.CONFLICT, "Conflict");
-  }
+export class ConflictException extends HttpException {
+	constructor() {
+		super(HTTP_STATUS.CONFLICT, 'Conflict', 'ConflictException');
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class GoneHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.GONE, "Gone");
-  }
+export class GoneException extends HttpException {
+	constructor() {
+		super(HTTP_STATUS.GONE, 'Gone', 'GoneException');
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class LengthRequiredHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.LENGTH_REQUIRED, "Length required");
-  }
+export class LengthRequiredException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.LENGTH_REQUIRED,
+			'Length required',
+			'LengthRequiredException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class PreconditionFailedHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.PRECONDITION_FAILED, "Precondition failed");
-  }
+export class PreconditionFailedException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.PRECONDITION_FAILED,
+			'Precondition failed',
+			'PreconditionFailedException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class PayloadTooLargeHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.PAYLOAD_TOO_LARGE, "Payload too large");
-  }
+export class PayloadTooLargeException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.PAYLOAD_TOO_LARGE,
+			'Payload too large',
+			'PayloadTooLargeException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class URITooLongHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.URI_TOO_LONG, "URI too long");
-  }
+export class URITooLongException extends HttpException {
+	constructor() {
+		super(HTTP_STATUS.URI_TOO_LONG, 'URI too long', 'URITooLongException');
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class UnsupportedMediaTypeHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.UNSUPPORTED_MEDIA_TYPE, "Unsupported media type");
-  }
+export class UnsupportedMediaTypeException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.UNSUPPORTED_MEDIA_TYPE,
+			'Unsupported media type',
+			'UnsupportedMediaTypeException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class RequestedRangeNotSatisfiableHttpException extends HttpException {
-  constructor() {
-    super(
-      HTTP_STATUS.REQUESTED_RANGE_NOT_SATISFIABLE,
-      "Requested range not statisfiable"
-    );
-  }
+export class RequestedRangeNotSatisfiableException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.REQUESTED_RANGE_NOT_SATISFIABLE,
+			'Requested range not statisfiable',
+			'RequestedRangeNotSatisfiableException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class ExpectationFailedHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.EXPECTATION_FAILED, "Expectation failed");
-  }
+export class ExpectationFailedException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.EXPECTATION_FAILED,
+			'Expectation failed',
+			'ExpectationFailedException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class IAmATeapotHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.I_AM_A_TEAPOT, "I am a teapot");
-  }
+export class IAmATeapotException extends HttpException {
+	constructor() {
+		super(HTTP_STATUS.I_AM_A_TEAPOT, 'I am a teapot', 'IAmATeapotException');
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class MisdirectedHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.MISDIRECTED, "Misdirected");
-  }
+export class MisdirectedException extends HttpException {
+	constructor() {
+		super(HTTP_STATUS.MISDIRECTED, 'Misdirected', 'MisdirectedException');
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class UnprocessableEntityHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.UNPROCESSABLE_ENTITY, "Unprocessable entity");
-  }
+export class UnprocessableEntityException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.UNPROCESSABLE_ENTITY,
+			'Unprocessable entity',
+			'UnprocessableEntityException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class FailedDependencyHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.FAILED_DEPENDENCY, "Failed dependency");
-  }
+export class FailedDependencyException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.FAILED_DEPENDENCY,
+			'Failed dependency',
+			'FailedDependencyException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class PreconditionRequiredHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.PRECONDITION_REQUIRED, "Precondition required");
-  }
+export class PreconditionRequiredException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.PRECONDITION_REQUIRED,
+			'Precondition required',
+			'PreconditionException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class TooManyRequestsHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.TOO_MANY_REQUESTS, "Too many requests");
-  }
+export class TooManyRequestsException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.TOO_MANY_REQUESTS,
+			'Too many requests',
+			'TooManyRequestsException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class InternalServerErrorHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.INTERNAL_SERVER_ERROR, "Internal server error");
-  }
+export class InternalServerErrorException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.INTERNAL_SERVER_ERROR,
+			'Internal server error',
+			'InternalServerErrorException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class NotImplementedHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.NOT_IMPLEMENTED, "Not implemented");
-  }
+export class NotImplementedException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.NOT_IMPLEMENTED,
+			'Not implemented',
+			'NotImplementedException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class BadGatewayHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.BAD_GATEWAY, "Bad gateway");
-  }
+export class BadGatewayException extends HttpException {
+	constructor() {
+		super(HTTP_STATUS.BAD_GATEWAY, 'Bad gateway', 'BadGatewayException');
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class ServiceUnavailableHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.SERVICE_UNAVAILABLE, "Service unavaible");
-  }
+export class ServiceUnavailableException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.SERVICE_UNAVAILABLE,
+			'Service unavailable',
+			'ServiceUnavailableException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class GatewayTimeoutHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.GATEWAY_TIMEOUT, "Gateway timeout");
-  }
+export class GatewayTimeoutException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.GATEWAY_TIMEOUT,
+			'Gateway timeout',
+			'GatewayTimeoutException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
 
-export class HttpVersionNotSupportedHttpException extends HttpException {
-  constructor() {
-    super(HTTP_STATUS.HTTP_VERSION_NOT_SUPPORTED, "Http version not supported");
-  }
+export class HttpVersionNotSupportedException extends HttpException {
+	constructor() {
+		super(
+			HTTP_STATUS.HTTP_VERSION_NOT_SUPPORTED,
+			'Http version not supported',
+			'HttpVersionNotSupportedException',
+		);
+		Object.setPrototypeOf(this, HttpException.prototype);
+	}
 }
