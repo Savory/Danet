@@ -174,8 +174,9 @@ Being a modern framework, we know that data extraction is mostly
 **asynchronous**. That's why Danet supports and works well with `async`
 functions.
 
-!!!info Hint Learn more about `async / await` feature
-[here](https://kamilmysliwiec.com/typescript-2-1-introduction-async-await) !!!
+!!!info Hint 
+Learn more about `async / await` feature [here](https://kamilmysliwiec.com/typescript-2-1-introduction-async-await)
+!!!
 
 Every async function has to return a `Promise`. This means that you can return a
 deferred value that Danet will be able to resolve by itself. Let's see an
