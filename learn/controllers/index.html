@@ -28,12 +28,12 @@
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="/Danet/resources/css/retype.css?v=2.2.706786415677" rel="stylesheet" data-turbo-track="reload" />
+    <link href="/Danet/resources/css/retype.css?v=2.2.706787112013" rel="stylesheet" data-turbo-track="reload" />
 
-    <script type="text/javascript" src="/Danet/resources/js/config.js?v=2.2.706786415677" defer data-turbo-track="reload"></script>
+    <script type="text/javascript" src="/Danet/resources/js/config.js?v=2.2.706787112013" defer data-turbo-track="reload"></script>
     <script type="text/javascript" src="/Danet/resources/js/retype.js?v=2.2" defer data-turbo-track="reload"></script>
-    <script id="lunr-js" type="text/javascript" src="/Danet/resources/js/lunr.js?v=2.2.706786415677" defer></script>
-    <script id="prism-js" type="text/javascript" src="/Danet/resources/js/prism.js?v=2.2.706786415677" defer></script>
+    <script id="lunr-js" type="text/javascript" src="/Danet/resources/js/lunr.js?v=2.2.706787112013" defer></script>
+    <script id="prism-js" type="text/javascript" src="/Danet/resources/js/prism.js?v=2.2.706787112013" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -365,8 +365,11 @@ functions.</p>
             </svg>
         </div>
         <div class="pr-5 ml-3 w-full">
-            <h5>Hint Learn more about <code v-pre>async / await</code> feature</h5>
-<p><a href="https://kamilmysliwiec.com/typescript-2-1-introduction-async-await">here</a> !!!</p>
+            <h5>Hint</h5>
+<p>Learn more about <code v-pre>async / await</code> feature <a href="https://kamilmysliwiec.com/typescript-2-1-introduction-async-await">here</a></p>
+        </div>
+    </div>
+</div>
 <p>Every async function has to return a <code v-pre>Promise</code>. This means that you can return a
 deferred value that Danet will be able to resolve by itself. Let&#x27;s see an
 example of this:</p>
@@ -459,9 +462,6 @@ export class AppModule {}</code></pre>
 </doc-codeblock></div>
 <p>We attached the metadata to the module class using the <code v-pre>@Module()</code> decorator,
 and Danet can now easily reflect which controllers have to be mounted.</p>
-        </div>
-    </div>
-</div>
 
                                 
                                 <!-- Required only on API pages -->
