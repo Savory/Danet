@@ -28,12 +28,12 @@
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="/Danet/resources/css/retype.css?v=2.2.706786392565" rel="stylesheet" data-turbo-track="reload" />
+    <link href="/Danet/resources/css/retype.css?v=2.2.706786415677" rel="stylesheet" data-turbo-track="reload" />
 
-    <script type="text/javascript" src="/Danet/resources/js/config.js?v=2.2.706786392565" defer data-turbo-track="reload"></script>
+    <script type="text/javascript" src="/Danet/resources/js/config.js?v=2.2.706786415677" defer data-turbo-track="reload"></script>
     <script type="text/javascript" src="/Danet/resources/js/retype.js?v=2.2" defer data-turbo-track="reload"></script>
-    <script id="lunr-js" type="text/javascript" src="/Danet/resources/js/lunr.js?v=2.2.706786392565" defer></script>
-    <script id="prism-js" type="text/javascript" src="/Danet/resources/js/prism.js?v=2.2.706786392565" defer></script>
+    <script id="lunr-js" type="text/javascript" src="/Danet/resources/js/lunr.js?v=2.2.706786415677" defer></script>
+    <script id="prism-js" type="text/javascript" src="/Danet/resources/js/prism.js?v=2.2.706786415677" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -190,8 +190,12 @@ engine.</p>
             </svg>
         </div>
         <div class="pr-5 ml-3 w-full">
-            <h5>Info If you want to put these directory elsewhere, you can provide the</h5>
-<p>path to <code v-pre>views</code> at runtime with <code v-pre>app.setViewEngineDir('my/path/to/views);</code> !!!</p>
+            <h5>Info</h5>
+<p>If you want to put these directory elsewhere, you can provide the
+path to <code v-pre>views</code> at runtime with <code v-pre>app.setViewEngineDir('my/path/to/views);</code></p>
+        </div>
+    </div>
+</div>
 <doc-anchor-target id="create-a-default-layout-called-mainhbs-with-the-following-content">
     <h4>
         <doc-anchor-trigger class="header-anchor-trigger" to="#create-a-default-layout-called-mainhbs-with-the-following-content">#</doc-anchor-trigger>
@@ -235,9 +239,6 @@ class MyController {
 value of the route handler is passed to the template for rendering.</p>
 <p>Notice that the return value is an object with <code v-pre>title</code> and <code v-pre>name</code> properties,
 matching <code v-pre>title</code> and <code v-pre>name</code> placeholders we used in the template.</p>
-        </div>
-    </div>
-</div>
 
                                 
                                 <!-- Required only on API pages -->
