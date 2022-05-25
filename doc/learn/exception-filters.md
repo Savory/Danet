@@ -15,9 +15,11 @@ filter generates the following default JSON response:
 }
 ```
 
-!!!info **Hint** Any thrown exception containing the `statusCode` and `message`
+!!!info **Hint** 
+Any thrown exception containing the `statusCode` and `message`
 property will be properly populated and send back as a response (instead of the
-default `InternalServerError` for unrecognized exceptions). !!!
+default `InternalServerError` for unrecognized exceptions).
+!!!
 
 #### Built-in HTTP exceptions
 
