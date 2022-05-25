@@ -10,14 +10,16 @@ filter generates the following default JSON response:
 
 ```json
 {
-	"statusCode": 500,
-	"message": "Internal server error!"
+  "statusCode": 500,
+  "message": "Internal server error!"
 }
 ```
 
-!!!info **Hint** Any thrown exception containing the `statusCode` and `message`
+!!!info **Hint**
+Any thrown exception containing the `statusCode` and `message`
 property will be properly populated and send back as a response (instead of the
-default `InternalServerError` for unrecognized exceptions). !!!
+default `InternalServerError` for unrecognized exceptions).
+!!!
 
 #### Built-in HTTP exceptions
 
@@ -59,7 +61,11 @@ which are an instance of the `CustomException` class, and implementing custom
 response logic for them.
 
 ```ts custom-exception.filter.ts
-import { ExceptionFilter, Catch, HttpContext } from 'https://deno.land/x/danet/mod.ts';
+import {
+  ExceptionFilter,
+  Catch,
+  HttpContext,
+} from "https://deno.land/x/danet/mod.ts";
 
 @Catch(CustomException)
 export class CustomExceptionFilter implements ExceptionFilter {
@@ -73,7 +79,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
-    }
+    };
   }
 }
 ```
@@ -121,25 +127,24 @@ type), omit `@Catch()` decorator.
 
 ```typescript
 import {
-	Catch,
-	ExceptionFilter,
-	HttpContext,
-} from 'https://deno.land/x/danet/mod.ts';
+  Catch,
+  ExceptionFilter,
+  HttpContext,
+} from "https://deno.land/x/danet/mod.ts";
 export class AllExceptionsFilter implements ExceptionFilter {
-	constructor() {
-	}
+  constructor() {}
 
-	catch(exception: unknown, ctx: HttpContext): boolean {
-		const response = ctx.response;
-		const request = ctx.request;
-		const status = exception.status;
+  catch(exception: unknown, ctx: HttpContext): boolean {
+    const response = ctx.response;
+    const request = ctx.request;
+    const status = exception.status;
 
-		response.status = status;
-		response.body = {
-			statusCode: status,
-			timestamp: new Date().toISOString(),
-			path: request.url,
-		};
-	}
+    response.status = status;
+    response.body = {
+      statusCode: status,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+    };
+  }
 }
 ```

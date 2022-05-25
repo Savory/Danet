@@ -16,8 +16,10 @@ engine.
 /views/partials
 ```
 
-!!!info Info If you want to put these directory elsewhere, you can provide the
-path to `views` at runtime with `app.setViewEngineDir('my/path/to/views);` !!!
+!!!info Info
+If you want to put these directory elsewhere, you can provide the
+path to `views` at runtime with `app.setViewEngineDir('my/path/to/views);`
+!!!
 
 #### Create a default layout called `main.hbs` with the following content:
 
@@ -34,10 +36,11 @@ directory. It will print 2 variables passed from your controller.
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>{{ title }}</title>
+    <title>{{title}}</title>
   </head>
   <body>
-    Hello {{ name }}!
+    Hello
+    {{name}}!
   </body>
 </html>
 ```
@@ -45,13 +48,13 @@ directory. It will print 2 variables passed from your controller.
 Now, let's tell your controller it has to render this view on a specific route:
 
 ```ts
-@Controller('nice-controller')
+@Controller("nice-controller")
 class MyController {
-	@Render('hello')
-	@Get('/')
-	renderANiceHTML() {
-		return { title: 'the page title', name: 'world' };
-	}
+  @Render("hello")
+  @Get("/")
+  renderANiceHTML() {
+    return { title: "the page title", name: "world" };
+  }
 }
 ```
 
