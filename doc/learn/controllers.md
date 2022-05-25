@@ -153,7 +153,8 @@ findOne(@Param('id') id: string): string {
 `@Param()` is used to decorate a method parameter by giving a particular
 parameter token to the decorator.
 
-!!!info Hint Import `Param` from the `https://deno.land/x/danet/mod.ts` package.
+!!!info Hint 
+Import `Param` from the `https://deno.land/x/danet/mod.ts` package.
 !!!
 
 ### Scopes
