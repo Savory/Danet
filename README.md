@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/38007824/170542778-5ffe8414-38ea-438e-a02b-15a7c4800252.png" width="250" alt="Danet Logo" />
+</p>
+
 # Danet - A savory web framework for [Deno](https://deno.land/) heavily inspired by [Nest](https://github.com/nestjs/nest)
 
 [![Run tests](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml)
