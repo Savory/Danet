@@ -1,4 +1,4 @@
-If you want your Danet app to serve static files from a specific folder, for example to serve an Angular application, you simply have to register the folder using `useStaticAssets` method from your `DanetApplication` instance as following : 
+If you want your Danet app to serve static files from a specific folder, for example to serve a .png, you simply have to register the folder using `useStaticAssets` method from your `DanetApplication` instance as following : 
 
 ```ts
   const app = new DanetApplication();
