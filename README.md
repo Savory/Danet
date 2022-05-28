@@ -1,110 +1,52 @@
-# Danet - A savory web framework for [Deno](https://deno.land/) heavily inspired by [Nest](https://github.com/nestjs/nest)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/38007824/170542778-5ffe8414-38ea-438e-a02b-15a7c4800252.png" width="250" alt="Danet Logo" />
+</p>
 
-[![Run tests](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml)
+
+[![CI](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml)
 [![codecov](https://codecov.io/gh/Sorikairox/Danet/branch/main/graph/badge.svg?token=R6WXVC669Z)](https://codecov.io/gh/Sorikairox/Danet)
 
-- **Modules** - exactly what you think they are.
-- **Controllers** - To handle requests.
-- **Dependency Injection** - Let Danet take care of instantiating stuff for you
-  when it is the most convenient.
-- **AuthGuards** - Handle your Authentication/Authorization. The whole App get
-  guard, Controllers get guard, Methods get guard, and you get a Guard...
-- **Decorators** - Modules, Controllers, Method, Body, Query Params, do more
-  with less code !
+## Description
 
----
+Danet is a framework heavily inspired by a NodeJS Framework called
+[Nest](https://docs.nestjs.com/). We aim to provide the same efficiency, but in
+[Deno](https://deno.land/). Of course, Nest is way more mature, think of it as a
+hero that we look up to.
 
-## Community
+We borrow a lot from it, including documentation and sentences on this page, so
+please, definitely check it out because they deserve a lot of credit. Without
+Nest, we wouldn't be developing Danet.
 
-Join [our discord](https://discord.gg/Q7ZHuDPgjA)
+Danet is a framework for building efficient, scalable Deno server-side
+applications. It is entirely build with Typescript.
 
-## Docs
+Under the hood, Danet makes use of [Oak](https://github.com/oakserver/oak). We
+might support other HTTP Web Framework in the future !
 
-Documentation is available at
-[https://savory.github.io/Danet/](https://savory.github.io/Danet/)
+We abstract a lot of things so you can focus on your core business and
+architecture.
 
-It is obviously still a WIP.
+## Philosophy
 
-## Contributing
+Deno is a relatively new engine. Nest was one of the greatest framework to
+improve the architecture of NodeJS project. We want to bring the same level of
+pro-efficiency and professionalism into Deno's world.
 
-If you want to contribute, feel free ! Guidelines will be available
-[here](https://github.com/savory/Danet/blob/main/CONTRIBUTING.md)
+Exactly like Nest, Danet provides an out-of-the-box application architecture
+which allows developers and teams to create highly testable, scalable, loosely
+coupled, and easily maintainable applications.
 
-## How to use
+The architecture is the same as our hero, and it was originally heavily inspired
+by Angular.
 
-If you are familiar with Nest (and if you're not,
-[go check it out](https://nestjs.com/)), you will not be lost.
+## Come with us on this awesome journey
 
-In this simplified example, we are building a todo-app:
+We always welcome contributors, feel free to submit a new feature or report a
+bug on our [Github Repository](https://github.com/Savory/Danet) and
+[join our discord](https://discord.gg/Q7ZHuDPgjA)
 
-### Modules
+## How to start
 
-```ts
-@Module({
-	controllers: [TodoController],
-	injectables: [TodoService],
-})
-class TodoModule {}
-```
+Check out our [starter repository](https://github.com/Savory/Danet-Starter)
 
-### Controllers
-
-```ts
-@Controller('todo')
-class TodoController {
-	//todoService will be automatically injected at runtime with DI
-	constructor(private todoService: TodoService) {
-	}
-
-	@Get('')
-	getTodos() {
-		return this.todoService.getTodos();
-	}
-
-	@Get(':id')
-	getOneTodo(@Param('id') todoId: string) {
-		return this.todoService.getOne(todoId);
-	}
-
-	@Post('')
-	createTodo(@Body() todo) {
-		return this.todoService.createTodo(todo);
-	}
-
-	@Put('')
-	UpdateTodos(@Body() updatedTodos: Todo[]) {
-		return this.todoService.updateMany(updatedTodos);
-	}
-
-	@Put(':id')
-	UpdateOneTodo(@Param('id') todoId: string, @Body() updatedTodo: Todo) {
-		return this.todoService.updateOneById(todoId, updatedTodo);
-	}
-}
-```
-
-### Services
-
-```ts
-//By default, injectables are singleton
-@Injectable()
-class TodoService {
-	//create  your own DatabaseService to interact with db, it will  be injected
-	constructor(databaseService: DatabaseService) {
-	}
-
-	getTodos() {
-		this.databaseService.getMany();
-	}
-	// implement your logic
-}
-```
-
-### Run your app
-
-```ts
-const optionalPort = 4000;
-const app = new DanetApplication();
-await app.init(TodoModule);
-await app.listen(optionalPort); //default to 3000
-```
+[Read our documentation](https://savory.github.io/Danet/)

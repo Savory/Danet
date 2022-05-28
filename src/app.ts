@@ -81,4 +81,15 @@ export class DanetApplication {
 	setViewEngineDir(path: string) {
 		this.renderer.setRootDir(path);
 	}
+
+	useStaticAssets(path: string) {
+		this.app.use(async (context, next: () => Promise<unknown>) => {
+			const root = path;
+			try {
+				await context.send({ root });
+			} catch {
+				await next();
+			}
+		});
+	}
 }
