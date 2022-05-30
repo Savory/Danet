@@ -96,6 +96,9 @@ objects they represent.
       <td><code>getQuery(context, { mergeParams: true })[key]</code></td>
     </tr>
     <tr>
+    <td><code>@Header(key? : string)</code></td>
+    <td><code>ctx.request.headers</code> / <code>ctx.request.headers.get(key)</code></td></tr>
+    <tr>
       <td><code>@Body(key?: string)</code></td>
       <td><code>ctx.request.body</code> / <code>ctx.request.body[key]</code></td>
     </tr>
