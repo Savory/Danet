@@ -1,20 +1,10 @@
 import { HTTP_STATUS } from "./enum.ts";
 
 export class HttpException extends Error {
-<<<<<<< HEAD
   constructor(readonly status: number, description: string) {
     super(`${status} - ${description}`);
     this.name = this.constructor.name;
   }
-=======
-	constructor(
-		readonly status: number,
-		description: string,
-	) {
-		super(`${status} - ${description}`);
-		this.name = this.constructor.name;
-	}
->>>>>>> a2ed19acb250c3e56c9229e7860ca0a5c92d74a1
 }
 
 export class ForbiddenException extends HttpException {
