@@ -37,7 +37,9 @@ export const Res = createParamDecorator((context: HttpContext) => {
 
 export const Header = (prop?: string) =>
 	createParamDecorator((context: HttpContext) => {
-		if (!context.request.headers) return null;
+		if (!context.request.headers) {
+			return null;
+		}
 		return prop ? context.request.headers.get(prop) : context.request.headers;
 	})();
 
