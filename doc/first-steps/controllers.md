@@ -28,7 +28,7 @@ import { Controller, Get } from 'https://deno.land/x/danet/mod.ts';
 export class CatsController {
   @Get()
   findAll(): string {
-    return 'This action returns all cats'
+    return 'This action returns all cats';
   }
 }
 ```
@@ -70,7 +70,7 @@ import { Controller, Get, Req } from 'https://deno.land/x/danet/mod.ts';
 export class CatsController {
   @Get()
   findAll(@Req() request: Request): string {
-    return 'This action returns all cats'
+    return 'This action returns all cats';
   }
 }
 ```
@@ -122,12 +122,12 @@ import { Controller, Get, Post } from 'https://deno.land/x/danet/mod.ts';
 export class CatsController {
   @Post()
   create(): string {
-    return 'This action adds a new cat'
+    return 'This action adds a new cat';
   }
 
   @Get()
   findAll(): string {
-    return 'This action returns all cats'
+    return 'This action returns all cats';
   }
 }
 ```
@@ -220,7 +220,7 @@ import { CreateCatDto, UpdateCatDto, ListAllEntities } from './dto';
 export class CatsController {
   @Post()
   create(@Body() createCatDto: CreateCatDto) {
-    return 'This action adds a new cat'
+    return 'This action adds a new cat';
   }
 
   @Get(':id')
@@ -252,7 +252,7 @@ modules except the root `AppModule`, we'll use that to introduce the
 
 ```ts app.module.ts
 import { Module } from 'https://deno.land/x/danet/mod.ts';
-import { CatsController } from './cats/cats.controller'
+import { CatsController } from './cats/cats.controller';
 
 @Module({
   controllers: [CatsController],
