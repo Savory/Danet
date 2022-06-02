@@ -5,6 +5,7 @@ import { Module } from '../src/module/decorator.ts';
 import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
 import {
 	Body,
+	Header,
 	Param,
 	Query,
 	Res,
@@ -15,6 +16,18 @@ class SimpleController {
 	@Get('/')
 	simpleGet(@Res() res: Response, @Query('myvalue') myvalue: string) {
 		return myvalue;
+	}
+
+	@Get('/lambda')
+	headerParamWithAttribute(@Header('Accept-Language') acceptHeader: string) {
+		if (!acceptHeader) return 'No "Accept-Language" header';
+		return acceptHeader;
+	}
+
+	@Post('/lambda')
+	headerParamWithoutAttribute(@Header() headers: Headers) {
+		if (!headers) return 'null';
+		return headers instanceof Headers;
 	}
 
 	@Post('/')
@@ -49,6 +62,49 @@ Deno.test('@Res and @Query decorator', async () => {
 	});
 	const text = await res.text();
 	assertEquals(text, `foo`);
+	await app.close();
+});
+
+Deno.test('@Header decorator with attribute', async () => {
+	await app.init(MyModule);
+	const port = (await app.listen(0)).port;
+
+	const res = await fetch(`http://localhost:${port}/lambda`, {
+		method: 'GET',
+		headers: {
+			'Accept-Language': 'en-US',
+		},
+	});
+	const text = await res.text();
+	assertEquals(text, 'en-US');
+	await app.close();
+});
+
+Deno.test('@Header decorator without attribute', async () => {
+	await app.init(MyModule);
+	const port = (await app.listen(0)).port;
+
+	const res = await fetch(`http://localhost:${port}/lambda`, {
+		method: 'POST',
+		headers: {
+			'content-type': 'application/json',
+		},
+	});
+	const text = await res.text();
+	assertEquals(text, 'true');
+	await app.close();
+});
+
+Deno.test('@Header decorator with attribute without qualifying header on request', async () => {
+	await app.init(MyModule);
+	const port = (await app.listen(0)).port;
+
+	const res = await fetch(`http://localhost:${port}/lambda`, {
+		method: 'GET',
+		headers: {},
+	});
+	const text = await res.text();
+	assertEquals(text, 'No "Accept-Language" header');
 	await app.close();
 });
 

@@ -88,13 +88,16 @@ objects they represent.
       <td><code>@Req()</code></td>
       <td><code>ctx.request</code></td></tr>
     <tr>
-      <td><code>@Res()</code><span class="table-code-asterisk">*</span></td>
+      <td><code>@Res()</code><span class='table-code-asterisk'>*</span></td>
       <td><code>ctx.response</code></td>
     </tr>
     <tr>
       <td><code>@Param(key: string)</code></td>
       <td><code>getQuery(context, { mergeParams: true })[key]</code></td>
     </tr>
+    <tr>
+    <td><code>@Header(key? : string)</code></td>
+    <td><code>ctx.request.headers</code> / <code>ctx.request.headers.get(key)</code></td></tr>
     <tr>
       <td><code>@Body(key?: string)</code></td>
       <td><code>ctx.request.body</code> / <code>ctx.request.body[key]</code></td>
@@ -153,7 +156,7 @@ findOne(@Param('id') id: string): string {
 `@Param()` is used to decorate a method parameter by giving a particular
 parameter token to the decorator.
 
-!!!info Hint 
+!!!info Hint
 Import `Param` from the `https://deno.land/x/danet/mod.ts` package.
 !!!
 
@@ -174,7 +177,7 @@ Being a modern framework, we know that data extraction is mostly
 **asynchronous**. That's why Danet supports and works well with `async`
 functions.
 
-!!!info Hint 
+!!!info Hint
 Learn more about `async / await` feature [here](https://kamilmysliwiec.com/typescript-2-1-introduction-async-await)
 !!!
 
@@ -201,7 +204,16 @@ create a basic controller. This controller exposes a couple of methods to access
 and manipulate internal data.
 
 ```ts cats.controller.ts
-import { Controller, Get, Query, Post, Body, Put, Param, Delete } from 'https://deno.land/x/danet/mod.ts';
+import {
+  Controller,
+  Get,
+  Query,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+} from 'https://deno.land/x/danet/mod.ts';
 import { CreateCatDto, UpdateCatDto, ListAllEntities } from './dto';
 
 @Controller('cats')
@@ -210,7 +222,7 @@ export class CatsController {
   create(@Body() createCatDto: CreateCatDto) {
     return 'This action adds a new cat';
   }
-  
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return `This action returns a #${id} cat`;

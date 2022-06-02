@@ -1,10 +1,7 @@
 import { HTTP_STATUS } from './enum.ts';
 
 export class HttpException extends Error {
-	constructor(
-		readonly status: number,
-		description: string,
-	) {
+	constructor(readonly status: number, description: string) {
 		super(`${status} - ${description}`);
 		this.name = this.constructor.name;
 	}
@@ -30,10 +27,7 @@ export class UnauthorizedException extends HttpException {
 
 export class PaymentRequiredException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.PAYMENT_REQUIRED,
-			'Payment required',
-		);
+		super(HTTP_STATUS.PAYMENT_REQUIRED, 'Payment required');
 	}
 }
 
@@ -45,19 +39,13 @@ export class NotFoundException extends HttpException {
 
 export class MethodNotAllowedException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.METHOD_NOT_ALLOWED,
-			'Method not allowed',
-		);
+		super(HTTP_STATUS.METHOD_NOT_ALLOWED, 'Method not allowed');
 	}
 }
 
 export class NotAcceptableException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.NOT_ACCEPTABLE,
-			'Not acceptable',
-		);
+		super(HTTP_STATUS.NOT_ACCEPTABLE, 'Not acceptable');
 	}
 }
 
@@ -72,10 +60,7 @@ export class ProxyAuthenticationRequiredException extends HttpException {
 
 export class RequestTimeoutException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.REQUEST_TIMEOUT,
-			'Request timeout',
-		);
+		super(HTTP_STATUS.REQUEST_TIMEOUT, 'Request timeout');
 	}
 }
 
@@ -93,28 +78,19 @@ export class GoneException extends HttpException {
 
 export class LengthRequiredException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.LENGTH_REQUIRED,
-			'Length required',
-		);
+		super(HTTP_STATUS.LENGTH_REQUIRED, 'Length required');
 	}
 }
 
 export class PreconditionFailedException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.PRECONDITION_FAILED,
-			'Precondition failed',
-		);
+		super(HTTP_STATUS.PRECONDITION_FAILED, 'Precondition failed');
 	}
 }
 
 export class PayloadTooLargeException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.PAYLOAD_TOO_LARGE,
-			'Payload too large',
-		);
+		super(HTTP_STATUS.PAYLOAD_TOO_LARGE, 'Payload too large');
 	}
 }
 
@@ -126,10 +102,7 @@ export class URITooLongException extends HttpException {
 
 export class UnsupportedMediaTypeException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.UNSUPPORTED_MEDIA_TYPE,
-			'Unsupported media type',
-		);
+		super(HTTP_STATUS.UNSUPPORTED_MEDIA_TYPE, 'Unsupported media type');
 	}
 }
 
@@ -144,10 +117,7 @@ export class RequestedRangeNotSatisfiableException extends HttpException {
 
 export class ExpectationFailedException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.EXPECTATION_FAILED,
-			'Expectation failed',
-		);
+		super(HTTP_STATUS.EXPECTATION_FAILED, 'Expectation failed');
 	}
 }
 
@@ -165,55 +135,37 @@ export class MisdirectedException extends HttpException {
 
 export class UnprocessableEntityException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.UNPROCESSABLE_ENTITY,
-			'Unprocessable entity',
-		);
+		super(HTTP_STATUS.UNPROCESSABLE_ENTITY, 'Unprocessable entity');
 	}
 }
 
 export class FailedDependencyException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.FAILED_DEPENDENCY,
-			'Failed dependency',
-		);
+		super(HTTP_STATUS.FAILED_DEPENDENCY, 'Failed dependency');
 	}
 }
 
 export class PreconditionRequiredException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.PRECONDITION_REQUIRED,
-			'Precondition required',
-		);
+		super(HTTP_STATUS.PRECONDITION_REQUIRED, 'Precondition required');
 	}
 }
 
 export class TooManyRequestsException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.TOO_MANY_REQUESTS,
-			'Too many requests',
-		);
+		super(HTTP_STATUS.TOO_MANY_REQUESTS, 'Too many requests');
 	}
 }
 
 export class InternalServerErrorException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.INTERNAL_SERVER_ERROR,
-			'Internal server error',
-		);
+		super(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'Internal server error');
 	}
 }
 
 export class NotImplementedException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.NOT_IMPLEMENTED,
-			'Not implemented',
-		);
+		super(HTTP_STATUS.NOT_IMPLEMENTED, 'Not implemented');
 	}
 }
 
@@ -225,27 +177,18 @@ export class BadGatewayException extends HttpException {
 
 export class ServiceUnavailableException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.SERVICE_UNAVAILABLE,
-			'Service unavailable',
-		);
+		super(HTTP_STATUS.SERVICE_UNAVAILABLE, 'Service unavailable');
 	}
 }
 
 export class GatewayTimeoutException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.GATEWAY_TIMEOUT,
-			'Gateway timeout',
-		);
+		super(HTTP_STATUS.GATEWAY_TIMEOUT, 'Gateway timeout');
 	}
 }
 
 export class HttpVersionNotSupportedException extends HttpException {
 	constructor() {
-		super(
-			HTTP_STATUS.HTTP_VERSION_NOT_SUPPORTED,
-			'Http version not supported',
-		);
+		super(HTTP_STATUS.HTTP_VERSION_NOT_SUPPORTED, 'Http version not supported');
 	}
 }
