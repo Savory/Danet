@@ -48,10 +48,10 @@ directory. It will print 2 variables passed from your controller.
 Now, let's tell your controller it has to render this view on a specific route:
 
 ```ts
-@Controller("nice-controller")
+@Controller('nice-controller')
 class MyController {
-  @Render("hello")
-  @Get("/")
+  @Render('hello')
+  @Get('/')
   renderANiceHTML() {
     return { title: "the page title", name: "world" };
   }

@@ -65,7 +65,7 @@ import {
   ExceptionFilter,
   Catch,
   HttpContext,
-} from "https://deno.land/x/danet/mod.ts";
+} from 'https://deno.land/x/danet/mod.ts';
 
 @Catch(CustomException)
 export class CustomExceptionFilter implements ExceptionFilter {
@@ -130,7 +130,7 @@ import {
   Catch,
   ExceptionFilter,
   HttpContext,
-} from "https://deno.land/x/danet/mod.ts";
+} from 'https://deno.land/x/danet/mod.ts';
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor() {}
 

@@ -22,13 +22,13 @@ path prefix `customers` in the `@Controller()` decorator so that we don't have
 to repeat that portion of the path for each route in the file.
 
 ```ts cats.controller.ts
-import { Controller, Get } from "https://deno.land/x/danet/mod.ts";
+import { Controller, Get } from 'https://deno.land/x/danet/mod.ts';
 
-@Controller("cats")
+@Controller('cats')
 export class CatsController {
   @Get()
   findAll(): string {
-    return "This action returns all cats";
+    return 'This action returns all cats'
   }
 }
 ```
@@ -64,13 +64,13 @@ We can access the request object by instructing Danet to inject it by adding the
 `@Req()` decorator to the handler's signature.
 
 ```ts cats.controller.ts
-import { Controller, Get, Req } from "https://deno.land/x/danet/mod.ts";
+import { Controller, Get, Req } from 'https://deno.land/x/danet/mod.ts';
 
-@Controller("cats")
+@Controller('cats')
 export class CatsController {
   @Get()
   findAll(@Req() request: Request): string {
-    return "This action returns all cats";
+    return 'This action returns all cats'
   }
 }
 ```
@@ -88,7 +88,7 @@ objects they represent.
       <td><code>@Req()</code></td>
       <td><code>ctx.request</code></td></tr>
     <tr>
-      <td><code>@Res()</code><span class="table-code-asterisk">*</span></td>
+      <td><code>@Res()</code><span class='table-code-asterisk'>*</span></td>
       <td><code>ctx.response</code></td>
     </tr>
     <tr>
@@ -116,18 +116,18 @@ We'll typically also want to provide an endpoint that creates new records. For
 this, let's create the **POST** handler:
 
 ```ts cats.controller.ts
-import { Controller, Get, Post } from "https://deno.land/x/danet/mod.ts";
+import { Controller, Get, Post } from 'https://deno.land/x/danet/mod.ts';
 
-@Controller("cats")
+@Controller('cats')
 export class CatsController {
   @Post()
   create(): string {
-    return "This action adds a new cat";
+    return 'This action adds a new cat'
   }
 
   @Get()
   findAll(): string {
-    return "This action returns all cats";
+    return 'This action returns all cats'
   }
 }
 ```
@@ -213,28 +213,28 @@ import {
   Put,
   Param,
   Delete,
-} from "https://deno.land/x/danet/mod.ts";
-import { CreateCatDto, UpdateCatDto, ListAllEntities } from "./dto";
+} from 'https://deno.land/x/danet/mod.ts';
+import { CreateCatDto, UpdateCatDto, ListAllEntities } from './dto';
 
-@Controller("cats")
+@Controller('cats')
 export class CatsController {
   @Post()
   create(@Body() createCatDto: CreateCatDto) {
-    return "This action adds a new cat";
+    return 'This action adds a new cat'
   }
 
-  @Get(":id")
-  findOne(@Param("id") id: string) {
+  @Get(':id')
+  findOne(@Param('id') id: string) {
     return `This action returns a #${id} cat`;
   }
 
-  @Put(":id")
-  update(@Param("id") id: string, @Body() updateCatDto: UpdateCatDto) {
+  @Put(':id')
+  update(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto) {
     return `This action updates a #${id} cat`;
   }
 
-  @Delete(":id")
-  remove(@Param("id") id: string) {
+  @Delete(':id')
+  remove(@Param('id') id: string) {
     return `This action removes a #${id} cat`;
   }
 }
@@ -251,8 +251,8 @@ modules except the root `AppModule`, we'll use that to introduce the
 `CatsController`:
 
 ```ts app.module.ts
-import { Module } from "https://deno.land/x/danet/mod.ts";
-import { CatsController } from "./cats/cats.controller";
+import { Module } from 'https://deno.land/x/danet/mod.ts';
+import { CatsController } from './cats/cats.controller'
 
 @Module({
   controllers: [CatsController],
