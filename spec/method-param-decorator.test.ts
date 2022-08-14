@@ -19,8 +19,8 @@ class SimpleController {
 	}
 
 	@Get('/lambda')
-	headerParamWithAttribute(@Header('Accept-Language') acceptHeader: string) {
-		if (!acceptHeader) return 'No "Accept-Language" header';
+	headerParamWithAttribute(@Header('New-Header') acceptHeader: string) {
+		if (!acceptHeader) return 'No "New-Header" header';
 		return acceptHeader;
 	}
 
@@ -72,7 +72,7 @@ Deno.test('@Header decorator with attribute', async () => {
 	const res = await fetch(`http://localhost:${port}/lambda`, {
 		method: 'GET',
 		headers: {
-			'Accept-Language': 'en-US',
+			'New-Header': 'en-US',
 		},
 	});
 	const text = await res.text();
@@ -104,7 +104,7 @@ Deno.test('@Header decorator with attribute without qualifying header on request
 		headers: {},
 	});
 	const text = await res.text();
-	assertEquals(text, 'No "Accept-Language" header');
+	assertEquals(text, 'No "New-Header" header');
 	await app.close();
 });
 
