@@ -262,3 +262,29 @@ export class AppModule {}
 
 We attached the metadata to the module class using the `@Module()` decorator,
 and Danet can now easily reflect which controllers have to be mounted.
+
+Now, it is time to create a DanetApplication that bootstrap our AppModule.
+
+We advise you to create a bootstrap function that returns your DanetApplication instance, this will make testing easier as you can get your application instance and make it listen to a random port.
+
+```ts bootstrap.ts
+import { AppModule } from './app.module.ts';
+import { DanetApplication } from 'https://deno.land/x/danet/mod.ts';
+
+export const bootstrap = async () => {
+  const application = new DanetApplication();
+  await application.init(AppModule);
+  return application;
+}
+```
+
+Run this function to get an application instance, and call `listen` method to run the server.
+
+```ts run.ts
+import { bootstrap } from './bootstrap.ts';
+
+const application = await bootstrap();
+await application.listen(Number(Deno.env.get('PORT') || 3000));
+```
+
+And finally execute this file with `deno run --allow-net --unstable --allow-env run.ts`
