@@ -20,7 +20,6 @@
 		}
 	},
 	"compilerOptions": {
-		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true
 	},
 	"tasks": {

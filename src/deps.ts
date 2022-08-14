@@ -13,4 +13,4 @@ export {
 	white,
 	yellow,
 } from 'https://deno.land/std@0.135.0/fmt/colors.ts';
-export { Reflect } from 'https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts';
+export { Reflect } from "https://deno.land/x/deno_reflect@v0.2.1/mod.ts";
