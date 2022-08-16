@@ -107,24 +107,10 @@ export class DanetRouter {
 					ControllerMethod,
 					context,
 				);
-				const response =
-					(await controllerInstance[ControllerMethod.name](...params)) as
-						| Record<string, unknown>
-						| string;
-				if (response) {
-					const fileName = MetadataHelper.getMetadata<string>(
-						rendererViewFile,
-						ControllerMethod,
-					);
-					if (fileName) {
-						context.response.body = await this.viewRenderer.render(
-							fileName,
-							response,
-						);
-					} else {
-						context.response.body = response;
-					}
-				}
+				const response: Record<string, unknown>
+						| string =
+					(await controllerInstance[ControllerMethod.name](...params));
+				await this.sendResponse(response, ControllerMethod, context);
 			} catch (error) {
 				const errorIsCaught = await this.filterExecutor
 					.executeControllerAndMethodFilter(
@@ -147,6 +133,23 @@ export class DanetRouter {
 				context.response.status = status;
 			}
 		};
+	}
+
+	private async sendResponse(response: string | Record<any, any>, ControllerMethod: Callback, context: HttpContext) {
+		if (response) {
+			const fileName = MetadataHelper.getMetadata<string>(
+				rendererViewFile,
+				ControllerMethod,
+			);
+			if (fileName) {
+				context.response.body = await this.viewRenderer.render(
+					fileName,
+					response,
+				);
+			} else {
+				context.response.body = response;
+			}
+		}
 	}
 
 	private async resolveMethodParam(
