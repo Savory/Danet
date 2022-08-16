@@ -135,7 +135,7 @@ export class DanetRouter {
 		};
 	}
 
-	private async sendResponse(response: string | Record<any, any>, ControllerMethod: Callback, context: HttpContext) {
+	private async sendResponse(response: string | Record<string, unknown>, ControllerMethod: Callback, context: HttpContext) {
 		if (response) {
 			const fileName = MetadataHelper.getMetadata<string>(
 				rendererViewFile,
