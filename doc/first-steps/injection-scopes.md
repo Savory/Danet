@@ -27,7 +27,7 @@ Using singleton scope is **recommended** for most use cases. Sharing providers a
 Specify injection scope by passing the `scope` property to the `@Injectable()` decorator options object:
 
 ```typescript
-import { Injectable, Scope } from '@nestjs/common';
+import { Injectable, Scope } from 'https://deno.land/x/danet/mod.ts';
 
 @Injectable({ scope: Scope.REQUEST })
 export class CatsService {}
