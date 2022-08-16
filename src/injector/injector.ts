@@ -33,7 +33,7 @@ export class Injector {
 
 	public get<T>(Type: Constructor<T> | string, ctx?: HttpContext): Promise<T> {
 		if (this.resolved.has(Type)) {
-			return this.resolved.get(Type)!(ctx) as T;
+			return this.resolved.get(Type)!(ctx) as Promise<T>;
 		}
 		throw Error(`Type ${Type} not injected`);
 	}
