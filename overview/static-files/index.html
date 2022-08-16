@@ -4,39 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-root" content="/Danet">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.713944832694">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.713945748200">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
 
     <!-- Primary Meta Tags -->
-    <title>Exception filters</title>
-    <meta name="title" content="Exception filters">
-    <meta name="description" content="Danet comes with a built-in exceptions layer which is responsible for processing all unhandled exceptions across an application. When an exception is" />
+    <title>Static files</title>
+    <meta name="title" content="Static files">
+    <meta name="description" content="If you want your Danet app to serve static files from a specific folder, for example to serve a .png, you simply have to register the folder using" />
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://savory.github.io/Danet/first-steps/exception-filters/" />
+    <link rel="canonical" href="https://savory.github.io/Danet/overview/static-files/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://savory.github.io/Danet/first-steps/exception-filters/">
-    <meta property="og:title" content="Exception filters">
-    <meta property="og:description" content="Danet comes with a built-in exceptions layer which is responsible for processing all unhandled exceptions across an application. When an exception is">
+    <meta property="og:url" content="https://savory.github.io/Danet/overview/static-files/">
+    <meta property="og:title" content="Static files">
+    <meta property="og:description" content="If you want your Danet app to serve static files from a specific folder, for example to serve a .png, you simply have to register the folder using">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://savory.github.io/Danet/first-steps/exception-filters/">
-    <meta property="twitter:title" content="Exception filters">
-    <meta property="twitter:description" content="Danet comes with a built-in exceptions layer which is responsible for processing all unhandled exceptions across an application. When an exception is">
+    <meta property="twitter:url" content="https://savory.github.io/Danet/overview/static-files/">
+    <meta property="twitter:title" content="Static files">
+    <meta property="twitter:description" content="If you want your Danet app to serve static files from a specific folder, for example to serve a .png, you simply have to register the folder using">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=2.4.0.713944832694" rel="stylesheet" />
+    <link href="../../resources/css/retype.css?v=2.4.0.713945748200" rel="stylesheet" />
 
-    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.713944832694" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.713945748200" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.713944832694" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.713944832694" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.713945748200" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.713945748200" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -154,180 +154,18 @@
                                 <div id="docs-sidebar-right-toggle"></div>
                 
                                 <!-- Page content  -->
-<doc-anchor-target id="exception-filters" class="break-words">
+<doc-anchor-target id="static-files" class="break-words">
     <h1>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#exception-filters">#</doc-anchor-trigger>
-        <span>Exception filters</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#static-files">#</doc-anchor-trigger>
+        <span>Static files</span>
     </h1>
 </doc-anchor-target>
-<p>Danet comes with a built-in <strong>exceptions layer</strong> which is responsible for
-processing all unhandled exceptions across an application. When an exception is
-not handled by your application code, it is caught by this layer, which then
-automatically sends an appropriate user-friendly response.</p>
-<p>Out of the box, this action is performed by a built-in <strong>global exception
-filter</strong>, which handles all exceptions. When an exception is <strong>unrecognized</strong>
-(does not have <code v-pre>statusCode</code> and <code v-pre>message</code> properties), the built-in exception
-filter generates the following default JSON response:</p>
+<p>If you want your Danet app to serve static files from a specific folder, for example to serve a .png, you simply have to register the folder using <code v-pre>useStaticAssets</code> method from your <code v-pre>DanetApplication</code> instance as following :</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-json"><code v-pre class="language-json">{
-  &quot;statusCode&quot;: 500,
-  &quot;message&quot;: &quot;Internal server error!&quot;
-}</code></pre>
-</doc-codeblock></div>
-<div class="flex mb-6">
-    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
-    <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
-        <div class="flex items-center ml-4 h-7">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-300" width="22" height="22" viewBox="0 0 24 24" role="presentation">
-                <g fill="currentColor"><g>
-                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
-                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
-                    <path fill="none" d="M0 0h24v24H0z"></path>
-                </g></g>
-            </svg>
-        </div>
-        <div class="pr-5 ml-3 w-full">
-            <h5><strong>Hint</strong></h5>
-<p>Any thrown exception containing the <code v-pre>statusCode</code> and <code v-pre>message</code>
-property will be properly populated and send back as a response (instead of the
-default <code v-pre>InternalServerError</code> for unrecognized exceptions).</p>
-        </div>
-    </div>
-</div>
-<doc-anchor-target id="built-in-http-exceptions">
-    <h4>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#built-in-http-exceptions">#</doc-anchor-trigger>
-        <span>Built-in HTTP exceptions</span>
-    </h4>
-</doc-anchor-target>
-<p>Danet provides a set of standard exceptions that inherit from the base
-<code v-pre>HttpException</code> and represent many of the most common HTTP exceptions:</p>
-<ul>
-<li><code v-pre>BadRequestException</code></li>
-<li><code v-pre>UnauthorizedException</code></li>
-<li><code v-pre>NotFoundException</code></li>
-<li><code v-pre>ForbiddenException</code></li>
-<li><code v-pre>NotAcceptableException</code></li>
-<li><code v-pre>RequestTimeoutException</code></li>
-<li><code v-pre>ConflictException</code></li>
-<li><code v-pre>GoneException</code></li>
-<li><code v-pre>HttpVersionNotSupportedException</code></li>
-<li><code v-pre>PayloadTooLargeException</code></li>
-<li><code v-pre>UnsupportedMediaTypeException</code></li>
-<li><code v-pre>UnprocessableEntityException</code></li>
-<li><code v-pre>InternalServerErrorException</code></li>
-<li><code v-pre>NotImplementedException</code></li>
-<li><code v-pre>ImATeapotException</code></li>
-<li><code v-pre>MethodNotAllowedException</code></li>
-<li><code v-pre>BadGatewayException</code></li>
-<li><code v-pre>ServiceUnavailableException</code></li>
-<li><code v-pre>GatewayTimeoutException</code></li>
-<li><code v-pre>PreconditionFailedException</code></li>
-</ul>
-<doc-anchor-target id="exception-filters">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#exception-filters">#</doc-anchor-trigger>
-        <span>Exception filters</span>
-    </h3>
-</doc-anchor-target>
-<p>While the base (built-in) exception filter can automatically handle many cases
-for you, you may want <strong>full control</strong> over the exceptions layer. For example,
-you may want to add logging or use a different JSON schema based on some dynamic
-factors. <strong>Exception filters</strong> are designed for exactly this purpose. They let
-you control the exact flow of control and the content of the response sent back
-to the client.</p>
-<p>Let&#x27;s create an exception filter that is responsible for catching exceptions
-which are an instance of the <code v-pre>CustomException</code> class, and implementing custom
-response logic for them.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">custom-exception.filter.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">import {
-  ExceptionFilter,
-  Catch,
-  HttpContext,
-} from 'https://deno.land/x/danet/mod.ts';
-
-@Catch(CustomException)
-export class CustomExceptionFilter implements ExceptionFilter {
-  catch(exception: CustomException, ctx: HttpContext) {
-    const response = ctx.response;
-    const request = ctx.request;
-    const status = exception.status;
-
-    response.status = status;
-    response.body = {
-      statusCode: status,
-      timestamp: new Date().toISOString(),
-      path: request.url,
-    };
-  }
-}</code></pre>
-</doc-codeblock></div>
-<p>The <code v-pre>@Catch(CustomException)</code> decorator binds the required metadata to the
-exception filter, telling Danet that this particular filter is looking for
-exceptions of type <code v-pre>CustomException</code> and nothing else. The <code v-pre>@Catch()</code> decorator
-takes a single parameter.</p>
-<doc-anchor-target id="binding-filters">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#binding-filters">#</doc-anchor-trigger>
-        <span>Binding filters</span>
-    </h3>
-</doc-anchor-target>
-<p>Let&#x27;s tie our new <code v-pre>CustomExceptionFilter</code> to the <code v-pre>CatsController</code>&#x27;s <code v-pre>create()</code>
-method.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">cats.controller.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">@Post()
-@UseFilter(CustomerExceptionFilter)
-async create(@Body() createCatDto: CreateCatDto) {
-  throw new ForbiddenException();
-}</code></pre>
-</doc-codeblock></div>
-<p>We have used the <code v-pre>@UseFilters()</code> decorator here. Similar to the <code v-pre>@Catch()</code>
-decorator, it takes the class of your filter, leaving responsibility for
-instantiation to the framework, and enabling <strong>dependency injection</strong>.</p>
-<p>In the example above, the <code v-pre>CustomException</code> is applied only to the single
-<code v-pre>create()</code> route handler, making it method-scoped. Exception filters can be
-scoped at different levels: method-scoped, controller-scoped, or global-scoped.
-For example, to set up a filter as controller-scoped, you would do the
-following:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">cats.controller.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">@UseFilter(CustomExceptionFilter)
-export class CatsController {}</code></pre>
-</doc-codeblock></div>
-<p>This construction sets up the <code v-pre>CustomException</code> for every route handler defined
-inside the <code v-pre>CatsController</code>.</p>
-<doc-anchor-target id="catch-everything">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#catch-everything">#</doc-anchor-trigger>
-        <span>Catch everything</span>
-    </h3>
-</doc-anchor-target>
-<p>In order to catch <strong>every</strong> unhandled exception (regardless of the exception
-type), omit <code v-pre>@Catch()</code> decorator.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">import {
-  Catch,
-  ExceptionFilter,
-  HttpContext,
-} from 'https://deno.land/x/danet/mod.ts';
-export class AllExceptionsFilter implements ExceptionFilter {
-  constructor() {}
-
-  catch(exception: unknown, ctx: HttpContext): boolean {
-    const response = ctx.response;
-    const request = ctx.request;
-    const status = exception.status;
-
-    response.status = status;
-    response.body = {
-      statusCode: status,
-      timestamp: new Date().toISOString(),
-      path: request.url,
-    };
-  }
-}</code></pre>
+<pre class="language-typescript"><code v-pre class="language-typescript">  const app = new DanetApplication();
+  await app.init(MyModule);
+  const staticAssetsPath = `${Deno.cwd()}/assets`;
+  app.useStaticAssets(staticAssetsPath);</code></pre>
 </doc-codeblock></div>
 
                                 
@@ -338,20 +176,20 @@ export class AllExceptionsFilter implements ExceptionFilter {
                             
                                 <nav class="flex mt-14">
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../first-steps/controllers/">
+                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../overview/renderer/">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                             <span>
                                                 <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
-                                                <span class="block mt-1">Controllers</span>
+                                                <span class="block mt-1">Rendering HTML</span>
                                             </span>
                                         </a>
                                     </div>
                             
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../first-steps/guards/">
+                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../license/">
                                             <span>
                                                 <span class="block text-xs font-normal text-right text-gray-400 dark:text-dark-400">Next</span>
-                                                <span class="block mt-1">Guards</span>
+                                                <span class="block mt-1">License</span>
                                             </span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                         </a>
@@ -395,6 +233,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     <div id="docs-overlay-target"></div>
 
-    <script>window.__DOCS__ = { "title": "Exception filters", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
+    <script>window.__DOCS__ = { "title": "Static files", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
 </body>
 </html>

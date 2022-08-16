@@ -4,39 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-root" content="/Danet">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.713944832694">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.713945748200">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
 
     <!-- Primary Meta Tags -->
-    <title>Controllers</title>
-    <meta name="title" content="Controllers">
-    <meta name="description" content="Controllers are responsible for handling incoming requests and returning responses to the client." />
+    <title>Injection scopes</title>
+    <meta name="title" content="Injection scopes">
+    <meta name="description" content="For people coming from different programming language backgrounds, it might be unexpected to learn that in Danet, almost everything is shared across..." />
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://savory.github.io/Danet/first-steps/controllers/" />
+    <link rel="canonical" href="https://savory.github.io/Danet/overview/injection-scopes/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://savory.github.io/Danet/first-steps/controllers/">
-    <meta property="og:title" content="Controllers">
-    <meta property="og:description" content="Controllers are responsible for handling incoming requests and returning responses to the client.">
+    <meta property="og:url" content="https://savory.github.io/Danet/overview/injection-scopes/">
+    <meta property="og:title" content="Injection scopes">
+    <meta property="og:description" content="For people coming from different programming language backgrounds, it might be unexpected to learn that in Danet, almost everything is shared across...">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://savory.github.io/Danet/first-steps/controllers/">
-    <meta property="twitter:title" content="Controllers">
-    <meta property="twitter:description" content="Controllers are responsible for handling incoming requests and returning responses to the client.">
+    <meta property="twitter:url" content="https://savory.github.io/Danet/overview/injection-scopes/">
+    <meta property="twitter:title" content="Injection scopes">
+    <meta property="twitter:description" content="For people coming from different programming language backgrounds, it might be unexpected to learn that in Danet, almost everything is shared across...">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=2.4.0.713944832694" rel="stylesheet" />
+    <link href="../../resources/css/retype.css?v=2.4.0.713945748200" rel="stylesheet" />
 
-    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.713944832694" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.713945748200" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.713944832694" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.713944832694" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.713945748200" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.713945748200" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -154,171 +154,31 @@
                                 <div id="docs-sidebar-right-toggle"></div>
                 
                                 <!-- Page content  -->
-<doc-anchor-target id="controllers" class="break-words">
+<doc-anchor-target id="injection-scopes" class="break-words">
     <h1>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#controllers">#</doc-anchor-trigger>
-        <span>Controllers</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#injection-scopes">#</doc-anchor-trigger>
+        <span>Injection scopes</span>
     </h1>
 </doc-anchor-target>
-<p>Controllers are responsible for handling incoming <strong>requests</strong> and returning
-<strong>responses</strong> to the client.</p>
-<p>A controller&#x27;s purpose is to receive specific requests for the application. The
-<strong>routing</strong> mechanism controls which controller receives which requests.
-Frequently, each controller has more than one route, and different routes can
-perform different actions.</p>
-<p>In order to create a basic controller, we use classes and <strong>decorators</strong>.
-Decorators associate classes with required metadata and enable Danet to create a
-routing map (tie requests to the corresponding controllers).</p>
-<doc-anchor-target id="routing">
+<p>For people coming from different programming language backgrounds, it might be unexpected to learn that in Danet, almost everything is shared across incoming requests. We have a connection pool to the database, singleton services with global state, etc. Remember that Node.js doesn&#x27;t follow the request/response Multi-Threaded Stateless Model in which every request is processed by a separate thread. Hence, using singleton instances is fully <strong>safe</strong> for our applications.</p>
+<p>However, there are edge-cases when request-based lifetime may be the desired behavior, for instance per-request caching in GraphQL applications, request tracking, and multi-tenancy. Injection scopes provide a mechanism to obtain the desired provider lifetime behavior.</p>
+<doc-anchor-target id="provider-scope">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#routing">#</doc-anchor-trigger>
-        <span>Routing</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#provider-scope">#</doc-anchor-trigger>
+        <span>Provider scope</span>
     </h3>
 </doc-anchor-target>
-<p>In the following example we&#x27;ll use the <code v-pre>@Controller()</code> decorator, which is
-<strong>required</strong> to define a basic controller. We&#x27;ll specify an optional route path
-prefix of <code v-pre>cats</code>. Using a path prefix in a <code v-pre>@Controller()</code> decorator allows us
-to easily group a set of related routes, and minimize repetitive code. For
-example, we may choose to group a set of routes that manage interactions with a
-customer entity under the route <code v-pre>/customers</code>. In that case, we could specify the
-path prefix <code v-pre>customers</code> in the <code v-pre>@Controller()</code> decorator so that we don&#x27;t have
-to repeat that portion of the path for each route in the file.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">cats.controller.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">import { Controller, Get } from 'https://deno.land/x/danet/mod.ts';
-
-@Controller('cats')
-export class CatsController {
-  @Get()
-  findAll(): string {
-    return 'This action returns all cats';
-  }
-}</code></pre>
-</doc-codeblock></div>
-<p>The <code v-pre>@Get()</code> HTTP request method decorator before the <code v-pre>findAll()</code> method tells
-Danet to create a handler for a specific endpoint for HTTP requests. The
-endpoint corresponds to the HTTP request method (GET in this case) and the route
-path. What is the route path? The route path for a handler is determined by
-concatenating the (optional) prefix declared for the controller, and any path
-specified in the method&#x27;s decorator. Since we&#x27;ve declared a prefix for every
-route ( <code v-pre>cats</code>), and haven&#x27;t added any path information in the decorator, Danet
-will map <code v-pre>GET /cats</code> requests to this handler. As mentioned, the path includes
-both the optional controller path prefix <strong>and</strong> any path string declared in the
-request method decorator. For example, a path prefix of <code v-pre>customers</code> combined
-with the decorator <code v-pre>@Get('profile')</code> would produce a route mapping for requests
-like <code v-pre>GET /customers/profile</code>.</p>
-<p>In our example above, when a GET request is made to this endpoint, Danet routes
-the request to our user-defined <code v-pre>findAll()</code> method. Note that the method name we
-choose here is completely arbitrary. We obviously must declare a method to bind
-the route to, but Danet doesn&#x27;t attach any significance to the method name
-chosen.</p>
-<p>This method will return a 200 status code and the associated response, which in
-this case is just a string.</p>
-<doc-anchor-target id="request-object">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#request-object">#</doc-anchor-trigger>
-        <span>Request object</span>
-    </h3>
-</doc-anchor-target>
-<p>Handlers often need access to the client <strong>request</strong> details. Danet provides
-access to the
-<a href="https://doc.deno.land/https://deno.land/x/oak@v10.6.0/mod.ts/%7E/Request">request object</a>.
-We can access the request object by instructing Danet to inject it by adding the
-<code v-pre>@Req()</code> decorator to the handler&#x27;s signature.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">cats.controller.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">import { Controller, Get, Req } from 'https://deno.land/x/danet/mod.ts';
-
-@Controller('cats')
-export class CatsController {
-  @Get()
-  findAll(@Req() request: Request): string {
-    return 'This action returns all cats';
-  }
-}</code></pre>
-</doc-codeblock></div>
-<p>The request object represents the HTTP request and has properties for the
-request query string, parameters, HTTP headers, and body. In most cases, it&#x27;s
-not necessary to grab these properties manually. We can use dedicated decorators
-instead, such as <code v-pre>@Body()</code> or <code v-pre>@Query()</code>, which are available out of the box.
-Below is a list of the provided decorators and the plain platform-specific
-objects they represent.</p>
+<p>A provider can have any of the following scopes:</p>
 <table>
-  <tbody>
-    <tr>
-      <td><code>@Req()</code></td>
-      <td><code>ctx.request</code></td></tr>
-    <tr>
-      <td><code>@Res()</code><span class='table-code-asterisk'>*</span></td>
-      <td><code>ctx.response</code></td>
-    </tr>
-    <tr>
-      <td><code>@Param(key: string)</code></td>
-      <td><code>getQuery(context, { mergeParams: true })[key]</code></td>
-    </tr>
-    <tr>
-    <td><code>@Header(key? : string)</code></td>
-    <td><code>ctx.request.headers</code> / <code>ctx.request.headers.get(key)</code></td></tr>
-    <tr>
-      <td><code>@Body(key?: string)</code></td>
-      <td><code>ctx.request.body</code> / <code>ctx.request.body[key]</code></td>
-    </tr>
-    <tr>
-      <td><code>@Query(key: string)</code></td>
-      <td><code>getQuery(context, { mergeParams: true })[key]</code></td>
-    </tr>
-  </tbody>
+  <tr>
+    <td><code>GLOBAL</code></td>
+    <td>A single instance of the provider is shared across the entire application. The instance lifetime is tied directly to the application lifecycle. Once the application has bootstrapped, all singleton providers have been instantiated. Singleton scope is used by default.</td>
+  </tr>
+  <tr>
+    <td><code>REQUEST</code></td>
+    <td>A new instance of the provider is created exclusively for each incoming <strong>request</strong>.  The instance is free'd after the request has completed processing.</td>
+  </tr>
 </table>
-<doc-anchor-target id="resources">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#resources">#</doc-anchor-trigger>
-        <span>Resources</span>
-    </h3>
-</doc-anchor-target>
-<p>Earlier, we defined an endpoint to fetch the cats resource (<strong>GET</strong> route).
-We&#x27;ll typically also want to provide an endpoint that creates new records. For
-this, let&#x27;s create the <strong>POST</strong> handler:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">cats.controller.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">import { Controller, Get, Post } from 'https://deno.land/x/danet/mod.ts';
-
-@Controller('cats')
-export class CatsController {
-  @Post()
-  create(): string {
-    return 'This action adds a new cat';
-  }
-
-  @Get()
-  findAll(): string {
-    return 'This action returns all cats';
-  }
-}</code></pre>
-</doc-codeblock></div>
-<p>It&#x27;s that simple. Danet provides decorators for almost all of the standard HTTP
-methods: <code v-pre>@Get()</code>, <code v-pre>@Post()</code>, <code v-pre>@Put()</code>, <code v-pre>@Delete()</code>, <code v-pre>@Patch()</code>. In addition,
-<code v-pre>@All()</code> defines an endpoint that handles all of them.</p>
-<doc-anchor-target id="route-parameters">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#route-parameters">#</doc-anchor-trigger>
-        <span>Route parameters</span>
-    </h3>
-</doc-anchor-target>
-<p>Routes with static paths won&#x27;t work when you need to accept <strong>dynamic data</strong> as
-part of the request (e.g., <code v-pre>GET /cats/1</code> to get cat with id <code v-pre>1</code>). In order to
-define routes with parameters, we can add route parameter <strong>tokens</strong> in the path
-of the route to capture the dynamic value at that position in the request URL.
-The route parameter token in the <code v-pre>@Get()</code> decorator example below demonstrates
-this usage. Route parameters declared in this way can be accessed using the
-<code v-pre>@Param()</code> decorator, which should be added to the method signature.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">@Get(':id')
-findOne(@Param('id') id: string): string {
-  return `This action returns a #${id} cat`;
-}</code></pre>
-</doc-codeblock></div>
-<p><code v-pre>@Param()</code> is used to decorate a method parameter by giving a particular
-parameter token to the decorator.</p>
 <div class="flex mb-6">
     <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
     <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
@@ -333,173 +193,91 @@ parameter token to the decorator.</p>
         </div>
         <div class="pr-5 ml-3 w-full">
             <h5>Hint</h5>
-<p>Import <code v-pre>Param</code> from the <code v-pre>https://deno.land/x/danet/mod.ts</code> package.</p>
+<p>Using singleton scope is <strong>recommended</strong> for most use cases. Sharing providers across consumers and across requests means that an instance can be cached and its initialization occurs only once, during application startup.</p>
         </div>
     </div>
 </div>
-<doc-anchor-target id="scopes">
+<doc-anchor-target id="usage">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#scopes">#</doc-anchor-trigger>
-        <span>Scopes</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#usage">#</doc-anchor-trigger>
+        <span>Usage</span>
     </h3>
 </doc-anchor-target>
-<p>For people coming from different programming language backgrounds, it might be
-unexpected to learn that in Danet, almost everything is shared across incoming
-requests. We have a connection pool to the database, singleton services with
-global state, etc.</p>
-<p>However, there are edge-cases when request-based lifetime of the controller may
-be the desired behavior, for example request tracking or multi-tenancy.
-Documentation page will be created to explain how to do that.</p>
-<doc-anchor-target id="asynchronicity">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#asynchronicity">#</doc-anchor-trigger>
-        <span>Asynchronicity</span>
-    </h3>
-</doc-anchor-target>
-<p>Being a modern framework, we know that data extraction is mostly
-<strong>asynchronous</strong>. That&#x27;s why Danet supports and works well with <code v-pre>async</code>
-functions.</p>
-<div class="flex mb-6">
-    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
-    <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
-        <div class="flex items-center ml-4 h-7">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-300" width="22" height="22" viewBox="0 0 24 24" role="presentation">
-                <g fill="currentColor"><g>
-                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
-                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
-                    <path fill="none" d="M0 0h24v24H0z"></path>
-                </g></g>
-            </svg>
-        </div>
-        <div class="pr-5 ml-3 w-full">
-            <h5>Hint</h5>
-<p>Learn more about <code v-pre>async / await</code> feature <a href="https://kamilmysliwiec.com/typescript-2-1-introduction-async-await">here</a></p>
-        </div>
-    </div>
-</div>
-<p>Every async function has to return a <code v-pre>Promise</code>. This means that you can return a
-deferred value that Danet will be able to resolve by itself. Let&#x27;s see an
-example of this:</p>
+<p>Specify injection scope by passing the <code v-pre>scope</code> property to the <code v-pre>@Injectable()</code> decorator options object:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">cats.controller.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">@Get()
-async findAll(): Promise&lt;any[]&gt; {
-  return [];
-}</code></pre>
+<pre class="language-typescript"><code v-pre class="language-typescript">import { Injectable, Scope } from 'https://deno.land/x/danet/mod.ts';
+
+@Injectable({ scope: Scope.REQUEST })
+export class CatsService {}</code></pre>
 </doc-codeblock></div>
-<doc-anchor-target id="handling-errors">
+<p>Singleton scope is used by default, and need not be declared. If you do want to declare a provider as singleton scoped, use the <code v-pre>Scope.GLOBAL</code> value for the <code v-pre>scope</code> property.</p>
+<doc-anchor-target id="controller-scope">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#handling-errors">#</doc-anchor-trigger>
-        <span>Handling errors</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#controller-scope">#</doc-anchor-trigger>
+        <span>Controller scope</span>
     </h3>
 </doc-anchor-target>
-<p>There&#x27;s a separate chapter about handling errors (i.e., working with
-exceptions): 
-<div class="mb-6 px-5 py-4 flex justify-between relative border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded transition-colors duration-150">
-    <div class="flex items-center text-blue-500 dark:text-blue-400">
-        <span class="inline-block mb-px">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" role="presentation" fill="currentColor"><path fill="none" d="M0 0h24v24H0z"/><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z"/></svg>
-        </span>
-        <span class="inline-block font-medium ml-2">Exception filters</span>
-    </div>
-    <div class="flex items-center text-xs text-gray-400 dark:text-dark-400">
-        <span>../exception-filters/</span>
-    </div>
-    <a href="../exception-filters/" class="absolute block inset-0"></a>
-</div>
-</p>
-<doc-anchor-target id="full-resource-sample">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#full-resource-sample">#</doc-anchor-trigger>
-        <span>Full resource sample</span>
-    </h3>
-</doc-anchor-target>
-<p>Below is an example that makes use of several of the available decorators to
-create a basic controller. This controller exposes a couple of methods to access
-and manipulate internal data.</p>
+<p>Controllers can also have scope, which applies to all request method handlers declared in that controller. Like provider scope, the scope of a controller declares its lifetime. For a request-scoped controller, a new instance is created for each inbound request, and garbage-collected when the request has completed processing.</p>
+<p>Declare controller scope with the <code v-pre>scope</code> property of the <code v-pre>ControllerOptions</code> object:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">cats.controller.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">import {
-  Controller,
-  Get,
-  Query,
-  Post,
-  Body,
-  Put,
-  Param,
-  Delete,
-} from 'https://deno.land/x/danet/mod.ts';
-import { CreateCatDto, UpdateCatDto, ListAllEntities } from './dto';
-
-@Controller('cats')
-export class CatsController {
-  @Post()
-  create(@Body() createCatDto: CreateCatDto) {
-    return 'This action adds a new cat';
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return `This action returns a #${id} cat`;
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto) {
-    return `This action updates a #${id} cat`;
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return `This action removes a #${id} cat`;
-  }
-}</code></pre>
-</doc-codeblock></div>
-<doc-anchor-target id="getting-up-and-running">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#getting-up-and-running">#</doc-anchor-trigger>
-        <span>Getting up and running</span>
-    </h3>
-</doc-anchor-target>
-<p>With the above controller fully defined, Danet still doesn&#x27;t know that
-<code v-pre>CatsController</code> exists and as a result won&#x27;t create an instance of this class.</p>
-<p>Controllers always belong to a module, which is why we include the <code v-pre>controllers</code>
-array within the <code v-pre>@Module()</code> decorator. Since we haven&#x27;t yet defined any other
-modules except the root <code v-pre>AppModule</code>, we&#x27;ll use that to introduce the
-<code v-pre>CatsController</code>:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">app.module.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">import { Module } from 'https://deno.land/x/danet/mod.ts';
-import { CatsController } from './cats/cats.controller';
-
-@Module({
-  controllers: [CatsController],
+<pre class="language-typescript"><code v-pre class="language-typescript">@Controller({
+  path: 'cats',
+  scope: Scope.REQUEST,
 })
-export class AppModule {}</code></pre>
+export class CatsController {}</code></pre>
 </doc-codeblock></div>
-<p>We attached the metadata to the module class using the <code v-pre>@Module()</code> decorator,
-and Danet can now easily reflect which controllers have to be mounted.</p>
-<p>Now, it is time to create a DanetApplication that bootstrap our AppModule.</p>
-<p>We advise you to create a bootstrap function that returns your DanetApplication instance, this will make testing easier as you can get your application instance and make it listen to a random port.</p>
+<doc-anchor-target id="scope-hierarchy">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#scope-hierarchy">#</doc-anchor-trigger>
+        <span>Scope hierarchy</span>
+    </h3>
+</doc-anchor-target>
+<p>The <code v-pre>REQUEST</code> scope bubbles up the injection chain. A controller that depends on a request-scoped provider will, itself, be request-scoped.</p>
+<p>Imagine the following dependency graph: <code v-pre>CatsController &lt;- CatsService &lt;- CatsRepository</code>. If <code v-pre>CatsService</code> is request-scoped (and the others are default singletons), the <code v-pre>CatsController</code> will become request-scoped as it is dependent on the injected service. The <code v-pre>CatsRepository</code>, which is not dependent, would remain singleton-scoped.</p>
+<doc-anchor-target id="access-context">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#access-context">#</doc-anchor-trigger>
+        <span>Access context</span>
+    </h3>
+</doc-anchor-target>
+<p>You may want to access a reference to the original request object when using request-scoped providers. You can access it using the <code v-pre>beforeControllerMethodIsCalled</code> method as following. And yes, it can be async.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">bootstrap.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">import { AppModule } from './app.module.ts';
-import { DanetApplication } from 'https://deno.land/x/danet/mod.ts';
+<pre class="language-typescript"><code v-pre class="language-typescript">import { Injectable, Scope, Inject, HttpContext } from 'https://deno.land/x/danet/mod.ts';
 
-export const bootstrap = async () =&gt; {
-  const application = new DanetApplication();
-  await application.init(AppModule);
-  return application;
+@Injectable({ scope: Scope.REQUEST })
+export class CatsService {
+  constructor() {}
+  
+  async beforeControllerMethodIsCalled(ctx: HttpContext) {
+    //do something with the context
+  }
 }</code></pre>
 </doc-codeblock></div>
-<p>Run this function to get an application instance, and call <code v-pre>listen</code> method to run the server.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">run.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">import { bootstrap } from './bootstrap.ts';
-
-const application = await bootstrap();
-await application.listen(Number(Deno.env.get('PORT') || 3000));</code></pre>
-</doc-codeblock></div>
-<p>And finally execute this file with <code v-pre>deno run --allow-net --unstable --allow-env run.ts</code></p>
+<doc-anchor-target id="performance">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#performance">#</doc-anchor-trigger>
+        <span>Performance</span>
+    </h3>
+</doc-anchor-target>
+<p>Using request-scoped providers will have an impact on application performance. We have to create an instance of your class on each request. Hence, it will slow down your average response time and overall benchmarking result. Unless a provider must be request-scoped, it is strongly recommended that you use the default singleton scope.</p>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
+    <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-300" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+            <h5>Hint</h5>
+<p>Although it all sounds quite intimidating, a properly designed application that leverages request-scoped providers should not slow down by more than ~5% latency-wise.</p>
+        </div>
+    </div>
+</div>
 
                                 
                                 <!-- Required only on API pages -->
@@ -509,20 +287,20 @@ await application.listen(Number(Deno.env.get('PORT') || 3000));</code></pre>
                             
                                 <nav class="flex mt-14">
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../">
+                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../overview/guards/">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                             <span>
                                                 <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
-                                                <span class="block mt-1">Welcome</span>
+                                                <span class="block mt-1">Guards</span>
                                             </span>
                                         </a>
                                     </div>
                             
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../first-steps/exception-filters/">
+                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../overview/lifecycle/">
                                             <span>
                                                 <span class="block text-xs font-normal text-right text-gray-400 dark:text-dark-400">Next</span>
-                                                <span class="block mt-1">Exception filters</span>
+                                                <span class="block mt-1">Lifecycle</span>
                                             </span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                         </a>
@@ -566,6 +344,6 @@ await application.listen(Number(Deno.env.get('PORT') || 3000));</code></pre>
 
     <div id="docs-overlay-target"></div>
 
-    <script>window.__DOCS__ = { "title": "Controllers", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
+    <script>window.__DOCS__ = { "title": "Injection scopes", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
 </body>
 </html>
