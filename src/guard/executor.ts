@@ -27,7 +27,7 @@ export class GuardExecutor {
 
 	async executeGlobalGuard(context: HttpContext) {
 		if (this.injector.has(GLOBAL_GUARD)) {
-			const globalGuard: AuthGuard = this.injector.get(GLOBAL_GUARD);
+			const globalGuard: AuthGuard = await this.injector.get(GLOBAL_GUARD);
 			await this.executeGuard(globalGuard, context);
 		}
 	}

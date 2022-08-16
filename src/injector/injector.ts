@@ -15,9 +15,11 @@ import {
 	SCOPE,
 } from './injectable/decorator.ts';
 import { InjectableHelper } from './injectable/helper.ts';
+import { HttpContext } from '../router/router.ts';
+import { BeforeControllerMethodIsCalled } from '../hook/interfaces.ts';
 
 export class Injector {
-	private resolved = new Map<Constructor | string, () => unknown>();
+	private resolved = new Map<Constructor | string, (ctx?: HttpContext) => Promise<unknown> | unknown>();
 	private availableTypes: InjectableConstructor[] = [];
 	private logger: Logger = new Logger('Injector');
 
@@ -29,9 +31,9 @@ export class Injector {
 		return this.resolved.has(Type);
 	}
 
-	public get<T>(Type: Constructor<T> | string): T {
+	public async get<T>(Type: Constructor<T> | string, ctx?: HttpContext): Promise<T> {
 		if (this.resolved.has(Type)) {
-			return this.resolved.get(Type)!() as T;
+			return this.resolved.get(Type)!(ctx) as T;
 		}
 		throw Error(`Type ${Type} not injected`);
 	}
@@ -45,10 +47,10 @@ export class Injector {
 		);
 		if (injectables) {
 			this.addAvailableInjectable(injectables);
-			this.registerInjectables(injectables);
+			await this.registerInjectables(injectables);
 		}
 		if (controllers) {
-			this.resolveControllers(controllers);
+			await this.resolveControllers(controllers);
 		}
 		await this.executeOnAppBoostrapHook(controllers, injectables);
 	}
@@ -57,21 +59,21 @@ export class Injector {
 		this.availableTypes = this.availableTypes.concat(...injectables);
 	}
 
-	public registerInjectables(
+	public async registerInjectables(
 		Injectables: Array<InjectableConstructor | TokenInjector>,
 	) {
-		Injectables?.forEach((Provider: InjectableConstructor | TokenInjector) => {
-			this.resolveInjectable(Provider);
-		});
+		for (let Provider of Injectables) {
+			await this.resolveInjectable(Provider);
+		}
 	}
 
-	public resolveControllers(Controllers: ControllerConstructor[]) {
-		Controllers?.forEach((Controller: ControllerConstructor) => {
-			this.resolveControllerDependencies(Controller);
-		});
+	public async resolveControllers(Controllers: ControllerConstructor[]) {
+		for (let Controller of Controllers) {
+			await this.resolveControllerDependencies(Controller);
+		}
 	}
 
-	private resolveControllerDependencies<T>(Type: Constructor<T>) {
+	private async resolveControllerDependencies<T>(Type: Constructor<T>) {
 		let canBeSingleton = true;
 		const dependencies = this.getDependencies(Type);
 		dependencies.forEach((DependencyType, idx) => {
@@ -91,9 +93,10 @@ export class Injector {
 			}
 		});
 		if (canBeSingleton) {
-			const resolvedDependencies = dependencies.map<Constructor>((Dep, idx) =>
-				this.resolved.get(this.getParamToken(Type, idx) ?? Dep)!() as Constructor
-			);
+			const resolvedDependencies = new Array<Constructor>();
+			for (let [idx, Dep] of dependencies.entries()) {
+				resolvedDependencies.push(await (this.resolved.get(this.getParamToken(Type, idx) ?? Dep)!()) as Constructor)
+			}
 			const instance = new Type(...resolvedDependencies);
 			this.resolved.set(Type, () => instance);
 		} else {
@@ -101,7 +104,7 @@ export class Injector {
 		}
 	}
 
-	private resolveInjectable(
+	private async resolveInjectable(
 		Type: InjectableConstructor | TokenInjector,
 		ParentConstructor?: Constructor,
 	) {
@@ -115,9 +118,10 @@ export class Injector {
 		);
 		this.resolveDependencies(dependencies, actualType);
 		if (injectableMetadata?.scope === SCOPE.GLOBAL) {
-			const resolvedDependencies = dependencies.map<Constructor>((Dep, idx) =>
-				this.resolved.get(this.getParamToken(actualType, idx) ?? Dep)!() as Constructor
-			);
+			const resolvedDependencies = new Array<Constructor>();
+			for (let [idx, Dep] of dependencies.entries()) {
+				resolvedDependencies.push(await (this.resolved.get(this.getParamToken(actualType, idx) ?? Dep)!()) as Constructor)
+			}
 			const instance = new actualType(...resolvedDependencies);
 			this.resolved.set(actualKey, () => instance);
 		} else {
@@ -140,11 +144,16 @@ export class Injector {
 	}
 
 	private setNonSingleton(Type: Constructor, key: string | InjectableConstructor, dependencies: Array<Constructor>) {
-		this.resolved.set(key, () => {
-			const resolvedDependencies = dependencies.map<Constructor>((Dep, idx) =>
-				this.resolved.get(this.getParamToken(Type, idx) ?? Dep)!() as Constructor
-			);
-			return new Type(...resolvedDependencies);
+		this.resolved.set(key, async (ctx?: HttpContext) => {
+			const resolvedDependencies = new Array<Constructor>();
+			for (let [idx, Dep] of dependencies.entries()) {
+				resolvedDependencies.push(await (this.resolved.get(this.getParamToken(Type, idx) ?? Dep)!(ctx)) as Constructor)
+			}
+			const instance: any = new Type(...resolvedDependencies) as any;
+			if (instance.beforeControllerMethodIsCalled && ctx) {
+				await instance.beforeControllerMethodIsCalled(ctx);
+			}
+			return instance;
 		});
 	}
 
@@ -177,7 +186,7 @@ export class Injector {
 			for (const controller of Controllers) {
 				if (InjectableHelper.isGlobal(controller)) {
 					// deno-lint-ignore no-explicit-any
-					await this.get<any>(controller).onAppBootstrap?.();
+					await (await this.get<any>(controller)).onAppBootstrap?.();
 				}
 			}
 		}
@@ -191,7 +200,7 @@ export class Injector {
 					: injectable;
 				if (InjectableHelper.isGlobal(actualType)) {
 					// deno-lint-ignore no-explicit-any
-					await this.get<any>(actualKey).onAppBootstrap?.();
+					await (await this.get<any>(actualKey)).onAppBootstrap?.();
 				}
 			}
 		}

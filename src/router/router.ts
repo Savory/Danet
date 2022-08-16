@@ -96,7 +96,7 @@ export class DanetRouter {
 		return async (context: HttpContext) => {
 			try {
 				// deno-lint-ignore no-explicit-any
-				const controllerInstance = this.injector.get(Controller) as any;
+				const controllerInstance = await this.injector.get(Controller, context) as any;
 				await this.guardExecutor.executeAllRelevantGuards(
 					context,
 					Controller,
