@@ -26,7 +26,7 @@ export class DanetApplication {
 	private controller: AbortController = new AbortController();
 	private logger: Logger = new Logger('DanetApplication');
 
-	async get<T>(Type: Constructor<T> | string): Promise<T> {
+	get<T>(Type: Constructor<T> | string): Promise<T> {
 		return this.injector.get(Type);
 	}
 
