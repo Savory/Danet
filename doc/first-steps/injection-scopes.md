@@ -1,10 +1,8 @@
-### Injection scopes
-
 For people coming from different programming language backgrounds, it might be unexpected to learn that in Danet, almost everything is shared across incoming requests. We have a connection pool to the database, singleton services with global state, etc. Remember that Node.js doesn't follow the request/response Multi-Threaded Stateless Model in which every request is processed by a separate thread. Hence, using singleton instances is fully **safe** for our applications.
 
 However, there are edge-cases when request-based lifetime may be the desired behavior, for instance per-request caching in GraphQL applications, request tracking, and multi-tenancy. Injection scopes provide a mechanism to obtain the desired provider lifetime behavior.
 
-#### Provider scope
+### Provider scope
 
 A provider can have any of the following scopes:
 
@@ -24,7 +22,7 @@ A provider can have any of the following scopes:
 Using singleton scope is **recommended** for most use cases. Sharing providers across consumers and across requests means that an instance can be cached and its initialization occurs only once, during application startup.
 !!!
 
-#### Usage
+### Usage
 
 Specify injection scope by passing the `scope` property to the `@Injectable()` decorator options object:
 
@@ -37,7 +35,7 @@ export class CatsService {}
 
 Singleton scope is used by default, and need not be declared. If you do want to declare a provider as singleton scoped, use the `Scope.GLOBAL` value for the `scope` property.
 
-#### Controller scope
+### Controller scope
 
 Controllers can also have scope, which applies to all request method handlers declared in that controller. Like provider scope, the scope of a controller declares its lifetime. For a request-scoped controller, a new instance is created for each inbound request, and garbage-collected when the request has completed processing.
 
@@ -51,13 +49,13 @@ Declare controller scope with the `scope` property of the `ControllerOptions` ob
 export class CatsController {}
 ```
 
-#### Scope hierarchy
+### Scope hierarchy
 
 The `REQUEST` scope bubbles up the injection chain. A controller that depends on a request-scoped provider will, itself, be request-scoped.
 
 Imagine the following dependency graph: `CatsController <- CatsService <- CatsRepository`. If `CatsService` is request-scoped (and the others are default singletons), the `CatsController` will become request-scoped as it is dependent on the injected service. The `CatsRepository`, which is not dependent, would remain singleton-scoped.
 
-#### Access context
+### Access context
 
 You may want to access a reference to the original request object when using request-scoped providers. You can access it using the `beforeControllerMethodIsCalled` method as following. And yes, it can be async.
 
@@ -73,7 +71,7 @@ export class CatsService {
   }
 }
 ```
-#### Performance
+### Performance
 
 Using request-scoped providers will have an impact on application performance. We have to create an instance of your class on each request. Hence, it will slow down your average response time and overall benchmarking result. Unless a provider must be request-scoped, it is strongly recommended that you use the default singleton scope.
 
