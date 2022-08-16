@@ -90,14 +90,14 @@ export class Injector {
 				canBeSingleton = false;
 			}
 		});
-		const resolvedDependencies = dependencies.map((Dep, idx) =>
-			this.resolved.get(this.getParamToken(Type, idx) ?? Dep)!()
-		);
 		if (canBeSingleton) {
+			const resolvedDependencies = dependencies.map<Constructor>((Dep, idx) =>
+				this.resolved.get(this.getParamToken(Type, idx) ?? Dep)!() as Constructor
+			);
 			const instance = new Type(...resolvedDependencies);
 			this.resolved.set(Type, () => instance);
 		} else {
-			this.resolved.set(Type, () => new Type(...resolvedDependencies));
+			this.setNonSingleton(Type, Type, dependencies);
 		}
 	}
 
@@ -108,15 +108,16 @@ export class Injector {
 		const actualType = Type instanceof TokenInjector ? Type.useClass : Type;
 		const actualKey = Type instanceof TokenInjector ? Type.token : Type;
 		const dependencies = this.getDependencies(actualType);
-		this.resolveDependencies(dependencies, actualType);
+
 		const injectableMetadata = MetadataHelper.getMetadata<InjectableOption>(
 			injectionData,
 			Type,
 		);
-		const resolvedDependencies = dependencies.map((Dep, idx) =>
-			this.resolved.get(this.getParamToken(actualType, idx) ?? Dep)!()
-		);
+		this.resolveDependencies(dependencies, actualType);
 		if (injectableMetadata?.scope === SCOPE.GLOBAL) {
+			const resolvedDependencies = dependencies.map<Constructor>((Dep, idx) =>
+				this.resolved.get(this.getParamToken(actualType, idx) ?? Dep)!() as Constructor
+			);
 			const instance = new actualType(...resolvedDependencies);
 			this.resolved.set(actualKey, () => instance);
 		} else {
@@ -127,10 +128,7 @@ export class Injector {
 					ParentConstructor,
 				);
 			}
-			this.resolved.set(
-				actualKey,
-				() => new actualType(...resolvedDependencies),
-			);
+			this.setNonSingleton(actualType, actualKey, dependencies);
 		}
 	}
 
@@ -139,6 +137,15 @@ export class Injector {
 			getInjectionTokenMetadataKey(paramIndex),
 			Type,
 		);
+	}
+
+	private setNonSingleton(Type: Constructor, key: string | InjectableConstructor, dependencies: Array<Constructor>) {
+		this.resolved.set(key, () => {
+			const resolvedDependencies = dependencies.map<Constructor>((Dep, idx) =>
+				this.resolved.get(this.getParamToken(Type, idx) ?? Dep)!() as Constructor
+			);
+			return new Type(...resolvedDependencies);
+		});
 	}
 
 	private resolveDependencies(

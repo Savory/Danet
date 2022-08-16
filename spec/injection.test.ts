@@ -34,6 +34,7 @@ Deno.test('Injection', async (testContext) => {
 
 	@Injectable({ scope: SCOPE.REQUEST })
 	class Child1 {
+		public id = crypto.randomUUID();
 		constructor(public child: GlobalInjectable) {
 		}
 
@@ -170,6 +171,7 @@ Deno.test('Injection', async (testContext) => {
 			const firstInstance = app.get<FirstController>(FirstController)!;
 			const secondInstance = app.get<FirstController>(FirstController)!;
 			assertNotEquals(firstInstance.id, secondInstance.id);
+			assertNotEquals(firstInstance.child1.id, secondInstance.child1.id);
 		},
 	);
 
