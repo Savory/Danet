@@ -142,23 +142,23 @@ Deno.test('Injection', async (testContext) => {
 
 	await testContext.step(
 		'it inject controllers dependencies if they are provided by current module or previously loaded module',
-		() => {
-			const firstController = app.get(FirstController)!;
+		async () => {
+			const firstController = await app.get(FirstController)!;
 			assertInstanceOf(firstController.child1, Child1);
 			assertEquals(firstController.child1.sayHelloWorld(), 'helloWorld');
-			const secondController = app.get(SingletonController)!;
-			assertInstanceOf(secondController.child2, GlobalInjectable);
-			assertInstanceOf(secondController.dbService, DatabaseService);
+			const singletonController = await app.get(SingletonController)!;
+			assertInstanceOf(singletonController.child2, GlobalInjectable);
+			assertInstanceOf(singletonController.dbService, DatabaseService);
 		},
 	);
 
 	await testContext.step(
 		'controllers are singleton if none of their depency is scoped',
-		() => {
-			const firstInstance = app.get<SingletonController>(
+		async () => {
+			const firstInstance = await app.get<SingletonController>(
 				SingletonController,
 			)!;
-			const secondInstance = app.get<SingletonController>(
+			const secondInstance = await app.get<SingletonController>(
 				SingletonController,
 			)!;
 			assertEquals(firstInstance.id, secondInstance.id);
@@ -167,16 +167,16 @@ Deno.test('Injection', async (testContext) => {
 
 	await testContext.step(
 		'controllers are not singleton if one of their dependencies is request scoped',
-		() => {
-			const firstInstance = app.get<FirstController>(FirstController)!;
-			const secondInstance = app.get<FirstController>(FirstController)!;
+		async () => {
+			const firstInstance = await app.get<FirstController>(FirstController)!;
+			const secondInstance = await app.get<FirstController>(FirstController)!;
 			assertNotEquals(firstInstance.id, secondInstance.id);
 			assertNotEquals(firstInstance.child1.id, secondInstance.child1.id);
 		},
 	);
 
-	await testContext.step('it inject GLOBAL_GUARD', () => {
-		const globalGuard = app.get(GLOBAL_GUARD);
+	await testContext.step('it inject GLOBAL_GUARD', async () => {
+		const globalGuard = await app.get(GLOBAL_GUARD);
 		assertInstanceOf(globalGuard, GlobalGuard);
 	});
 
