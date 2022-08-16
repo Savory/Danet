@@ -10,24 +10,24 @@
     <meta name="generator" content="Retype 2.4.0">
 
     <!-- Primary Meta Tags -->
-    <title>Static files</title>
-    <meta name="title" content="Static files">
-    <meta name="description" content="If you want your Danet app to serve static files from a specific folder, for example to serve a .png, you simply have to register the folder using" />
+    <title>Injection scopes</title>
+    <meta name="title" content="Injection scopes">
+    <meta name="description" content="For people coming from different programming language backgrounds, it might be unexpected to learn that in Danet, almost everything is shared across..." />
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://savory.github.io/Danet/first-steps/static-files/" />
+    <link rel="canonical" href="https://savory.github.io/Danet/first-steps/injection-scopes/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://savory.github.io/Danet/first-steps/static-files/">
-    <meta property="og:title" content="Static files">
-    <meta property="og:description" content="If you want your Danet app to serve static files from a specific folder, for example to serve a .png, you simply have to register the folder using">
+    <meta property="og:url" content="https://savory.github.io/Danet/first-steps/injection-scopes/">
+    <meta property="og:title" content="Injection scopes">
+    <meta property="og:description" content="For people coming from different programming language backgrounds, it might be unexpected to learn that in Danet, almost everything is shared across...">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://savory.github.io/Danet/first-steps/static-files/">
-    <meta property="twitter:title" content="Static files">
-    <meta property="twitter:description" content="If you want your Danet app to serve static files from a specific folder, for example to serve a .png, you simply have to register the folder using">
+    <meta property="twitter:url" content="https://savory.github.io/Danet/first-steps/injection-scopes/">
+    <meta property="twitter:title" content="Injection scopes">
+    <meta property="twitter:description" content="For people coming from different programming language backgrounds, it might be unexpected to learn that in Danet, almost everything is shared across...">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
@@ -154,19 +154,136 @@
                                 <div id="docs-sidebar-right-toggle"></div>
                 
                                 <!-- Page content  -->
-<doc-anchor-target id="static-files" class="break-words">
+<doc-anchor-target id="injection-scopes" class="break-words">
     <h1>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#static-files">#</doc-anchor-trigger>
-        <span>Static files</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#injection-scopes">#</doc-anchor-trigger>
+        <span>Injection scopes</span>
     </h1>
 </doc-anchor-target>
-<p>If you want your Danet app to serve static files from a specific folder, for example to serve a .png, you simply have to register the folder using <code v-pre>useStaticAssets</code> method from your <code v-pre>DanetApplication</code> instance as following :</p>
+<doc-anchor-target id="injection-scopes">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#injection-scopes">#</doc-anchor-trigger>
+        <span>Injection scopes</span>
+    </h3>
+</doc-anchor-target>
+<p>For people coming from different programming language backgrounds, it might be unexpected to learn that in Danet, almost everything is shared across incoming requests. We have a connection pool to the database, singleton services with global state, etc. Remember that Node.js doesn&#x27;t follow the request/response Multi-Threaded Stateless Model in which every request is processed by a separate thread. Hence, using singleton instances is fully <strong>safe</strong> for our applications.</p>
+<p>However, there are edge-cases when request-based lifetime may be the desired behavior, for instance per-request caching in GraphQL applications, request tracking, and multi-tenancy. Injection scopes provide a mechanism to obtain the desired provider lifetime behavior.</p>
+<doc-anchor-target id="provider-scope">
+    <h4>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#provider-scope">#</doc-anchor-trigger>
+        <span>Provider scope</span>
+    </h4>
+</doc-anchor-target>
+<p>A provider can have any of the following scopes:</p>
+<table>
+  <tr>
+    <td><code>GLOBAL</code></td>
+    <td>A single instance of the provider is shared across the entire application. The instance lifetime is tied directly to the application lifecycle. Once the application has bootstrapped, all singleton providers have been instantiated. Singleton scope is used by default.</td>
+  </tr>
+  <tr>
+    <td><code>REQUEST</code></td>
+    <td>A new instance of the provider is created exclusively for each incoming <strong>request</strong>.  The instance is free'd after the request has completed processing.</td>
+  </tr>
+</table>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
+    <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-300" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+            <h5>Hint</h5>
+<p>Using singleton scope is <strong>recommended</strong> for most use cases. Sharing providers across consumers and across requests means that an instance can be cached and its initialization occurs only once, during application startup.</p>
+        </div>
+    </div>
+</div>
+<doc-anchor-target id="usage">
+    <h4>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#usage">#</doc-anchor-trigger>
+        <span>Usage</span>
+    </h4>
+</doc-anchor-target>
+<p>Specify injection scope by passing the <code v-pre>scope</code> property to the <code v-pre>@Injectable()</code> decorator options object:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">  const app = new DanetApplication();
-  await app.init(MyModule);
-  const staticAssetsPath = `${Deno.cwd()}/assets`;
-  app.useStaticAssets(staticAssetsPath);</code></pre>
+<pre class="language-typescript"><code v-pre class="language-typescript">import { Injectable, Scope } from '@nestjs/common';
+
+@Injectable({ scope: Scope.REQUEST })
+export class CatsService {}</code></pre>
 </doc-codeblock></div>
+<p>Singleton scope is used by default, and need not be declared. If you do want to declare a provider as singleton scoped, use the <code v-pre>Scope.GLOBAL</code> value for the <code v-pre>scope</code> property.</p>
+<doc-anchor-target id="controller-scope">
+    <h4>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#controller-scope">#</doc-anchor-trigger>
+        <span>Controller scope</span>
+    </h4>
+</doc-anchor-target>
+<p>Controllers can also have scope, which applies to all request method handlers declared in that controller. Like provider scope, the scope of a controller declares its lifetime. For a request-scoped controller, a new instance is created for each inbound request, and garbage-collected when the request has completed processing.</p>
+<p>Declare controller scope with the <code v-pre>scope</code> property of the <code v-pre>ControllerOptions</code> object:</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-typescript"><code v-pre class="language-typescript">@Controller({
+  path: 'cats',
+  scope: Scope.REQUEST,
+})
+export class CatsController {}</code></pre>
+</doc-codeblock></div>
+<doc-anchor-target id="scope-hierarchy">
+    <h4>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#scope-hierarchy">#</doc-anchor-trigger>
+        <span>Scope hierarchy</span>
+    </h4>
+</doc-anchor-target>
+<p>The <code v-pre>REQUEST</code> scope bubbles up the injection chain. A controller that depends on a request-scoped provider will, itself, be request-scoped.</p>
+<p>Imagine the following dependency graph: <code v-pre>CatsController &lt;- CatsService &lt;- CatsRepository</code>. If <code v-pre>CatsService</code> is request-scoped (and the others are default singletons), the <code v-pre>CatsController</code> will become request-scoped as it is dependent on the injected service. The <code v-pre>CatsRepository</code>, which is not dependent, would remain singleton-scoped.</p>
+<doc-anchor-target id="access-context">
+    <h4>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#access-context">#</doc-anchor-trigger>
+        <span>Access context</span>
+    </h4>
+</doc-anchor-target>
+<p>You may want to access a reference to the original request object when using request-scoped providers. You can access it using the <code v-pre>beforeControllerMethodIsCalled</code> method as following. And yes, it can be async.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-typescript"><code v-pre class="language-typescript">import { Injectable, Scope, Inject, HttpContext } from 'https://deno.land/x/danet/mod.ts';
+
+@Injectable({ scope: Scope.REQUEST })
+export class CatsService {
+  constructor() {}
+  
+  async beforeControllerMethodIsCalled(ctx: HttpContext) {
+    //do something with the context
+  }
+}</code></pre>
+</doc-codeblock></div>
+<doc-anchor-target id="performance">
+    <h4>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#performance">#</doc-anchor-trigger>
+        <span>Performance</span>
+    </h4>
+</doc-anchor-target>
+<p>Using request-scoped providers will have an impact on application performance. We have to create an instance of your class on each request. Hence, it will slow down your average response time and overall benchmarking result. Unless a provider must be request-scoped, it is strongly recommended that you use the default singleton scope.</p>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
+    <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-300" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+            <h5>Hint</h5>
+<p>Although it all sounds quite intimidating, a properly designed application that leverages request-scoped providers should not slow down by more than ~5% latency-wise.</p>
+        </div>
+    </div>
+</div>
 
                                 
                                 <!-- Required only on API pages -->
@@ -176,20 +293,20 @@
                             
                                 <nav class="flex mt-14">
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../first-steps/renderer/">
+                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../first-steps/guards/">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                             <span>
                                                 <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
-                                                <span class="block mt-1">Rendering HTML</span>
+                                                <span class="block mt-1">Guards</span>
                                             </span>
                                         </a>
                                     </div>
                             
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../license/">
+                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../first-steps/lifecycle/">
                                             <span>
                                                 <span class="block text-xs font-normal text-right text-gray-400 dark:text-dark-400">Next</span>
-                                                <span class="block mt-1">License</span>
+                                                <span class="block mt-1">Lifecycle</span>
                                             </span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                         </a>
@@ -233,6 +350,6 @@
 
     <div id="docs-overlay-target"></div>
 
-    <script>window.__DOCS__ = { "title": "Static files", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
+    <script>window.__DOCS__ = { "title": "Injection scopes", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
 </body>
 </html>
