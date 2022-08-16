@@ -28,7 +28,8 @@ Deno.test('it serve static files', async () => {
 		method: 'GET',
 	});
 	const blob = await res.blob();
-	assertEquals(await blob.text(), 'I love pikachu\n');
+	const text = await blob.text();
+	assertEquals(text.indexOf('I love pikachu'), 0);
 	await app.close();
 });
 
