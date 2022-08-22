@@ -1,3 +1,8 @@
+---
+order: 95
+---
+
+
 Danet comes with a built-in **exceptions layer** which is responsible for
 processing all unhandled exceptions across an application. When an exception is
 not handled by your application code, it is caught by this layer, which then
