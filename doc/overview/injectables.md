@@ -8,7 +8,9 @@ Injectables are a fundamental concept in Danet. Many of the basic Danet classes 
 ![](https://docs.nestjs.com/assets/Components_1.png)
 Image from [nestjs documentation](https://docs.nestjs.com/providers)
 
-In the previous chapter, we built a simple `TodoController`. Controllers should handle HTTP requests and delegate more complex tasks to **injectables**. Injectables are plain JavaScript classes that are declared as `injectables` in a [module](/modules).
+In the previous chapter, we built a simple `TodoController`. Controllers should handle HTTP requests and delegate more complex tasks to **injectables**. Injectables are plain JavaScript classes that are declared as `injectables` in a 
+
+[!ref](/overview/modules.md).
 
 > info **Hint** Since Danet enables the possibility to design and organize dependencies in a more OO way, we strongly recommend following the [SOLID](https://en.wikipedia.org/wiki/SOLID) principles.
 
