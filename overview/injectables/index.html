@@ -10,24 +10,26 @@
     <meta name="generator" content="Retype 2.4.0">
 
     <!-- Primary Meta Tags -->
-    <title>Guards</title>
-    <meta name="title" content="Guards">
-    <meta name="description" content="A guard is a class annotated with the @Injectable() decorator, which implements the AuthGuard interface." />
+    <title>Injectables</title>
+    <meta name="title" content="Injectables">
+    <meta name="description" content="Injectables are a fundamental concept in Danet. Many of the basic Danet classes may be treated as a provider – services, repositories, factories,..." />
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://savory.github.io/Danet/overview/guards/" />
+    <link rel="canonical" href="https://savory.github.io/Danet/overview/injectables/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://savory.github.io/Danet/overview/guards/">
-    <meta property="og:title" content="Guards">
-    <meta property="og:description" content="A guard is a class annotated with the @Injectable() decorator, which implements the AuthGuard interface.">
+    <meta property="og:url" content="https://savory.github.io/Danet/overview/injectables/">
+    <meta property="og:title" content="Injectables">
+    <meta property="og:description" content="Injectables are a fundamental concept in Danet. Many of the basic Danet classes may be treated as a provider – services, repositories, factories,...">
+    <meta property="og:image" content="https://docs.nestjs.com/assets/Components_1.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://savory.github.io/Danet/overview/guards/">
-    <meta property="twitter:title" content="Guards">
-    <meta property="twitter:description" content="A guard is a class annotated with the @Injectable() decorator, which implements the AuthGuard interface.">
+    <meta property="twitter:url" content="https://savory.github.io/Danet/overview/injectables/">
+    <meta property="twitter:title" content="Injectables">
+    <meta property="twitter:description" content="Injectables are a fundamental concept in Danet. Many of the basic Danet classes may be treated as a provider – services, repositories, factories,...">
+    <meta property="twitter:image" content="https://docs.nestjs.com/assets/Components_1.png">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
@@ -154,68 +156,132 @@
                                 <div id="docs-sidebar-right-toggle"></div>
                 
                                 <!-- Page content  -->
-<doc-anchor-target id="guards" class="break-words">
+<doc-anchor-target id="injectables" class="break-words">
     <h1>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#guards">#</doc-anchor-trigger>
-        <span>Guards</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#injectables">#</doc-anchor-trigger>
+        <span>Injectables</span>
     </h1>
 </doc-anchor-target>
-<p>A guard is a class annotated with the <code v-pre>@Injectable()</code> decorator, which implements the <code v-pre>AuthGuard</code> interface.</p>
-<p>Guards have a <strong>single responsibility</strong>. They determine whether a given request will be handled by the route handler or not, depending on certain conditions (like permissions, roles, ACLs, etc.) present at run-time. This is often referred to as <strong>authorization</strong>.</p>
-<doc-anchor-target id="authorization-guard">
+<p>Injectables are a fundamental concept in Danet. Many of the basic Danet classes may be treated as a provider – services, repositories, factories, helpers, and so on. The main idea of a provider is that it can be <strong>injected</strong> as a dependency; this means objects can create various relationships with each other, and the function of &quot;wiring up&quot; instances of objects can largely be delegated to the Danet runtime system.</p>
+<p><figure class="content-center">
+    <img src="https://docs.nestjs.com/assets/Components_1.png" alt="" />
+    <figcaption class="caption"></figcaption>
+</figure>
+Image from <a href="https://docs.nestjs.com/providers">nestjs documentation</a></p>
+<p>In the previous chapter, we built a simple <code v-pre>TodoController</code>. Controllers should handle HTTP requests and delegate more complex tasks to <strong>injectables</strong>. Injectables are plain JavaScript classes that are declared as <code v-pre>injectables</code> in a <a href="/modules">module</a>.</p>
+<blockquote>
+<p>info <strong>Hint</strong> Since Danet enables the possibility to design and organize dependencies in a more OO way, we strongly recommend following the <a href="https://en.wikipedia.org/wiki/SOLID">SOLID</a> principles.</p>
+</blockquote>
+<doc-anchor-target id="services">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#authorization-guard">#</doc-anchor-trigger>
-        <span>Authorization guard</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#services">#</doc-anchor-trigger>
+        <span>Services</span>
     </h3>
 </doc-anchor-target>
-<p>As mentioned, <strong>authorization</strong> is a great use case for Guards because specific routes should be available only when the caller (usually a specific authenticated user) has sufficient permissions. The <code v-pre>AuthGuard</code> that we&#x27;ll build now assumes an authenticated user (and that, therefore, a token is attached to the request headers). It will extract and validate the token, and use the extracted information to determine whether the request can proceed or not.</p>
+<p>Let&#x27;s start by creating a simple <code v-pre>TodoService</code>. This service will be responsible for data storage and retrieval, and is designed to be used by the <code v-pre>TodoController</code>, so it&#x27;s a good candidate to be defined as a provider.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">simple-auth-guard.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">
-import { Injectable, AuthGuard } from 'https://deno.land/x/danet/mod.ts';
+<div class="codeblock-title">todo.service.ts</div>
+<pre class="language-typescript"><code v-pre class="language-typescript">import { Injectable } from 'https://deno.land/x/danet/mod.ts';
+import { Todo } from './todo.interface';
 
 @Injectable()
-export class SimpleAuthGuard implements AuthGuard {
-  canActivate(
-    context: HttpContext,
-  ): boolean | Promise&lt;boolean&gt; {
-    const request = context.request;
-    return validateRequest(request);
+export class TodoService {
+  private readonly todos: Todo[] = [];
+
+  create(todo: Todo) {
+    this.todos.push(todo);
+  }
+
+  findAll(): Todo[] {
+    return this.todos;
   }
 }</code></pre>
 </doc-codeblock></div>
-<p>The logic inside the <code v-pre>validateRequest()</code> function can be as simple or sophisticated as needed. The main point of this example is to show how guards fit into the request/response cycle.</p>
-<p>Every guard must implement a <code v-pre>canActivate()</code> function. This function should return a boolean, indicating whether the current request is allowed or not. It can return the response either synchronously or asynchronously via a <code v-pre>Promise</code>. Danet uses the return value to control the next action:</p>
-<ul>
-<li>if it returns <code v-pre>true</code>, the request will be processed.</li>
-<li>if it returns <code v-pre>false</code>, Danet will deny the request.</li>
-</ul>
-<doc-anchor-target id="binding-guards">
+<p>Our <code v-pre>TodoService</code> is a basic class with one property and two methods. The only new feature is that it uses the <code v-pre>@Injectable()</code> decorator. The <code v-pre>@Injectable()</code> decorator attaches metadata, which declares that <code v-pre>TodoService</code>  is a class that can be managed by the Danet <a href="https://en.wikipedia.org/wiki/Inversion_of_control">IoC</a> container. By the way, this example also uses a <code v-pre>Todo</code> interface, which probably looks something like this:</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<div class="codeblock-title">todo.interface</div>
+<pre class="language-typescript"><code v-pre class="language-typescript">export interface Todo {
+  title: string;
+  description: string;
+}</code></pre>
+</doc-codeblock></div>
+<p>Now that we have a service class to retrieve todos, let&#x27;s use it inside the <code v-pre>TodoController</code>:</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<div class="codeblock-title">todo.controller</div>
+<pre class="language-typescript"><code v-pre class="language-typescript">
+import { Controller, Get, Post, Body } from 'https://deno.land/x/danet/mod.ts';
+import { CreateTodoDto } from './create-todo.dto';
+import { TodoService } from './todo.service';
+import { Todo } from './todo.interface';
+
+@Controller('todo')
+export class TodoController {
+  constructor(private todoService: TodoService) {}
+
+  @Post()
+  async create(@Body() createTodoDto: CreateTodoDto) {
+    this.todoService.create(createTodoDto);
+  }
+
+  @Get()
+  async findAll(): Promise&lt;Todo[]&gt; {
+    return this.todoService.findAll();
+  }
+}</code></pre>
+</doc-codeblock></div>
+<p>The <code v-pre>TodoService</code> is <strong>injected</strong> through the class constructor. Notice the use of the <code v-pre>private</code> syntax. This shorthand allows us to both declare and initialize the <code v-pre>todoService</code> member immediately in the same location.</p>
+<doc-anchor-target id="dependency-injection">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#binding-guards">#</doc-anchor-trigger>
-        <span>Binding guards</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#dependency-injection">#</doc-anchor-trigger>
+        <span>Dependency injection</span>
     </h3>
 </doc-anchor-target>
-<p>Like pipes and exception filters, guards can be <strong>controller-scoped</strong>, method-scoped, or global-scoped. Below, we set up a controller-scoped guard using the <code v-pre>@UseGuards()</code> decorator. This decorator may take a single argument, or a comma-separated list of arguments. This lets you easily apply the appropriate set of guards with one declaration.</p>
+<p>Danet is built around the strong design pattern commonly known as <strong>Dependency injection</strong>. We recommend reading a great article about this concept in the official <a href="https://angular.io/guide/dependency-injection">Angular</a> documentation.</p>
+<p>In Danet, thanks to TypeScript capabilities, it&#x27;s extremely easy to manage dependencies because they are resolved just by type. In the example below, Danet will resolve the <code v-pre>todoService</code> by creating and returning an instance of <code v-pre>TodoService</code> (or, in the normal case of a singleton, returning the existing instance if it has already been requested elsewhere). This dependency is resolved and passed to your controller&#x27;s constructor (or assigned to the indicated property):</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">todo.controller.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">@Controller('todo')
-@UseGuards(SimpleGuard)
-export class TodoController {}</code></pre>
+<pre class="language-typescript"><code v-pre class="language-typescript">constructor(private todoService: TodoService) {}</code></pre>
 </doc-codeblock></div>
-<p>The construction above attaches the guard to every handler declared by this controller. If we wish the guard to apply only to a single method, we apply the <code v-pre>@UseGuards()</code> decorator at the <strong>method level</strong>.</p>
-<p>Global guards are used across the whole application, for every controller and every route handler. You can set up a global guard using the following:</p>
+<doc-anchor-target id="scopes">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#scopes">#</doc-anchor-trigger>
+        <span>Scopes</span>
+    </h3>
+</doc-anchor-target>
+<p>Injectables normally have a lifetime (&quot;scope&quot;) synchronized with the application lifecycle. When the application is bootstrapped, every dependency must be resolved, and therefore every provider has to be instantiated. Similarly, when the application shuts down, each provider will be destroyed. However, there are ways to make your provider lifetime <strong>request-scoped</strong> as well.
+You can read more about these techniques on the following page
+<div class="mb-6 px-5 py-4 flex justify-between relative border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded transition-colors duration-150">
+    <div class="flex items-center text-blue-500 dark:text-blue-400">
+        <span class="inline-block mb-px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" role="presentation" fill="currentColor"><path fill="none" d="M0 0h24v24H0z"/><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z"/></svg>
+        </span>
+        <span class="inline-block font-medium ml-2">Injection scopes</span>
+    </div>
+    <div class="flex items-center text-xs text-gray-400 dark:text-dark-400">
+        <span>../injection-scopes/</span>
+    </div>
+    <a href="../injection-scopes/" class="absolute block inset-0"></a>
+</div>
+</p>
+<doc-anchor-target id="provider-registration">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#provider-registration">#</doc-anchor-trigger>
+        <span>Provider registration</span>
+    </h3>
+</doc-anchor-target>
+<p>Now that we have defined a provider (<code v-pre>TodoService</code>), and we have a consumer of that service (<code v-pre>TodoController</code>), we need to register the service with Danet so that it can perform the injection. We do this by editing our module file (<code v-pre>app.module.ts</code>) and adding the service to the <code v-pre>injectables</code> array of the <code v-pre>@Module()</code> decorator.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">app.module.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">import { Module, AuthGuard } from 'https://deno.land/x/danet/mod.ts';
+<div class="codeblock-title">app.module</div>
+<pre class="language-typescript"><code v-pre class="language-typescript">import { Module } from 'https://deno.land/x/danet/mod.ts';
+import { TodoController } from './todo/todo.controller';
+import { TodoService } from './todo/todo.service';
 
 @Module({
-  providers: [
-    new TokenInjector(SimpleGuard, GLOBAL_GUARD)
-  ],
+  controllers: [TodoController],
+  injectables: [TodoService],
 })
 export class AppModule {}</code></pre>
 </doc-codeblock></div>
+<p>Danet will now be able to resolve the dependencies of the <code v-pre>TodoController</code> class.</p>
 
                                 
                                 <!-- Required only on API pages -->
@@ -225,20 +291,20 @@ export class AppModule {}</code></pre>
                             
                                 <nav class="flex mt-14">
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../overview/exception-filters/">
+                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../overview/controllers/">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                             <span>
                                                 <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
-                                                <span class="block mt-1">Exception filters</span>
+                                                <span class="block mt-1">Controllers</span>
                                             </span>
                                         </a>
                                     </div>
                             
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../overview/injection-scopes/">
+                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../overview/exception-filters/">
                                             <span>
                                                 <span class="block text-xs font-normal text-right text-gray-400 dark:text-dark-400">Next</span>
-                                                <span class="block mt-1">Injection scopes</span>
+                                                <span class="block mt-1">Exception filters</span>
                                             </span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                         </a>
@@ -282,6 +348,6 @@ export class AppModule {}</code></pre>
 
     <div id="docs-overlay-target"></div>
 
-    <script>window.__DOCS__ = { "title": "Guards", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
+    <script>window.__DOCS__ = { "title": "Injectables", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
 </body>
 </html>
