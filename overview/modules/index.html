@@ -10,24 +10,24 @@
     <meta name="generator" content="Retype 2.4.0">
 
     <!-- Primary Meta Tags -->
-    <title>First steps</title>
-    <meta name="title" content="First steps">
-    <meta name="description" content="In this set of articles, you'll learn the core fundamentals of Danet." />
+    <title>Modules</title>
+    <meta name="title" content="Modules">
+    <meta name="description" content="A module is a class annotated with a @Module() decorator. The @Module() decorator provides metadata that" />
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://savory.github.io/Danet/overview/first-steps/" />
+    <link rel="canonical" href="https://savory.github.io/Danet/overview/modules/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://savory.github.io/Danet/overview/first-steps/">
-    <meta property="og:title" content="First steps">
-    <meta property="og:description" content="In this set of articles, you'll learn the core fundamentals of Danet.">
+    <meta property="og:url" content="https://savory.github.io/Danet/overview/modules/">
+    <meta property="og:title" content="Modules">
+    <meta property="og:description" content="A module is a class annotated with a @Module() decorator. The @Module() decorator provides metadata that">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://savory.github.io/Danet/overview/first-steps/">
-    <meta property="twitter:title" content="First steps">
-    <meta property="twitter:description" content="In this set of articles, you'll learn the core fundamentals of Danet.">
+    <meta property="twitter:url" content="https://savory.github.io/Danet/overview/modules/">
+    <meta property="twitter:title" content="Modules">
+    <meta property="twitter:description" content="A module is a class annotated with a @Module() decorator. The @Module() decorator provides metadata that">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
@@ -154,43 +154,87 @@
                                 <div id="docs-sidebar-right-toggle"></div>
                 
                                 <!-- Page content  -->
-<doc-anchor-target id="first-steps" class="break-words">
+<doc-anchor-target id="modules" class="break-words">
     <h1>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#first-steps">#</doc-anchor-trigger>
-        <span>First steps</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#modules">#</doc-anchor-trigger>
+        <span>Modules</span>
     </h1>
 </doc-anchor-target>
-<p>In this set of articles, you&#x27;ll learn the <strong>core fundamentals</strong> of Danet. To get familiar with the essential building blocks of Danet applications, we&#x27;ll build a basic CRUD application with features that cover a lot of ground at an introductory level.</p>
-<doc-anchor-target id="prerequisites">
+<p>A module is a class annotated with a <code v-pre>@Module()</code> decorator. The <code v-pre>@Module()</code> decorator provides metadata that <strong>Danet</strong> makes use of to organize the application structure.</p>
+<p>Each application has at least one module, a <strong>root module</strong>. The root module is the starting point Danet uses to build the <strong>application graph</strong> - the internal data structure Danet uses to resolve module and provider relationships and dependencies. While very small applications may theoretically have just the root module, this is not the typical case. We want to emphasize that modules are <strong>strongly</strong> recommended as an effective way to organize your components. Thus, for most applications, the resulting architecture will employ multiple modules, each declaring a closely related set of <strong>capabilities</strong>.</p>
+<p>The <code v-pre>@Module()</code> decorator takes a single object whose properties describe the module:</p>
+<div class="table-wrapper scrollbar overflow-hidden">
+<table class="comfortable">
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code v-pre>injectables</code></td>
+<td>the injectables that will be instantiated by the Danet injector and that may be shared at least across this module</td>
+</tr>
+<tr>
+<td><code v-pre>controllers</code></td>
+<td>the set of controllers defined in this module which have to be instantiated</td>
+</tr>
+<tr>
+<td><code v-pre>imports</code></td>
+<td>the list of imported modules that declare the injectables which are required in this module</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The module <strong>does not encapsulate</strong> injectables. This means that you can inject injectables from any module as long as it has been resolved.</p>
+<p>This will change in the future.</p>
+<doc-anchor-target id="feature-modules">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#prerequisites">#</doc-anchor-trigger>
-        <span>Prerequisites</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#feature-modules">#</doc-anchor-trigger>
+        <span>Feature modules</span>
     </h3>
 </doc-anchor-target>
-<p>Please make sure that <a href="https://deno.land/">Deno</a> (version &gt;= Install
-v1.24.3) is installed on your operating system.</p>
-<doc-anchor-target id="setup">
+<p>The <code v-pre>TodoController</code> and <code v-pre>TodoService</code> belong to the same application domain. As they are closely related, it makes sense to move them into a feature module. A feature module simply organizes code relevant for a specific feature, keeping code organized and establishing clear boundaries. This helps us manage complexity and develop with <a href="https://en.wikipedia.org/wiki/SOLID">SOLID</a> principles, especially as the size of the application and/or team grow.</p>
+<p>To demonstrate this, we&#x27;ll create the <code v-pre>TodoModule</code>.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<div class="codeblock-title">todo.module.ts</div>
+<pre class="language-typescript"><code v-pre class="language-typescript">import { Module } from 'https://deno.land/x/danet/mod.ts';
+import { TodoController } from './todo.controller';
+import { TodoService } from './todo.service';
+
+@Module({
+  controllers: [TodoController],
+  injectables: [TodoService],
+})
+export class TodoModule {}</code></pre>
+</doc-codeblock></div>
+<p>Above, we defined the <code v-pre>TodoModule</code> in the <code v-pre>todo.module.ts</code> file, and moved everything related to this module into the <code v-pre>todo</code> directory. The last thing we need to do is import this module into the root module (the <code v-pre>AppModule</code>, defined in the <code v-pre>app.module.ts</code> file).</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-typescript"><code v-pre class="language-typescript">@@filename(app.module)
+import { Module } from 'https://deno.land/x/danet/mod.ts';
+import { TodoModule } from './todo/todo.module';
+
+@Module({
+  imports: [TodoModule],
+})
+export class AppModule {}</code></pre>
+</doc-codeblock></div>
+<doc-anchor-target id="shared-modules">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#setup">#</doc-anchor-trigger>
-        <span>Setup</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#shared-modules">#</doc-anchor-trigger>
+        <span>Shared modules</span>
     </h3>
 </doc-anchor-target>
-<p>We don&#x27;t have a CLI yet. The easiest way to get started is to clone our <a href="https://github.com/Savory/Danet-Starter">starter repository</a></p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-bash"><code v-pre class="language-bash">$ git clone git@github.com:Savory/Danet-Starter.git nameofyourproject
-$ cd nameofyourproject</code></pre>
-</doc-codeblock></div>
-<p>The app is a simple in memory todo app.</p>
-<doc-anchor-target id="running-the-application">
-    <h4>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#running-the-application">#</doc-anchor-trigger>
-        <span>Running the application</span>
-    </h4>
+<p>In Danet, modules are <strong>singletons</strong> by default, and thus you can share the same instance of any provider between multiple modules effortlessly.</p>
+<p>Every module is automatically a <strong>shared module</strong>. Once created it can be reused by any module. Let&#x27;s imagine that we want to share an instance of the <code v-pre>TodoService</code> between several other modules. In order to do that, nothing has to be done, any module that imports the <code v-pre>TodoModule</code> has access to the <code v-pre>TodoService</code> and will share the same instance with all other modules that import it as well.</p>
+<doc-anchor-target id="global-modules">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#global-modules">#</doc-anchor-trigger>
+        <span>Global modules</span>
+    </h3>
 </doc-anchor-target>
-<p>Once the installation process is complete, you can run the following command at your OS command prompt to start the application listening for inbound HTTP requests:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-bash"><code v-pre class="language-bash">$ deno task launch-server</code></pre>
-</doc-codeblock></div>
+<p>Like in <a href="https://angular.io">Angular</a> <code v-pre>injectables</code> are registered in the global scope. Once defined, they&#x27;re available everywhere.</p>
 
                                 
                                 <!-- Required only on API pages -->
@@ -200,20 +244,20 @@ $ cd nameofyourproject</code></pre>
                             
                                 <nav class="flex mt-14">
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../">
+                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../overview/injectables/">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                             <span>
                                                 <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
-                                                <span class="block mt-1">Welcome</span>
+                                                <span class="block mt-1">Injectables</span>
                                             </span>
                                         </a>
                                     </div>
                             
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../overview/controllers/">
+                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../overview/exception-filters/">
                                             <span>
                                                 <span class="block text-xs font-normal text-right text-gray-400 dark:text-dark-400">Next</span>
-                                                <span class="block mt-1">Controllers</span>
+                                                <span class="block mt-1">Exception filters</span>
                                             </span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                         </a>
@@ -257,6 +301,6 @@ $ cd nameofyourproject</code></pre>
 
     <div id="docs-overlay-target"></div>
 
-    <script>window.__DOCS__ = { "title": "First steps", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
+    <script>window.__DOCS__ = { "title": "Modules", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
 </body>
 </html>
