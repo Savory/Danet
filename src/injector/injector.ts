@@ -20,7 +20,7 @@ import { BeforeControllerMethodIsCalled } from '../hook/interfaces.ts';
 
 export class Injector {
 	private resolved = new Map<Constructor | string, (ctx?: HttpContext) => Promise<unknown> | unknown>();
-	private availableTypes: InjectableConstructor[] = [];
+	private availableTypes = new Map<InjectableConstructor, boolean>();
 	private logger: Logger = new Logger('Injector');
 
 	public getAll() {
@@ -56,7 +56,9 @@ export class Injector {
 	}
 
 	public addAvailableInjectable(injectables: InjectableConstructor[]) {
-		this.availableTypes = this.availableTypes.concat(...injectables);
+		for (const injectable of injectables) {
+			this.availableTypes.set(injectable, true);
+		}
 	}
 
 	public async registerInjectables(
@@ -164,7 +166,7 @@ export class Injector {
 	) {
 		Dependencies.forEach((Dependency) => {
 			if (!this.resolved.get(Dependency)) {
-				if (this.availableTypes.includes(Dependency)) {
+				if (this.availableTypes.get(Dependency)) {
 					this.resolveInjectable(Dependency, ParentConstructor);
 				} else {
 					throw new Error(
