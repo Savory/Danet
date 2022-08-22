@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-root" content="/Danet">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.713945748200">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.714462733463">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
@@ -31,12 +31,12 @@
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=2.4.0.713945748200" rel="stylesheet" />
+    <link href="../../resources/css/retype.css?v=2.4.0.714462733463" rel="stylesheet" />
 
-    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.713945748200" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.714462733463" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.713945748200" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.713945748200" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.714462733463" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.714462733463" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -208,7 +208,7 @@
 <pre class="language-typescript"><code v-pre class="language-typescript">import { Injectable, Scope } from 'https://deno.land/x/danet/mod.ts';
 
 @Injectable({ scope: Scope.REQUEST })
-export class CatsService {}</code></pre>
+export class TodoService {}</code></pre>
 </doc-codeblock></div>
 <p>Singleton scope is used by default, and need not be declared. If you do want to declare a provider as singleton scoped, use the <code v-pre>Scope.GLOBAL</code> value for the <code v-pre>scope</code> property.</p>
 <doc-anchor-target id="controller-scope">
@@ -221,10 +221,10 @@ export class CatsService {}</code></pre>
 <p>Declare controller scope with the <code v-pre>scope</code> property of the <code v-pre>ControllerOptions</code> object:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <pre class="language-typescript"><code v-pre class="language-typescript">@Controller({
-  path: 'cats',
+  path: 'todo',
   scope: Scope.REQUEST,
 })
-export class CatsController {}</code></pre>
+export class TodoController {}</code></pre>
 </doc-codeblock></div>
 <doc-anchor-target id="scope-hierarchy">
     <h3>
@@ -233,7 +233,7 @@ export class CatsController {}</code></pre>
     </h3>
 </doc-anchor-target>
 <p>The <code v-pre>REQUEST</code> scope bubbles up the injection chain. A controller that depends on a request-scoped provider will, itself, be request-scoped.</p>
-<p>Imagine the following dependency graph: <code v-pre>CatsController &lt;- CatsService &lt;- CatsRepository</code>. If <code v-pre>CatsService</code> is request-scoped (and the others are default singletons), the <code v-pre>CatsController</code> will become request-scoped as it is dependent on the injected service. The <code v-pre>CatsRepository</code>, which is not dependent, would remain singleton-scoped.</p>
+<p>Imagine the following dependency graph: <code v-pre>TodoController &lt;- TodoService &lt;- TodoRepository</code>. If <code v-pre>TodoService</code> is request-scoped (and the others are default singletons), the <code v-pre>TodoController</code> will become request-scoped as it is dependent on the injected service. The <code v-pre>TodoRepository</code>, which is not dependent, would remain singleton-scoped.</p>
 <doc-anchor-target id="access-context">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#access-context">#</doc-anchor-trigger>
@@ -245,7 +245,7 @@ export class CatsController {}</code></pre>
 <pre class="language-typescript"><code v-pre class="language-typescript">import { Injectable, Scope, Inject, HttpContext } from 'https://deno.land/x/danet/mod.ts';
 
 @Injectable({ scope: Scope.REQUEST })
-export class CatsService {
+export class TodoService {
   constructor() {}
   
   async beforeControllerMethodIsCalled(ctx: HttpContext) {
