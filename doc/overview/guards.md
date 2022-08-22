@@ -32,10 +32,10 @@ Every guard must implement a `canActivate()` function. This function should retu
 
 Like pipes and exception filters, guards can be **controller-scoped**, method-scoped, or global-scoped. Below, we set up a controller-scoped guard using the `@UseGuards()` decorator. This decorator may take a single argument, or a comma-separated list of arguments. This lets you easily apply the appropriate set of guards with one declaration.
 
-```typescript cat-controller.ts
-@Controller('cats')
+```typescript todo.controller.ts
+@Controller('todo')
 @UseGuards(SimpleGuard)
-export class CatsController {}
+export class TodoController {}
 ```
 
 The construction above attaches the guard to every handler declared by this controller. If we wish the guard to apply only to a single method, we apply the `@UseGuards()` decorator at the **method level**.

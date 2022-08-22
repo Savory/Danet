@@ -14,21 +14,21 @@ routing map (tie requests to the corresponding controllers).
 
 In the following example we'll use the `@Controller()` decorator, which is
 **required** to define a basic controller. We'll specify an optional route path
-prefix of `cats`. Using a path prefix in a `@Controller()` decorator allows us
+prefix of `todo`. Using a path prefix in a `@Controller()` decorator allows us
 to easily group a set of related routes, and minimize repetitive code. For
 example, we may choose to group a set of routes that manage interactions with a
 customer entity under the route `/customers`. In that case, we could specify the
 path prefix `customers` in the `@Controller()` decorator so that we don't have
 to repeat that portion of the path for each route in the file.
 
-```ts cats.controller.ts
+```ts todo.controller.ts
 import { Controller, Get } from 'https://deno.land/x/danet/mod.ts';
 
-@Controller('cats')
-export class CatsController {
+@Controller('todo')
+export class TodoController {
   @Get()
   findAll(): string {
-    return 'This action returns all cats';
+    return 'This action returns all todo';
   }
 }
 ```
@@ -39,8 +39,8 @@ endpoint corresponds to the HTTP request method (GET in this case) and the route
 path. What is the route path? The route path for a handler is determined by
 concatenating the (optional) prefix declared for the controller, and any path
 specified in the method's decorator. Since we've declared a prefix for every
-route ( `cats`), and haven't added any path information in the decorator, Danet
-will map `GET /cats` requests to this handler. As mentioned, the path includes
+route ( `todo`), and haven't added any path information in the decorator, Danet
+will map `GET /todo` requests to this handler. As mentioned, the path includes
 both the optional controller path prefix **and** any path string declared in the
 request method decorator. For example, a path prefix of `customers` combined
 with the decorator `@Get('profile')` would produce a route mapping for requests
@@ -63,14 +63,14 @@ access to the
 We can access the request object by instructing Danet to inject it by adding the
 `@Req()` decorator to the handler's signature.
 
-```ts cats.controller.ts
+```ts todo.controller.ts
 import { Controller, Get, Req } from 'https://deno.land/x/danet/mod.ts';
 
-@Controller('cats')
-export class CatsController {
+@Controller('todo')
+export class TodoController {
   @Get()
   findAll(@Req() request: Request): string {
-    return 'This action returns all cats';
+    return 'This action returns all todo';
   }
 }
 ```
@@ -111,23 +111,23 @@ objects they represent.
 
 ### Resources
 
-Earlier, we defined an endpoint to fetch the cats resource (**GET** route).
+Earlier, we defined an endpoint to fetch the todo resource (**GET** route).
 We'll typically also want to provide an endpoint that creates new records. For
 this, let's create the **POST** handler:
 
-```ts cats.controller.ts
+```ts todo.controller.ts
 import { Controller, Get, Post } from 'https://deno.land/x/danet/mod.ts';
 
-@Controller('cats')
-export class CatsController {
+@Controller('todo')
+export class TodoController {
   @Post()
   create(): string {
-    return 'This action adds a new cat';
+    return 'This action adds a new todo';
   }
 
   @Get()
   findAll(): string {
-    return 'This action returns all cats';
+    return 'This action returns all todo';
   }
 }
 ```
@@ -139,7 +139,7 @@ methods: `@Get()`, `@Post()`, `@Put()`, `@Delete()`, `@Patch()`. In addition,
 ### Route parameters
 
 Routes with static paths won't work when you need to accept **dynamic data** as
-part of the request (e.g., `GET /cats/1` to get cat with id `1`). In order to
+part of the request (e.g., `GET /todo/1` to get todo with id `1`). In order to
 define routes with parameters, we can add route parameter **tokens** in the path
 of the route to capture the dynamic value at that position in the request URL.
 The route parameter token in the `@Get()` decorator example below demonstrates
@@ -149,7 +149,7 @@ this usage. Route parameters declared in this way can be accessed using the
 ```ts
 @Get(':id')
 findOne(@Param('id') id: string): string {
-  return `This action returns a #${id} cat`;
+  return `This action returns a #${id} todo`;
 }
 ```
 
@@ -185,7 +185,7 @@ Every async function has to return a `Promise`. This means that you can return a
 deferred value that Danet will be able to resolve by itself. Let's see an
 example of this:
 
-```ts cats.controller.ts
+```ts todo.controller.ts
 @Get()
 async findAll(): Promise<any[]> {
   return [];
@@ -203,7 +203,7 @@ Below is an example that makes use of several of the available decorators to
 create a basic controller. This controller exposes a couple of methods to access
 and manipulate internal data.
 
-```ts cats.controller.ts
+```ts todo.controller.ts
 import {
   Controller,
   Get,
@@ -214,28 +214,28 @@ import {
   Param,
   Delete,
 } from 'https://deno.land/x/danet/mod.ts';
-import { CreateCatDto, UpdateCatDto, ListAllEntities } from './dto';
+import { CreateTodoDto, UpdateTodoDto, ListAllEntities } from './dto';
 
-@Controller('cats')
-export class CatsController {
+@Controller('todo')
+export class TodoController {
   @Post()
-  create(@Body() createCatDto: CreateCatDto) {
-    return 'This action adds a new cat';
+  create(@Body() createTodoDto: CreateTodoDto) {
+    return 'This action adds a new todo';
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return `This action returns a #${id} cat`;
+    return `This action returns a #${id} todo`;
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto) {
-    return `This action updates a #${id} cat`;
+  update(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto) {
+    return `This action updates a #${id} todo`;
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return `This action removes a #${id} cat`;
+    return `This action removes a #${id} todo`;
   }
 }
 ```
@@ -243,19 +243,19 @@ export class CatsController {
 ### Getting up and running
 
 With the above controller fully defined, Danet still doesn't know that
-`CatsController` exists and as a result won't create an instance of this class.
+`TodoController` exists and as a result won't create an instance of this class.
 
 Controllers always belong to a module, which is why we include the `controllers`
 array within the `@Module()` decorator. Since we haven't yet defined any other
 modules except the root `AppModule`, we'll use that to introduce the
-`CatsController`:
+`TodoController`:
 
 ```ts app.module.ts
 import { Module } from 'https://deno.land/x/danet/mod.ts';
-import { CatsController } from './cats/cats.controller';
+import { TodoController } from './todo/todo.controller';
 
 @Module({
-  controllers: [CatsController],
+  controllers: [TodoController],
 })
 export class AppModule {}
 ```

@@ -91,13 +91,13 @@ takes a single parameter.
 
 ### Binding filters
 
-Let's tie our new `CustomExceptionFilter` to the `CatsController`'s `create()`
+Let's tie our new `CustomExceptionFilter` to the `TodoController`'s `create()`
 method.
 
 ```ts cats.controller.ts
 @Post()
 @UseFilter(CustomerExceptionFilter)
-async create(@Body() createCatDto: CreateCatDto) {
+async create(@Body() createTodoDto: CreateTodoDto) {
   throw new ForbiddenException();
 }
 ```
@@ -114,11 +114,11 @@ following:
 
 ```ts cats.controller.ts
 @UseFilter(CustomExceptionFilter)
-export class CatsController {}
+export class TodoController {}
 ```
 
 This construction sets up the `CustomException` for every route handler defined
-inside the `CatsController`.
+inside the `TodoController`.
 
 ### Catch everything
 

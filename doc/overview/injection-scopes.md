@@ -30,7 +30,7 @@ Specify injection scope by passing the `scope` property to the `@Injectable()` d
 import { Injectable, Scope } from 'https://deno.land/x/danet/mod.ts';
 
 @Injectable({ scope: Scope.REQUEST })
-export class CatsService {}
+export class TodoService {}
 ```
 
 Singleton scope is used by default, and need not be declared. If you do want to declare a provider as singleton scoped, use the `Scope.GLOBAL` value for the `scope` property.
@@ -43,17 +43,17 @@ Declare controller scope with the `scope` property of the `ControllerOptions` ob
 
 ```typescript
 @Controller({
-  path: 'cats',
+  path: 'todo',
   scope: Scope.REQUEST,
 })
-export class CatsController {}
+export class TodoController {}
 ```
 
 ### Scope hierarchy
 
 The `REQUEST` scope bubbles up the injection chain. A controller that depends on a request-scoped provider will, itself, be request-scoped.
 
-Imagine the following dependency graph: `CatsController <- CatsService <- CatsRepository`. If `CatsService` is request-scoped (and the others are default singletons), the `CatsController` will become request-scoped as it is dependent on the injected service. The `CatsRepository`, which is not dependent, would remain singleton-scoped.
+Imagine the following dependency graph: `TodoController <- TodoService <- TodoRepository`. If `TodoService` is request-scoped (and the others are default singletons), the `TodoController` will become request-scoped as it is dependent on the injected service. The `TodoRepository`, which is not dependent, would remain singleton-scoped.
 
 ### Access context
 
@@ -63,7 +63,7 @@ You may want to access a reference to the original request object when using req
 import { Injectable, Scope, Inject, HttpContext } from 'https://deno.land/x/danet/mod.ts';
 
 @Injectable({ scope: Scope.REQUEST })
-export class CatsService {
+export class TodoService {
   constructor() {}
   
   async beforeControllerMethodIsCalled(ctx: HttpContext) {
