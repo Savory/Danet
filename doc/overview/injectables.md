@@ -85,7 +85,7 @@ constructor(private todoService: TodoService) {}
 ### Scopes
 
 Injectables normally have a lifetime ("scope") synchronized with the application lifecycle. When the application is bootstrapped, every dependency must be resolved, and therefore every provider has to be instantiated. Similarly, when the application shuts down, each provider will be destroyed. However, there are ways to make your provider lifetime **request-scoped** as well. 
-You can read more about these techniques on the following page[!ref](/overview/injection-scopes.md)
+You can read more about these techniques on the following page[!fundamentals](/overview/injection-scopes.md)
 
 [//]: # (### Custom injectables)
 
