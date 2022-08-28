@@ -50,6 +50,8 @@ Check out our [starter repository](https://github.com/Savory/Danet-Starter)
 
 [Read our documentation](https://savory.github.io/Danet/)
 
+[Read our blog](https://savory.github.io/)
+
 ## Sponsor
 
 A huge thanks to
