@@ -39,3 +39,14 @@ by Angular.
 We always welcome contributors, feel free to submit a new feature or report a
 bug on our [Github Repository](https://github.com/Savory/Danet) and
 [join our discord](https://discord.gg/Q7ZHuDPgjA)
+
+
+## Sponsor
+
+A huge thanks to
+
+<p align="center">
+<a href="https://www.abbeal.com/">
+  <img src="https://cdn.discordapp.com/attachments/1004562983969628191/1004593615537963038/image.png" width="250" alt="Abbeal Logo" />
+</a>
+</p>
