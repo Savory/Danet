@@ -40,6 +40,7 @@ We always welcome contributors, feel free to submit a new feature or report a
 bug on our [Github Repository](https://github.com/Savory/Danet) and
 [join our discord](https://discord.gg/Q7ZHuDPgjA)
 
+If you prefer to read one page tutorial, [read our blog](https://savory.github.io/)
 
 ## Sponsor
 
