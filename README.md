@@ -4,6 +4,7 @@
 
 [![CI](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml)
 [![codecov](https://codecov.io/gh/Sorikairox/Danet/branch/main/graph/badge.svg?token=R6WXVC669Z)](https://codecov.io/gh/Sorikairox/Danet)
+![Made for Deno](https://img.shields.io/badge/made%20for-Deno-6B82F6?style=flat-square)
 
 ## Description
 
