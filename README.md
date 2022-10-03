@@ -74,7 +74,7 @@ A huge thanks to
 
 <h2>
 License
-</h1>
+</h2>
 <br>
 
 <p>
