@@ -62,3 +62,20 @@ A huge thanks to
   <img src="https://cdn.discordapp.com/attachments/1004562983969628191/1004593615537963038/image.png" width="250" alt="Abbeal Logo" />
 </a>
 </p>
+
+
+
+##  Contributing
+
+- Contributions make the open source community such an amazing place to learn, inspire, and create.
+- Any contributions you make are **truly appreciated**.
+- Check out our [contribution guidelines](/CONTRIBUTING.md) for more information.
+
+
+<h2>
+License
+</h2>
+<br>
+
+<p>
+This project is Licensed under the <a href="./LICENSE">MIT License</a>. Please go through the License atleast once before making your contribution. </p>
