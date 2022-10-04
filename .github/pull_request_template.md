@@ -15,8 +15,8 @@ Fixes #(issue_number)
 
 ---
 # Checklist:
+- [ ] I have run `deno lint` AND `deno fmt` AND `deno task test` and got no errors.
 - [ ] I have followed the contributing guidelines of this project as mentioned in [CONTRIBUTING.md](/CONTRIBUTING.md)
 - [ ] I have checked to ensure there aren't other open [Pull Requests](https://github.com/Savory/Danet/pulls) for the same update/change?
 - [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have made corresponding changes needed to the documentation
