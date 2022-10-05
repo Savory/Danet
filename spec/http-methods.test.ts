@@ -1,4 +1,4 @@
-import { assertEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
+import { assertEquals } from '../src/deps_test.ts';
 import { DanetApplication } from '../src/app.ts';
 import { Module } from '../src/module/decorator.ts';
 import {
@@ -50,13 +50,13 @@ class SimpleController {
 class MyModule {}
 
 const app = new DanetApplication();
-for (let method of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
+for (const method of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
 	Deno.test(method, async () => {
 		await app.init(MyModule);
-		const port = (await app.listen(0)).port;
+		const listenEvent = await app.listen();
 
-		const res = await fetch(`http://localhost:${port}/nice-controller`, {
-			method: method,
+		const res = await fetch(`http://localhost:${listenEvent.port}/nice-controller`, {
+			method,
 		});
 		const text = await res.text();
 		assertEquals(text, `OK ${method}`);
@@ -66,12 +66,15 @@ for (let method of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
 
 Deno.test('ALL', async () => {
 	await app.init(MyModule);
-	app.listen(3000);
+	const listenEvent = await app.listen();
 
-	for (let method of ['GET', 'POST', 'PUT', 'DELETE']) {
-		const res = await fetch('http://localhost:3000/nice-controller/all', {
-			method: method,
-		});
+	for (const method of ['GET', 'POST', 'PUT', 'DELETE']) {
+		const res = await fetch(
+			`http://localhost:${listenEvent.port}/nice-controller/all`,
+			{
+				method: method,
+			},
+		);
 		const text = await res.text();
 		assertEquals(text, `OK ALL`);
 	}

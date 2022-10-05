@@ -65,12 +65,12 @@ class MethodGuardModule {}
 })
 class ControllerGuardModule {}
 
-for (let guardType of ['controller', 'method']) {
+for (const guardType of ['controller', 'method']) {
 	Deno.test(`${guardType} guard`, async () => {
 		const app = new DanetApplication();
 		await app.init(ControllerGuardModule);
-		const port = (await app.listen(0)).port;
-		const res = await fetch(`http://localhost:${port}/${guardType}-guard`, {
+		const listenEvent = await app.listen();
+		const res = await fetch(`http://localhost:${listenEvent.port}/${guardType}-guard`, {
 			method: 'GET',
 		});
 		const json = await res.json();
@@ -97,8 +97,8 @@ class GlobalAuthModule {}
 Deno.test('Global guard', async () => {
 	const app = new DanetApplication();
 	await app.init(GlobalAuthModule);
-	const port = (await app.listen(0)).port;
-	const res = await fetch(`http://localhost:${port}/global-guard`, {
+	const listenEvent = await app.listen();
+	const res = await fetch(`http://localhost:${listenEvent.port}/global-guard`, {
 		method: 'GET',
 	});
 	const json = await res.json();
@@ -110,7 +110,7 @@ Deno.test('Global guard', async () => {
 
 @Injectable()
 class ThrowingGuard implements AuthGuard {
-	canActivate(context: HttpContext) {
+	canActivate() {
 		return false;
 	}
 }
@@ -131,8 +131,8 @@ class ThrowingAuthModule {}
 Deno.test('403 when guard is throwing', async () => {
 	const app = new DanetApplication();
 	await app.init(ThrowingAuthModule);
-	const port = (await app.listen(0)).port;
-	const res = await fetch(`http://localhost:${port}/throwing-guard`, {
+	const listenEvent = await app.listen();
+	const res = await fetch(`http://localhost:${listenEvent.port}/throwing-guard`, {
 		method: 'GET',
 	});
 	const errorStatus = res.status;

@@ -3,8 +3,8 @@ import {
 	assertInstanceOf,
 	assertNotEquals,
 	assertRejects,
-} from 'https://deno.land/std@0.135.0/testing/asserts.ts';
-import { Route } from 'https://deno.land/x/oak@v10.5.1/router.ts';
+} from '../src/deps_test.ts';
+import { Route } from '../src/deps.ts';
 import { DanetApplication } from '../src/app.ts';
 import { GLOBAL_GUARD } from '../src/guard/constants.ts';
 import { AuthGuard } from '../src/guard/interface.ts';

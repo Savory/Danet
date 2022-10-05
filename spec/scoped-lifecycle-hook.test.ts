@@ -1,6 +1,6 @@
-import { assertEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
+import { assertEquals } from '../src/deps_test.ts';
 import { DanetApplication } from '../src/app.ts';
-import { BeforeControllerMethodIsCalled, OnAppBootstrap, OnAppClose } from '../src/hook/interfaces.ts';
+import { BeforeControllerMethodIsCalled } from '../src/hook/interfaces.ts';
 import { Injectable, SCOPE } from '../src/injector/injectable/decorator.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
@@ -10,7 +10,7 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 	@Injectable({ scope: SCOPE.REQUEST })
 	class ScopedInjectable implements BeforeControllerMethodIsCalled {
 		public somethingThatMatters: string | null = null;
-		async beforeControllerMethodIsCalled(ctx: HttpContext) {
+		beforeControllerMethodIsCalled(ctx: HttpContext) {
 			this.somethingThatMatters = `Received a ${ctx.request.method} request`;
 		}
 	}
@@ -18,7 +18,7 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 	@Controller('scoped-controller/')
 	class ScopedController {
 		@Get()
-		public returnSomethingThatMatters(): string| null {
+		public returnSomethingThatMatters(): string | null {
 			return this.child1.somethingThatMatters;
 		}
 		constructor(
@@ -37,15 +37,17 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 
 	const app = new DanetApplication();
 	await app.init(MyModule);
-	await testContext.step('handleRequest is called before request when defined in a scoped service', async () => {
-		const port = (await app.listen(0)).port;
+	await testContext.step(
+		'handleRequest is called before request when defined in a scoped service',
+		async () => {
+			const listenEvent = await app.listen();
 
-		const res = await fetch(`http://localhost:${port}/scoped-controller/`, {
-			method: 'GET',
-		});
-		const text = await res.text();
-		assertEquals(text, `Received a GET request`);
-		await app.close();
-	});
-
+			const res = await fetch(`http://localhost:${listenEvent.port}/scoped-controller/`, {
+				method: 'GET',
+			});
+			const text = await res.text();
+			assertEquals(text, `Received a GET request`);
+			await app.close();
+		},
+	);
 });

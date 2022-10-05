@@ -57,7 +57,7 @@ export class DanetApplication {
 		this.controller.abort();
 	}
 
-	listen(port = 3000): Promise<ApplicationListenEvent> {
+	listen(port = 0): Promise<ApplicationListenEvent> {
 		const routes = this.router.routes();
 		this.app.use(routes);
 		this.controller = new AbortController();
