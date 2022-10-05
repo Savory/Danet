@@ -1,4 +1,4 @@
-import { getQuery } from '../../../deps.ts';
+import { getQuery } from 'https://deno.land/x/oak@v10.5.1/helpers.ts';
 import { MetadataHelper } from '../../../metadata/helper.ts';
 import { HttpContext } from '../../router.ts';
 
@@ -58,14 +58,36 @@ export const Body = (prop?: string) =>
 		return prop ? body[prop] : body;
 	})();
 
-export const Query = (prop?: string) =>
+	export const Query = (param?: string) =>
+		createParamDecorator((context: HttpContext) => {
+			const query = getQuery(context);
+			if (param) {
+				return query[param];
+			} else {
+				return query;
+			}
+		})();
+
+export const QueryAll = (params?: string) =>
 	createParamDecorator((context: HttpContext) => {
-		const query = getQuery(context, { mergeParams: true });
-		if (prop) {
-			return query?.[prop];
+		if (params) {
+			return context.request.url.searchParams.getAll(params);
 		} else {
-			return query;
+			return Object.fromEntries(
+				Array.from(context.request.url.searchParams.keys())
+					.map(key => [key, context.request.url.searchParams.getAll(key)])
+			);
 		}
 	})();
 
-export const Param = (paramName: string) => Query(paramName);
+export const Param = (paramName: string) =>
+	createParamDecorator((context: HttpContext) => {
+		// not sure why params is not exposed, but it definitely is the right way to do this
+		// deno-lint-ignore no-explicit-any
+		const params = (context as any).params;
+		if (paramName) {
+			return params?.[paramName];
+		} else {
+			return params;
+		}
+	})();

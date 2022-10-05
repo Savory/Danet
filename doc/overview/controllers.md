@@ -89,26 +89,42 @@ objects they represent.
 <table>
   <tbody>
     <tr>
+      <th>Decorator</th>
+      <th>Type</th>
+      <th>Value</th>
+    </tr>
+    <tr>
       <td><code>@Req()</code></td>
+      <td><a href="https://deno.land/x/oak@v10.5.1/request.ts">oak.Request</a></td>
       <td><code>ctx.request</code></td></tr>
     <tr>
-      <td><code>@Res()</code><span class='table-code-asterisk'>*</span></td>
+      <td><code>@Res()</code></td>
+      <td><a href="https://deno.land/x/oak@v10.5.1/response.ts">oak.Response</a></td>
       <td><code>ctx.response</code></td>
     </tr>
     <tr>
       <td><code>@Param(key: string)</code></td>
-      <td><code>getQuery(context, { mergeParams: true })[key]</code></td>
+      <td><code>string</code></td>
+      <td><code>context.params[key]</code></td>
     </tr>
     <tr>
-    <td><code>@Header(key? : string)</code></td>
-    <td><code>ctx.request.headers</code> / <code>ctx.request.headers.get(key)</code></td></tr>
+      <td><code>@Header(key? : string)</code></td>
+      <td><code>string | undefined</code></td>
+      <td><code>ctx.request.headers</code> / <code>ctx.request.headers.get(key)</code></td></tr>
     <tr>
       <td><code>@Body(key?: string)</code></td>
+      <td><code>any</code></td>
       <td><code>ctx.request.body</code> / <code>ctx.request.body[key]</code></td>
     </tr>
     <tr>
-      <td><code>@Query(key: string)</code></td>
-      <td><code>getQuery(context, { mergeParams: true })[key]</code></td>
+      <td><code>@Query(key?: string)</code></td>
+      <td><code>string | { [key: string]: string }</code></td>
+      <td><code>getQuery(ctx)</code> / <code>getQuery(ctx)[key]</code></td>
+    </tr>
+    <tr>
+      <td><code>@QueryAll(key: string)</code></td>
+      <td><code>string[] | { [key: string]: string[] }</code></td>
+      <td>All query parameters grouped by key / <code>context.request.url.searchParams.getAll(params)</code></td>
     </tr>
   </tbody>
 </table>

@@ -1,5 +1,4 @@
 import { assertEquals } from '../src/deps_test.ts';
-import { Response } from '../src/deps.ts';
 import { DanetApplication } from '../src/app.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
@@ -8,13 +7,19 @@ import {
 	Header,
 	Param,
 	Query,
-	Res,
+	QueryAll,
 } from '../src/router/controller/params/decorators.ts';
 
 @Controller('')
 class SimpleController {
 	@Get('/')
-	simpleGet(@Res() res: Response, @Query('myvalue') myvalue: string) {
+	simpleGet(@QueryAll('myvalue') myvalue: string) {
+		return myvalue;
+	}
+	@Get('/keep-last')
+	simpleGetKeepLast(
+		@Query('myvalue') myvalue: string[],
+	) {
 		return myvalue;
 	}
 
@@ -53,7 +58,7 @@ class MyModule {}
 
 const app = new DanetApplication();
 
-Deno.test('@Res and @Query decorator', async () => {
+Deno.test('@Res and @QueryAll decorator', async () => {
 	await app.init(MyModule);
 	const port = (await app.listen(0)).port;
 
@@ -61,7 +66,40 @@ Deno.test('@Res and @Query decorator', async () => {
 		method: 'GET',
 	});
 	const text = await res.text();
-	assertEquals(text, `foo`);
+	assertEquals(text, `["foo"]`);
+
+	await app.close();
+});
+
+Deno.test('@QueryAll decorator to return all values for a given query parameter', async () => {
+	await app.init(MyModule);
+	const listenEvent = await app.listen();
+
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}?myvalue=foo&myvalue=bar`,
+		{
+			method: 'GET',
+		},
+	);
+	const text = await res.text();
+	assertEquals(text, `["foo","bar"]`);
+
+	await app.close();
+});
+
+Deno.test('@Query decorator to return the last value for a given query parameter', async () => {
+	await app.init(MyModule);
+	const listenEvent = await app.listen();
+
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/keep-last?myvalue=foo&myvalue=bar`,
+		{
+			method: 'GET',
+		},
+	);
+	const text = await res.text();
+	assertEquals(text, `bar`);
+
 	await app.close();
 });
 
