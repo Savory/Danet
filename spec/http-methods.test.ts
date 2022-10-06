@@ -53,7 +53,7 @@ const app = new DanetApplication();
 for (const method of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
 	Deno.test(method, async () => {
 		await app.init(MyModule);
-		const listenEvent = await app.listen();
+		const listenEvent = await app.listen(0);
 
 		const res = await fetch(`http://localhost:${listenEvent.port}/nice-controller`, {
 			method,
@@ -66,7 +66,7 @@ for (const method of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
 
 Deno.test('ALL', async () => {
 	await app.init(MyModule);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	for (const method of ['GET', 'POST', 'PUT', 'DELETE']) {
 		const res = await fetch(

@@ -22,7 +22,7 @@ Deno.test('it serve static files', async () => {
 	const staticAssetsPath = path.dirname(path.fromFileUrl(import.meta.url)) +
 		'/static';
 	app.useStaticAssets(staticAssetsPath);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(`http://localhost:${listenEvent.port}/test.txt`, {
 		method: 'GET',
@@ -39,7 +39,7 @@ Deno.test('serving static file does not break routes', async () => {
 	const staticAssetsPath = path.dirname(path.fromFileUrl(import.meta.url)) +
 		'/static';
 	app.useStaticAssets(staticAssetsPath);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(`http://localhost:${listenEvent.port}/todo`, {
 		method: 'GET',

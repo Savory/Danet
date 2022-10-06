@@ -69,7 +69,7 @@ for (const guardType of ['controller', 'method']) {
 	Deno.test(`${guardType} guard`, async () => {
 		const app = new DanetApplication();
 		await app.init(ControllerGuardModule);
-		const listenEvent = await app.listen();
+		const listenEvent = await app.listen(0);
 		const res = await fetch(`http://localhost:${listenEvent.port}/${guardType}-guard`, {
 			method: 'GET',
 		});
@@ -97,7 +97,7 @@ class GlobalAuthModule {}
 Deno.test('Global guard', async () => {
 	const app = new DanetApplication();
 	await app.init(GlobalAuthModule);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 	const res = await fetch(`http://localhost:${listenEvent.port}/global-guard`, {
 		method: 'GET',
 	});
@@ -131,7 +131,7 @@ class ThrowingAuthModule {}
 Deno.test('403 when guard is throwing', async () => {
 	const app = new DanetApplication();
 	await app.init(ThrowingAuthModule);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 	const res = await fetch(`http://localhost:${listenEvent.port}/throwing-guard`, {
 		method: 'GET',
 	});

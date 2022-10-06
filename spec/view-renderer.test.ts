@@ -23,7 +23,7 @@ Deno.test('Hbs renderer', async () => {
 	await app.init(MyModule);
 	const viewPath = path.dirname(path.fromFileUrl(import.meta.url)) + '/views';
 	app.setViewEngineDir(viewPath);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(`http://localhost:${listenEvent.port}/nice-controller`, {
 		method: 'GET',

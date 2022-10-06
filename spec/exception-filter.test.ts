@@ -66,7 +66,7 @@ for (
 	Deno.test(testName, async () => {
 		const app = new DanetApplication();
 		await app.init(ModuleWithFilter);
-		const listenEvent = await app.listen();
+		const listenEvent = await app.listen(0);
 
 		const res = await fetch(`http://localhost:${listenEvent.port}/custom-error`, {
 			method: 'GET',
@@ -82,7 +82,7 @@ for (
 Deno.test('Controller filter works', async () => {
 	const app = new DanetApplication();
 	await app.init(ModuleWithFilter);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(`http://localhost:${listenEvent.port}`, {
 		method: 'GET',
@@ -97,7 +97,7 @@ Deno.test('Controller filter works', async () => {
 Deno.test('throw 500 on unexpected error', async () => {
 	const app = new DanetApplication();
 	await app.init(ModuleWithFilter);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(
 		`http://localhost:${listenEvent.port}/custom-error/unexpected-error`,

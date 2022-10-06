@@ -55,7 +55,7 @@ const app = new DanetApplication();
 
 Deno.test('@Res and @Query decorator', async () => {
 	await app.init(MyModule);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(`http://localhost:${listenEvent.port}?myvalue=foo`, {
 		method: 'GET',
@@ -67,7 +67,7 @@ Deno.test('@Res and @Query decorator', async () => {
 
 Deno.test('@Header decorator with attribute', async () => {
 	await app.init(MyModule);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(`http://localhost:${listenEvent.port}/lambda`, {
 		method: 'GET',
@@ -82,7 +82,7 @@ Deno.test('@Header decorator with attribute', async () => {
 
 Deno.test('@Header decorator without attribute', async () => {
 	await app.init(MyModule);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(`http://localhost:${listenEvent.port}/lambda`, {
 		method: 'POST',
@@ -97,7 +97,7 @@ Deno.test('@Header decorator without attribute', async () => {
 
 Deno.test('@Header decorator with attribute without qualifying header on request', async () => {
 	await app.init(MyModule);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(`http://localhost:${listenEvent.port}/lambda`, {
 		method: 'GET',
@@ -110,7 +110,7 @@ Deno.test('@Header decorator with attribute without qualifying header on request
 
 Deno.test('@Body decorator with attribute', async () => {
 	await app.init(MyModule);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(`http://localhost:${listenEvent.port}`, {
 		method: 'POST',
@@ -126,7 +126,7 @@ Deno.test('@Body decorator with attribute', async () => {
 
 Deno.test('@Body decorator', async () => {
 	await app.init(MyModule);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(`http://localhost:${listenEvent.port}/full-body/`, {
 		method: 'POST',
@@ -144,7 +144,7 @@ Deno.test('@Body decorator', async () => {
 
 Deno.test('@Param decorator', async () => {
 	await app.init(MyModule);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(`http://localhost:${listenEvent.port}/batman`, {
 		method: 'GET',

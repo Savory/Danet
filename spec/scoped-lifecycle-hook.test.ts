@@ -40,7 +40,7 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 	await testContext.step(
 		'handleRequest is called before request when defined in a scoped service',
 		async () => {
-			const listenEvent = await app.listen();
+			const listenEvent = await app.listen(0);
 
 			const res = await fetch(`http://localhost:${listenEvent.port}/scoped-controller/`, {
 				method: 'GET',
