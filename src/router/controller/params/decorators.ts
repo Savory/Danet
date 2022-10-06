@@ -95,8 +95,8 @@ export function Query(pParamOrOptions?: string | QueryOption, pOptions?: QueryOp
 					])
 			);
 		}
-	}))()
-};
+	}))();
+}
 
 export const Param = (paramName: string) =>
 	createParamDecorator((context: HttpContext) => {
