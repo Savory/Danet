@@ -3,7 +3,6 @@ import { MetadataHelper } from '../../../metadata/helper.ts';
 import { HttpContext } from '../../router.ts';
 import { validateObject } from '../../../deps.ts';
 import { Constructor } from '../../../mod.ts';
-import { isArray } from 'https://jspm.dev/npm:@jspm/core@2.0.0-beta.26/nodelibs/util';
 
 export type OptionsResolver = {
 	target: Constructor;
@@ -82,20 +81,20 @@ export const Body = (prop?: string) =>
 
 		// Extract Class type of Parameter with @Body
 		const { parameterIndex } = opts;
-		const params: Constructor[] = MetadataHelper.getMetadata(
+		const paramsTypesDTO: Constructor[] = MetadataHelper.getMetadata(
 			'design:paramtypes',
 			opts.target,
 			opts.propertyKey,
 		);
 
 		// Make the validation of body
-		if (isArray(params)) {
-			const validation = validateObject(body, params[parameterIndex]);
-			if (validation.length > 0) {
+		if (paramsTypesDTO.length > 0) {
+			const errors = validateObject(body, paramsTypesDTO[parameterIndex]);
+			if (errors.length > 0) {
 				throw {
 					status: 400,
 					message: 'Body bad formatted',
-					reasons: validation,
+					reasons: errors,
 				};
 			}
 		}
