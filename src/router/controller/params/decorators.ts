@@ -1,18 +1,19 @@
 import { getQuery } from '../../../deps.ts';
 import { MetadataHelper } from '../../../metadata/helper.ts';
 import { HttpContext } from '../../router.ts';
-import { Reflect } from '../../../deps.ts';
 import { validateObject } from '../../../deps.ts';
 import { Constructor } from '../../../mod.ts';
 import { isArray } from 'https://jspm.dev/npm:@jspm/core@2.0.0-beta.26/nodelibs/util';
 
+export type OptionsResolver = {
+	target: Constructor;
+	propertyKey: string | symbol;
+	parameterIndex: number;
+};
+
 export type Resolver = (
 	context: HttpContext,
-	opts?: {
-		target: Constructor;
-		propertyKey: string | symbol;
-		parameterIndex: number;
-	},
+	opts?: OptionsResolver,
 ) => unknown | Promise<unknown>;
 
 export const argumentResolverFunctionsMetadataKey = 'argumentResolverFunctions';
@@ -32,7 +33,7 @@ export const createParamDecorator = (resolver: Resolver) =>
 
 	argumentsResolverMap.set(
 		parameterIndex,
-		(c) => resolver(c, { target, propertyKey, parameterIndex }),
+		(context) => resolver(context, { target, propertyKey, parameterIndex }),
 	);
 
 	MetadataHelper.setMetadata(
@@ -60,9 +61,12 @@ export const Header = (prop?: string) =>
 	})();
 
 export const Body = (prop?: string) =>
-	createParamDecorator(async (context: HttpContext, opts: any) => {
+	createParamDecorator(async (context: HttpContext, opts?: OptionsResolver) => {
 		if (!opts) {
-			console.log('no options received');
+			throw {
+				status: 500,
+				message: 'Options of Body not taken by Body decorator function',
+			};
 		}
 
 		let body;
