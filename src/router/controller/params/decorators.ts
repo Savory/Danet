@@ -3,17 +3,23 @@ import { MetadataHelper } from '../../../metadata/helper.ts';
 import { HttpContext } from '../../router.ts';
 import { Reflect } from '../../../deps.ts';
 import { validateObject } from '../../../deps.ts';
+import { Constructor } from '../../../mod.ts';
+import { isArray } from 'https://jspm.dev/npm:@jspm/core@2.0.0-beta.26/nodelibs/util';
 
 export type Resolver = (
 	context: HttpContext,
-	opts: any,
+	opts?: {
+		target: Constructor;
+		propertyKey: string | symbol;
+		parameterIndex: number;
+	},
 ) => unknown | Promise<unknown>;
 
 export const argumentResolverFunctionsMetadataKey = 'argumentResolverFunctions';
 export const createParamDecorator = (resolver: Resolver) =>
 () =>
 (
-	target: Record<string, unknown>,
+	target: Constructor,
 	propertyKey: string | symbol,
 	parameterIndex: number,
 ) => {
@@ -72,20 +78,22 @@ export const Body = (prop?: string) =>
 
 		// Extract Class type of Parameter with @Body
 		const { parameterIndex } = opts;
-		const params = MetadataHelper.getMetadata(
+		const params: any[] = MetadataHelper.getMetadata(
 			'design:paramtypes',
 			opts.target,
 			opts.propertyKey,
 		);
 
 		// Make the validation of body
-		const validation = validateObject(body, params[parameterIndex]);
-		if (validation.length > 0) {
-			throw {
-				status: 400,
-				message: 'Body bad formatted',
-				reasons: validation,
-			};
+		if (isArray(params)) {
+			const validation = validateObject(body, params[parameterIndex]);
+			if (validation.length > 0) {
+				throw {
+					status: 400,
+					message: 'Body bad formatted',
+					reasons: validation,
+				};
+			}
 		}
 
 		if (prop) {
