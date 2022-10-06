@@ -1,4 +1,3 @@
-import { getQuery } from 'https://deno.land/x/oak@v10.5.1/helpers.ts';
 import { MetadataHelper } from '../../../metadata/helper.ts';
 import { HttpContext } from '../../router.ts';
 
@@ -58,27 +57,46 @@ export const Body = (prop?: string) =>
 		return prop ? body[prop] : body;
 	})();
 
-	export const Query = (param?: string) =>
-		createParamDecorator((context: HttpContext) => {
-			const query = getQuery(context);
-			if (param) {
-				return query[param];
-			} else {
-				return query;
-			}
-		})();
+function formatQueryValue(queryValue: string[] | undefined, value: 'first' | 'last' | 'array' | undefined) {
+	if (!queryValue || !value) {
+		return undefined;
+	}
 
-export const QueryAll = (params?: string) =>
-	createParamDecorator((context: HttpContext) => {
-		if (params) {
-			return context.request.url.searchParams.getAll(params);
+	switch (value || 'last') {
+		case 'first':
+			return queryValue[0];
+		case 'last':
+			return queryValue[queryValue.length - 1];
+		case 'array':
+			return queryValue;
+		default:
+			return undefined;
+	}
+}
+
+export interface QueryOption {
+	value?: 'first' | 'last' | 'array';
+}
+export function Query(options?: QueryOption): ReturnType<ReturnType<typeof createParamDecorator>>;
+export function Query(param: string, options?: QueryOption): ReturnType<ReturnType<typeof createParamDecorator>>;
+export function Query(pParamOrOptions?: string | QueryOption, pOptions?: QueryOption) {
+	return (createParamDecorator((context: HttpContext) => {
+		const param = typeof pParamOrOptions === 'string' ? pParamOrOptions : undefined;
+		const options = typeof pParamOrOptions === 'string' ? pOptions : pParamOrOptions;
+
+		if (param) {
+			return formatQueryValue(context.request.url.searchParams.getAll(param), options?.value);
 		} else {
 			return Object.fromEntries(
 				Array.from(context.request.url.searchParams.keys())
-					.map(key => [key, context.request.url.searchParams.getAll(key)])
+					.map(key => [
+						key,
+						formatQueryValue(context.request.url.searchParams.getAll(key), options?.value),
+					])
 			);
 		}
-	})();
+	}))()
+};
 
 export const Param = (paramName: string) =>
 	createParamDecorator((context: HttpContext) => {

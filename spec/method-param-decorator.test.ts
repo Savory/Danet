@@ -7,20 +7,38 @@ import {
 	Header,
 	Param,
 	Query,
-	QueryAll,
 } from '../src/router/controller/params/decorators.ts';
 
 @Controller('')
 class SimpleController {
-	@Get('/')
-	simpleGet(@QueryAll('myvalue') myvalue: string) {
+	@Get('/query/myvalue/all')
+	simpleGetMyValueAll(@Query('myvalue', { value: 'array' }) myvalue: string[]) {
 		return myvalue;
 	}
-	@Get('/keep-last')
-	simpleGetKeepLast(
-		@Query('myvalue') myvalue: string[],
-	) {
+
+	@Get('/query/myvalue/last')
+	simpleGetMyValueLast(@Query('myvalue', { value: 'last' }) myvalue: string) {
 		return myvalue;
+	}
+
+	@Get('/query/myvalue/first')
+	simpleGetMyValueFirst(@Query('myvalue', { value: 'first' }) myvalue: string) {
+		return myvalue;
+	}
+
+	@Get('/query/all')
+	simpleGetAll(@Query({ value: 'array' }) queryParams: Record<string, string[]>) {
+		return queryParams;
+	}
+
+	@Get('/query/last')
+	simpleGetLast(@Query({ value: 'last' }) queryParams: Record<string, string>) {
+		return queryParams;
+	}
+
+	@Get('/query/first')
+	simpleGetFirst(@Query({ value: 'first' }) queryParams: Record<string, string>) {
+		return queryParams;
 	}
 
 	@Get('/lambda')
@@ -58,11 +76,11 @@ class MyModule {}
 
 const app = new DanetApplication();
 
-Deno.test('@Res and @QueryAll decorator', async () => {
+Deno.test('@Res and @Query decorator', async () => {
 	await app.init(MyModule);
 	const port = (await app.listen(0)).port;
 
-	const res = await fetch(`http://localhost:${port}?myvalue=foo`, {
+	const res = await fetch(`http://localhost:${port}/query/myvalue/all?myvalue=foo`, {
 		method: 'GET',
 	});
 	const text = await res.text();
@@ -71,34 +89,98 @@ Deno.test('@Res and @QueryAll decorator', async () => {
 	await app.close();
 });
 
-Deno.test('@QueryAll decorator to return all values for a given query parameter', async () => {
+Deno.test(`@Query decorator with value 'array' to return all values for a given query parameter`, async () => {
 	await app.init(MyModule);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(
-		`http://localhost:${listenEvent.port}?myvalue=foo&myvalue=bar`,
+		`http://localhost:${listenEvent.port}/query/myvalue/all?myvalue=foo&myvalue=bar`,
 		{
 			method: 'GET',
 		},
 	);
-	const text = await res.text();
-	assertEquals(text, `["foo","bar"]`);
+	const json = await res.json();
+	assertEquals(json, ['foo','bar']);
 
 	await app.close();
 });
 
-Deno.test('@Query decorator to return the last value for a given query parameter', async () => {
+Deno.test(`@Query decorator with value 'last' to return the last value for a given query parameter`, async () => {
 	await app.init(MyModule);
-	const listenEvent = await app.listen();
+	const listenEvent = await app.listen(0);
 
 	const res = await fetch(
-		`http://localhost:${listenEvent.port}/keep-last?myvalue=foo&myvalue=bar`,
+		`http://localhost:${listenEvent.port}/query/myvalue/last?myvalue=foo&myvalue=bar`,
 		{
 			method: 'GET',
 		},
 	);
 	const text = await res.text();
 	assertEquals(text, `bar`);
+
+	await app.close();
+});
+
+Deno.test(`@Query decorator with value 'first' to return the first value for a given query parameter`, async () => {
+	await app.init(MyModule);
+	const listenEvent = await app.listen(0);
+
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/query/myvalue/first?myvalue=foo&myvalue=bar`,
+		{
+			method: 'GET',
+		},
+	);
+	const text = await res.text();
+	assertEquals(text, `foo`);
+
+	await app.close();
+});
+
+Deno.test(`@Query decorator with no key and value 'array' to return all values of all query parameters`, async () => {
+	await app.init(MyModule);
+	const listenEvent = await app.listen(0);
+
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/query/all?myvalue=foo&myvalue=bar`,
+		{
+			method: 'GET',
+		},
+	);
+	const json = await res.json();
+	assertEquals(json, {myvalue: ['foo','bar']});
+
+	await app.close();
+});
+
+Deno.test(`@Query decorator with no key and value 'last' to return the last value of all query parameters`, async () => {
+	await app.init(MyModule);
+	const listenEvent = await app.listen(0);
+
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/query/last?myvalue=foo&myvalue=bar`,
+		{
+			method: 'GET',
+		},
+	);
+	const json = await res.json();
+	assertEquals(json, {myvalue: 'bar'});
+
+	await app.close();
+});
+
+Deno.test(`@Query decorator with no key and value 'first' to return the first value of all query parameters`, async () => {
+	await app.init(MyModule);
+	const listenEvent = await app.listen(0);
+
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/query/first?myvalue=foo&myvalue=bar`,
+		{
+			method: 'GET',
+		},
+	);
+	const json = await res.json();
+	assertEquals(json, {myvalue: 'foo'});
 
 	await app.close();
 });

@@ -85,49 +85,15 @@ not necessary to grab these properties manually. We can use dedicated decorators
 instead, such as `@Body()` or `@Query()`, which are available out of the box.
 Below is a list of the provided decorators and the plain platform-specific
 objects they represent.
-
-<table>
-  <tbody>
-    <tr>
-      <th>Decorator</th>
-      <th>Type</th>
-      <th>Value</th>
-    </tr>
-    <tr>
-      <td><code>@Req()</code></td>
-      <td><a href="https://deno.land/x/oak@v10.5.1/request.ts">oak.Request</a></td>
-      <td><code>ctx.request</code></td></tr>
-    <tr>
-      <td><code>@Res()</code></td>
-      <td><a href="https://deno.land/x/oak@v10.5.1/response.ts">oak.Response</a></td>
-      <td><code>ctx.response</code></td>
-    </tr>
-    <tr>
-      <td><code>@Param(key: string)</code></td>
-      <td><code>string</code></td>
-      <td><code>context.params[key]</code></td>
-    </tr>
-    <tr>
-      <td><code>@Header(key? : string)</code></td>
-      <td><code>string | undefined</code></td>
-      <td><code>ctx.request.headers</code> / <code>ctx.request.headers.get(key)</code></td></tr>
-    <tr>
-      <td><code>@Body(key?: string)</code></td>
-      <td><code>any</code></td>
-      <td><code>ctx.request.body</code> / <code>ctx.request.body[key]</code></td>
-    </tr>
-    <tr>
-      <td><code>@Query(key?: string)</code></td>
-      <td><code>string | { [key: string]: string }</code></td>
-      <td><code>getQuery(ctx)</code> / <code>getQuery(ctx)[key]</code></td>
-    </tr>
-    <tr>
-      <td><code>@QueryAll(key: string)</code></td>
-      <td><code>string[] | { [key: string]: string[] }</code></td>
-      <td>All query parameters grouped by key / <code>context.request.url.searchParams.getAll(params)</code></td>
-    </tr>
-  </tbody>
-</table>
+| Decorator | Type | Value |
+|-----------|------|-------|
+| `@Req()` | [oak.Request](https://deno.land/x/oak@v10.5.1/request.ts) | `ctx.request` |
+| `@Res()` | [oak.Response](https://deno.land/x/oak@v10.5.1/response.ts) | `ctx.response` |
+| `@Param(key: string)` | `string` | `context.params[key]` |
+| `@Header(key? : string)` | `string \| undefined` | `ctx.request.headers` / `ctx.request.headers.get(key)` |
+| `@Body(key?: string)` | `any` | `ctx.request.body` / `ctx.request.body[key]` |
+| `@Query(key: string, options?: { value?: 'first' \| 'last' \| 'array' })` | `string \| string[]` | Get the `first`, the `last` or `all` the values for the query parameter named `key` |
+| `@Query(options?: { value?: 'first' \| 'last' \| 'array' })` | `{ [key: string]: string \| string[] }` | Get the `first`, the `last` or `all` the values for all the query parameters |
 
 ### Resources
 
