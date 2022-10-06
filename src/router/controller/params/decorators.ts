@@ -3,6 +3,7 @@ import { MetadataHelper } from '../../../metadata/helper.ts';
 import { HttpContext } from '../../router.ts';
 import { validateObject } from '../../../deps.ts';
 import { Constructor } from '../../../mod.ts';
+import { NotValidBodyException } from '../../../exception/mod.ts';
 
 export type OptionsResolver = {
 	target: Constructor;
@@ -91,11 +92,7 @@ export const Body = (prop?: string) =>
 		if (paramsTypesDTO.length > 0) {
 			const errors = validateObject(body, paramsTypesDTO[parameterIndex]);
 			if (errors.length > 0) {
-				throw {
-					status: 400,
-					message: 'Body bad formatted',
-					reasons: errors,
-				};
+				throw new NotValidBodyException(errors);
 			}
 		}
 
