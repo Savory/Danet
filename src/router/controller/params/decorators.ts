@@ -2,7 +2,7 @@ import { getQuery } from '../../../deps.ts';
 import { MetadataHelper } from '../../../metadata/helper.ts';
 import { HttpContext } from '../../router.ts';
 import { Reflect } from '../../../deps.ts';
-import { validateObject } from 'https://deno.land/x/validatte/mod.ts';
+import { validateObject } from '../../../deps.ts';
 
 export type Resolver = (
 	context: HttpContext,
@@ -66,7 +66,12 @@ export const Body = (prop?: string) =>
 			throw e;
 		}
 
-		const i = opts.parameterIndex;
+		if (!body) {
+			return null;
+		}
+
+		// Extract Class type of Parameter with @Body
+		const { parameterIndex } = opts;
 		const params = MetadataHelper.getMetadata(
 			'design:paramtypes',
 			opts.target,
@@ -74,13 +79,20 @@ export const Body = (prop?: string) =>
 		);
 
 		// Make the validation of body
-		console.log('Body valid?');
-		console.log(validateObject(body, params[i]));
-
-		if (!body) {
-			return null;
+		const validation = validateObject(body, params[parameterIndex]);
+		if (validation.length > 0) {
+			throw {
+				status: 400,
+				message: 'Body bad formatted',
+				reasons: validation,
+			};
 		}
-		return prop ? body[prop] : body;
+
+		if (prop) {
+			return body[prop];
+		}
+
+		return body;
 	})();
 
 export const Query = (prop?: string) =>
