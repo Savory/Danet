@@ -82,7 +82,7 @@ export const Body = (prop?: string) =>
 
 		// Extract Class type of Parameter with @Body
 		const { parameterIndex } = opts;
-		const params: any[] = MetadataHelper.getMetadata(
+		const params: Constructor[] = MetadataHelper.getMetadata(
 			'design:paramtypes',
 			opts.target,
 			opts.propertyKey,
