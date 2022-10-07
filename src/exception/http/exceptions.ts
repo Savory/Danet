@@ -192,3 +192,11 @@ export class HttpVersionNotSupportedException extends HttpException {
 		super(HTTP_STATUS.HTTP_VERSION_NOT_SUPPORTED, 'Http version not supported');
 	}
 }
+
+export class NotValidBodyException<T> extends HttpException {
+	reasons: T;
+	constructor(reasons: T) {
+		super(HTTP_STATUS.BAD_REQUEST, 'Body bad formatted');
+		this.reasons = reasons;
+	}
+}
