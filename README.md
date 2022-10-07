@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/38007824/170542778-5ffe8414-38ea-438e-a02b-15a7c4800252.png" width="250" alt="Danet Logo" />
+  <img width="1920" alt="Danet Banner" src="https://user-images.githubusercontent.com/63385587/194619655-cb01d740-ee5a-4e88-9161-08ed85566853.png">
 </p>
 
 [![CI](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml)
