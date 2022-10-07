@@ -85,33 +85,15 @@ not necessary to grab these properties manually. We can use dedicated decorators
 instead, such as `@Body()` or `@Query()`, which are available out of the box.
 Below is a list of the provided decorators and the plain platform-specific
 objects they represent.
-
-<table>
-  <tbody>
-    <tr>
-      <td><code>@Req()</code></td>
-      <td><code>ctx.request</code></td></tr>
-    <tr>
-      <td><code>@Res()</code><span class='table-code-asterisk'>*</span></td>
-      <td><code>ctx.response</code></td>
-    </tr>
-    <tr>
-      <td><code>@Param(key: string)</code></td>
-      <td><code>getQuery(context, { mergeParams: true })[key]</code></td>
-    </tr>
-    <tr>
-    <td><code>@Header(key? : string)</code></td>
-    <td><code>ctx.request.headers</code> / <code>ctx.request.headers.get(key)</code></td></tr>
-    <tr>
-      <td><code>@Body(key?: string)</code></td>
-      <td><code>ctx.request.body</code> / <code>ctx.request.body[key]</code></td>
-    </tr>
-    <tr>
-      <td><code>@Query(key: string)</code></td>
-      <td><code>getQuery(context, { mergeParams: true })[key]</code></td>
-    </tr>
-  </tbody>
-</table>
+| Decorator | Type | Value |
+|-----------|------|-------|
+| `@Req()` | [oak.Request](https://deno.land/x/oak@v10.5.1/request.ts) | `ctx.request` |
+| `@Res()` | [oak.Response](https://deno.land/x/oak@v10.5.1/response.ts) | `ctx.response` |
+| `@Param(key: string)` | `string` | `context.params[key]` |
+| `@Header(key? : string)` | `string \| undefined` | `ctx.request.headers` / `ctx.request.headers.get(key)` |
+| `@Body(key?: string)` | `any` | `ctx.request.body` / `ctx.request.body[key]` |
+| `@Query(key: string, options?: { value?: 'first' \| 'last' \| 'array' })` | `string \| string[]` | Get the `first`, the `last` or `all` the values for the query parameter named `key` |
+| `@Query(options?: { value?: 'first' \| 'last' \| 'array' })` | `{ [key: string]: string \| string[] }` | Get the `first`, the `last` or `all` the values for all the query parameters |
 
 ### Resources
 

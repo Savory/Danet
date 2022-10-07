@@ -1,4 +1,3 @@
-import { getQuery } from '../../../deps.ts';
 import { MetadataHelper } from '../../../metadata/helper.ts';
 import { HttpContext } from '../../router.ts';
 import { validateObject } from '../../../deps.ts';
@@ -103,14 +102,55 @@ export const Body = (prop?: string) =>
 		return body;
 	})();
 
-export const Query = (prop?: string) =>
-	createParamDecorator((context: HttpContext) => {
-		const query = getQuery(context, { mergeParams: true });
-		if (prop) {
-			return query?.[prop];
+function formatQueryValue(queryValue: string[] | undefined, value: 'first' | 'last' | 'array' | undefined) {
+	if (!queryValue || !value) {
+		return undefined;
+	}
+
+	switch (value || 'last') {
+		case 'first':
+			return queryValue[0];
+		case 'last':
+			return queryValue[queryValue.length - 1];
+		case 'array':
+			return queryValue;
+		default:
+			return undefined;
+	}
+}
+
+export interface QueryOption {
+	value?: 'first' | 'last' | 'array';
+}
+export function Query(options?: QueryOption): ReturnType<ReturnType<typeof createParamDecorator>>;
+export function Query(param: string, options?: QueryOption): ReturnType<ReturnType<typeof createParamDecorator>>;
+export function Query(pParamOrOptions?: string | QueryOption, pOptions?: QueryOption) {
+	return (createParamDecorator((context: HttpContext) => {
+		const param = typeof pParamOrOptions === 'string' ? pParamOrOptions : undefined;
+		const options = typeof pParamOrOptions === 'string' ? pOptions : pParamOrOptions;
+
+		if (param) {
+			return formatQueryValue(context.request.url.searchParams.getAll(param), options?.value);
 		} else {
-			return query;
+			return Object.fromEntries(
+				Array.from(context.request.url.searchParams.keys())
+					.map(key => [
+						key,
+						formatQueryValue(context.request.url.searchParams.getAll(key), options?.value),
+					])
+			);
+		}
+	}))();
+}
+
+export const Param = (paramName: string) =>
+	createParamDecorator((context: HttpContext) => {
+		// not sure why params is not exposed, but it definitely is the right way to do this
+		// deno-lint-ignore no-explicit-any
+		const params = (context as any).params;
+		if (paramName) {
+			return params?.[paramName];
+		} else {
+			return params;
 		}
 	})();
-
-export const Param = (paramName: string) => Query(paramName);
