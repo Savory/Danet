@@ -68,9 +68,12 @@ for (
 		await app.init(ModuleWithFilter);
 		const listenEvent = await app.listen(0);
 
-		const res = await fetch(`http://localhost:${listenEvent.port}/custom-error`, {
-			method: 'GET',
-		});
+		const res = await fetch(
+			`http://localhost:${listenEvent.port}/custom-error`,
+			{
+				method: 'GET',
+			},
+		);
 		const json = await res.json();
 		assertEquals(json, {
 			wePassedInFilterCatchingOnlySomeError: true,

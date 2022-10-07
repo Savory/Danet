@@ -7,14 +7,14 @@ export function getInjectionTokenMetadataKey(parameterIndex: number) {
 }
 
 export const Inject = (token: string) =>
-	(
-		target: Record<string, unknown>,
-		propertyKey: string | symbol,
-		parameterIndex: number,
-	) => {
-		MetadataHelper.setMetadata(
-			getInjectionTokenMetadataKey(parameterIndex),
-			token,
-			target,
-		);
-	};
+(
+	target: Record<string, unknown>,
+	propertyKey: string | symbol,
+	parameterIndex: number,
+) => {
+	MetadataHelper.setMetadata(
+		getInjectionTokenMetadataKey(parameterIndex),
+		token,
+		target,
+	);
+};

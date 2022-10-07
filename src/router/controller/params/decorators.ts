@@ -102,7 +102,10 @@ export const Body = (prop?: string) =>
 		return body;
 	})();
 
-function formatQueryValue(queryValue: string[] | undefined, value: 'first' | 'last' | 'array' | undefined) {
+function formatQueryValue(
+	queryValue: string[] | undefined,
+	value: 'first' | 'last' | 'array' | undefined,
+) {
 	if (!queryValue || !value) {
 		return undefined;
 	}
@@ -122,22 +125,40 @@ function formatQueryValue(queryValue: string[] | undefined, value: 'first' | 'la
 export interface QueryOption {
 	value?: 'first' | 'last' | 'array';
 }
-export function Query(options?: QueryOption): ReturnType<ReturnType<typeof createParamDecorator>>;
-export function Query(param: string, options?: QueryOption): ReturnType<ReturnType<typeof createParamDecorator>>;
-export function Query(pParamOrOptions?: string | QueryOption, pOptions?: QueryOption) {
+export function Query(
+	options?: QueryOption,
+): ReturnType<ReturnType<typeof createParamDecorator>>;
+export function Query(
+	param: string,
+	options?: QueryOption,
+): ReturnType<ReturnType<typeof createParamDecorator>>;
+export function Query(
+	pParamOrOptions?: string | QueryOption,
+	pOptions?: QueryOption,
+) {
 	return (createParamDecorator((context: HttpContext) => {
-		const param = typeof pParamOrOptions === 'string' ? pParamOrOptions : undefined;
-		const options = typeof pParamOrOptions === 'string' ? pOptions : pParamOrOptions;
+		const param = typeof pParamOrOptions === 'string'
+			? pParamOrOptions
+			: undefined;
+		const options = typeof pParamOrOptions === 'string'
+			? pOptions
+			: pParamOrOptions;
 
 		if (param) {
-			return formatQueryValue(context.request.url.searchParams.getAll(param), options?.value);
+			return formatQueryValue(
+				context.request.url.searchParams.getAll(param),
+				options?.value,
+			);
 		} else {
 			return Object.fromEntries(
 				Array.from(context.request.url.searchParams.keys())
-					.map(key => [
+					.map((key) => [
 						key,
-						formatQueryValue(context.request.url.searchParams.getAll(key), options?.value),
-					])
+						formatQueryValue(
+							context.request.url.searchParams.getAll(key),
+							options?.value,
+						),
+					]),
 			);
 		}
 	}))();

@@ -63,14 +63,13 @@ A huge thanks to
 </a>
 </p>
 
+## Contributing
 
-
-##  Contributing
-
-- Contributions make the open source community such an amazing place to learn, inspire, and create.
+- Contributions make the open source community such an amazing place to learn,
+  inspire, and create.
 - Any contributions you make are **truly appreciated**.
-- Check out our [contribution guidelines](/CONTRIBUTING.md) for more information.
-
+- Check out our [contribution guidelines](/CONTRIBUTING.md) for more
+  information.
 
 <h2>
 License

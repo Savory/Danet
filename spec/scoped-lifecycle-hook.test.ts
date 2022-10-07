@@ -42,9 +42,12 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 		async () => {
 			const listenEvent = await app.listen(0);
 
-			const res = await fetch(`http://localhost:${listenEvent.port}/scoped-controller/`, {
-				method: 'GET',
-			});
+			const res = await fetch(
+				`http://localhost:${listenEvent.port}/scoped-controller/`,
+				{
+					method: 'GET',
+				},
+			);
 			const text = await res.text();
 			assertEquals(text, `Received a GET request`);
 			await app.close();

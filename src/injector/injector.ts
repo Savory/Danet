@@ -19,7 +19,10 @@ import { HttpContext } from '../router/router.ts';
 import { BeforeControllerMethodIsCalled } from '../hook/interfaces.ts';
 
 export class Injector {
-	private resolved = new Map<Constructor | string, (ctx?: HttpContext) => Promise<unknown> | unknown>();
+	private resolved = new Map<
+		Constructor | string,
+		(ctx?: HttpContext) => Promise<unknown> | unknown
+	>();
 	private availableTypes = new Map<InjectableConstructor, boolean>();
 	private logger: Logger = new Logger('Injector');
 
@@ -97,7 +100,11 @@ export class Injector {
 		if (canBeSingleton) {
 			const resolvedDependencies = new Array<Constructor>();
 			for (const [idx, Dep] of dependencies.entries()) {
-				resolvedDependencies.push(await (this.resolved.get(this.getParamToken(Type, idx) ?? Dep)!()) as Constructor)
+				resolvedDependencies.push(
+					await (this.resolved.get(
+						this.getParamToken(Type, idx) ?? Dep,
+					)!()) as Constructor,
+				);
 			}
 			const instance = new Type(...resolvedDependencies);
 			this.resolved.set(Type, () => instance);
@@ -122,7 +129,11 @@ export class Injector {
 		if (injectableMetadata?.scope === SCOPE.GLOBAL) {
 			const resolvedDependencies = new Array<Constructor>();
 			for (const [idx, Dep] of dependencies.entries()) {
-				resolvedDependencies.push(await (this.resolved.get(this.getParamToken(actualType, idx) ?? Dep)!()) as Constructor)
+				resolvedDependencies.push(
+					await (this.resolved.get(
+						this.getParamToken(actualType, idx) ?? Dep,
+					)!()) as Constructor,
+				);
 			}
 			const instance = new actualType(...resolvedDependencies);
 			this.resolved.set(actualKey, () => instance);
@@ -145,11 +156,19 @@ export class Injector {
 		);
 	}
 
-	private setNonSingleton(Type: Constructor, key: string | InjectableConstructor, dependencies: Array<Constructor>) {
+	private setNonSingleton(
+		Type: Constructor,
+		key: string | InjectableConstructor,
+		dependencies: Array<Constructor>,
+	) {
 		this.resolved.set(key, async (ctx?: HttpContext) => {
 			const resolvedDependencies = new Array<Constructor>();
 			for (const [idx, Dep] of dependencies.entries()) {
-				resolvedDependencies.push(await (this.resolved.get(this.getParamToken(Type, idx) ?? Dep)!(ctx)) as Constructor)
+				resolvedDependencies.push(
+					await (this.resolved.get(this.getParamToken(Type, idx) ?? Dep)!(
+						ctx,
+					)) as Constructor,
+				);
 			}
 			// deno-lint-ignore no-explicit-any
 			const instance: any = new Type(...resolvedDependencies) as any;
