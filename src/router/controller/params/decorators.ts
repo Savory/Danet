@@ -1,30 +1,47 @@
 import { MetadataHelper } from '../../../metadata/helper.ts';
 import { HttpContext } from '../../router.ts';
+import { validateObject } from '../../../deps.ts';
+import { Constructor } from '../../../mod.ts';
+import { NotValidBodyException } from '../../../exception/mod.ts';
 
-export type Resolver = (context: HttpContext) => unknown | Promise<unknown>;
+export type OptionsResolver = {
+	target: Constructor;
+	propertyKey: string | symbol;
+	parameterIndex: number;
+};
+
+export type Resolver = (
+	context: HttpContext,
+	opts?: OptionsResolver,
+) => unknown | Promise<unknown>;
 
 export const argumentResolverFunctionsMetadataKey = 'argumentResolverFunctions';
 export const createParamDecorator = (resolver: Resolver) =>
-	() =>
-		(
-			target: Record<string, unknown>,
-			propertyKey: string | symbol,
-			parameterIndex: number,
-		) => {
-			const argumentsResolverMap: Map<number, Resolver> =
-				MetadataHelper.getMetadata(
-					argumentResolverFunctionsMetadataKey,
-					target.constructor,
-					propertyKey,
-				) || new Map<number, Resolver>();
-			argumentsResolverMap.set(parameterIndex, resolver);
-			MetadataHelper.setMetadata(
-				argumentResolverFunctionsMetadataKey,
-				argumentsResolverMap,
-				target.constructor,
-				propertyKey,
-			);
-		};
+() =>
+(
+	target: Constructor,
+	propertyKey: string | symbol,
+	parameterIndex: number,
+) => {
+	const argumentsResolverMap: Map<number, Resolver> =
+		MetadataHelper.getMetadata(
+			argumentResolverFunctionsMetadataKey,
+			target.constructor,
+			propertyKey,
+		) || new Map<number, Resolver>();
+
+	argumentsResolverMap.set(
+		parameterIndex,
+		(context) => resolver(context, { target, propertyKey, parameterIndex }),
+	);
+
+	MetadataHelper.setMetadata(
+		argumentResolverFunctionsMetadataKey,
+		argumentsResolverMap,
+		target.constructor,
+		propertyKey,
+	);
+};
 
 export const Req = createParamDecorator((context: HttpContext) => {
 	return context.request;
@@ -43,7 +60,14 @@ export const Header = (prop?: string) =>
 	})();
 
 export const Body = (prop?: string) =>
-	createParamDecorator(async (context: HttpContext) => {
+	createParamDecorator(async (context: HttpContext, opts?: OptionsResolver) => {
+		if (!opts) {
+			throw {
+				status: 500,
+				message: 'Options of Body not taken by Body decorator function',
+			};
+		}
+
 		let body;
 		try {
 			body = await context.request.body({ type: 'json' })?.value;
@@ -54,7 +78,28 @@ export const Body = (prop?: string) =>
 		if (!body) {
 			return null;
 		}
-		return prop ? body[prop] : body;
+
+		// Extract Class type of Parameter with @Body
+		const { parameterIndex } = opts;
+		const paramsTypesDTO: Constructor[] = MetadataHelper.getMetadata(
+			'design:paramtypes',
+			opts.target,
+			opts.propertyKey,
+		);
+
+		// Make the validation of body
+		if (paramsTypesDTO.length > 0) {
+			const errors = validateObject(body, paramsTypesDTO[parameterIndex]);
+			if (errors.length > 0) {
+				throw new NotValidBodyException(errors);
+			}
+		}
+
+		if (prop) {
+			return body[prop];
+		}
+
+		return body;
 	})();
 
 function formatQueryValue(queryValue: string[] | undefined, value: 'first' | 'last' | 'array' | undefined) {

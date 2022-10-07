@@ -1,4 +1,4 @@
-import { assertEquals } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
+import { assertEquals } from '../src/deps_test.ts';
 import { DanetApplication } from '../src/app.ts';
 import { OnAppBootstrap, OnAppClose } from '../src/hook/interfaces.ts';
 import { Injectable, SCOPE } from '../src/injector/injectable/decorator.ts';
@@ -46,15 +46,21 @@ Deno.test('Lifecycle hooks', async (testContext) => {
 	const app = new DanetApplication();
 	await app.init(MyModule);
 
-	await testContext.step('call global injectables onAppBootstrap hook', async () => {
-		const injectableWithHook = await app.get(InjectableWithHook);
-		assertEquals(injectableWithHook.appBoostrapCalled, true);
-	});
+	await testContext.step(
+		'call global injectables onAppBootstrap hook',
+		async () => {
+			const injectableWithHook = await app.get(InjectableWithHook);
+			assertEquals(injectableWithHook.appBoostrapCalled, true);
+		},
+	);
 
-	await testContext.step('call global controller onAppBootstrap hook', async () => {
-		const controllerWithHook = await app.get(ControllerWithHook);
-		assertEquals(controllerWithHook.appBoostrapCalled, true);
-	});
+	await testContext.step(
+		'call global controller onAppBootstrap hook',
+		async () => {
+			const controllerWithHook = await app.get(ControllerWithHook);
+			assertEquals(controllerWithHook.appBoostrapCalled, true);
+		},
+	);
 
 	await testContext.step(
 		'call injectables and controllers onAppClosehook when app is closed',

@@ -78,9 +78,9 @@ const app = new DanetApplication();
 
 Deno.test('@Res and @Query decorator', async () => {
 	await app.init(MyModule);
-	const port = (await app.listen(0)).port;
+	const listenEvent = await app.listen(0);
 
-	const res = await fetch(`http://localhost:${port}/query/myvalue/all?myvalue=foo`, {
+	const res = await fetch(`http://localhost:${listenEvent.port}/query/myvalue/all?myvalue=foo`, {
 		method: 'GET',
 	});
 	const text = await res.text();
@@ -187,9 +187,9 @@ Deno.test(`@Query decorator with no key and value 'first' to return the first va
 
 Deno.test('@Header decorator with attribute', async () => {
 	await app.init(MyModule);
-	const port = (await app.listen(0)).port;
+	const listenEvent = await app.listen(0);
 
-	const res = await fetch(`http://localhost:${port}/lambda`, {
+	const res = await fetch(`http://localhost:${listenEvent.port}/lambda`, {
 		method: 'GET',
 		headers: {
 			'New-Header': 'en-US',
@@ -202,9 +202,9 @@ Deno.test('@Header decorator with attribute', async () => {
 
 Deno.test('@Header decorator without attribute', async () => {
 	await app.init(MyModule);
-	const port = (await app.listen(0)).port;
+	const listenEvent = await app.listen(0);
 
-	const res = await fetch(`http://localhost:${port}/lambda`, {
+	const res = await fetch(`http://localhost:${listenEvent.port}/lambda`, {
 		method: 'POST',
 		headers: {
 			'content-type': 'application/json',
@@ -217,9 +217,9 @@ Deno.test('@Header decorator without attribute', async () => {
 
 Deno.test('@Header decorator with attribute without qualifying header on request', async () => {
 	await app.init(MyModule);
-	const port = (await app.listen(0)).port;
+	const listenEvent = await app.listen(0);
 
-	const res = await fetch(`http://localhost:${port}/lambda`, {
+	const res = await fetch(`http://localhost:${listenEvent.port}/lambda`, {
 		method: 'GET',
 		headers: {},
 	});
@@ -230,9 +230,9 @@ Deno.test('@Header decorator with attribute without qualifying header on request
 
 Deno.test('@Body decorator with attribute', async () => {
 	await app.init(MyModule);
-	const port = (await app.listen(0)).port;
+	const listenEvent = await app.listen(0);
 
-	const res = await fetch(`http://localhost:${port}`, {
+	const res = await fetch(`http://localhost:${listenEvent.port}`, {
 		method: 'POST',
 		headers: {
 			'content-type': 'application/json',
@@ -246,9 +246,9 @@ Deno.test('@Body decorator with attribute', async () => {
 
 Deno.test('@Body decorator', async () => {
 	await app.init(MyModule);
-	const port = (await app.listen(0)).port;
+	const listenEvent = await app.listen(0);
 
-	const res = await fetch(`http://localhost:${port}/full-body/`, {
+	const res = await fetch(`http://localhost:${listenEvent.port}/full-body/`, {
 		method: 'POST',
 		headers: {
 			'content-type': 'application/json',
@@ -264,9 +264,9 @@ Deno.test('@Body decorator', async () => {
 
 Deno.test('@Param decorator', async () => {
 	await app.init(MyModule);
-	const port = (await app.listen(0)).port;
+	const listenEvent = await app.listen(0);
 
-	const res = await fetch(`http://localhost:${port}/batman`, {
+	const res = await fetch(`http://localhost:${listenEvent.port}/batman`, {
 		method: 'GET',
 		headers: {
 			'content-type': 'application/json',
