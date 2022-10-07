@@ -95,8 +95,11 @@ export class DanetRouter {
 	) {
 		return async (context: HttpContext) => {
 			try {
-				// deno-lint-ignore no-explicit-any
-				const controllerInstance = await this.injector.get(Controller, context) as any;
+				const controllerInstance = await this.injector.get(
+					Controller,
+					context,
+					// deno-lint-ignore no-explicit-any
+				) as any;
 				await this.guardExecutor.executeAllRelevantGuards(
 					context,
 					Controller,
@@ -107,9 +110,10 @@ export class DanetRouter {
 					ControllerMethod,
 					context,
 				);
-				const response: Record<string, unknown>
-						| string =
-					(await controllerInstance[ControllerMethod.name](...params));
+				const response:
+					| Record<string, unknown>
+					| string =
+						(await controllerInstance[ControllerMethod.name](...params));
 				await this.sendResponse(response, ControllerMethod, context);
 			} catch (error) {
 				const errorIsCaught = await this.filterExecutor
@@ -135,7 +139,11 @@ export class DanetRouter {
 		};
 	}
 
-	private async sendResponse(response: string | Record<string, unknown>, ControllerMethod: Callback, context: HttpContext) {
+	private async sendResponse(
+		response: string | Record<string, unknown>,
+		ControllerMethod: Callback,
+		context: HttpContext,
+	) {
 		if (response) {
 			const fileName = MetadataHelper.getMetadata<string>(
 				rendererViewFile,

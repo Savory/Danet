@@ -7,7 +7,7 @@ import { Injectable } from '../src/injector/injectable/mod.ts';
 import { Module } from '../src/module/mod.ts';
 import { Body, Controller, Get, Post } from '../src/router/controller/mod.ts';
 
-import { IsNumber, IsString } from 'https://deno.land/x/validatte/mod.ts';
+import { IsNumber, IsString } from '../validation.ts';
 
 // Utils ---------------
 function jsonWithMessage(msg: string) {
@@ -89,7 +89,6 @@ Deno.test('Return 400 if body is NOT following DTO', async (t) => {
 
 	res = await fetchWithBody(`http://localhost:${port}/test`, {
 		name: 'James',
-		// -- Missing 'age'
 	});
 	assertEquals(res.status, 400);
 

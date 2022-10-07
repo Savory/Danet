@@ -1,4 +1,4 @@
-import { path, assertEquals } from '../src/deps_test.ts';
+import { assertEquals, path } from '../src/deps_test.ts';
 import { DanetApplication } from '../src/app.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Render } from '../src/renderer/decorator.ts';
@@ -25,9 +25,12 @@ Deno.test('Hbs renderer', async () => {
 	app.setViewEngineDir(viewPath);
 	const listenEvent = await app.listen(0);
 
-	const res = await fetch(`http://localhost:${listenEvent.port}/nice-controller`, {
-		method: 'GET',
-	});
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/nice-controller`,
+		{
+			method: 'GET',
+		},
+	);
 	const text = await res.text();
 	assertEquals(text.includes('my title'), true);
 	await app.close();

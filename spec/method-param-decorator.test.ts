@@ -27,7 +27,9 @@ class SimpleController {
 	}
 
 	@Get('/query/all')
-	simpleGetAll(@Query({ value: 'array' }) queryParams: Record<string, string[]>) {
+	simpleGetAll(
+		@Query({ value: 'array' }) queryParams: Record<string, string[]>,
+	) {
 		return queryParams;
 	}
 
@@ -37,7 +39,9 @@ class SimpleController {
 	}
 
 	@Get('/query/first')
-	simpleGetFirst(@Query({ value: 'first' }) queryParams: Record<string, string>) {
+	simpleGetFirst(
+		@Query({ value: 'first' }) queryParams: Record<string, string>,
+	) {
 		return queryParams;
 	}
 
@@ -80,9 +84,12 @@ Deno.test('@Res and @Query decorator', async () => {
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
 
-	const res = await fetch(`http://localhost:${listenEvent.port}/query/myvalue/all?myvalue=foo`, {
-		method: 'GET',
-	});
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/query/myvalue/all?myvalue=foo`,
+		{
+			method: 'GET',
+		},
+	);
 	const text = await res.text();
 	assertEquals(text, `["foo"]`);
 
@@ -100,7 +107,7 @@ Deno.test(`@Query decorator with value 'array' to return all values for a given 
 		},
 	);
 	const json = await res.json();
-	assertEquals(json, ['foo','bar']);
+	assertEquals(json, ['foo', 'bar']);
 
 	await app.close();
 });
@@ -148,7 +155,7 @@ Deno.test(`@Query decorator with no key and value 'array' to return all values o
 		},
 	);
 	const json = await res.json();
-	assertEquals(json, {myvalue: ['foo','bar']});
+	assertEquals(json, { myvalue: ['foo', 'bar'] });
 
 	await app.close();
 });
@@ -164,7 +171,7 @@ Deno.test(`@Query decorator with no key and value 'last' to return the last valu
 		},
 	);
 	const json = await res.json();
-	assertEquals(json, {myvalue: 'bar'});
+	assertEquals(json, { myvalue: 'bar' });
 
 	await app.close();
 });
@@ -180,7 +187,7 @@ Deno.test(`@Query decorator with no key and value 'first' to return the first va
 		},
 	);
 	const json = await res.json();
-	assertEquals(json, {myvalue: 'foo'});
+	assertEquals(json, { myvalue: 'foo' });
 
 	await app.close();
 });

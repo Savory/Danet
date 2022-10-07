@@ -55,9 +55,12 @@ for (const method of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
 		await app.init(MyModule);
 		const listenEvent = await app.listen(0);
 
-		const res = await fetch(`http://localhost:${listenEvent.port}/nice-controller`, {
-			method,
-		});
+		const res = await fetch(
+			`http://localhost:${listenEvent.port}/nice-controller`,
+			{
+				method,
+			},
+		);
 		const text = await res.text();
 		assertEquals(text, `OK ${method}`);
 		await app.close();
