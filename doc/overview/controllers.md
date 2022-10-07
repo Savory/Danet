@@ -178,6 +178,48 @@ async findAll(): Promise<any[]> {
 }
 ```
 
+### Request payloads
+
+Our previous examples of the POST route handler didn't accept any client params.
+Let's fix this by adding the `@Body()` decorator here.
+
+But first, we need to determine the DTO (Data Transfer
+Object) schema. A DTO is an object that defines how the data will be sent over
+the network. We determine the DTO schema by using simples classes with **Type validation decorators**.
+Danet uses [Validatte](https://github.com/Savory/validatte) to validate the Dto Schema with
+the body received. So, for each member of body you'll need to use a matching decorator for it.
+
+You can see all the validation decorators avaibles [here](https://github.com/Savory/validatte#available-decorators).
+
+Let's create the CreateTodoDto class:
+
+```ts create-todo.dto.ts
+import { IsNumber, IsString, IsHexColor } from 'https://deno.land/x/validatte/mod.ts';
+
+export class CreateTodoDto {
+  @IsString()
+  name!: string;
+
+  @IsNumber()
+  priority!: number;
+
+  @IsHexColor()
+  colorLabel!: string;
+}
+```
+
+It has only three basic properties. Thereafter we can use the newly created DTO
+inside the TodoController:
+
+```ts todo.controller.ts
+@Post()
+async create(@Body() createTodoDto: CreateTodoDto) {
+  return 'This action adds a new todo';
+}
+```
+
+If the body doesn't follow the DTO is returned a 400 status code.
+
 ### Handling errors
 
 There's a separate chapter about handling errors (i.e., working with
