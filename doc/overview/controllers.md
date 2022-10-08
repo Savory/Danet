@@ -218,7 +218,22 @@ async create(@Body() createTodoDto: CreateTodoDto) {
 }
 ```
 
-If the body doesn't follow the DTO is returned a 400 status code.
+If the body doesn't follow the DTO is returned a 400 status code. Like the example below:
+
+```json
+{
+	"status": 400,
+	"name": "NotValidBodyException",
+	"reasons": [
+		{
+			"property": "priority",
+			"errorMessage": "Property must be a number",
+			"constraints": []
+		}
+	],
+	"message": "400 - Body bad formatted"
+}
+```
 
 ### Handling errors
 
