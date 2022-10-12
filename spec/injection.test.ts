@@ -35,7 +35,10 @@ Deno.test('Injection', async (testContext) => {
 	@Injectable({ scope: SCOPE.REQUEST })
 	class Child1 {
 		public id = crypto.randomUUID();
-		constructor(public child: GlobalInjectable) {
+		constructor(
+			public child: GlobalInjectable,
+			@Inject('DB_SERVICE') public dbService: IDBService,
+		) {
 		}
 
 		sayHelloWorld() {
@@ -146,6 +149,7 @@ Deno.test('Injection', async (testContext) => {
 			const firstController = await app.get(FirstController)!;
 			assertInstanceOf(firstController.child1, Child1);
 			assertEquals(firstController.child1.sayHelloWorld(), 'helloWorld');
+			assertEquals(firstController.child1.dbService.data, 'coucou');
 			const singletonController = await app.get(SingletonController)!;
 			assertInstanceOf(singletonController.child2, GlobalInjectable);
 			assertInstanceOf(singletonController.dbService, DatabaseService);

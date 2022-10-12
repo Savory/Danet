@@ -125,7 +125,7 @@ export class Injector {
 			injectionData,
 			Type,
 		);
-		this.resolveDependencies(dependencies, actualType);
+		await this.resolveDependencies(dependencies, actualType);
 		if (injectableMetadata?.scope === SCOPE.GLOBAL) {
 			const resolvedDependencies = new Array<Constructor>();
 			for (const [idx, Dep] of dependencies.entries()) {
@@ -179,21 +179,25 @@ export class Injector {
 		});
 	}
 
-	private resolveDependencies(
+	private async resolveDependencies(
 		Dependencies: Constructor[],
 		ParentConstructor: Constructor,
 	) {
-		Dependencies.forEach((Dependency) => {
-			if (!this.resolved.get(Dependency)) {
+		for (const [idx, Dependency] of Dependencies.entries()) {
+			if (
+				!this.resolved.get(
+					this.getParamToken(ParentConstructor, idx) ?? Dependency,
+				)
+			) {
 				if (this.availableTypes.get(Dependency)) {
-					this.resolveInjectable(Dependency, ParentConstructor);
+					await this.resolveInjectable(Dependency, ParentConstructor);
 				} else {
 					throw new Error(
 						`${Dependency.name} is not available in injection context. Did you provide it in module ?`,
 					);
 				}
 			}
-		});
+		}
 	}
 
 	private getDependencies(Type: Constructor): Constructor[] {
