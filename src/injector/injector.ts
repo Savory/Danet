@@ -126,7 +126,7 @@ export class Injector {
 			Type,
 		);
 		await this.resolveDependencies(dependencies, actualType);
-		if (injectableMetadata?.scope === SCOPE.GLOBAL) {
+		if (injectableMetadata?.scope !== SCOPE.REQUEST) {
 			const resolvedDependencies = new Array<Constructor>();
 			for (const [idx, Dep] of dependencies.entries()) {
 				resolvedDependencies.push(

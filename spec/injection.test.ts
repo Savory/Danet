@@ -18,6 +18,7 @@ import { HttpContext } from '../src/router/router.ts';
 Deno.test('Injection', async (testContext) => {
 	interface IDBService {
 		data: string;
+		id: string;
 	}
 
 	@Injectable()
@@ -49,8 +50,9 @@ Deno.test('Injection', async (testContext) => {
 	@Injectable()
 	class DatabaseService implements IDBService {
 		public data = 'coucou';
-
+		public id = crypto.randomUUID();
 		constructor() {
+			console.log('we construct');
 		}
 	}
 
@@ -153,6 +155,7 @@ Deno.test('Injection', async (testContext) => {
 			const singletonController = await app.get(SingletonController)!;
 			assertInstanceOf(singletonController.child2, GlobalInjectable);
 			assertInstanceOf(singletonController.dbService, DatabaseService);
+			assertEquals(firstController.child1.dbService.id, singletonController.dbService.id);
 		},
 	);
 
