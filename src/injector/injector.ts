@@ -120,6 +120,10 @@ export class Injector {
 		const actualKey = Type instanceof TokenInjector ? Type.token : Type;
 		const dependencies = this.getDependencies(actualType);
 
+		if (this.resolved.has(actualType)) {
+			return;
+		}
+
 		const injectableMetadata = MetadataHelper.getMetadata<InjectableOption>(
 			injectionData,
 			Type,
