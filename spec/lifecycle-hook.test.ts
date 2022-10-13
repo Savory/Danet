@@ -8,25 +8,25 @@ import { Controller } from '../src/router/controller/decorator.ts';
 Deno.test('Lifecycle hooks', async (testContext) => {
 	@Injectable({ scope: SCOPE.GLOBAL })
 	class InjectableWithHook implements OnAppBootstrap, OnAppClose {
-		public appBoostrapCalled = false;
-		public appCloseCalled = false;
+		public appBoostrapCalled = 0;
+		public appCloseCalled = 0;
 		onAppBootstrap() {
-			this.appBoostrapCalled = true;
+			this.appBoostrapCalled += 1;
 		}
 		onAppClose() {
-			this.appCloseCalled = true;
+			this.appCloseCalled += 1;
 		}
 	}
 
 	@Controller('second-controller/')
 	class ControllerWithHook implements OnAppBootstrap, OnAppClose {
-		public appBoostrapCalled = false;
-		public appCloseCalled = false;
+		public appBoostrapCalled = 0;
+		public appCloseCalled = 0;
 		onAppBootstrap(): void | Promise<void> {
-			this.appBoostrapCalled = true;
+			this.appBoostrapCalled += 1;
 		}
 		onAppClose() {
-			this.appCloseCalled = true;
+			this.appCloseCalled += 1;
 		}
 
 		constructor(
@@ -50,7 +50,7 @@ Deno.test('Lifecycle hooks', async (testContext) => {
 		'call global injectables onAppBootstrap hook',
 		async () => {
 			const injectableWithHook = await app.get(InjectableWithHook);
-			assertEquals(injectableWithHook.appBoostrapCalled, true);
+			assertEquals(injectableWithHook.appBoostrapCalled, 1);
 		},
 	);
 
@@ -58,7 +58,7 @@ Deno.test('Lifecycle hooks', async (testContext) => {
 		'call global controller onAppBootstrap hook',
 		async () => {
 			const controllerWithHook = await app.get(ControllerWithHook);
-			assertEquals(controllerWithHook.appBoostrapCalled, true);
+			assertEquals(controllerWithHook.appBoostrapCalled, 1);
 		},
 	);
 
@@ -68,8 +68,8 @@ Deno.test('Lifecycle hooks', async (testContext) => {
 			await app.close();
 			const injectableWithHook = await app.get(ControllerWithHook);
 			const controllerWithHook = await app.get(InjectableWithHook);
-			assertEquals(controllerWithHook.appCloseCalled, true);
-			assertEquals(injectableWithHook.appCloseCalled, true);
+			assertEquals(controllerWithHook.appCloseCalled, 1);
+			assertEquals(injectableWithHook.appCloseCalled, 1);
 		},
 	);
 });

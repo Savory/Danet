@@ -55,7 +55,6 @@ export class Injector {
 		if (controllers) {
 			await this.resolveControllers(controllers);
 		}
-		await this.executeOnAppBoostrapHook(controllers, injectables);
 	}
 
 	public addAvailableInjectable(injectables: InjectableConstructor[]) {
