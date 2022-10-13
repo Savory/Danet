@@ -43,13 +43,13 @@ export class DanetApplication {
 		if (metadata.controllers) {
 			this.danetRouter.registerControllers(metadata.controllers);
 		}
-		await this.hookExecutor.executeHookForEveryInjectable(
-			hookName.APP_BOOTSTRAP,
-		);
 	}
 
 	async init(Module: Constructor) {
 		await this.bootstrap(Module);
+		await this.hookExecutor.executeHookForEveryInjectable(
+			hookName.APP_BOOTSTRAP,
+		);
 	}
 
 	async close() {
