@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-root" content="/Danet">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.719992254414">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.720024558385">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
@@ -31,12 +31,12 @@
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=2.4.0.719992254414" rel="stylesheet" />
+    <link href="../../resources/css/retype.css?v=2.4.0.720024558385" rel="stylesheet" />
 
-    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.719992254414" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.720024558385" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.719992254414" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.719992254414" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.720024558385" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.720024558385" defer></script>
 
     <script data-goatcounter="https://danet.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
@@ -178,17 +178,85 @@ v1.24.3) is installed on your operating system.</p>
         <span>Setup</span>
     </h3>
 </doc-anchor-target>
-<p>The easiest way to set up a Danet project is by using our <a href="">Danet CLI</a>.</p>
+<p>The easiest way to set up a Danet project is by using our Danet CLI</p>
+<p>
+<div class="mb-6 px-5 py-4 flex justify-between relative border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded transition-colors duration-150">
+    <div class="flex items-center text-blue-500 dark:text-blue-400">
+        <span class="inline-block mb-px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" role="presentation" fill="currentColor"><path fill="none" d="M0 0h24v24H0z"/><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z"/></svg>
+        </span>
+        <span class="inline-block font-medium ml-2">CLI</span>
+    </div>
+    <div class="flex items-center text-xs text-gray-400 dark:text-dark-400">
+        <span>../../cli/</span>
+    </div>
+    <a href="../../cli/" class="absolute block inset-0"></a>
+</div>
+</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-bash"><code v-pre class="language-bash">$ git clone git@github.com:Savory/Danet-Starter.git nameofyourproject
-$ cd nameofyourproject</code></pre>
+<pre class="language-bash"><code v-pre class="language-bash">$ deno install --allow-read --allow-write --allow-run --allow-env -n danet https://deno.land/x/danet_cli/main.ts
+$ danet new my-danet-project
+$ cd my-danet-project</code></pre>
 </doc-codeblock></div>
-<p>The app is a simple in memory todo app.</p>
-<doc-anchor-target id="running-the-application">
+<p>The app is a TODO CRUD API with either MongoDB, Postgres or In-Memory database depending on what you choose when executing <code v-pre>danet new</code> command !</p>
+<doc-anchor-target id="using-mongodb-or-postgres">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#using-mongodb-or-postgres">#</doc-anchor-trigger>
+        <span>Using MongoDB or Postgres</span>
+    </h3>
+</doc-anchor-target>
+<p>To run the app, you need a database server running one or the other. We assume you know how to do that.</p>
+<p>Then, you have to add your server&#x27;s information somewhere so Danet can access these information to connect to the server.</p>
+<p>You have 2 ways of doing so :</p>
+<doc-anchor-target id="environment-variables">
     <h4>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#environment-variables">#</doc-anchor-trigger>
+        <span>Environment variables</span>
+    </h4>
+</doc-anchor-target>
+<p>Add the following variables:</p>
+<p>DB_NAME=
+DB_HOST=
+DB_PORT
+DB_USERNAME
+DB_PASSWORD=</p>
+<doc-anchor-target id="dotenv">
+    <h4>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#dotenv">#</doc-anchor-trigger>
+        <span>Dotenv</span>
+    </h4>
+</doc-anchor-target>
+<p>Danet has built-in <code v-pre>dotenv</code> support (because Deno support it natively), so you can create a <code v-pre>.env</code> file at your project&#x27;s root the same variables :</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-bash"><code v-pre class="language-bash">DB_NAME=
+DB_HOST=
+DB_PORT
+DB_USERNAME
+DB_PASSWORD=</code></pre>
+</doc-codeblock></div>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
+    <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-300" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+            <h5>Hint</h5>
+<p>We provide an <code v-pre>.env.example</code> file in the project</p>
+        </div>
+    </div>
+</div>
+<doc-anchor-target id="running-the-application">
+    <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#running-the-application">#</doc-anchor-trigger>
         <span>Running the application</span>
-    </h4>
+    </h3>
 </doc-anchor-target>
 <p>Once the installation process is complete, you can run the following command at your OS command prompt to start the application listening for inbound HTTP requests:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
