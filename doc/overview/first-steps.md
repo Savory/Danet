@@ -11,7 +11,7 @@ v1.24.3) is installed on your operating system.
 
 ### Setup
 
-We don't have a CLI yet. The easiest way to get started is to clone our [starter repository](https://github.com/Savory/Danet-Starter)
+The easiest way to set up a Danet project is by using our [Danet CLI]().
 ```bash
 $ git clone git@github.com:Savory/Danet-Starter.git nameofyourproject
 $ cd nameofyourproject

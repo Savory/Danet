@@ -47,21 +47,11 @@ bug on our [Github Repository](https://github.com/Savory/Danet) and
 
 ## How to start
 
-Check out our [starter repository](https://github.com/Savory/Danet-Starter)
+[Use our CLI](https://github.com/Savory/Danet-CLI)
 
 [Read our documentation](https://savory.github.io/Danet/)
 
 [Read our blog](https://savory.github.io/)
-
-## Sponsor
-
-A huge thanks to
-
-<p align="center">
-<a href="https://www.abbeal.com/">
-  <img src="https://cdn.discordapp.com/attachments/1004562983969628191/1004593615537963038/image.png" width="250" alt="Abbeal Logo" />
-</a>
-</p>
 
 ## Contributing
 
@@ -78,3 +68,14 @@ License
 
 <p>
 This project is Licensed under the <a href="./LICENSE">MIT License</a>. Please go through the License atleast once before making your contribution. </p>
+
+
+## Sponsor
+
+A huge thanks to
+
+<p align="center">
+<a href="https://www.abbeal.com/">
+  <img src="https://cdn.discordapp.com/attachments/1004562983969628191/1004593615537963038/image.png" width="250" alt="Abbeal Logo" />
+</a>
+</p>
