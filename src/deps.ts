@@ -1,12 +1,12 @@
-export { ApplicationListenEvent } from 'https://deno.land/x/oak@v10.5.1/application.ts';
+export { ApplicationListenEvent } from 'https://deno.land/x/oak@v11.1.0/application.ts';
 export {
 	Application,
 	Context,
 	Response,
 	Router,
-} from 'https://deno.land/x/oak@v10.5.1/mod.ts';
-export type { Route, State } from 'https://deno.land/x/oak@v10.5.1/mod.ts';
-export { getQuery } from 'https://deno.land/x/oak@v10.5.1/helpers.ts';
+} from 'https://deno.land/x/oak@v11.1.0/mod.ts';
+export type { Route, State } from 'https://deno.land/x/oak@v11.1.0/mod.ts';
+export { getQuery } from 'https://deno.land/x/oak@v11.1.0/helpers.ts';
 export {
 	green,
 	red,
