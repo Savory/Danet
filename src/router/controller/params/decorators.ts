@@ -175,3 +175,13 @@ export const Param = (paramName: string) =>
 			return params;
 		}
 	})();
+
+
+export const Session =  (prop?: string) =>
+	createParamDecorator((context: HttpContext) => {
+		if (prop) {
+			return context.state.session.get(prop);
+		} else {
+			return context.state.session;
+		}
+	})();

@@ -1,4 +1,4 @@
-import { Application, ApplicationListenEvent, Router } from './deps.ts';
+import { Application, ApplicationListenEvent, Router, Session, CookieStore } from './deps.ts';
 import { FilterExecutor } from './exception/filter/executor.ts';
 import { GuardExecutor } from './guard/executor.ts';
 import { HookExecutor } from './hook/executor.ts';
@@ -13,6 +13,11 @@ import { DanetRouter } from './router/router.ts';
 import { Constructor } from './utils/constructor.ts';
 import { DanetMiddleware } from './router/middleware/decorator.ts';
 import { globalMiddlewareContainer } from './router/middleware/global-container.ts';
+
+type AppState = {
+	session: Session
+}
+
 
 export class DanetApplication {
 	private app = new Application();
@@ -48,6 +53,9 @@ export class DanetApplication {
 	}
 
 	async init(Module: Constructor) {
+		if (Deno.env.get('COOKIE_SECRET_KEY')) {
+			this.app.use(Session.initMiddleware(new CookieStore(Deno.env.get('COOKIE_SECRET_KEY') as string)));
+		}
 		await this.bootstrap(Module);
 		await this.hookExecutor.executeHookForEveryInjectable(
 			hookName.APP_BOOTSTRAP,
