@@ -13,6 +13,9 @@ import { UseGuard } from '../src/guard/decorator.ts';
 import { Injectable } from '../src/injector/injectable/decorator.ts';
 import { AuthGuard } from '../src/guard/interface.ts';
 import { HttpContext } from '../src/router/router.ts';
+import { CookieStore } from 'https://deno.land/x/oak_sessions@v4.0.5/mod.ts';
+import { OakSession } from '../src/deps.ts';
+import { MiddlewareFunction } from '../src/router/middleware/decorator.ts';
 
 @Injectable()
 class AddThingToSession implements AuthGuard {
@@ -96,9 +99,7 @@ class SimpleController {
 	queryParam(@Param('myparam') niceValue: string) {
 		return niceValue;
 	}
-
 }
-
 
 @Module({
 	controllers: [SimpleController],
@@ -106,6 +107,11 @@ class SimpleController {
 class MyModule {}
 
 const app = new DanetApplication();
+app.addGlobalMiddlewares(
+	OakSession.initMiddleware(
+		new CookieStore(Deno.env.get('COOKIE_SECRET_KEY') as string),
+	) as MiddlewareFunction,
+);
 
 Deno.test('@Res and @Query decorator', async () => {
 	await app.init(MyModule);
@@ -315,22 +321,27 @@ Deno.test('@Session decorator without params', async () => {
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
 
-	const res = await fetch(`http://localhost:${listenEvent.port}/whole-session-decorator`, {
-		method: 'GET',
-	});
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/whole-session-decorator`,
+		{
+			method: 'GET',
+		},
+	);
 	const text = await res.text();
 	assertEquals(text, 'yes');
 	await app.close();
 });
 
-
 Deno.test('@Session decorator with param', async () => {
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
 
-	const res = await fetch(`http://localhost:${listenEvent.port}/session-with-param`, {
-		method: 'GET',
-	});
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/session-with-param`,
+		{
+			method: 'GET',
+		},
+	);
 	const text = await res.text();
 	assertEquals(text, 'yes');
 	await app.close();
