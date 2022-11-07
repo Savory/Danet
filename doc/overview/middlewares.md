@@ -40,18 +40,17 @@ For global middlewares simply use `addGlobalMiddlewares` DanetApplication's meth
 ...
   const application = new DanetApplication();
   await application.init(AppModule);
-  application.addGlobalMiddlewares(YourFirstMiddleware, SecondMiddleware); //as many middleware as you want;
+  application.addGlobalMiddlewares(LoggerMiddleware); //as many middleware as you want;
 ...
 ```
 
 For controllers and methods, simply use `@Middleware` decorator ! Like `addGlobalMiddlewares`, it can take as many middleware are you need for arguments.
 
 ```ts todo.controllers.ts
-@Middleware(SimpleMiddleware)
+@Middleware(LoggerMiddleware)
 @Controller('todo')
 class TodoController {
 	@Get('/')
-	@Middleware(SimpleMiddleware)
 	getWithMiddleware() {
     return 'OK'
     }
@@ -76,7 +75,6 @@ And use it within the `TodoController`:
 @Controller('todo')
 class TodoController {
   @Get('/')
-  @Middleware(SimpleMiddleware)
   getWithMiddleware() {
     return 'OK'
   }
