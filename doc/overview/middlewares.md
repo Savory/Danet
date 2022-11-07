@@ -17,11 +17,13 @@ Middleware is a function which is called **before** the route handler. Middlewar
 You implement custom Danet middleware in either a function, or in a class with an `@Injectable()` decorator. The class should implement the `DanetMiddleware` interface, while the function does not have any special requirements. Let's start by implementing a simple middleware feature using the class method.
 
 ```ts logger.middleware.ts
-import { Injectable, DanetMiddle, HttpContext } from 'https://deno.land/x/danet/mod.ts';
+import { Injectable, DanetMiddle, HttpContext, NextFunction } from 'https://deno.land/x/danet/mod.ts';
+
 @Injectable()
 export class LoggerMiddleware implements DanetMiddleware {
-  action(ctx: HttpContext) {
+  async action(ctx: HttpContext, next: NextFunction) {
     console.log('Request...');
+    await next();
   }
 }
 ```
@@ -62,9 +64,11 @@ class TodoController {
 The `LoggerMiddleware` class we've been using is quite simple. It has no members, no additional methods, and no dependencies. Why can't we just define it in a simple function instead of a class? In fact, we can. This type of middleware is called **functional middleware**. Let's transform the logger middleware from class-based into functional middleware to illustrate the difference:
 
 ```ts logger.middleware.ts
-import { Injectable, DanetMiddle, HttpContext } from 'https://deno.land/x/danet/mod.ts';
-export function logger(ctx: HttpContext) {
+import { Injectable, DanetMiddle, HttpContext, NextFunction } from 'https://deno.land/x/danet/mod.ts';
+
+export async function logger(ctx: HttpContext, next: NextFunction) {
   console.log(`Request...`);
+  await next();
 };
 ```
 
