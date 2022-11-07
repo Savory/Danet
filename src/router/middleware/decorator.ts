@@ -1,7 +1,7 @@
-import { Constructor } from '../utils/constructor.ts';
-import { ControllerConstructor } from './controller/constructor.ts';
-import { MetadataHelper } from '../metadata/helper.ts';
-import { HttpContext } from './router.ts';
+import { Constructor } from '../../utils/constructor.ts';
+import { ControllerConstructor } from '../controller/constructor.ts';
+import { MetadataHelper } from '../../metadata/helper.ts';
+import { HttpContext } from '../router.ts';
 
 export interface DanetMiddleware {
   // deno-lint-ignore no-explicit-any

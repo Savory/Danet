@@ -7,7 +7,7 @@ import {
 } from '../src/router/controller/decorator.ts';
 import { Injectable } from '../src/injector/injectable/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
-import { Middleware } from '../src/router/middleware.ts';
+import { Middleware } from '../src/router/middleware/decorator.ts';
 
 @Injectable()
 class SimpleInjectable {
