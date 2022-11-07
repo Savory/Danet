@@ -155,7 +155,10 @@ Deno.test('Injection', async (testContext) => {
 			const singletonController = await app.get(SingletonController)!;
 			assertInstanceOf(singletonController.child2, GlobalInjectable);
 			assertInstanceOf(singletonController.dbService, DatabaseService);
-			assertEquals(firstController.child1.dbService.id, singletonController.dbService.id);
+			assertEquals(
+				firstController.child1.dbService.id,
+				singletonController.dbService.id,
+			);
 		},
 	);
 

@@ -69,7 +69,6 @@ License
 <p>
 This project is Licensed under the <a href="./LICENSE">MIT License</a>. Please go through the License atleast once before making your contribution. </p>
 
-
 ## Sponsor
 
 A huge thanks to

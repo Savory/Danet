@@ -33,7 +33,9 @@ export class DanetRouter {
 		private guardExecutor: GuardExecutor = new GuardExecutor(injector),
 		private filterExecutor: FilterExecutor = new FilterExecutor(),
 		private viewRenderer: Renderer = new HandlebarRenderer(),
-		private middlewareExecutor: MiddlewareExecutor = new MiddlewareExecutor(injector),
+		private middlewareExecutor: MiddlewareExecutor = new MiddlewareExecutor(
+			injector,
+		),
 	) {
 	}
 	methodsMap = new Map([
@@ -100,7 +102,8 @@ export class DanetRouter {
 				await this.middlewareExecutor.executeAllRelevantMiddlewares(
 					context,
 					Controller,
-					ControllerMethod);
+					ControllerMethod,
+				);
 				const controllerInstance = await this.injector.get(
 					Controller,
 					context,

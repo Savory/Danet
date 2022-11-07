@@ -1,10 +1,7 @@
 import { assertEquals } from '../src/deps_test.ts';
 import { DanetApplication } from '../src/app.ts';
 import { Module } from '../src/module/decorator.ts';
-import {
-	Controller,
-	Get,
-} from '../src/router/controller/decorator.ts';
+import { Controller, Get } from '../src/router/controller/decorator.ts';
 import { Injectable } from '../src/injector/injectable/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
 import { Middleware } from '../src/router/middleware/decorator.ts';
@@ -22,9 +19,9 @@ class SimpleMiddleware {
 	}
 
 	action(ctx: HttpContext) {
-		ctx.response.body = `${ctx.response.body as string || ''}` + this.simpleInjectable.doSomething();
+		ctx.response.body = `${ctx.response.body as string || ''}` +
+			this.simpleInjectable.doSomething();
 	}
-
 }
 @Injectable()
 class SecondMiddleware {
@@ -34,26 +31,21 @@ class SecondMiddleware {
 	action(ctx: HttpContext) {
 		ctx.response.body = `${ctx.response.body as string || ''}` + ' ' + 'more';
 	}
-
 }
 
 @Controller('simple-controller')
 class SimpleController {
-
 	@Get('/')
 	@Middleware(SimpleMiddleware)
 	getWithMiddleware() {
-
 	}
 }
 
 @Middleware(SecondMiddleware, SimpleMiddleware)
 @Controller('controller-with-middleware')
 class ControllerWithMiddleware {
-
 	@Get('/')
 	getWithoutMiddleware() {
-
 	}
 }
 
