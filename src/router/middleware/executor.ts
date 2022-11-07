@@ -3,7 +3,13 @@ import { Callback, HttpContext } from '../router.ts';
 import { ControllerConstructor } from '../controller/constructor.ts';
 import { InjectableConstructor } from '../../injector/injectable/constructor.ts';
 import { MetadataHelper } from '../../metadata/helper.ts';
-import { DanetMiddleware, middlewareMetadataKey } from './decorator.ts';
+import {
+	DanetMiddleware,
+	isMiddlewareClass,
+	MiddlewareFunction,
+	middlewareMetadataKey,
+	PossibleMiddlewareType,
+} from './decorator.ts';
 import { Constructor } from '../../utils/constructor.ts';
 import { globalMiddlewareContainer } from './global-container.ts';
 
@@ -38,14 +44,21 @@ export class MiddlewareExecutor {
 
 	private async executeMiddlewares(
 		context: HttpContext,
-		middlewares: InjectableConstructor[],
+		middlewares: PossibleMiddlewareType[],
 	) {
-		await this.injector.registerInjectables(middlewares);
-		for (const middlewareConstructor of middlewares) {
-			const middlewareInstance: DanetMiddleware = await this.injector.get<
-				DanetMiddleware
-			>(middlewareConstructor as Constructor<DanetMiddleware>);
-			await middlewareInstance.action(context);
+		const injectablesMiddleware: InjectableConstructor[] = middlewares.filter(
+			isMiddlewareClass,
+		) as InjectableConstructor[];
+		await this.injector.registerInjectables(injectablesMiddleware);
+		for (const middleware of middlewares) {
+			if (isMiddlewareClass(middleware)) {
+				const middlewareInstance: DanetMiddleware = await this.injector.get<
+					DanetMiddleware
+				>(middleware as Constructor<DanetMiddleware>);
+				await middlewareInstance.action(context);
+			} else {
+				await (middleware as MiddlewareFunction)(context);
+			}
 		}
 	}
 }

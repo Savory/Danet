@@ -41,15 +41,9 @@ class ThrowingMiddleware implements DanetMiddleware {
 	}
 }
 
-@Injectable()
-class SecondMiddleware implements DanetMiddleware {
-	constructor() {
-	}
-
-	action(ctx: HttpContext) {
-		ctx.response.body = `${ctx.response.body as string || ''}` + ' ' + 'more';
-	}
-}
+const secondMiddleware = (ctx: HttpContext) => {
+	ctx.response.body = `${ctx.response.body as string || ''}` + ' ' + 'more';
+};
 
 @Controller('simple-controller')
 class SimpleController {
@@ -64,7 +58,7 @@ class SimpleController {
 	}
 }
 
-@Middleware(SecondMiddleware, SimpleMiddleware)
+@Middleware(secondMiddleware, SimpleMiddleware)
 @Controller('controller-with-middleware')
 class ControllerWithMiddleware {
 	@Get('/')
