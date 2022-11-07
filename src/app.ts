@@ -11,6 +11,8 @@ import { moduleMetadataKey, ModuleOptions } from './module/decorator.ts';
 import { HandlebarRenderer } from './renderer/handlebar.ts';
 import { DanetRouter } from './router/router.ts';
 import { Constructor } from './utils/constructor.ts';
+import { DanetMiddleware } from './router/middleware/decorator.ts';
+import { globalMiddlewareContainer } from './router/middleware/global-container.ts';
 
 export class DanetApplication {
 	private app = new Application();
@@ -91,5 +93,9 @@ export class DanetApplication {
 				await next();
 			}
 		});
+	}
+
+	addGlobalMiddlewares(...middlewares: Constructor<DanetMiddleware>[]) {
+		globalMiddlewareContainer.push(...middlewares);
 	}
 }
