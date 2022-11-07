@@ -17,6 +17,7 @@ import {
 	Resolver,
 } from './controller/params/decorators.ts';
 import { trimSlash } from './utils.ts';
+import { MiddlewareExecutor } from './middleware/executor.ts';
 
 // deno-lint-ignore no-explicit-any
 export type Callback = (...args: any[]) => unknown;
@@ -32,6 +33,9 @@ export class DanetRouter {
 		private guardExecutor: GuardExecutor = new GuardExecutor(injector),
 		private filterExecutor: FilterExecutor = new FilterExecutor(),
 		private viewRenderer: Renderer = new HandlebarRenderer(),
+		private middlewareExecutor: MiddlewareExecutor = new MiddlewareExecutor(
+			injector,
+		),
 	) {
 	}
 	methodsMap = new Map([
@@ -95,6 +99,11 @@ export class DanetRouter {
 	) {
 		return async (context: HttpContext) => {
 			try {
+				await this.middlewareExecutor.executeAllRelevantMiddlewares(
+					context,
+					Controller,
+					ControllerMethod,
+				);
 				const controllerInstance = await this.injector.get(
 					Controller,
 					context,
