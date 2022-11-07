@@ -1,4 +1,9 @@
-import { Application, ApplicationListenEvent, Router } from './deps.ts';
+import {
+	Application,
+	ApplicationListenEvent,
+	OakSession,
+	Router,
+} from './deps.ts';
 import { FilterExecutor } from './exception/filter/executor.ts';
 import { GuardExecutor } from './guard/executor.ts';
 import { HookExecutor } from './hook/executor.ts';
@@ -11,8 +16,15 @@ import { moduleMetadataKey, ModuleOptions } from './module/decorator.ts';
 import { HandlebarRenderer } from './renderer/handlebar.ts';
 import { DanetRouter } from './router/router.ts';
 import { Constructor } from './utils/constructor.ts';
-import { DanetMiddleware } from './router/middleware/decorator.ts';
+import {
+	DanetMiddleware,
+	PossibleMiddlewareType,
+} from './router/middleware/decorator.ts';
 import { globalMiddlewareContainer } from './router/middleware/global-container.ts';
+
+type AppState = {
+	session: OakSession;
+};
 
 export class DanetApplication {
 	private app = new Application();
@@ -28,7 +40,7 @@ export class DanetApplication {
 	private controller: AbortController = new AbortController();
 	private logger: Logger = new Logger('DanetApplication');
 
-	get<T>(Type: Constructor<T> | string): Promise<T> {
+	get<T>(Type: Constructor<T> | string): T {
 		return this.injector.get(Type);
 	}
 
@@ -95,7 +107,7 @@ export class DanetApplication {
 		});
 	}
 
-	addGlobalMiddlewares(...middlewares: Constructor<DanetMiddleware>[]) {
+	addGlobalMiddlewares(...middlewares: PossibleMiddlewareType[]) {
 		globalMiddlewareContainer.push(...middlewares);
 	}
 }

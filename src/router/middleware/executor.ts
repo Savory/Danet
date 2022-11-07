@@ -8,6 +8,7 @@ import {
 	isMiddlewareClass,
 	MiddlewareFunction,
 	middlewareMetadataKey,
+	NextFunction,
 	PossibleMiddlewareType,
 } from './decorator.ts';
 import { Constructor } from '../../utils/constructor.ts';
@@ -21,16 +22,52 @@ export class MiddlewareExecutor {
 		context: HttpContext,
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
+		next: NextFunction,
 	) {
-		if (globalMiddlewareContainer.length > 0) {
-			await this.executeMiddlewares(context, globalMiddlewareContainer);
-		}
-		await this.retrieveAndExecuteSymbolMiddleware(context, Controller);
-		await this.retrieveAndExecuteSymbolMiddleware(context, ControllerMethod);
+		const middlewares = [...globalMiddlewareContainer];
+		middlewares.push(...this.getSymbolMiddlewares(Controller));
+		middlewares.push(...this.getSymbolMiddlewares(ControllerMethod));
+
+		if (middlewares.length === 0) return next();
+		const injectablesMiddleware: InjectableConstructor[] = middlewares.filter(
+			isMiddlewareClass,
+		) as InjectableConstructor[];
+		let index = -1;
+		await this.injector.registerInjectables(injectablesMiddleware);
+		const dispatch = async (i: number) => {
+			if (i <= index) {
+				throw new Error('next() called multiple times.');
+			}
+			index = i;
+			let fn;
+			if (i === middlewares.length) {
+				fn = next;
+				await fn();
+				return;
+			}
+			const currentMiddleware = middlewares[i];
+			if (isMiddlewareClass(currentMiddleware)) {
+				const middlewareInstance: DanetMiddleware = this.injector.get<
+					DanetMiddleware
+				>(currentMiddleware as Constructor<DanetMiddleware>);
+				fn = async (ctx: HttpContext, nextFn: NextFunction) => {
+					await middlewareInstance.action(ctx, nextFn);
+				};
+			} else {
+				fn = async (ctx: HttpContext, nextFn: NextFunction) => {
+					await (currentMiddleware as MiddlewareFunction)(ctx, nextFn);
+				};
+			}
+			if (!fn) {
+				return;
+			}
+			await fn(context, dispatch.bind(null, i + 1));
+		};
+
+		await dispatch(0);
 	}
 
-	private async retrieveAndExecuteSymbolMiddleware(
-		context: HttpContext,
+	private getSymbolMiddlewares(
 		symbol: unknown,
 	) {
 		const middlewares: InjectableConstructor[] = MetadataHelper.getMetadata(
@@ -38,27 +75,8 @@ export class MiddlewareExecutor {
 			symbol,
 		);
 		if (middlewares) {
-			await this.executeMiddlewares(context, middlewares);
+			return middlewares;
 		}
-	}
-
-	private async executeMiddlewares(
-		context: HttpContext,
-		middlewares: PossibleMiddlewareType[],
-	) {
-		const injectablesMiddleware: InjectableConstructor[] = middlewares.filter(
-			isMiddlewareClass,
-		) as InjectableConstructor[];
-		await this.injector.registerInjectables(injectablesMiddleware);
-		for (const middleware of middlewares) {
-			if (isMiddlewareClass(middleware)) {
-				const middlewareInstance: DanetMiddleware = await this.injector.get<
-					DanetMiddleware
-				>(middleware as Constructor<DanetMiddleware>);
-				await middlewareInstance.action(context);
-			} else {
-				await (middleware as MiddlewareFunction)(context);
-			}
-		}
+		return [];
 	}
 }

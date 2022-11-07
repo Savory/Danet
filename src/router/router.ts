@@ -103,27 +103,29 @@ export class DanetRouter {
 					context,
 					Controller,
 					ControllerMethod,
+					async () => {
+						await this.guardExecutor.executeAllRelevantGuards(
+							context,
+							Controller,
+							ControllerMethod,
+						);
+						const params = await this.resolveMethodParam(
+							Controller,
+							ControllerMethod,
+							context,
+						);
+						const controllerInstance = await this.injector.get(
+							Controller,
+							context,
+							// deno-lint-ignore no-explicit-any
+						) as any;
+						const response:
+							| Record<string, unknown>
+							| string =
+								(await controllerInstance[ControllerMethod.name](...params));
+						await this.sendResponse(response, ControllerMethod, context);
+					},
 				);
-				const controllerInstance = await this.injector.get(
-					Controller,
-					context,
-					// deno-lint-ignore no-explicit-any
-				) as any;
-				await this.guardExecutor.executeAllRelevantGuards(
-					context,
-					Controller,
-					ControllerMethod,
-				);
-				const params = await this.resolveMethodParam(
-					Controller,
-					ControllerMethod,
-					context,
-				);
-				const response:
-					| Record<string, unknown>
-					| string =
-						(await controllerInstance[ControllerMethod.name](...params));
-				await this.sendResponse(response, ControllerMethod, context);
 			} catch (error) {
 				const errorIsCaught = await this.filterExecutor
 					.executeControllerAndMethodFilter(

@@ -1,4 +1,3 @@
-import { DanetMiddleware } from './decorator.ts';
-import { Constructor } from '../../utils/constructor.ts';
+import { PossibleMiddlewareType } from './decorator.ts';
 
-export const globalMiddlewareContainer: Constructor<DanetMiddleware>[] = [];
+export const globalMiddlewareContainer: PossibleMiddlewareType[] = [];

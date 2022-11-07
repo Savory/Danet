@@ -5,11 +5,15 @@ import { HttpContext } from '../router.ts';
 import { InjectableConstructor } from '../../injector/injectable/constructor.ts';
 
 export interface DanetMiddleware {
-	// deno-lint-ignore no-explicit-any
-	action(ctx: HttpContext): Promise<any> | any;
+	action(ctx: HttpContext, next: NextFunction): Promise<unknown> | unknown;
 }
 
-export type MiddlewareFunction = (ctx: HttpContext) => unknown;
+export type NextFunction = () => Promise<unknown>;
+
+export type MiddlewareFunction = (
+	ctx: HttpContext,
+	next: NextFunction,
+) => unknown;
 
 export type PossibleMiddlewareType =
 	| InjectableConstructor

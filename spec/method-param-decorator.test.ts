@@ -1,5 +1,6 @@
 import { assertEquals } from '../src/deps_test.ts';
 import { DanetApplication } from '../src/app.ts';
+import { Session, SessionInstance } from '../src/mod.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
 import {
@@ -8,6 +9,21 @@ import {
 	Param,
 	Query,
 } from '../src/router/controller/params/decorators.ts';
+import { UseGuard } from '../src/guard/decorator.ts';
+import { Injectable } from '../src/injector/injectable/decorator.ts';
+import { AuthGuard } from '../src/guard/interface.ts';
+import { HttpContext } from '../src/router/router.ts';
+import { CookieStore } from 'https://deno.land/x/oak_sessions@v4.0.5/mod.ts';
+import { OakSession } from '../src/deps.ts';
+import { MiddlewareFunction } from '../src/router/middleware/decorator.ts';
+
+@Injectable()
+class AddThingToSession implements AuthGuard {
+	canActivate(context: HttpContext) {
+		context.state.session.set('passed-in-guard', 'yes');
+		return true;
+	}
+}
 
 @Controller('')
 class SimpleController {
@@ -62,14 +78,26 @@ class SimpleController {
 		return niceValue;
 	}
 
-	@Get('/:myparam')
-	queryParam(@Param('myparam') niceValue: string) {
-		return niceValue;
+	@Get('/whole-session-decorator')
+	@UseGuard(AddThingToSession)
+	sessionDecorationTest(@Session() session: SessionInstance) {
+		return session.get('passed-in-guard');
+	}
+
+	@Get('/session-with-param')
+	@UseGuard(AddThingToSession)
+	sessionWithParam(@Session('passed-in-guard') passedInGuard: string) {
+		return passedInGuard;
 	}
 
 	@Post('full-body')
 	wholeBody(@Body() fullBody: unknown) {
 		return fullBody;
+	}
+
+	@Get('/:myparam')
+	queryParam(@Param('myparam') niceValue: string) {
+		return niceValue;
 	}
 }
 
@@ -79,6 +107,11 @@ class SimpleController {
 class MyModule {}
 
 const app = new DanetApplication();
+app.addGlobalMiddlewares(
+	OakSession.initMiddleware(
+		new CookieStore(Deno.env.get('COOKIE_SECRET_KEY') as string),
+	) as MiddlewareFunction,
+);
 
 Deno.test('@Res and @Query decorator', async () => {
 	await app.init(MyModule);
@@ -281,5 +314,35 @@ Deno.test('@Param decorator', async () => {
 	});
 	const text = await res.text();
 	assertEquals(text, 'batman');
+	await app.close();
+});
+
+Deno.test('@Session decorator without params', async () => {
+	await app.init(MyModule);
+	const listenEvent = await app.listen(0);
+
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/whole-session-decorator`,
+		{
+			method: 'GET',
+		},
+	);
+	const text = await res.text();
+	assertEquals(text, 'yes');
+	await app.close();
+});
+
+Deno.test('@Session decorator with param', async () => {
+	await app.init(MyModule);
+	const listenEvent = await app.listen(0);
+
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/session-with-param`,
+		{
+			method: 'GET',
+		},
+	);
+	const text = await res.text();
+	assertEquals(text, 'yes');
 	await app.close();
 });

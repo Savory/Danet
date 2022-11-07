@@ -23,7 +23,7 @@
 		"emitDecoratorMetadata": true
 	},
 	"tasks": {
-		"test": "NO_LOG=true deno test --allow-env --allow-net --allow-read -A --unstable --coverage=coverage spec",
+		"test": "NO_LOG=true COOKIE_SECRET_KEY=mysecretkey deno test --allow-env --allow-net --allow-read -A --unstable --coverage=coverage spec",
 		"start:example": "deno run --allow-net --allow-env --watch example/run.ts"
 	}
 }
