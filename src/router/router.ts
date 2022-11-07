@@ -17,6 +17,8 @@ import {
 	Resolver,
 } from './controller/params/decorators.ts';
 import { trimSlash } from './utils.ts';
+import { DanetMiddleware, middlewareMetadataKey } from './middleware.ts';
+import { InjectableConstructor } from '../injector/injectable/constructor.ts';
 
 // deno-lint-ignore no-explicit-any
 export type Callback = (...args: any[]) => unknown;
@@ -95,6 +97,7 @@ export class DanetRouter {
 	) {
 		return async (context: HttpContext) => {
 			try {
+				await this.executeMiddlewares(context, Controller, ControllerMethod);
 				const controllerInstance = await this.injector.get(
 					Controller,
 					context,
@@ -137,6 +140,28 @@ export class DanetRouter {
 				context.response.status = status;
 			}
 		};
+	}
+
+	private async executeMiddlewares(
+		context: HttpContext,
+		Controller: ControllerConstructor,
+		ControllerMethod: Callback) {
+		const controllerMiddlewares: InjectableConstructor[] = MetadataHelper.getMetadata(middlewareMetadataKey, Controller);
+		if (controllerMiddlewares) {
+			await this.injector.registerInjectables(controllerMiddlewares);
+			for (const middlewareConstructor of controllerMiddlewares) {
+				const middlewareInstance: DanetMiddleware = await this.injector.get<DanetMiddleware>(middlewareConstructor as Constructor<DanetMiddleware>);
+				await middlewareInstance.action(context);
+			}
+		}
+		const methodMiddlewares: InjectableConstructor[] = MetadataHelper.getMetadata(middlewareMetadataKey, ControllerMethod);
+		if (methodMiddlewares) {
+			await this.injector.registerInjectables(methodMiddlewares);
+			for (const middlewareConstructor of methodMiddlewares) {
+				const middlewareInstance: DanetMiddleware = await this.injector.get<DanetMiddleware>(middlewareConstructor as Constructor<DanetMiddleware>);
+				await middlewareInstance.action(context);
+			}
+		}
 	}
 
 	private async sendResponse(
