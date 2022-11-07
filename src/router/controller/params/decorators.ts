@@ -176,8 +176,7 @@ export const Param = (paramName: string) =>
 		}
 	})();
 
-
-export const Session =  (prop?: string) =>
+export const Session = (prop?: string) =>
 	createParamDecorator((context: HttpContext) => {
 		if (prop) {
 			return context.state.session.get(prop);

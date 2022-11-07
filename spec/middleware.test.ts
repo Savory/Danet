@@ -7,6 +7,8 @@ import { HttpContext } from '../src/router/router.ts';
 import {
 	DanetMiddleware,
 	Middleware,
+	MiddlewareFunction,
+	NextFunction,
 } from '../src/router/middleware/decorator.ts';
 import {
 	BadRequestException,
@@ -25,9 +27,10 @@ class SimpleMiddleware implements DanetMiddleware {
 	constructor(private simpleInjectable: SimpleInjectable) {
 	}
 
-	action(ctx: HttpContext) {
+	async action(ctx: HttpContext, next: NextFunction) {
 		ctx.response.body = `${ctx.response.body as string || ''}` +
 			this.simpleInjectable.doSomething();
+		await next();
 	}
 }
 
@@ -37,12 +40,13 @@ class ThrowingMiddleware implements DanetMiddleware {
 	}
 
 	action(ctx: HttpContext) {
-		throw new NotFoundException();
+		throw new BadRequestException();
 	}
 }
 
-const secondMiddleware = (ctx: HttpContext) => {
+const secondMiddleware = async (ctx: HttpContext, next: NextFunction) => {
 	ctx.response.body = `${ctx.response.body as string || ''}` + ' ' + 'more';
+	await next();
 };
 
 @Controller('simple-controller')
@@ -58,7 +62,7 @@ class SimpleController {
 	}
 }
 
-@Middleware(secondMiddleware, SimpleMiddleware)
+@Middleware(SimpleMiddleware, secondMiddleware)
 @Controller('controller-with-middleware')
 class ControllerWithMiddleware {
 	@Get('/')
@@ -98,7 +102,7 @@ Deno.test('Throwing middleware method decorator', async () => {
 			method: 'GET',
 		},
 	);
-	assertEquals(404, res.status);
+	assertEquals(res.status, 400);
 	await res.json();
 	await app.close();
 });
@@ -115,25 +119,27 @@ Deno.test('Middleware controller decorator', async () => {
 	);
 	const text = await res.text();
 	//order is mixed up on purpose to check that argument order prevails
-	assertEquals(text, ` moreI did something`);
+	assertEquals(text, `I did something more`);
 	await app.close();
 });
 
 @Injectable()
 class FirstGlobalMiddleware implements DanetMiddleware {
-	action(ctx: HttpContext): any {
+	async action(ctx: HttpContext, next: NextFunction) {
 		ctx.response.body = `${
 			ctx.response.body as string || ''
 		}[first-middleware]`;
+		await next();
 	}
 }
 
 @Injectable()
 class SecondGlobalMiddleware implements DanetMiddleware {
-	action(ctx: HttpContext): any {
+	async action(ctx: HttpContext, next: NextFunction) {
 		ctx.response.body = `${
 			ctx.response.body as string || ''
 		}[second-middleware]`;
+		await next();
 	}
 }
 
@@ -151,7 +157,7 @@ Deno.test('Global middlewares', async () => {
 	const text = await res.text();
 	assertEquals(
 		text,
-		`[first-middleware][second-middleware] moreI did something`,
+		`[first-middleware][second-middleware]I did something more`,
 	);
 	await app.close();
 });
