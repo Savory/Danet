@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-root" content="/Danet">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.721147291305">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.721157252088">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
@@ -31,12 +31,12 @@
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=2.4.0.721147291305" rel="stylesheet" />
+    <link href="../../resources/css/retype.css?v=2.4.0.721157252088" rel="stylesheet" />
 
-    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.721147291305" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.721157252088" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.721147291305" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.721147291305" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.721157252088" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.721157252088" defer></script>
 
     <script data-goatcounter="https://danet.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
@@ -175,11 +175,13 @@
 <p>You implement custom Danet middleware in either a function, or in a class with an <code v-pre>@Injectable()</code> decorator. The class should implement the <code v-pre>DanetMiddleware</code> interface, while the function does not have any special requirements. Let&#x27;s start by implementing a simple middleware feature using the class method.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">logger.middleware.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">import { Injectable, DanetMiddle, HttpContext } from 'https://deno.land/x/danet/mod.ts';
+<pre class="language-typescript"><code v-pre class="language-typescript">import { Injectable, DanetMiddle, HttpContext, NextFunction } from 'https://deno.land/x/danet/mod.ts';
+
 @Injectable()
 export class LoggerMiddleware implements DanetMiddleware {
-  action(ctx: HttpContext) {
+  async action(ctx: HttpContext, next: NextFunction) {
     console.log('Request...');
+    await next();
   }
 }</code></pre>
 </doc-codeblock></div>
@@ -227,9 +229,11 @@ class TodoController {
 <p>The <code v-pre>LoggerMiddleware</code> class we&#x27;ve been using is quite simple. It has no members, no additional methods, and no dependencies. Why can&#x27;t we just define it in a simple function instead of a class? In fact, we can. This type of middleware is called <strong>functional middleware</strong>. Let&#x27;s transform the logger middleware from class-based into functional middleware to illustrate the difference:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">logger.middleware.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">import { Injectable, DanetMiddle, HttpContext } from 'https://deno.land/x/danet/mod.ts';
-export function logger(ctx: HttpContext) {
+<pre class="language-typescript"><code v-pre class="language-typescript">import { Injectable, DanetMiddle, HttpContext, NextFunction } from 'https://deno.land/x/danet/mod.ts';
+
+export async function logger(ctx: HttpContext, next: NextFunction) {
   console.log(`Request...`);
+  await next();
 };</code></pre>
 </doc-codeblock></div>
 <p>And use it within the <code v-pre>TodoController</code>:</p>
