@@ -1,6 +1,6 @@
 import { assertEquals } from '../src/deps_test.ts';
 import { DanetApplication } from '../src/app.ts';
-import { Session, SessionInstance } from '../src/mod.ts';
+import { Session } from '../src/mod.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
 import {
@@ -14,7 +14,7 @@ import { Injectable } from '../src/injector/injectable/decorator.ts';
 import { AuthGuard } from '../src/guard/interface.ts';
 import { HttpContext } from '../src/router/router.ts';
 import { CookieStore } from 'https://deno.land/x/oak_sessions@v4.0.5/mod.ts';
-import { OakSession } from '../src/deps.ts';
+import { OakSession } from '../src/deps_test.ts';
 import { MiddlewareFunction } from '../src/router/middleware/decorator.ts';
 
 @Injectable()
@@ -80,7 +80,7 @@ class SimpleController {
 
 	@Get('/whole-session-decorator')
 	@UseGuard(AddThingToSession)
-	sessionDecorationTest(@Session() session: SessionInstance) {
+	sessionDecorationTest(@Session() session: Map<unknown, unknown>) {
 		return session.get('passed-in-guard');
 	}
 
