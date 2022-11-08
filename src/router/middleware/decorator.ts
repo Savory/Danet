@@ -1,4 +1,4 @@
-import { Constructor } from '../../utils/constructor.ts';
+import type { Middleware as OakMiddleware } from '../../deps.ts';
 import { ControllerConstructor } from '../controller/constructor.ts';
 import { MetadataHelper } from '../../metadata/helper.ts';
 import { HttpContext } from '../router.ts';
@@ -17,7 +17,7 @@ export type MiddlewareFunction = (
 
 export type PossibleMiddlewareType =
 	| InjectableConstructor
-	| MiddlewareFunction;
+	| OakMiddleware;
 export const isMiddlewareClass = (s: PossibleMiddlewareType) => !!s.prototype;
 export const middlewareMetadataKey = 'middlewares';
 export const Middleware = (...middlewares: PossibleMiddlewareType[]) =>

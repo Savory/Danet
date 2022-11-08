@@ -110,7 +110,7 @@ const app = new DanetApplication();
 app.addGlobalMiddlewares(
 	OakSession.initMiddleware(
 		new CookieStore(Deno.env.get('COOKIE_SECRET_KEY') as string),
-	) as MiddlewareFunction,
+	),
 );
 
 Deno.test('@Res and @Query decorator', async () => {

@@ -4,6 +4,7 @@ export {
 	Context,
 	Response,
 	Router,
+	type Middleware,
 } from 'https://deno.land/x/oak@v11.1.0/mod.ts';
 export type { Route, State } from 'https://deno.land/x/oak@v11.1.0/mod.ts';
 export { getQuery } from 'https://deno.land/x/oak@v11.1.0/helpers.ts';
