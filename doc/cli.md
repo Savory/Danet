@@ -4,7 +4,7 @@ order: 1
 ---
 ## Overview
 
-The [Danet CLI](https://github.com/Savory/Danet-CLI) is a command-line interface tool that helps you to initialize your Nest applications.
+The [Danet CLI](https://github.com/Savory/Danet-CLI) is a command-line interface tool that helps you to initialize your Danet applications.
 
 In the future, it will assist in multiple ways, including scaffolding the project, serving it in development mode, and building and bundling the application for production distribution. It embodies best-practice architectural patterns to encourage well-structured apps.
 
