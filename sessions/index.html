@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-root" content="/Danet">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.721203044909">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.721203810623">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
@@ -12,7 +12,7 @@
     <!-- Primary Meta Tags -->
     <title>Sessions</title>
     <meta name="title" content="Sessions">
-    <meta name="description" content="HTTP sessions provide a way to store information about the user across multiple requests, which is particularly useful for" />
+    <meta name="description" content="HTTP sessions provide a way to store information about the user across multiple requests." />
 
     <!-- Canonical -->
     <link rel="canonical" href="https://savory.github.io/Danet/sessions/" />
@@ -21,22 +21,22 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://savory.github.io/Danet/sessions/">
     <meta property="og:title" content="Sessions">
-    <meta property="og:description" content="HTTP sessions provide a way to store information about the user across multiple requests, which is particularly useful for">
+    <meta property="og:description" content="HTTP sessions provide a way to store information about the user across multiple requests.">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://savory.github.io/Danet/sessions/">
     <meta property="twitter:title" content="Sessions">
-    <meta property="twitter:description" content="HTTP sessions provide a way to store information about the user across multiple requests, which is particularly useful for">
+    <meta property="twitter:description" content="HTTP sessions provide a way to store information about the user across multiple requests.">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../resources/css/retype.css?v=2.4.0.721203044909" rel="stylesheet" />
+    <link href="../resources/css/retype.css?v=2.4.0.721203810623" rel="stylesheet" />
 
-    <script type="text/javascript" src="../resources/js/config.js?v=2.4.0.721203044909" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../resources/js/config.js?v=2.4.0.721203810623" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../resources/js/lunr.js?v=2.4.0.721203044909" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../resources/js/prism.js?v=2.4.0.721203044909" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../resources/js/lunr.js?v=2.4.0.721203810623" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../resources/js/prism.js?v=2.4.0.721203810623" defer></script>
 
     <script data-goatcounter="https://danet.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
@@ -163,113 +163,79 @@
         <span>Sessions</span>
     </h1>
 </doc-anchor-target>
-<doc-anchor-target id="session">
+<p><strong>HTTP sessions</strong> provide a way to store information about the user across multiple requests.</p>
+<doc-anchor-target id="usage">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#session">#</doc-anchor-trigger>
-        <span>Session</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#usage">#</doc-anchor-trigger>
+        <span>Usage</span>
     </h3>
 </doc-anchor-target>
-<p><strong>HTTP sessions</strong> provide a way to store information about the user across multiple requests, which is particularly useful for <a href="/techniques/mvc">MVC</a> applications.</p>
-<doc-anchor-target id="use-with-express-default">
-    <h4>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#use-with-express-default">#</doc-anchor-trigger>
-        <span>Use with Express (default)</span>
-    </h4>
-</doc-anchor-target>
-<p>First install the <a href="https://github.com/expressjs/session">required package</a> (and its types for TypeScript users):</p>
+<p>As Danet uses Oak under the hood, you can use <a href="https://deno.land/x/oak_sessions">oak_sessions</a> package.</p>
+<p>Then, apply the <code v-pre>oak_sessions</code> middleware as global middleware (for example, in your <code v-pre>bootstrap.ts</code> file).</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-bash"><code v-pre class="language-bash">$ npm i express-session
-$ npm i -D @types/express-session</code></pre>
-</doc-codeblock></div>
-<p>Once the installation is complete, apply the <code v-pre>express-session</code> middleware as global middleware (for example, in your <code v-pre>main.ts</code> file).</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">import * as session from 'express-session';
-// somewhere in your initialization file
-app.use(
-  session({
-    secret: 'my-secret',
-    resave: false,
-    saveUninitialized: false,
-  }),
+<pre class="language-typescript"><code v-pre class="language-typescript">import { Session } from 'https://deno.land/x/oak_sessions@v4.0.5/mod.ts';
+
+const app = new DanetApplication();
+app.addGlobalMiddlewares(
+  Session.initMiddleware() as MiddlewareFunction,
 );</code></pre>
 </doc-codeblock></div>
-<blockquote>
-<p>warning <strong>Notice</strong> The default server-side session storage is purposely not designed for a production environment. It will leak memory under most conditions, does not scale past a single process, and is meant for debugging and developing. Read more in the <a href="https://github.com/expressjs/session">official repository</a>.</p>
-</blockquote>
-<p>The <code v-pre>secret</code> is used to sign the session ID cookie. This can be either a string for a single secret, or an array of multiple secrets. If an array of secrets is provided, only the first element will be used to sign the session ID cookie, while all the elements will be considered when verifying the signature in requests. The secret itself should be not easily parsed by a human and would best be a random set of characters.</p>
-<p>Enabling the <code v-pre>resave</code> option forces the session to be saved back to the session store, even if the session was never modified during the request. The default value is <code v-pre>true</code>, but using the default has been deprecated, as the default will change in the future.</p>
-<p>Likewise, enabling the <code v-pre>saveUninitialized</code> option Forces a session that is &quot;uninitialized&quot; to be saved to the store. A session is uninitialized when it is new but not modified. Choosing <code v-pre>false</code> is useful for implementing login sessions, reducing server storage usage, or complying with laws that require permission before setting a cookie. Choosing <code v-pre>false</code> will also help with race conditions where a client makes multiple parallel requests without a session (<a href="https://github.com/expressjs/session#saveuninitialized">source</a>).</p>
-<p>You can pass several other options to the <code v-pre>session</code> middleware, read more about them in the <a href="https://github.com/expressjs/session#options">API documentation</a>.</p>
-<blockquote>
-<p>info <strong>Hint</strong> Please note that <code v-pre>secure: true</code> is a recommended option. However, it requires an https-enabled website, i.e., HTTPS is necessary for secure cookies. If secure is set, and you access your site over HTTP, the cookie will not be set. If you have your node.js behind a proxy and are using <code v-pre>secure: true</code>, you need to set <code v-pre>&quot;trust proxy&quot;</code> in express.</p>
-</blockquote>
-<p>With this in place, you can now set and read session values from within the route handlers, as follows:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">@Get()
-findAll(@Req() request: Request) {
-  request.session.visits = request.session.visits ? request.session.visits + 1 : 1;
-}</code></pre>
-</doc-codeblock></div>
-<blockquote>
-<p>info <strong>Hint</strong> The <code v-pre>@Req()</code> decorator is imported from the <code v-pre>@nestjs/common</code>, while <code v-pre>Request</code> from the <code v-pre>express</code> package.</p>
-</blockquote>
-<p>Alternatively, you can use the <code v-pre>@Session()</code> decorator to extract a session object from the request, as follows:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">@Get()
-findAll(@Session() session: Record&lt;string, any&gt;) {
-  session.visits = session.visits ? session.visits + 1 : 1;
-}</code></pre>
-</doc-codeblock></div>
-<blockquote>
-<p>info <strong>Hint</strong> The <code v-pre>@Session()</code> decorator is imported from the <code v-pre>@nestjs/common</code> package.</p>
-</blockquote>
-<doc-anchor-target id="use-with-fastify">
-    <h4>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#use-with-fastify">#</doc-anchor-trigger>
-        <span>Use with Fastify</span>
-    </h4>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-yellow-500"></div>
+    <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-yellow-500" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M22.48 15.59L14.01 1.45A2.968 2.968 0 0012.16.09c-.78-.19-1.58-.07-2.27.35-.41.25-.76.6-1.01 1.01v.01L.4 15.6c-.83 1.43-.33 3.27 1.1 4.1.45.26.95.4 1.48.4h16.95c.8-.01 1.55-.33 2.11-.9.56-.57.87-1.33.86-2.13a3.04 3.04 0 00-.42-1.48zm-1.87 2.21c-.19.19-.44.3-.69.3H2.99c-.17 0-.34-.05-.49-.13a.992.992 0 01-.37-1.35L10.6 2.48c.08-.14.2-.25.34-.33a.992.992 0 011.37.33l8.46 14.13c.09.15.13.32.13.49 0 .26-.1.51-.29.7z"></path>
+                    <path d="M11.45 12.1c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1s-1 .45-1 1v4c0 .56.45 1 1 1zM11.46 14.1c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+            <h5><strong>Notice</strong></h5>
+<p>The default server-side session storage is purposely not designed for a production environment. It is meant for debugging and developing. Read more in the <a href="https://deno.land/x/oak_sessions">official repository</a>.</p>
+        </div>
+    </div>
+</div>
+<doc-anchor-target id="with-cookies">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#with-cookies">#</doc-anchor-trigger>
+        <span>With cookies</span>
+    </h3>
 </doc-anchor-target>
-<p>First install the required package:</p>
+<p>Oak_session use <code v-pre>Stores</code> to store session data in Cookies, Sqlite, Mongodb or Postgres.
+The simpliest way to handle sessions is with cookies using <code v-pre>CookieStore</code>:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-bash"><code v-pre class="language-bash">$ npm i @fastify/secure-session</code></pre>
-</doc-codeblock></div>
-<p>Once the installation is complete, register the <code v-pre>fastify-secure-session</code> plugin:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">import secureSession from '@fastify/secure-session';
+<pre class="language-typescript"><code v-pre class="language-typescript">import {
+  CookieStore,
+  Session,
+} from 'https://deno.land/x/oak_sessions@v4.0.5/mod.ts';
 
-// somewhere in your initialization file
-const app = await NestFactory.create&lt;NestFastifyApplication&gt;(
-  AppModule,
-  new FastifyAdapter(),
-);
-await app.register(secureSession, {
-  secret: 'averylogphrasebiggerthanthirtytwochars',
-  salt: 'mq9hDxBVDbspDR6n',
-});</code></pre>
+const app = new DanetApplication();
+app.addGlobalMiddlewares(
+  Session.initMiddleware(
+    new CookieStore(Deno.env.get('COOKIE_SECRET_KEY') as string),
+  ) as MiddlewareFunction,
+);</code></pre>
 </doc-codeblock></div>
-<blockquote>
-<p>info <strong>Hint</strong> You can also pregenerate a key (<a href="https://github.com/fastify/fastify-secure-session">see instructions</a>) or use <a href="https://github.com/fastify/fastify-secure-session#using-keys-with-key-rotation">keys rotation</a>.</p>
-</blockquote>
-<p>Read more about the available options in the <a href="https://github.com/fastify/fastify-secure-session">official repository</a>.</p>
-<p>With this in place, you can now set and read session values from within the route handlers, as follows:</p>
+<doc-anchor-target id="session-decorator">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#session-decorator">#</doc-anchor-trigger>
+        <span>Session decorator</span>
+    </h3>
+</doc-anchor-target>
+<p>You can access the session in your routes using <code v-pre>@Session</code> decorator.
+<code v-pre>oak_session</code>&#x27;s <code v-pre>Session</code> is basically a map, so we use the <code v-pre>Map</code> type.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">@Get()
-findAll(@Req() request: FastifyRequest) {
-  const visits = request.session.get('visits');
-  request.session.set('visits', visits ? visits + 1 : 1);
-}</code></pre>
-</doc-codeblock></div>
-<p>Alternatively, you can use the <code v-pre>@Session()</code> decorator to extract a session object from the request, as follows:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">@Get()
-findAll(@Session() session: secureSession.Session) {
+<pre class="language-typescript"><code v-pre class="language-typescript">import { Session,
+} from 'https://deno.land/x/Danet/mod.ts';
+
+@Get()
+findAll(@Session() session: Map&lt;unknown, unknown&gt;) {
   const visits = session.get('visits');
   session.set('visits', visits ? visits + 1 : 1);
 }</code></pre>
 </doc-codeblock></div>
-<blockquote>
-<p>info <strong>Hint</strong> The <code v-pre>@Session()</code> decorator is imported from the <code v-pre>@nestjs/common</code>, while <code v-pre>secureSession.Session</code> from the <code v-pre>@fastify/secure-session</code> package (import statement: <code v-pre>import * as secureSession from '@fastify/secure-session'</code>).</p>
-</blockquote>
 
                                 
                                 <!-- Required only on API pages -->
