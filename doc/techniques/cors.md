@@ -15,7 +15,7 @@ Then, apply its middleware as global middleware (for example, in your `bootstrap
 import { CORS } from "https://deno.land/x/oak_cors/mod.ts";
 
 const app = new DanetApplication();
-app.addGlobalMiddlewares(CORS() as MiddlewareFunction);
+app.addGlobalMiddlewares(CORS());
 ```
 !!!hint **Hint**
 Feel free to use any other cors middleware you like

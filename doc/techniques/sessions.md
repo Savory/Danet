@@ -16,7 +16,7 @@ import { Session } from 'https://deno.land/x/oak_sessions@v4.0.5/mod.ts';
 
 const app = new DanetApplication();
 app.addGlobalMiddlewares(
-  Session.initMiddleware() as MiddlewareFunction,
+  Session.initMiddleware(),
 );
 ```
 !!!warning **Notice**
