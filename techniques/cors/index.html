@@ -10,24 +10,24 @@
     <meta name="generator" content="Retype 2.4.0">
 
     <!-- Primary Meta Tags -->
-    <title>Middlewares</title>
-    <meta name="title" content="Middlewares">
-    <meta name="description" content="Middleware is a function which is called before the route handler. Middleware functions have access to" />
+    <title>CORS</title>
+    <meta name="title" content="CORS">
+    <meta name="description" content="Cross-origin resource sharing (CORS) is a mechanism that allows resources to be requested from another domain." />
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://savory.github.io/Danet/overview/middlewares/" />
+    <link rel="canonical" href="https://savory.github.io/Danet/techniques/cors/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://savory.github.io/Danet/overview/middlewares/">
-    <meta property="og:title" content="Middlewares">
-    <meta property="og:description" content="Middleware is a function which is called before the route handler. Middleware functions have access to">
+    <meta property="og:url" content="https://savory.github.io/Danet/techniques/cors/">
+    <meta property="og:title" content="CORS">
+    <meta property="og:description" content="Cross-origin resource sharing (CORS) is a mechanism that allows resources to be requested from another domain.">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://savory.github.io/Danet/overview/middlewares/">
-    <meta property="twitter:title" content="Middlewares">
-    <meta property="twitter:description" content="Middleware is a function which is called before the route handler. Middleware functions have access to">
+    <meta property="twitter:url" content="https://savory.github.io/Danet/techniques/cors/">
+    <meta property="twitter:title" content="CORS">
+    <meta property="twitter:description" content="Cross-origin resource sharing (CORS) is a mechanism that allows resources to be requested from another domain.">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
@@ -157,102 +157,32 @@
                                 <div id="docs-sidebar-right-toggle"></div>
                 
                                 <!-- Page content  -->
-<doc-anchor-target id="middlewares" class="break-words">
+<doc-anchor-target id="cors" class="break-words">
     <h1>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#middlewares">#</doc-anchor-trigger>
-        <span>Middlewares</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#cors">#</doc-anchor-trigger>
+        <span>CORS</span>
     </h1>
 </doc-anchor-target>
-<p>Middleware is a function which is called <strong>before</strong> the route handler. Middleware functions have access to <a href="https://deno.land/x/oak@v11.1.0/context.ts?s=Context">oak&#x27;s context</a> object.</p>
-<figure><img src="https://docs.nestjs.com/assets/Middlewares_1.png" /></figure>
-<blockquote class="external">
-  Middleware functions can perform the following tasks:
-  <ul>
-    <li>execute any code.</li>
-    <li>make changes to the context object.</li>
-  </ul>
-</blockquote>
-<p>You implement custom Danet middleware in either a function, or in a class with an <code v-pre>@Injectable()</code> decorator. The class should implement the <code v-pre>DanetMiddleware</code> interface, while the function does not have any special requirements. Let&#x27;s start by implementing a simple middleware feature using the class method.</p>
+<p><strong>Cross-origin resource sharing (CORS)</strong> is a mechanism that allows resources to be requested from another domain.</p>
+<doc-anchor-target id="usage">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#usage">#</doc-anchor-trigger>
+        <span>Usage</span>
+    </h3>
+</doc-anchor-target>
+<p>As Danet uses Oak under the hood, you can use <a href="https://deno.land/x/oak_cors">oak_cors</a> package.</p>
+<p>Then, apply its middleware as global middleware (for example, in your <code v-pre>bootstrap.ts</code> file).</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">logger.middleware.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">import { Injectable, DanetMiddle, HttpContext, NextFunction } from 'https://deno.land/x/danet/mod.ts';
+<pre class="language-typescript"><code v-pre class="language-typescript">import { CORS } from &quot;https://deno.land/x/oak_cors/mod.ts&quot;;
 
-@Injectable()
-export class LoggerMiddleware implements DanetMiddleware {
-  async action(ctx: HttpContext, next: NextFunction) {
-    console.log('Request...');
-    await next();
-  }
-}</code></pre>
-</doc-codeblock></div>
-<doc-anchor-target id="dependency-injection">
-    <h4>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#dependency-injection">#</doc-anchor-trigger>
-        <span>Dependency injection</span>
-    </h4>
-</doc-anchor-target>
-<p>Danet middleware fully supports Dependency Injection. Just as with injectables and controllers, they are able to <strong>inject dependencies</strong> that are available within the same module. As usual, this is done through the <code v-pre>constructor</code>.</p>
-<doc-anchor-target id="applying-middleware">
-    <h4>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#applying-middleware">#</doc-anchor-trigger>
-        <span>Applying middleware</span>
-    </h4>
-</doc-anchor-target>
-<p>You can apply middlewares either globally, to controllers and to methods.</p>
-<p>For global middlewares simply use <code v-pre>addGlobalMiddlewares</code> DanetApplication&#x27;s method as following:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">bootstrap.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">...
-  const application = new DanetApplication();
-  await application.init(AppModule);
-  application.addGlobalMiddlewares(LoggerMiddleware); //as many middleware as you want;
-...</code></pre>
-</doc-codeblock></div>
-<p>For controllers and methods, simply use <code v-pre>@Middleware</code> decorator ! Like <code v-pre>addGlobalMiddlewares</code>, it can take as many middleware are you need for arguments.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">todo.controllers.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">@Middleware(LoggerMiddleware)
-@Controller('todo')
-class TodoController {
-	@Get('/')
-	getWithMiddleware() {
-    return 'OK'
-    }
-};</code></pre>
-</doc-codeblock></div>
-<doc-anchor-target id="functional-middleware">
-    <h4>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#functional-middleware">#</doc-anchor-trigger>
-        <span>Functional middleware</span>
-    </h4>
-</doc-anchor-target>
-<p>The <code v-pre>LoggerMiddleware</code> class we&#x27;ve been using is quite simple. It has no members, no additional methods, and no dependencies. Why can&#x27;t we just define it in a simple function instead of a class? In fact, we can. This type of middleware is called <strong>functional middleware</strong>. Let&#x27;s transform the logger middleware from class-based into functional middleware to illustrate the difference:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">logger.middleware.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">import { Injectable, DanetMiddle, HttpContext, NextFunction } from 'https://deno.land/x/danet/mod.ts';
-
-export async function logger(ctx: HttpContext, next: NextFunction) {
-  console.log(`Request...`);
-  await next();
-};</code></pre>
-</doc-codeblock></div>
-<p>And use it within the <code v-pre>TodoController</code>:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">todo.controller.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">@Middleware(logger)
-@Controller('todo')
-class TodoController {
-  @Get('/')
-  getWithMiddleware() {
-    return 'OK'
-  }
-};</code></pre>
+const app = new DanetApplication();
+app.addGlobalMiddlewares(CORS() as MiddlewareFunction);</code></pre>
 </doc-codeblock></div>
 <div class="flex mb-6">
-    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
+    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-500 dark:bg-blue-400"></div>
     <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
         <div class="flex items-center ml-4 h-7">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-300" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-500 dark:text-blue-400" width="22" height="22" viewBox="0 0 24 24" role="presentation">
                 <g fill="currentColor"><g>
                     <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
                     <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
@@ -261,33 +191,11 @@ class TodoController {
             </svg>
         </div>
         <div class="pr-5 ml-3 w-full">
-            <h5><strong>Hint</strong></h5>
-<p>Consider using the simpler <strong>functional middleware</strong> alternative any time your middleware doesn&#x27;t need any dependencies.</p>
+            <h5>hint <strong>Hint</strong></h5>
+<p>Feel free to use any other cors middleware you like</p>
         </div>
     </div>
 </div>
-<doc-anchor-target id="multiple-middleware">
-    <h4>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#multiple-middleware">#</doc-anchor-trigger>
-        <span>Multiple middleware</span>
-    </h4>
-</doc-anchor-target>
-<p>As mentioned above, in order to bind multiple middleware that are executed sequentially, simply provide them in left to right order to <code v-pre>@Middleware</code> or <code v-pre>addGlobalMiddleware</code>.</p>
-<doc-anchor-target id="global-middleware">
-    <h4>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#global-middleware">#</doc-anchor-trigger>
-        <span>Global middleware</span>
-    </h4>
-</doc-anchor-target>
-<p>If we want to bind middleware to every registered route at once, simply use <code v-pre>addGlobalMiddlewares</code> DanetApplication&#x27;s method as following:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">bootstrap.ts</div>
-<pre class="language-typescript"><code v-pre class="language-typescript">...
-  const application = new DanetApplication();
-  await application.init(AppModule);
-  application.addGlobalMiddlewares(YourFirstMiddleware, SecondMiddleware); //as many middleware as you want;
-...</code></pre>
-</doc-codeblock></div>
 
                                 
                                 <!-- Required only on API pages -->
@@ -297,20 +205,20 @@ class TodoController {
                             
                                 <nav class="flex mt-14">
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../overview/modules/">
+                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../fundamentals/lifecycle/">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                             <span>
                                                 <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
-                                                <span class="block mt-1">Modules</span>
+                                                <span class="block mt-1">Lifecycle</span>
                                             </span>
                                         </a>
                                     </div>
                             
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../overview/exception-filters/">
+                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../techniques/sessions/">
                                             <span>
                                                 <span class="block text-xs font-normal text-right text-gray-400 dark:text-dark-400">Next</span>
-                                                <span class="block mt-1">Exception filters</span>
+                                                <span class="block mt-1">Sessions</span>
                                             </span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                         </a>
@@ -354,6 +262,6 @@ class TodoController {
 
     <div id="docs-overlay-target"></div>
 
-    <script>window.__DOCS__ = { "title": "Middlewares", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
+    <script>window.__DOCS__ = { "title": "CORS", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
 </body>
 </html>

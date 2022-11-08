@@ -4,39 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-root" content="/Danet">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.721205891590">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.721229266373">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
 
     <!-- Primary Meta Tags -->
-    <title>Sessions</title>
-    <meta name="title" content="Sessions">
-    <meta name="description" content="HTTP sessions provide a way to store information about the user across multiple requests." />
+    <title>Compression</title>
+    <meta name="title" content="Compression">
+    <meta name="description" content="Compression can greatly decrease the size of the response body, thereby increasing the speed of a web app." />
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://savory.github.io/Danet/sessions/" />
+    <link rel="canonical" href="https://savory.github.io/Danet/techniques/compression/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://savory.github.io/Danet/sessions/">
-    <meta property="og:title" content="Sessions">
-    <meta property="og:description" content="HTTP sessions provide a way to store information about the user across multiple requests.">
+    <meta property="og:url" content="https://savory.github.io/Danet/techniques/compression/">
+    <meta property="og:title" content="Compression">
+    <meta property="og:description" content="Compression can greatly decrease the size of the response body, thereby increasing the speed of a web app.">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://savory.github.io/Danet/sessions/">
-    <meta property="twitter:title" content="Sessions">
-    <meta property="twitter:description" content="HTTP sessions provide a way to store information about the user across multiple requests.">
+    <meta property="twitter:url" content="https://savory.github.io/Danet/techniques/compression/">
+    <meta property="twitter:title" content="Compression">
+    <meta property="twitter:description" content="Compression can greatly decrease the size of the response body, thereby increasing the speed of a web app.">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../resources/css/retype.css?v=2.4.0.721205891590" rel="stylesheet" />
+    <link href="../../resources/css/retype.css?v=2.4.0.721229266373" rel="stylesheet" />
 
-    <script type="text/javascript" src="../resources/js/config.js?v=2.4.0.721205891590" data-turbo-eval="false" defer></script>
-    <script type="text/javascript" src="../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../resources/js/lunr.js?v=2.4.0.721205891590" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../resources/js/prism.js?v=2.4.0.721205891590" defer></script>
+    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.721229266373" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.721229266373" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.721229266373" defer></script>
 
     <script data-goatcounter="https://danet.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
@@ -54,7 +54,7 @@
                 <!-- Logo -->
                 <div class="flex items-center justify-between h-full py-2 md:w-75">
                     <div class="flex items-center px-2 md:px-6">
-                        <a id="docs-site-logo" href="../" class="flex items-center leading-snug text-2xl">
+                        <a id="docs-site-logo" href="../../" class="flex items-center leading-snug text-2xl">
                             <span class="dark:text-white font-semibold line-clamp-1 md:line-clamp-2">Danet</span>
                         </a><span class="hidden px-2 py-1 ml-4 text-sm font-semibold leading-none text-root-logo-label-text bg-root-logo-label-bg rounded-sm md:inline-block">Docs</span>
                     </div>
@@ -157,85 +157,48 @@
                                 <div id="docs-sidebar-right-toggle"></div>
                 
                                 <!-- Page content  -->
-<doc-anchor-target id="sessions" class="break-words">
+<doc-anchor-target id="compression" class="break-words">
     <h1>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#sessions">#</doc-anchor-trigger>
-        <span>Sessions</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#compression">#</doc-anchor-trigger>
+        <span>Compression</span>
     </h1>
 </doc-anchor-target>
-<p><strong>HTTP sessions</strong> provide a way to store information about the user across multiple requests.</p>
+<p>Compression can greatly decrease the size of the response body, thereby increasing the speed of a web app.</p>
+<p>For high-traffic websites in production, it is strongly recommended to offload compression from the application server - typically in a reverse proxy (e.g., Nginx). In that case, you should not use compression middleware.</p>
 <doc-anchor-target id="usage">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#usage">#</doc-anchor-trigger>
         <span>Usage</span>
     </h3>
 </doc-anchor-target>
-<p>As Danet uses Oak under the hood, you can use <a href="https://deno.land/x/oak_sessions">oak_sessions</a> package.</p>
-<p>Then, apply the <code v-pre>oak_sessions</code> middleware as global middleware (for example, in your <code v-pre>bootstrap.ts</code> file).</p>
+<p>As Danet uses Oak under the hood, you can use <a href="https://deno.land/x/oak_compress">oak_compress</a> package.</p>
+<p>Then, apply its middleware as global middleware (for example, in your <code v-pre>bootstrap.ts</code> file).</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">import { Session } from 'https://deno.land/x/oak_sessions@v4.0.5/mod.ts';
+<pre class="language-typescript"><code v-pre class="language-typescript">import { CORS } from &quot;https://deno.land/x/oak_cors/mod.ts&quot;;
 
 const app = new DanetApplication();
-app.addGlobalMiddlewares(
-  Session.initMiddleware() as MiddlewareFunction,
-);</code></pre>
+app.addGlobalMiddlewares(brotli() as MiddlewareFunction);
+// app.addGlobalMiddlewares(gzip() as MiddlewareFunction);
+// app.addGlobalMiddlewares(deflate() as MiddlewareFunction);</code></pre>
 </doc-codeblock></div>
 <div class="flex mb-6">
-    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-yellow-500"></div>
+    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-500 dark:bg-blue-400"></div>
     <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
         <div class="flex items-center ml-4 h-7">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-yellow-500" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-500 dark:text-blue-400" width="22" height="22" viewBox="0 0 24 24" role="presentation">
                 <g fill="currentColor"><g>
-                    <path d="M22.48 15.59L14.01 1.45A2.968 2.968 0 0012.16.09c-.78-.19-1.58-.07-2.27.35-.41.25-.76.6-1.01 1.01v.01L.4 15.6c-.83 1.43-.33 3.27 1.1 4.1.45.26.95.4 1.48.4h16.95c.8-.01 1.55-.33 2.11-.9.56-.57.87-1.33.86-2.13a3.04 3.04 0 00-.42-1.48zm-1.87 2.21c-.19.19-.44.3-.69.3H2.99c-.17 0-.34-.05-.49-.13a.992.992 0 01-.37-1.35L10.6 2.48c.08-.14.2-.25.34-.33a.992.992 0 011.37.33l8.46 14.13c.09.15.13.32.13.49 0 .26-.1.51-.29.7z"></path>
-                    <path d="M11.45 12.1c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1s-1 .45-1 1v4c0 .56.45 1 1 1zM11.46 14.1c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
                 </g></g>
             </svg>
         </div>
         <div class="pr-5 ml-3 w-full">
-            <h5><strong>Notice</strong></h5>
-<p>The default server-side session storage is purposely not designed for a production environment. It is meant for debugging and developing. Read more in the <a href="https://deno.land/x/oak_sessions">official repository</a>.</p>
+            <h5>hint <strong>Hint</strong></h5>
+<p>Feel free to use any other compression middleware you like</p>
         </div>
     </div>
 </div>
-<doc-anchor-target id="with-cookies">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#with-cookies">#</doc-anchor-trigger>
-        <span>With cookies</span>
-    </h3>
-</doc-anchor-target>
-<p>Oak_session use <code v-pre>Stores</code> to store session data in Cookies, Sqlite, Mongodb or Postgres.
-The simpliest way to handle sessions is with cookies using <code v-pre>CookieStore</code>:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">import {
-  CookieStore,
-  Session,
-} from 'https://deno.land/x/oak_sessions@v4.0.5/mod.ts';
-
-const app = new DanetApplication();
-app.addGlobalMiddlewares(
-  Session.initMiddleware(
-    new CookieStore(Deno.env.get('COOKIE_SECRET_KEY') as string),
-  ) as MiddlewareFunction,
-);</code></pre>
-</doc-codeblock></div>
-<doc-anchor-target id="session-decorator">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#session-decorator">#</doc-anchor-trigger>
-        <span>Session decorator</span>
-    </h3>
-</doc-anchor-target>
-<p>You can access the session in your routes using <code v-pre>@Session</code> decorator.
-<code v-pre>oak_session</code>&#x27;s <code v-pre>Session</code> is basically a map, so we use the <code v-pre>Map</code> type.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">import { Session,
-} from 'https://deno.land/x/Danet/mod.ts';
-
-@Get()
-findAll(@Session() session: Map&lt;unknown, unknown&gt;) {
-  const visits = session.get('visits');
-  session.set('visits', visits ? visits + 1 : 1);
-}</code></pre>
-</doc-codeblock></div>
 
                                 
                                 <!-- Required only on API pages -->
@@ -245,17 +208,17 @@ findAll(@Session() session: Map&lt;unknown, unknown&gt;) {
                             
                                 <nav class="flex mt-14">
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../fundamentals/lifecycle/">
+                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../techniques/sessions/">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                             <span>
                                                 <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
-                                                <span class="block mt-1">Lifecycle</span>
+                                                <span class="block mt-1">Sessions</span>
                                             </span>
                                         </a>
                                     </div>
                             
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../cli/">
+                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../cli/">
                                             <span>
                                                 <span class="block text-xs font-normal text-right text-gray-400 dark:text-dark-400">Next</span>
                                                 <span class="block mt-1">CLI</span>
@@ -302,6 +265,6 @@ findAll(@Session() session: Map&lt;unknown, unknown&gt;) {
 
     <div id="docs-overlay-target"></div>
 
-    <script>window.__DOCS__ = { "title": "Sessions", level: 1, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
+    <script>window.__DOCS__ = { "title": "Compression", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
 </body>
 </html>
