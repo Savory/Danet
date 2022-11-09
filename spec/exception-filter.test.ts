@@ -7,7 +7,6 @@ import { Controller, Get } from '../src/router/controller/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
 import { Injectable } from '../src/injector/injectable/decorator.ts';
 
-
 @Injectable()
 class SimpleService {
 	private a = 0;
@@ -25,7 +24,6 @@ class CustomException extends Error {
 
 @Injectable()
 class ErrorFilter implements ExceptionFilter {
-
 	constructor(private simpleService: SimpleService) {
 	}
 

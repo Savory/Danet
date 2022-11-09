@@ -9,7 +9,6 @@ import { Module } from '../src/module/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
 
-
 @Injectable()
 class SimpleService {
 	private a = 0;
