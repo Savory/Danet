@@ -31,7 +31,7 @@ export class DanetRouter {
 	constructor(
 		private injector: Injector,
 		private guardExecutor: GuardExecutor = new GuardExecutor(injector),
-		private filterExecutor: FilterExecutor = new FilterExecutor(),
+		private filterExecutor: FilterExecutor = new FilterExecutor(injector),
 		private viewRenderer: Renderer = new HandlebarRenderer(),
 		private middlewareExecutor: MiddlewareExecutor = new MiddlewareExecutor(
 			injector,

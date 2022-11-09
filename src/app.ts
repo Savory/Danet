@@ -22,7 +22,7 @@ export class DanetApplication {
 	public danetRouter = new DanetRouter(
 		this.injector,
 		new GuardExecutor(this.injector),
-		new FilterExecutor(),
+		new FilterExecutor(this.injector),
 		this.renderer,
 	);
 	private controller: AbortController = new AbortController();

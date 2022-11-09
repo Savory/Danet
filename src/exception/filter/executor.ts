@@ -3,12 +3,16 @@ import { ControllerConstructor } from '../../router/controller/constructor.ts';
 import { Callback, HttpContext } from '../../router/router.ts';
 import { Constructor } from '../../utils/constructor.ts';
 import {
-	filterCatchTypeMetadataKey,
-	filterExceptionMetadataKey,
+	filterCatchTypeMetadataKey, filterExceptionMetadataKey,
 } from './decorator.ts';
 import { ExceptionFilter } from './interface.ts';
+import { Injector } from '../../injector/injector.ts';
 
 export class FilterExecutor {
+
+	constructor(private injector: Injector) {
+	}
+
 	private getErrorTypeCaughtByExceptionFilter(
 		exceptionConstructor: Constructor,
 	) {
@@ -40,17 +44,22 @@ export class FilterExecutor {
 		return false;
 	}
 
-	private executeFilterFromMetadata(
+	private async executeFilterFromMetadata(
 		context: HttpContext,
 		error: unknown,
 		// deno-lint-ignore ban-types
 		constructor: Constructor | Function,
 	): Promise<boolean> {
-		const filter: ExceptionFilter = MetadataHelper.getMetadata<ExceptionFilter>(
+		const FilterConstructor: Constructor<ExceptionFilter> = MetadataHelper.getMetadata<Constructor<ExceptionFilter>>(
 			filterExceptionMetadataKey,
 			constructor,
 		);
-		return this.executeFilter(filter, context, error);
+		if (FilterConstructor) {
+			await this.injector.registerInjectables([ FilterConstructor ]);
+			const filter: ExceptionFilter = this.injector.get<ExceptionFilter>(FilterConstructor);
+			return this.executeFilter(filter, context, error);
+		}
+		return false;
 	}
 
 	async executeControllerAndMethodFilter(

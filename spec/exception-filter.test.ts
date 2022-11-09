@@ -5,6 +5,16 @@ import { ExceptionFilter } from '../src/exception/filter/interface.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
+import { Injectable } from '../src/injector/injectable/decorator.ts';
+
+
+@Injectable()
+class SimpleService {
+	private a = 0;
+	doSomething() {
+		this.a++;
+	}
+}
 
 class CustomException extends Error {
 	public customField = 'i am a custom field';
@@ -13,17 +23,28 @@ class CustomException extends Error {
 	}
 }
 
+@Injectable()
 class ErrorFilter implements ExceptionFilter {
+
+	constructor(private simpleService: SimpleService) {
+	}
+
 	catch(exception: any, context: HttpContext) {
+		this.simpleService.doSomething();
 		context.response.body = {
 			wePassedInFilterCatchingAllErrors: true,
 		};
 	}
 }
 
+@Injectable()
 @Catch(CustomException)
 class CustomErrorFilter implements ExceptionFilter {
+	constructor(private simpleService: SimpleService) {
+	}
+
 	catch(exception: any, context: HttpContext) {
+		this.simpleService.doSomething();
 		context.response.body = {
 			wePassedInFilterCatchingOnlySomeError: true,
 		};
@@ -54,6 +75,7 @@ class ControllerWithCustomFilter {
 }
 @Module({
 	controllers: [ControllerWithFilter, ControllerWithCustomFilter],
+	injectables: [SimpleService],
 })
 class ModuleWithFilter {}
 

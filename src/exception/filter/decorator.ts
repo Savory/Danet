@@ -11,17 +11,16 @@ export const UseFilter = (guard: Constructor) =>
 	// deno-lint-ignore no-explicit-any
 	descriptor?: TypedPropertyDescriptor<any>,
 ) => {
-	const guardInstance = new guard();
 	if (propertyKey && descriptor) {
 		MetadataHelper.setMetadata(
 			filterExceptionMetadataKey,
-			guardInstance,
+			guard,
 			descriptor.value,
 		);
 	} else {
 		MetadataHelper.setMetadata(
 			filterExceptionMetadataKey,
-			guardInstance,
+			guard,
 			target,
 		);
 	}
