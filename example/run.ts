@@ -64,7 +64,7 @@ class FirstController {
 
 	@Get('sum')
 	getSum(
-		@Query('num') numParams: string | string[],
+		@Query('num', {	value: 'array' }) numParams: string | string[],
 	) {
 		const numString = Array.isArray(numParams) ? numParams : [numParams];
 		return this.sharedService.sum(numString.map((n) => Number(n)));
