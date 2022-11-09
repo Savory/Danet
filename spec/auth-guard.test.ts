@@ -9,9 +9,22 @@ import { Module } from '../src/module/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
 
+
+@Injectable()
+class SimpleService {
+	private a = 0;
+	doSomething() {
+		this.a++;
+	}
+}
+
 @Injectable()
 class GlobalGuard implements AuthGuard {
+	constructor(private simpleService: SimpleService) {
+	}
+
 	canActivate(context: HttpContext) {
+		this.simpleService.doSomething();
 		context.response.body = {
 			passedInglobalGuard: true,
 		};
@@ -21,7 +34,11 @@ class GlobalGuard implements AuthGuard {
 
 @Injectable()
 class ControllerGuard implements AuthGuard {
+	constructor(private simpleService: SimpleService) {
+	}
+
 	canActivate(context: HttpContext) {
+		this.simpleService.doSomething();
 		context.response.body = {
 			passedIncontrollerGuard: true,
 		};
@@ -31,7 +48,11 @@ class ControllerGuard implements AuthGuard {
 
 @Injectable()
 class MethodGuard implements AuthGuard {
+	constructor(private simpleService: SimpleService) {
+	}
+
 	canActivate(context: HttpContext) {
+		this.simpleService.doSomething();
 		context.response.body = {
 			passedInmethodGuard: true,
 		};
@@ -56,6 +77,7 @@ class AuthGuardController {
 @Module({
 	imports: [],
 	controllers: [MethodGuardController],
+	injectables: [SimpleService],
 })
 class MethodGuardModule {}
 
@@ -93,7 +115,7 @@ class GlobalAuthController {
 @Module({
 	imports: [],
 	controllers: [GlobalAuthController],
-	injectables: [new TokenInjector(GlobalGuard, GLOBAL_GUARD)],
+	injectables: [new TokenInjector(GlobalGuard, GLOBAL_GUARD), SimpleService],
 })
 class GlobalAuthModule {}
 
@@ -127,6 +149,7 @@ class ThrowingGuardController {
 
 @Module({
 	imports: [],
+	injectables: [SimpleService],
 	controllers: [ThrowingGuardController],
 })
 class ThrowingAuthModule {}

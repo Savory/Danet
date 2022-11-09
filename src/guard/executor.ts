@@ -55,10 +55,14 @@ export class GuardExecutor {
 		// deno-lint-ignore ban-types
 		constructor: Constructor | Function,
 	) {
-		const guard: AuthGuard = MetadataHelper.getMetadata<AuthGuard>(
+		const GuardConstructor: Constructor<AuthGuard> = MetadataHelper.getMetadata<Constructor<AuthGuard>>(
 			guardMetadataKey,
 			constructor,
 		);
-		await this.executeGuard(guard, context);
+		if (GuardConstructor) {
+			await this.injector.registerInjectables([ GuardConstructor ]);
+			const guardInstance: AuthGuard = this.injector.get<AuthGuard>(GuardConstructor);
+			await this.executeGuard(guardInstance, context);
+		}
 	}
 }
