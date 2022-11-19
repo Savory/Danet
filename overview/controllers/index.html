@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-root" content="/Danet">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.721330231668">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.722146492873">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
@@ -31,12 +31,12 @@
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=2.4.0.721330231668" rel="stylesheet" />
+    <link href="../../resources/css/retype.css?v=2.4.0.722146492873" rel="stylesheet" />
 
-    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.721330231668" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.722146492873" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.721330231668" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.721330231668" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.722146492873" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.722146492873" defer></script>
 
     <script data-goatcounter="https://danet.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
@@ -245,16 +245,55 @@ request query string, parameters, HTTP headers, and body. In most cases, it&#x27
 not necessary to grab these properties manually. We can use dedicated decorators
 instead, such as <code v-pre>@Body()</code> or <code v-pre>@Query()</code>, which are available out of the box.
 Below is a list of the provided decorators and the plain platform-specific
-objects they represent.
-| Decorator | Type | Value |
-|-----------|------|-------|
-| <code v-pre>@Req()</code> | <a href="https://deno.land/x/oak@v10.5.1/request.ts">oak.Request</a> | <code v-pre>ctx.request</code> |
-| <code v-pre>@Res()</code> | <a href="https://deno.land/x/oak@v10.5.1/response.ts">oak.Response</a> | <code v-pre>ctx.response</code> |
-| <code v-pre>@Param(key: string)</code> | <code v-pre>string</code> | <code v-pre>context.params[key]</code> |
-| <code v-pre>@Header(key? : string)</code> | <code v-pre>string \| undefined</code> | <code v-pre>ctx.request.headers</code> / <code v-pre>ctx.request.headers.get(key)</code> |
-| <code v-pre>@Body(key?: string)</code> | <code v-pre>any</code> | <code v-pre>ctx.request.body</code> / <code v-pre>ctx.request.body[key]</code> |
-| <code v-pre>@Query(key: string, options?: { value?: 'first' \| 'last' \| 'array' })</code> | <code v-pre>string \| string[]</code> | Get the <code v-pre>first</code>, the <code v-pre>last</code> or <code v-pre>all</code> the values for the query parameter named <code v-pre>key</code> |
-| <code v-pre>@Query(options?: { value?: 'first' \| 'last' \| 'array' })</code> | <code v-pre>{ [key: string]: string \| string[] }</code> | Get the <code v-pre>first</code>, the <code v-pre>last</code> or <code v-pre>all</code> the values for all the query parameters |</p>
+objects they represent.</p>
+<div class="table-wrapper scrollbar overflow-hidden">
+<table class="comfortable">
+<thead>
+<tr>
+<th>Decorator</th>
+<th>Type</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code v-pre>@Req()</code></td>
+<td><a href="https://deno.land/x/oak@v10.5.1/request.ts">oak.Request</a></td>
+<td><code v-pre>ctx.request</code></td>
+</tr>
+<tr>
+<td><code v-pre>@Res()</code></td>
+<td><a href="https://deno.land/x/oak@v10.5.1/response.ts">oak.Response</a></td>
+<td><code v-pre>ctx.response</code></td>
+</tr>
+<tr>
+<td><code v-pre>@Param(key: string)</code></td>
+<td><code v-pre>string</code></td>
+<td><code v-pre>context.params[key]</code></td>
+</tr>
+<tr>
+<td><code v-pre>@Header(key? : string)</code></td>
+<td><code v-pre>string \| undefined</code></td>
+<td><code v-pre>ctx.request.headers</code> / <code v-pre>ctx.request.headers.get(key)</code></td>
+</tr>
+<tr>
+<td><code v-pre>@Body(key?: string)</code></td>
+<td><code v-pre>any</code></td>
+<td><code v-pre>ctx.request.body</code> / <code v-pre>ctx.request.body[key]</code></td>
+</tr>
+<tr>
+<td><code v-pre>@Query(key: string, options?: { value?: 'first' \| 'last' \| 'array' })</code></td>
+<td><code v-pre>string \| string[]</code></td>
+<td>Get the <code v-pre>first</code>, the <code v-pre>last</code> or <code v-pre>all</code> the values for the query parameter named <code v-pre>key</code></td>
+</tr>
+<tr>
+<td><code v-pre>@Query(options?: { value?: 'first' \| 'last' \| 'array' })</code></td>
+<td><code v-pre>{ [key: string]: string \| string[] }</code></td>
+<td>Get the <code v-pre>first</code>, the <code v-pre>last</code> or <code v-pre>all</code> the values for all the query parameters</td>
+</tr>
+</tbody>
+</table>
+</div>
 <doc-anchor-target id="resources">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#resources">#</doc-anchor-trigger>
