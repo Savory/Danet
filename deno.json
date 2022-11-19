@@ -16,7 +16,7 @@
 			"useTabs": true
 		},
 		"files": {
-			"exclude": ["node_modules/", "coverage/", "doc/"]
+			"exclude": ["./node_modules/", "./coverage/", "./doc/"]
 		}
 	},
 	"compilerOptions": {

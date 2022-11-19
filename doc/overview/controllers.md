@@ -85,6 +85,7 @@ not necessary to grab these properties manually. We can use dedicated decorators
 instead, such as `@Body()` or `@Query()`, which are available out of the box.
 Below is a list of the provided decorators and the plain platform-specific
 objects they represent.
+
 | Decorator | Type | Value |
 |-----------|------|-------|
 | `@Req()` | [oak.Request](https://deno.land/x/oak@v10.5.1/request.ts) | `ctx.request` |
