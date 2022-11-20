@@ -16,7 +16,10 @@ export type Resolver = (
 ) => unknown | Promise<unknown>;
 
 export const argumentResolverFunctionsMetadataKey = 'argumentResolverFunctions';
-export const createParamDecorator = (parameterResolver: Resolver, additionalDecoratorAction?: ParameterDecorator) =>
+export const createParamDecorator = (
+	parameterResolver: Resolver,
+	additionalDecoratorAction?: ParameterDecorator,
+) =>
 () =>
 (
 	target: Constructor,
@@ -32,7 +35,8 @@ export const createParamDecorator = (parameterResolver: Resolver, additionalDeco
 
 	argumentsResolverMap.set(
 		parameterIndex,
-		(context) => parameterResolver(context, { target, propertyKey, parameterIndex }),
+		(context) =>
+			parameterResolver(context, { target, propertyKey, parameterIndex }),
 	);
 
 	MetadataHelper.setMetadata(
@@ -42,8 +46,9 @@ export const createParamDecorator = (parameterResolver: Resolver, additionalDeco
 		propertyKey,
 	);
 
-	if (additionalDecoratorAction)
+	if (additionalDecoratorAction) {
 		additionalDecoratorAction(target, propertyKey, parameterIndex);
+	}
 };
 
 export const Req = createParamDecorator((context: HttpContext) => {
@@ -101,18 +106,21 @@ export const Body = (prop?: string) =>
 			}
 		}
 		return param;
-
-	},
-		(target, propertyKey, parameterIndex) => {
-			if (!prop) {
-				const paramsTypesDTO: Constructor[] = MetadataHelper.getMetadata(
-					'design:paramtypes',
-					target,
-					propertyKey,
-				);
-				MetadataHelper.setMetadata(BODY_TYPE_KEY, paramsTypesDTO[parameterIndex], target, propertyKey);
-			}
-		})();
+	}, (target, propertyKey, parameterIndex) => {
+		if (!prop) {
+			const paramsTypesDTO: Constructor[] = MetadataHelper.getMetadata(
+				'design:paramtypes',
+				target,
+				propertyKey,
+			);
+			MetadataHelper.setMetadata(
+				BODY_TYPE_KEY,
+				paramsTypesDTO[parameterIndex],
+				target,
+				propertyKey,
+			);
+		}
+	})();
 
 function formatQueryValue(
 	queryValue: string[] | undefined,

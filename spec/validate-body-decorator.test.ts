@@ -91,7 +91,6 @@ Deno.test('Return 200 if body follows DTO', async (t) => {
 	await app.close();
 });
 
-
 Deno.test('Return 200 when using partial body decorator', async (t) => {
 	const app = new DanetApplication();
 	await app.init(App);
@@ -114,18 +113,20 @@ Deno.test('Return 200 when prop is a class with validators and valid', async (t)
 	const port = (await app.listen(0)).port;
 	let res, json;
 
-	res = await fetchWithBody(`http://localhost:${port}/test/validate-only-prop`, {
-		person: {
-			name: 'James',
-			age: 23, // A string as number
-		}
-	});
+	res = await fetchWithBody(
+		`http://localhost:${port}/test/validate-only-prop`,
+		{
+			person: {
+				name: 'James',
+				age: 23, // A string as number
+			},
+		},
+	);
 	assertEquals(res.status, 200);
 	await res.body?.cancel();
 
 	await app.close();
 });
-
 
 Deno.test('Return 400 if body is NOT following DTO', async (t) => {
 	const app = new DanetApplication();
