@@ -16,7 +16,7 @@ export type Resolver = (
 ) => unknown | Promise<unknown>;
 
 export const argumentResolverFunctionsMetadataKey = 'argumentResolverFunctions';
-export const createParamDecorator = (resolver: Resolver) =>
+export const createParamDecorator = (parameterResolver: Resolver, additionalDecoratorAction?: ParameterDecorator) =>
 () =>
 (
 	target: Constructor,
@@ -32,7 +32,7 @@ export const createParamDecorator = (resolver: Resolver) =>
 
 	argumentsResolverMap.set(
 		parameterIndex,
-		(context) => resolver(context, { target, propertyKey, parameterIndex }),
+		(context) => parameterResolver(context, { target, propertyKey, parameterIndex }),
 	);
 
 	MetadataHelper.setMetadata(
@@ -41,6 +41,9 @@ export const createParamDecorator = (resolver: Resolver) =>
 		target.constructor,
 		propertyKey,
 	);
+
+	if (additionalDecoratorAction)
+		additionalDecoratorAction(target, propertyKey, parameterIndex);
 };
 
 export const Req = createParamDecorator((context: HttpContext) => {
@@ -58,6 +61,8 @@ export const Header = (prop?: string) =>
 		}
 		return prop ? context.request.headers.get(prop) : context.request.headers;
 	})();
+
+export const BODY_TYPE_KEY = 'body-type';
 
 export const Body = (prop?: string) =>
 	createParamDecorator(async (context: HttpContext, opts?: OptionsResolver) => {
@@ -87,20 +92,27 @@ export const Body = (prop?: string) =>
 			opts.propertyKey,
 		);
 
+		const param = prop ? body[prop] : body;
 		// Make the validation of body
 		if (paramsTypesDTO.length > 0) {
-			const errors = validateObject(body, paramsTypesDTO[parameterIndex]);
+			const errors = validateObject(param, paramsTypesDTO[parameterIndex]);
 			if (errors.length > 0) {
 				throw new NotValidBodyException(errors);
 			}
 		}
+		return param;
 
-		if (prop) {
-			return body[prop];
-		}
-
-		return body;
-	})();
+	},
+		(target, propertyKey, parameterIndex) => {
+			if (!prop) {
+				const paramsTypesDTO: Constructor[] = MetadataHelper.getMetadata(
+					'design:paramtypes',
+					target,
+					propertyKey,
+				);
+				MetadataHelper.setMetadata(BODY_TYPE_KEY, paramsTypesDTO[parameterIndex], target, propertyKey);
+			}
+		})();
 
 function formatQueryValue(
 	queryValue: string[] | undefined,
