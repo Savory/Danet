@@ -142,6 +142,8 @@ function formatQueryValue(
 	}
 }
 
+export const QUERY_TYPE_KEY = 'query-type';
+
 export interface QueryOption {
 	value?: 'first' | 'last' | 'array';
 }
@@ -181,7 +183,22 @@ export function Query(
 					]),
 			);
 		}
-	}))();
+	},
+		(target, propertyKey, parameterIndex) => {
+			if ((typeof pParamOrOptions !== 'string')) {
+				const paramsTypesDTO: Constructor[] = MetadataHelper.getMetadata(
+					'design:paramtypes',
+					target,
+					propertyKey,
+				);
+				MetadataHelper.setMetadata(
+					QUERY_TYPE_KEY,
+					paramsTypesDTO[parameterIndex],
+					target,
+					propertyKey,
+				);
+			}
+		}))();
 }
 
 export const Param = (paramName: string) =>
