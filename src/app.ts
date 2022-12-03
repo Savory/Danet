@@ -13,6 +13,7 @@ import { DanetRouter } from './router/router.ts';
 import { Constructor } from './utils/constructor.ts';
 import { PossibleMiddlewareType } from './router/middleware/decorator.ts';
 import { globalMiddlewareContainer } from './router/middleware/global-container.ts';
+import { ModuleConstructor } from './module/constructor.ts';
 
 export class DanetApplication {
 	private app = new Application();
@@ -27,6 +28,7 @@ export class DanetApplication {
 	);
 	private controller: AbortController = new AbortController();
 	private logger: Logger = new Logger('DanetApplication');
+	public entryModule!: ModuleConstructor;
 
 	get<T>(Type: Constructor<T> | string): T {
 		return this.injector.get(Type);
@@ -48,6 +50,7 @@ export class DanetApplication {
 	}
 
 	async init(Module: Constructor) {
+		this.entryModule = Module;
 		await this.bootstrap(Module);
 		await this.hookExecutor.executeHookForEveryInjectable(
 			hookName.APP_BOOTSTRAP,
