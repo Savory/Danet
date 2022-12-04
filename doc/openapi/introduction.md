@@ -5,10 +5,10 @@ order: 99
 
 The [OpenAPI](https://swagger.io/specification/) specification is a language-agnostic definition format used to describe RESTful APIs. Danet provides a dedicated [module](https://github.com/Savory/Danet-Swagger) which allows generating such a specification by leveraging decorators.
 
-### The SwaggerModule is currently in Alpha, maaaany features are missing. If something you need is not here yet, [please fill an issue/feature request](https://github.com/Savory/Danet-Swagger/issues)
+## The SwaggerModule is currently in Alpha, maaaany features are missing. If something you need is not here yet, [please fill an issue/feature request](https://github.com/Savory/Danet-Swagger/issues)
 
 
-#### Bootstrap
+### Bootstrap
 
 Simply open the `bootstrap.ts` file and initialize Swagger using the `SwaggerModule` class:
 
@@ -53,5 +53,6 @@ While the application is running, open your browser and navigate to `http://loca
 
 The `SwaggerModule` automatically reflects all of your endpoints.
 
-!!!hint **Hint** To generate and download a Swagger JSON file, navigate to `http://localhost:3000/api/json` (assuming that your Swagger documentation is available under `http://localhost:3000/api`).
+!!!Hint
+To generate and download a Swagger JSON file, navigate to `http://localhost:3000/api/json` (assuming that your Swagger documentation is available under `http://localhost:3000/api`).
 !!!
