@@ -3,6 +3,11 @@ order: 98
 label: Types and Parameters
 ---
 
+!!!danger
+The SwaggerModule is currently in Alpha, maaaany features are missing. If something you need is not here yet, [please fill an issue/feature request](https://github.com/Savory/Danet-Swagger/issues)
+!!!
+
+
 ### Body, Query and Params
 
 The `SwaggerModule` searches for all `@Body()` and `@Query()` decorators in route handlers to generate the API document. It also creates corresponding model definitions by taking advantage of reflection. Consider the following code:
