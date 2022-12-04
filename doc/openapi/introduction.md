@@ -5,7 +5,10 @@ order: 99
 
 The [OpenAPI](https://swagger.io/specification/) specification is a language-agnostic definition format used to describe RESTful APIs. Danet provides a dedicated [module](https://github.com/Savory/Danet-Swagger) which allows generating such a specification by leveraging decorators.
 
-## The SwaggerModule is currently in Alpha, maaaany features are missing. If something you need is not here yet, [please fill an issue/feature request](https://github.com/Savory/Danet-Swagger/issues)
+
+!!!danger
+The SwaggerModule is currently in Alpha, maaaany features are missing. If something you need is not here yet, [please fill an issue/feature request](https://github.com/Savory/Danet-Swagger/issues)
+!!!
 
 
 ### Bootstrap
