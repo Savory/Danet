@@ -10,24 +10,24 @@
     <meta name="generator" content="Retype 2.4.0">
 
     <!-- Primary Meta Tags -->
-    <title>First steps</title>
-    <meta name="title" content="First steps">
-    <meta name="description" content="In this set of articles, you'll learn the core fundamentals of Danet." />
+    <title>Introduction</title>
+    <meta name="title" content="Introduction">
+    <meta name="description" content="The OpenAPI specification is a language-agnostic definition format used to describe RESTful APIs. Danet provides a dedicated" />
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://savory.github.io/Danet/overview/first-steps/" />
+    <link rel="canonical" href="https://savory.github.io/Danet/openapi/introduction/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://savory.github.io/Danet/overview/first-steps/">
-    <meta property="og:title" content="First steps">
-    <meta property="og:description" content="In this set of articles, you'll learn the core fundamentals of Danet.">
+    <meta property="og:url" content="https://savory.github.io/Danet/openapi/introduction/">
+    <meta property="og:title" content="Introduction">
+    <meta property="og:description" content="The OpenAPI specification is a language-agnostic definition format used to describe RESTful APIs. Danet provides a dedicated">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://savory.github.io/Danet/overview/first-steps/">
-    <meta property="twitter:title" content="First steps">
-    <meta property="twitter:description" content="In this set of articles, you'll learn the core fundamentals of Danet.">
+    <meta property="twitter:url" content="https://savory.github.io/Danet/openapi/introduction/">
+    <meta property="twitter:title" content="Introduction">
+    <meta property="twitter:description" content="The OpenAPI specification is a language-agnostic definition format used to describe RESTful APIs. Danet provides a dedicated">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
@@ -157,88 +157,51 @@
                                 <div id="docs-sidebar-right-toggle"></div>
                 
                                 <!-- Page content  -->
-<doc-anchor-target id="first-steps" class="break-words">
+<doc-anchor-target id="introduction" class="break-words">
     <h1>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#first-steps">#</doc-anchor-trigger>
-        <span>First steps</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#introduction">#</doc-anchor-trigger>
+        <span>Introduction</span>
     </h1>
 </doc-anchor-target>
-<p>In this set of articles, you&#x27;ll learn the <strong>core fundamentals</strong> of Danet. To get familiar with the essential building blocks of Danet applications, we&#x27;ll build a basic CRUD application with features that cover a lot of ground at an introductory level.</p>
-<doc-anchor-target id="prerequisites">
+<p>The <a href="https://swagger.io/specification/">OpenAPI</a> specification is a language-agnostic definition format used to describe RESTful APIs. Danet provides a dedicated <a href="https://github.com/Savory/Danet-Swagger">module</a> which allows generating such a specification by leveraging decorators.</p>
+<doc-anchor-target id="the-swaggermodule-is-currently-in-alpha-maaaany-features-are-missing-if-something-you-need-is-not-here-yet-please-fill-an-issuefeature-request">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#prerequisites">#</doc-anchor-trigger>
-        <span>Prerequisites</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#the-swaggermodule-is-currently-in-alpha-maaaany-features-are-missing-if-something-you-need-is-not-here-yet-please-fill-an-issuefeature-request">#</doc-anchor-trigger>
+        <span>The SwaggerModule is currently in Alpha, maaaany features are missing. If something you need is not here yet, <a href="https://github.com/Savory/Danet-Swagger/issues">please fill an issue/feature request</a></span>
     </h3>
 </doc-anchor-target>
-<p>Please make sure that <a href="https://deno.land/">Deno</a> (version &gt;= Install
-v1.24.3) is installed on your operating system.</p>
-<doc-anchor-target id="setup">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#setup">#</doc-anchor-trigger>
-        <span>Setup</span>
-    </h3>
-</doc-anchor-target>
-<p>The easiest way to set up a Danet project is by using our Danet CLI</p>
-<p>
-<div class="mb-6 px-5 py-4 flex justify-between relative border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded transition-colors duration-150">
-    <div class="flex items-center text-blue-500 dark:text-blue-400">
-        <span class="inline-block mb-px">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" role="presentation" fill="currentColor"><path fill="none" d="M0 0h24v24H0z"/><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z"/></svg>
-        </span>
-        <span class="inline-block font-medium ml-2">CLI</span>
-    </div>
-    <div class="flex items-center text-xs text-gray-400 dark:text-dark-400">
-        <span>../../cli/</span>
-    </div>
-    <a href="../../cli/" class="absolute block inset-0"></a>
-</div>
-</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-bash"><code v-pre class="language-bash">$ deno install --allow-read --allow-write --allow-run --allow-env -n danet https://deno.land/x/danet_cli/main.ts
-$ danet new my-danet-project
-$ cd my-danet-project</code></pre>
-</doc-codeblock></div>
-<p>The app is a TODO CRUD API with either MongoDB, Postgres or In-Memory database depending on what you choose when executing <code v-pre>danet new</code> command !</p>
-<doc-anchor-target id="using-mongodb-or-postgres">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#using-mongodb-or-postgres">#</doc-anchor-trigger>
-        <span>Using MongoDB or Postgres</span>
-    </h3>
-</doc-anchor-target>
-<p>To run the app, you need a database server running one or the other. We assume you know how to do that.</p>
-<p>Then, you have to add your server&#x27;s information somewhere so Danet can access these information to connect to the server.</p>
-<p>You have 2 ways of doing so :</p>
-<doc-anchor-target id="environment-variables">
+<doc-anchor-target id="bootstrap">
     <h4>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#environment-variables">#</doc-anchor-trigger>
-        <span>Environment variables</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#bootstrap">#</doc-anchor-trigger>
+        <span>Bootstrap</span>
     </h4>
 </doc-anchor-target>
-<p>Add the following variables:</p>
-<p>DB_NAME=
-DB_HOST=
-DB_PORT
-DB_USERNAME
-DB_PASSWORD=</p>
-<doc-anchor-target id="dotenv">
-    <h4>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#dotenv">#</doc-anchor-trigger>
-        <span>Dotenv</span>
-    </h4>
-</doc-anchor-target>
-<p>Danet has built-in <code v-pre>dotenv</code> support (because Deno support it natively), so you can create a <code v-pre>.env</code> file at your project&#x27;s root the same variables :</p>
+<p>Simply open the <code v-pre>bootstrap.ts</code> file and initialize Swagger using the <code v-pre>SwaggerModule</code> class:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-bash"><code v-pre class="language-bash">DB_NAME=
-DB_HOST=
-DB_PORT
-DB_USERNAME
-DB_PASSWORD=</code></pre>
+<div class="codeblock-title">bootstrap.ts</div>
+<pre class="language-typescript"><code v-pre class="language-typescript">import { DanetApplication } from 'https://deno.land/x/danet/mod.ts';
+import { SwaggerModule, DocumentBuilder } from 'https://deno.land/x/danet_swagger/mod.ts';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await DanetApplication;
+  await app.init(AppModule);
+  const config = new DocumentBuilder()
+    .setTitle('Todo example')
+    .setDescription('The todo API description')
+    .setVersion('1.0')
+    .addTag('todo')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+  return app;
+}</code></pre>
 </doc-codeblock></div>
 <div class="flex mb-6">
-    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
+    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-500 dark:bg-blue-400"></div>
     <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
         <div class="flex items-center ml-4 h-7">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-300" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-500 dark:text-blue-400" width="22" height="22" viewBox="0 0 24 24" role="presentation">
                 <g fill="currentColor"><g>
                     <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
                     <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
@@ -248,20 +211,40 @@ DB_PASSWORD=</code></pre>
         </div>
         <div class="pr-5 ml-3 w-full">
             <h5>Hint</h5>
-<p>We provide an <code v-pre>.env.example</code> file in the project</p>
+<p><code v-pre>document</code> (returned by the <code v-pre>SwaggerModule#createDocument()</code> method) is a serializable object conforming to <a href="https://swagger.io/specification/#openapi-document">OpenAPI Document</a>. Instead of hosting it via HTTP, you could also save it as a JSON/YAML file, and consume it in different ways.</p>
         </div>
     </div>
 </div>
-<doc-anchor-target id="running-the-application">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#running-the-application">#</doc-anchor-trigger>
-        <span>Running the application</span>
-    </h3>
-</doc-anchor-target>
-<p>Once the installation process is complete, you can run the following command at your OS command prompt to start the application listening for inbound HTTP requests:</p>
+<p>The <code v-pre>DocumentBuilder</code> helps to structure a base document that conforms to the OpenAPI Specification. It provides several methods that allow setting such properties as title, description, version, etc. In order to create a full document (with all HTTP routes defined) we use the <code v-pre>createDocument()</code> method of the <code v-pre>SwaggerModule</code> class. This method takes two arguments, an application instance and a Swagger options object.</p>
+<p>Once we create a document, we can call the <code v-pre>setup()</code> method. It accepts:</p>
+<ol>
+<li>The path to mount the Swagger UI</li>
+<li>An application instance</li>
+<li>The document object instantiated above</li>
+</ol>
+<p>Now you can run the following command to start the HTTP server:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <pre class="language-bash"><code v-pre class="language-bash">$ deno task launch-server</code></pre>
 </doc-codeblock></div>
+<p>While the application is running, open your browser and navigate to <code v-pre>http://localhost:3000/api</code>. You should see the Swagger UI.</p>
+<p>The <code v-pre>SwaggerModule</code> automatically reflects all of your endpoints.</p>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-500 dark:bg-blue-400"></div>
+    <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-500 dark:text-blue-400" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+            <h5>hint <strong>Hint</strong> To generate and download a Swagger JSON file, navigate to <code v-pre>http://localhost:3000/api/json</code> (assuming that your Swagger documentation is available under <code v-pre>http://localhost:3000/api</code>).</h5>
+        </div>
+    </div>
+</div>
 
                                 
                                 <!-- Required only on API pages -->
@@ -271,20 +254,20 @@ DB_PASSWORD=</code></pre>
                             
                                 <nav class="flex mt-14">
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../">
+                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../techniques/compression/">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                             <span>
                                                 <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
-                                                <span class="block mt-1">Welcome</span>
+                                                <span class="block mt-1">Compression</span>
                                             </span>
                                         </a>
                                     </div>
                             
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../overview/controllers/">
+                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../openapi/types-and-parameters/">
                                             <span>
                                                 <span class="block text-xs font-normal text-right text-gray-400 dark:text-dark-400">Next</span>
-                                                <span class="block mt-1">Controllers</span>
+                                                <span class="block mt-1">Types and Parameters</span>
                                             </span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                         </a>
@@ -328,6 +311,6 @@ DB_PASSWORD=</code></pre>
 
     <div id="docs-overlay-target"></div>
 
-    <script>window.__DOCS__ = { "title": "First steps", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
+    <script>window.__DOCS__ = { "title": "Introduction", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
 </body>
 </html>
