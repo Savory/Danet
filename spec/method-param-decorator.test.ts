@@ -61,6 +61,11 @@ class SimpleController {
 		return queryParams;
 	}
 
+	@Get('/query/nothing')
+	nothingGet(@Query() something: Record<string, string>) {
+		return `Hello ${something.name}`;
+	}
+
 	@Get('/lambda')
 	headerParamWithAttribute(@Header('New-Header') acceptHeader: string) {
 		if (!acceptHeader) return 'No "New-Header" header';
@@ -224,6 +229,24 @@ Deno.test(`@Query decorator with no key and value 'first' to return the first va
 
 	await app.close();
 });
+
+
+Deno.test(`@Query decorator with no key and no option`, async () => {
+	await app.init(MyModule);
+	const listenEvent = await app.listen(0);
+
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/query/nothing?name=thomas`,
+		{
+			method: 'GET',
+		},
+	);
+	const text = await res.text();
+	assertEquals(text, 'Hello thomas');
+
+	await app.close();
+});
+
 
 Deno.test('@Header decorator with attribute', async () => {
 	await app.init(MyModule);

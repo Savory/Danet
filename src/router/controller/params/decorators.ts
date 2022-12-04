@@ -178,7 +178,7 @@ export function Query(
 						key,
 						formatQueryValue(
 							context.request.url.searchParams.getAll(key),
-							options?.value,
+							options?.value || 'first',
 						),
 					]),
 			);
