@@ -1,5 +1,5 @@
 import { Renderer } from './interface.ts';
-import { Handlebars } from 'https://raw.githubusercontent.com/Savory/handlebars/master/mod.ts';
+import { Handlebars } from 'https://deno.land/x/handlebars/mod.ts';
 
 const defaultOption = {
 	baseDir: 'views',
