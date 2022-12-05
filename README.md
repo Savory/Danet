@@ -1,6 +1,7 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/38007824/170542778-5ffe8414-38ea-438e-a02b-15a7c4800252.png" width="250" alt="Danet Logo" />
+  <img src="https://user-images.githubusercontent.com/38007824/205580360-fa032554-5e9e-4266-8ec9-c78ca9a233bc.svg" width="250" alt="Danet Logo" />
 </p>
+
 
 [![CI](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Sorikairox/Danet/actions/workflows/run-tests.yml)
 [![codecov](https://codecov.io/gh/Savory/Danet/branch/main/graph/badge.svg?token=R6WXVC669Z)](https://codecov.io/gh/Savory/Danet)
