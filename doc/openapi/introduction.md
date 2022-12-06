@@ -17,13 +17,13 @@ Simply open the `bootstrap.ts` file and initialize Swagger using the `SwaggerMod
 
 ```ts bootstrap.ts 
 import { DanetApplication } from 'https://deno.land/x/danet/mod.ts';
-import { SwaggerModule, DocumentBuilder } from 'https://deno.land/x/danet_swagger/mod.ts';
+import { SwaggerModule, SpecBuilder } from 'https://deno.land/x/danet_swagger/mod.ts';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await DanetApplication;
   await app.init(AppModule);
-  const config = new DocumentBuilder()
+  const config = new SpecBuilder()
     .setTitle('Todo example')
     .setDescription('The todo API description')
     .setVersion('1.0')
@@ -38,7 +38,7 @@ async function bootstrap() {
 `document` (returned by the `SwaggerModule#createDocument()` method) is a serializable object conforming to [OpenAPI Document](https://swagger.io/specification/#openapi-document). Instead of hosting it via HTTP, you could also save it as a JSON/YAML file, and consume it in different ways.
 !!!
 
-The `DocumentBuilder` helps to structure a base document that conforms to the OpenAPI Specification. It provides several methods that allow setting such properties as title, description, version, etc. In order to create a full document (with all HTTP routes defined) we use the `createDocument()` method of the `SwaggerModule` class. This method takes two arguments, an application instance and a Swagger options object.
+The `SpecBuilder` helps to structure a base document that conforms to the OpenAPI Specification. It provides several methods that allow setting such properties as title, description, version, etc. In order to create a full document (with all HTTP routes defined) we use the `createDocument()` method of the `SwaggerModule` class. This method takes two arguments, an application instance and a Swagger options object.
 
 Once we create a document, we can call the `setup()` method. It accepts:
 
