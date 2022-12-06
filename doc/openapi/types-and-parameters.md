@@ -55,3 +55,14 @@ async getById(@Param('id') id: string): Todo {
   return this.todoService.getById(id);
 }
 ```
+
+If your route returns an array, pass `true` as the second argument of `ReturnedType` : 
+
+
+```ts
+@ReturnedType(Todo, true)
+@Get()
+async getTodos(): Todo[] {
+  return this.todoService.getAll();
+}
+```
