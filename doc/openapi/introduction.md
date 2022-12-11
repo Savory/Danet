@@ -53,6 +53,8 @@ $ deno task launch-server
 
 While the application is running, open your browser and navigate to `http://localhost:3000/api`. You should see the Swagger UI.
 
+![image](https://user-images.githubusercontent.com/38007824/206904215-c99be01c-7db0-4868-8cc8-63fe9046e3af.png)
+
 The `SwaggerModule` automatically reflects all of your endpoints.
 
 !!!Hint
