@@ -21,17 +21,16 @@ import { SwaggerModule, SpecBuilder } from 'https://deno.land/x/danet_swagger/mo
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await DanetApplication;
-  await app.init(AppModule);
-  const config = new SpecBuilder()
-    .setTitle('Todo example')
-    .setDescription('The todo API description')
+  const application = new DanetApplication();
+  await application.init(AppModule);
+  const spec = new SpecBuilder()
+    .setTitle('Todo')
+    .setDescription('The todo API')
     .setVersion('1.0')
-    .addTag('todo')
     .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
-  return app;
+  const document = await SwaggerModule.createDocument(application, spec);
+  SwaggerModule.setup('api', application, document);
+  return application;
 }
 ```
 !!!Hint
