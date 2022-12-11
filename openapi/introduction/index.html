@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-root" content="/Danet">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.723648497159">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.724070957339">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
@@ -31,12 +31,12 @@
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=2.4.0.723648497159" rel="stylesheet" />
+    <link href="../../resources/css/retype.css?v=2.4.0.724070957339" rel="stylesheet" />
 
-    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.723648497159" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.724070957339" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.723648497159" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.723648497159" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.724070957339" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.724070957339" defer></script>
 
     <script data-goatcounter="https://danet.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
@@ -190,13 +190,13 @@
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">bootstrap.ts</div>
 <pre class="language-typescript"><code v-pre class="language-typescript">import { DanetApplication } from 'https://deno.land/x/danet/mod.ts';
-import { SwaggerModule, DocumentBuilder } from 'https://deno.land/x/danet_swagger/mod.ts';
+import { SwaggerModule, SpecBuilder } from 'https://deno.land/x/danet_swagger/mod.ts';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await DanetApplication;
   await app.init(AppModule);
-  const config = new DocumentBuilder()
+  const config = new SpecBuilder()
     .setTitle('Todo example')
     .setDescription('The todo API description')
     .setVersion('1.0')
@@ -225,7 +225,7 @@ async function bootstrap() {
         </div>
     </div>
 </div>
-<p>The <code v-pre>DocumentBuilder</code> helps to structure a base document that conforms to the OpenAPI Specification. It provides several methods that allow setting such properties as title, description, version, etc. In order to create a full document (with all HTTP routes defined) we use the <code v-pre>createDocument()</code> method of the <code v-pre>SwaggerModule</code> class. This method takes two arguments, an application instance and a Swagger options object.</p>
+<p>The <code v-pre>SpecBuilder</code> helps to structure a base document that conforms to the OpenAPI Specification. It provides several methods that allow setting such properties as title, description, version, etc. In order to create a full document (with all HTTP routes defined) we use the <code v-pre>createDocument()</code> method of the <code v-pre>SwaggerModule</code> class. This method takes two arguments, an application instance and a Swagger options object.</p>
 <p>Once we create a document, we can call the <code v-pre>setup()</code> method. It accepts:</p>
 <ol>
 <li>The path to mount the Swagger UI</li>
