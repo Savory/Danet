@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-root" content="/Danet">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.724077855275">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.724078396256">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
@@ -22,21 +22,23 @@
     <meta property="og:url" content="https://savory.github.io/Danet/openapi/types-and-parameters/">
     <meta property="og:title" content="Types and Parameters">
     <meta property="og:description" content="The SwaggerModule is currently in Alpha, maaaany features are missing. If something you need is not here yet,">
+    <meta property="og:image" content="https://user-images.githubusercontent.com/38007824/206904581-a7d39867-4a1b-40d2-be39-60e65897d99e.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://savory.github.io/Danet/openapi/types-and-parameters/">
     <meta property="twitter:title" content="Types and Parameters">
     <meta property="twitter:description" content="The SwaggerModule is currently in Alpha, maaaany features are missing. If something you need is not here yet,">
+    <meta property="twitter:image" content="https://user-images.githubusercontent.com/38007824/206904581-a7d39867-4a1b-40d2-be39-60e65897d99e.png">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=2.4.0.724077855275" rel="stylesheet" />
+    <link href="../../resources/css/retype.css?v=2.4.0.724078396256" rel="stylesheet" />
 
-    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.724077855275" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.724078396256" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.724077855275" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.724077855275" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.724078396256" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.724078396256" defer></script>
 
     <script data-goatcounter="https://danet.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
@@ -211,6 +213,12 @@ To explicitly set the query definition use the <code v-pre>@QueryType(Todo)</cod
         </div>
     </div>
 </div>
+<p>Based on the <code v-pre>Todo</code>, the following model definition Swagger UI will be created:
+<figure class="content-center">
+    <img src="https://user-images.githubusercontent.com/38007824/206904581-a7d39867-4a1b-40d2-be39-60e65897d99e.png" alt="image" />
+    <figcaption class="caption">image</figcaption>
+</figure>
+</p>
 <p>In order to make the class properties visible to the <code v-pre>SwaggerModule</code>, we have to annotate them with the <code v-pre>@ApiProperty()</code> decorator :</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <pre class="language-typescript"><code v-pre class="language-typescript">export class CreateTodoDto {
@@ -242,6 +250,12 @@ To explicitly set the query definition use the <code v-pre>@QueryType(Todo)</cod
         </div>
     </div>
 </div>
+<p>Let&#x27;s open the browser and verify the generated <code v-pre>Todo</code> model:</p>
+<p><figure class="content-center">
+    <img src="https://user-images.githubusercontent.com/38007824/206904638-1f44ef08-c8e1-4d95-b605-8acc80227397.png" alt="image" />
+    <figcaption class="caption">image</figcaption>
+</figure>
+</p>
 <doc-anchor-target id="return-type">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#return-type">#</doc-anchor-trigger>
