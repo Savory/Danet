@@ -24,6 +24,10 @@ To explicitly set the body definition use the `@BodyType(Todo)` decorator.
 To explicitly set the query definition use the `@QueryType(Todo)` decorator.
 !!!
 
+Based on the `Todo`, the following model definition Swagger UI will be created:
+![image](https://user-images.githubusercontent.com/38007824/206904581-a7d39867-4a1b-40d2-be39-60e65897d99e.png)
+
+
 In order to make the class properties visible to the `SwaggerModule`, we have to annotate them with the `@ApiProperty()` decorator :
 
 ```ts
@@ -42,6 +46,10 @@ export class CreateTodoDto {
 !!!Hint
 If one of these property is optional, you can use `@Optional()` decorator.
 !!!
+
+Let's open the browser and verify the generated `Todo` model:
+
+![image](https://user-images.githubusercontent.com/38007824/206904638-1f44ef08-c8e1-4d95-b605-8acc80227397.png)
 
 ### Return type
 
