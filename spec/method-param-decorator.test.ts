@@ -230,7 +230,6 @@ Deno.test(`@Query decorator with no key and value 'first' to return the first va
 	await app.close();
 });
 
-
 Deno.test(`@Query decorator with no key and no option`, async () => {
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
@@ -246,7 +245,6 @@ Deno.test(`@Query decorator with no key and no option`, async () => {
 
 	await app.close();
 });
-
 
 Deno.test('@Header decorator with attribute', async () => {
 	await app.init(MyModule);

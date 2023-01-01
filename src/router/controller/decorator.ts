@@ -9,7 +9,8 @@ export type HttpMethod =
 	| 'OPTIONS'
 	| 'HEAD';
 
-export const Controller = <T>(endpoint = '') => SetMetadata('endpoint', endpoint);
+export const Controller = <T>(endpoint = '') =>
+	SetMetadata('endpoint', endpoint);
 function createMappingDecorator(method?: HttpMethod) {
 	return (endpoint = ''): MethodDecorator => {
 		return (_target, _propertyKey, descriptor) => {

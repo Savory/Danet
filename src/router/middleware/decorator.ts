@@ -19,4 +19,5 @@ export type PossibleMiddlewareType =
 	| OakMiddleware;
 export const isMiddlewareClass = (s: PossibleMiddlewareType) => !!s.prototype;
 export const middlewareMetadataKey = 'middlewares';
-export const Middleware = (...middlewares: PossibleMiddlewareType[]) => SetMetadata(middlewareMetadataKey, middlewares);
+export const Middleware = (...middlewares: PossibleMiddlewareType[]) =>
+	SetMetadata(middlewareMetadataKey, middlewares);
