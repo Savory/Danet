@@ -1,5 +1,5 @@
 import { MetadataHelper } from '../../metadata/helper.ts';
-import { Constructor } from '../../utils/constructor.ts';
+import { SetMetadata } from '../../metadata/decorator.ts';
 export type HttpMethod =
 	| 'GET'
 	| 'POST'
@@ -9,11 +9,7 @@ export type HttpMethod =
 	| 'OPTIONS'
 	| 'HEAD';
 
-export function Controller<T>(endpoint = '') {
-	return (Type: Constructor<T>): void => {
-		MetadataHelper.setMetadata('endpoint', endpoint, Type);
-	};
-}
+export const Controller = <T>(endpoint = '') => SetMetadata('endpoint', endpoint);
 function createMappingDecorator(method?: HttpMethod) {
 	return (endpoint = ''): MethodDecorator => {
 		return (_target, _propertyKey, descriptor) => {
