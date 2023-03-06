@@ -15,7 +15,7 @@ As Danet uses Oak under the hood, you can use [oak_compress](https://deno.land/x
 Then, apply its middleware as global middleware (for example, in your `bootstrap.ts` file).
 
 ```typescript
-import { CORS } from "https://deno.land/x/oak_cors/mod.ts";
+import { CORS } from "https://deno.land/x/oak_compress/mod.ts";
 
 const app = new DanetApplication();
 app.addGlobalMiddlewares(brotli());
