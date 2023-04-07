@@ -5,6 +5,7 @@ import { Constructor } from '../../../mod.ts';
 import { NotValidBodyException } from '../../../exception/mod.ts';
 
 export type OptionsResolver = {
+	// deno-lint-ignore no-explicit-any
 	target: Constructor | any;
 	propertyKey: string | symbol | undefined;
 	parameterIndex: number;
@@ -22,6 +23,7 @@ export const createParamDecorator = (
 ) =>
 () =>
 (
+	// deno-lint-ignore no-explicit-any
 	target: Constructor | any,
 	propertyKey: string | symbol | undefined,
 	parameterIndex: number,
