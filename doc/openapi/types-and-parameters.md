@@ -79,7 +79,7 @@ async getTodos(): Todo[] {
 
 To identify an `enum`, we must manually set the `enum` property on the `@ApiProperty` with an array of values.
 
-```typescript
+```ts
 @ApiProperty({ enum: ['Admin', 'Moderator', 'User']})
 role: UserRole;
 ```
