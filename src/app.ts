@@ -14,7 +14,7 @@ import { Constructor } from './utils/constructor.ts';
 import { PossibleMiddlewareType } from './router/middleware/decorator.ts';
 import { globalMiddlewareContainer } from './router/middleware/global-container.ts';
 import { ModuleConstructor } from './module/constructor.ts';
-
+import { oakCors, CorsOptions } from "https://deno.land/x/cors/mod.ts";
 export class DanetApplication {
 	private app = new Application();
 	private injector = new Injector();
@@ -101,4 +101,8 @@ export class DanetApplication {
 	addGlobalMiddlewares(...middlewares: PossibleMiddlewareType[]) {
 		globalMiddlewareContainer.push(...middlewares);
 	}
+
+    enableCors(options?: CorsOptions) {
+        this.app.use(oakCors(options));
+    }
 }
