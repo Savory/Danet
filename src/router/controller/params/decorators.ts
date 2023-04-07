@@ -5,8 +5,8 @@ import { Constructor } from '../../../mod.ts';
 import { NotValidBodyException } from '../../../exception/mod.ts';
 
 export type OptionsResolver = {
-	target: Constructor;
-	propertyKey: string | symbol;
+	target: Constructor | any;
+	propertyKey: string | symbol | undefined;
 	parameterIndex: number;
 };
 
@@ -22,8 +22,8 @@ export const createParamDecorator = (
 ) =>
 () =>
 (
-	target: Constructor,
-	propertyKey: string | symbol,
+	target: Constructor | any,
+	propertyKey: string | symbol | undefined,
 	parameterIndex: number,
 ) => {
 	const argumentsResolverMap: Map<number, Resolver> =
@@ -106,7 +106,7 @@ export const Body = (prop?: string) =>
 			}
 		}
 		return param;
-	}, (target, propertyKey, parameterIndex) => {
+	}, (target, propertyKey: string | symbol | undefined, parameterIndex) => {
 		if (!prop) {
 			const paramsTypesDTO: Constructor[] = MetadataHelper.getMetadata(
 				'design:paramtypes',

@@ -6,10 +6,10 @@ export function getInjectionTokenMetadataKey(parameterIndex: number) {
 	return `${injectionTokenMetadataKey}:${parameterIndex}`;
 }
 
-export const Inject = (token: string) =>
+export const Inject = (token?: string) =>
 (
-	target: Record<string, unknown>,
-	propertyKey: string | symbol,
+	target: Record<string, unknown> | any,
+	propertyKey: string | symbol | undefined,
 	parameterIndex: number,
 ) => {
 	MetadataHelper.setMetadata(
