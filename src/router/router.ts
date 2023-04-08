@@ -24,6 +24,12 @@ export type Callback = (...args: any[]) => unknown;
 
 export type HttpContext = Context;
 
+export type ExecutionContext = HttpContext & {
+	// deno-lint-ignore ban-types
+	getHandler: () => Function,
+	getClass: () => Constructor
+};
+
 export class DanetRouter {
 	public router = new Router();
 	private logger: Logger = new Logger('Router');
@@ -99,13 +105,18 @@ export class DanetRouter {
 	) {
 		return async (context: HttpContext) => {
 			try {
+				context = {
+					...context,
+					getClass: () => Controller,
+					getHandler: () => ControllerMethod,
+				} as unknown as ExecutionContext;
 				await this.middlewareExecutor.executeAllRelevantMiddlewares(
-					context,
+					context as ExecutionContext,
 					Controller,
 					ControllerMethod,
 					async () => {
 						await this.guardExecutor.executeAllRelevantGuards(
-							context,
+							context as ExecutionContext,
 							Controller,
 							ControllerMethod,
 						);
@@ -175,8 +186,7 @@ export class DanetRouter {
 		Controller: ControllerConstructor,
 		// deno-lint-ignore no-explicit-any
 		ControllerMethod: (...args: any[]) => unknown,
-		// deno-lint-ignore no-explicit-any
-		context: Context<State, Record<string, any>>,
+		context: HttpContext,
 	) {
 		const paramResolverMap: Map<number, Resolver> = MetadataHelper.getMetadata(
 			argumentResolverFunctionsMetadataKey,

@@ -1,5 +1,5 @@
 import { Injector } from '../../injector/injector.ts';
-import { Callback, HttpContext } from '../router.ts';
+import { Callback, ExecutionContext, HttpContext } from '../router.ts';
 import { ControllerConstructor } from '../controller/constructor.ts';
 import { InjectableConstructor } from '../../injector/injectable/constructor.ts';
 import { MetadataHelper } from '../../metadata/helper.ts';
@@ -19,7 +19,7 @@ export class MiddlewareExecutor {
 	}
 
 	async executeAllRelevantMiddlewares(
-		context: HttpContext,
+		context: ExecutionContext,
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
 		next: NextFunction,

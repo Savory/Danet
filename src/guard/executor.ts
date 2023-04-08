@@ -2,7 +2,7 @@ import { ForbiddenException } from '../exception/http/mod.ts';
 import { Injector } from '../injector/injector.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { ControllerConstructor } from '../router/controller/constructor.ts';
-import { Callback, HttpContext } from '../router/router.ts';
+import { ExecutionContext, Callback, HttpContext } from '../router/router.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { GLOBAL_GUARD } from './constants.ts';
 import { guardMetadataKey } from './decorator.ts';
@@ -13,7 +13,7 @@ export class GuardExecutor {
 	}
 
 	async executeAllRelevantGuards(
-		context: HttpContext,
+		context: ExecutionContext,
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
 	) {
@@ -25,7 +25,7 @@ export class GuardExecutor {
 		);
 	}
 
-	async executeGlobalGuard(context: HttpContext) {
+	async executeGlobalGuard(context: ExecutionContext) {
 		if (this.injector.has(GLOBAL_GUARD)) {
 			const globalGuard: AuthGuard = await this.injector.get(GLOBAL_GUARD);
 			await this.executeGuard(globalGuard, context);
@@ -33,7 +33,7 @@ export class GuardExecutor {
 	}
 
 	async executeControllerAndMethodAuthGuards(
-		context: HttpContext,
+		context: ExecutionContext,
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
 	) {
@@ -41,7 +41,7 @@ export class GuardExecutor {
 		await this.executeGuardFromMetadata(context, ControllerMethod);
 	}
 
-	async executeGuard(guard: AuthGuard, context: HttpContext) {
+	async executeGuard(guard: AuthGuard, context: ExecutionContext) {
 		if (guard) {
 			const canActivate = await guard.canActivate(context);
 			if (!canActivate) {
@@ -51,7 +51,7 @@ export class GuardExecutor {
 	}
 
 	async executeGuardFromMetadata(
-		context: HttpContext,
+		context: ExecutionContext,
 		// deno-lint-ignore ban-types
 		constructor: Constructor | Function,
 	) {

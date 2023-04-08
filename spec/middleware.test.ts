@@ -3,7 +3,7 @@ import { DanetApplication } from '../src/app.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
 import { Injectable } from '../src/injector/injectable/decorator.ts';
-import { HttpContext } from '../src/router/router.ts';
+import { ExecutionContext, HttpContext } from '../src/router/router.ts';
 import {
 	DanetMiddleware,
 	Middleware,
@@ -27,7 +27,7 @@ class SimpleMiddleware implements DanetMiddleware {
 	constructor(private simpleInjectable: SimpleInjectable) {
 	}
 
-	async action(ctx: HttpContext, next: NextFunction) {
+	async action(ctx: ExecutionContext, next: NextFunction) {
 		ctx.response.body = `${ctx.response.body as string || ''}` +
 			this.simpleInjectable.doSomething();
 		await next();
@@ -39,7 +39,7 @@ class ThrowingMiddleware implements DanetMiddleware {
 	constructor(private simpleInjectable: SimpleInjectable) {
 	}
 
-	action(ctx: HttpContext) {
+	action(ctx: ExecutionContext) {
 		throw new BadRequestException();
 	}
 }
@@ -125,7 +125,7 @@ Deno.test('Middleware controller decorator', async () => {
 
 @Injectable()
 class FirstGlobalMiddleware implements DanetMiddleware {
-	async action(ctx: HttpContext, next: NextFunction) {
+	async action(ctx: ExecutionContext, next: NextFunction) {
 		ctx.response.body = `${
 			ctx.response.body as string || ''
 		}[first-middleware]`;
@@ -135,7 +135,7 @@ class FirstGlobalMiddleware implements DanetMiddleware {
 
 @Injectable()
 class SecondGlobalMiddleware implements DanetMiddleware {
-	async action(ctx: HttpContext, next: NextFunction) {
+	async action(ctx: ExecutionContext, next: NextFunction) {
 		ctx.response.body = `${
 			ctx.response.body as string || ''
 		}[second-middleware]`;

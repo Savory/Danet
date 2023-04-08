@@ -13,15 +13,16 @@ As mentioned, **authorization** is a great use case for Guards because specific 
 ```typescript simple-auth-guard.ts
 
 import { Injectable, AuthGuard } from 'https://deno.land/x/danet/mod.ts';
+import { ExecutionContext } from "./router.ts";
 
 @Injectable()
 export class SimpleAuthGuard implements AuthGuard {
-  canActivate(
-    context: HttpContext,
-  ): boolean | Promise<boolean> {
-    const request = context.request;
-    return validateRequest(request);
-  }
+    canActivate(
+        context: ExecutionContext,
+    ): boolean | Promise<boolean> {
+        const request = context.request;
+        return validateRequest(request);
+    }
 }
 ```
 
