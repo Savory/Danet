@@ -39,3 +39,53 @@ Add the security definition to your base document using `SpecBuilder`:
 ```ts
 const options = new SpecBuilder().addBasicAuth();
 ```
+
+
+
+#### Bearer authentication
+
+To enable bearer authentication, use `@ApiBearerAuth()`.
+
+```typescript
+@ApiBearerAuth()
+@Controller('todo')
+export class TodoController {}
+```
+
+Before you run your application, remember to add the security definition to your base document using `SpecBuilder`:
+
+```typescript
+const options = new SpecBuilder().addBearerAuth();
+```
+
+#### OAuth2 authentication
+
+To enable OAuth2, use `@ApiOAuth2()`.
+
+```typescript
+@ApiOAuth2(['todos:write'])
+@Controller('todo')
+export class TodoController {}
+```
+
+Before you run your application, remember to add the security definition to your base document using `SpecBuilder`:
+
+```typescript
+const options = new SpecBuilder().addOAuth2();
+```
+
+#### Cookie authentication
+
+To enable cookie authentication, use `@ApiCookieAuth()`.
+
+```typescript
+@ApiCookieAuth()
+@Controller('todo')
+export class TodoController {}
+```
+
+Before you run your application, remember to add the security definition to your base document using `SpecBuilder`:
+
+```typescript
+const options = new SpecBuilder().addCookieAuth('token');
+```
