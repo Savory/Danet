@@ -3,8 +3,6 @@ order: 97
 label: Security
 ---
 
-### Security
-
 To define which security mechanisms should be used for a specific operation, use the `@ApiSecurity()` decorator.
 
 ```ts
@@ -24,7 +22,7 @@ const options = new Spec().addSecurity('basic', {
 
 Some of the most popular authentication techniques are built-in (e.g., `basic` and `bearer`) and therefore you don't have to define security mechanisms manually as shown above.
 
-#### Basic authentication
+### Basic authentication
 
 To enable basic authentication, use `@ApiBasicAuth()`.
 
@@ -42,7 +40,7 @@ const options = new SpecBuilder().addBasicAuth();
 
 
 
-#### Bearer authentication
+### Bearer authentication
 
 To enable bearer authentication, use `@ApiBearerAuth()`.
 
@@ -58,7 +56,7 @@ Before you run your application, remember to add the security definition to your
 const options = new SpecBuilder().addBearerAuth();
 ```
 
-#### OAuth2 authentication
+### OAuth2 authentication
 
 To enable OAuth2, use `@ApiOAuth2()`.
 
@@ -74,7 +72,7 @@ Before you run your application, remember to add the security definition to your
 const options = new SpecBuilder().addOAuth2();
 ```
 
-#### Cookie authentication
+### Cookie authentication
 
 To enable cookie authentication, use `@ApiCookieAuth()`.
 
