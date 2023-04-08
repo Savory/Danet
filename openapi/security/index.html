@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-root" content="/Danet">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.734243520726">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.734248846224">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
@@ -31,12 +31,12 @@
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=2.4.0.734243520726" rel="stylesheet" />
+    <link href="../../resources/css/retype.css?v=2.4.0.734248846224" rel="stylesheet" />
 
-    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.734243520726" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.734248846224" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.734243520726" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.734243520726" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.734248846224" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.734248846224" defer></script>
 
     <script data-goatcounter="https://danet.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
@@ -198,6 +198,54 @@ export class TodoController {}</code></pre>
 <p>Add the security definition to your base document using <code v-pre>SpecBuilder</code>:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <pre class="language-typescript"><code v-pre class="language-typescript">const options = new SpecBuilder().addBasicAuth();</code></pre>
+</doc-codeblock></div>
+<doc-anchor-target id="bearer-authentication">
+    <h4>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#bearer-authentication">#</doc-anchor-trigger>
+        <span>Bearer authentication</span>
+    </h4>
+</doc-anchor-target>
+<p>To enable bearer authentication, use <code v-pre>@ApiBearerAuth()</code>.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-typescript"><code v-pre class="language-typescript">@ApiBearerAuth()
+@Controller('todo')
+export class TodoController {}</code></pre>
+</doc-codeblock></div>
+<p>Before you run your application, remember to add the security definition to your base document using <code v-pre>SpecBuilder</code>:</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-typescript"><code v-pre class="language-typescript">const options = new SpecBuilder().addBearerAuth();</code></pre>
+</doc-codeblock></div>
+<doc-anchor-target id="oauth2-authentication">
+    <h4>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#oauth2-authentication">#</doc-anchor-trigger>
+        <span>OAuth2 authentication</span>
+    </h4>
+</doc-anchor-target>
+<p>To enable OAuth2, use <code v-pre>@ApiOAuth2()</code>.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-typescript"><code v-pre class="language-typescript">@ApiOAuth2(['todos:write'])
+@Controller('todo')
+export class TodoController {}</code></pre>
+</doc-codeblock></div>
+<p>Before you run your application, remember to add the security definition to your base document using <code v-pre>SpecBuilder</code>:</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-typescript"><code v-pre class="language-typescript">const options = new SpecBuilder().addOAuth2();</code></pre>
+</doc-codeblock></div>
+<doc-anchor-target id="cookie-authentication">
+    <h4>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#cookie-authentication">#</doc-anchor-trigger>
+        <span>Cookie authentication</span>
+    </h4>
+</doc-anchor-target>
+<p>To enable cookie authentication, use <code v-pre>@ApiCookieAuth()</code>.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-typescript"><code v-pre class="language-typescript">@ApiCookieAuth()
+@Controller('todo')
+export class TodoController {}</code></pre>
+</doc-codeblock></div>
+<p>Before you run your application, remember to add the security definition to your base document using <code v-pre>SpecBuilder</code>:</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-typescript"><code v-pre class="language-typescript">const options = new SpecBuilder().addCookieAuth('token');</code></pre>
 </doc-codeblock></div>
 
                                 
