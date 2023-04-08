@@ -71,10 +71,7 @@ This project is Licensed under the <a href="./LICENSE">MIT License</a>. Please g
 
 ## Sponsor
 
-A huge thanks to
+Danet is, for now, maintained by myself [(Thomas)](https://github.com/Sorikairox) only.
+Feel free to donate on the project's ko-fi page :
 
-<p align="center">
-<a href="https://www.abbeal.com/">
-  <img src="https://cdn.discordapp.com/attachments/1004562983969628191/1004593615537963038/image.png" width="250" alt="Abbeal Logo" />
-</a>
-</p>
+<img width="620" alt="logo_white_stroke" src="https://user-images.githubusercontent.com/38007824/230703158-84a35961-a05a-40cd-ac76-4a3c26f0e521.png">
