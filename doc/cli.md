@@ -29,7 +29,8 @@ To create, run a new basic Danet project, go to the folder that should be the pa
 ```bash
 $ danet new my-danet-project
 $ cd my-danet-project
-$ deno task launch-server
+$ danet develop //run with file watching
+$ danet start  //run without file watching
 ```
 
 In your browser, open [http://localhost:3000](http://localhost:3000) to see the new application running.
