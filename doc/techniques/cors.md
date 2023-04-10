@@ -3,20 +3,15 @@ label: CORS
 order: 60
 ---
 
-**Cross-origin resource sharing (CORS)** is a mechanism that allows resources to be requested from another domain.
+Cross-origin resource sharing (CORS) is a mechanism that allows resources to be requested from another domain. Under the hood, Danet makes use of this [cors package for Deno](https://deno.land/x/cors). This package provides various options that you can customize based on your requirements.
 
-### Usage
+### Getting started
 
-As Danet uses Oak under the hood, you can use [oak_cors](https://deno.land/x/oak_cors) package.
-
-Then, apply its middleware as global middleware (for example, in your `bootstrap.ts` file).
+To enable CORS, call the `enableCors()` method on the Danet application object.
 
 ```typescript
-import { CORS } from "https://deno.land/x/oak_cors/mod.ts";
-
 const app = new DanetApplication();
-app.addGlobalMiddlewares(CORS());
+app.enableCors();
 ```
-!!!hint **Hint**
-Feel free to use any other cors middleware you like
-!!!
+
+The `enableCors()` method takes an optional configuration object argument. The available properties of this object are described in the official [CORS package](https://deno.land/x/cors@v1.2.2#configuration-options) documentation. 
