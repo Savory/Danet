@@ -8,8 +8,8 @@ import { Injectable } from '../src/injector/injectable/decorator.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
 import { ExecutionContext, HttpContext } from '../src/router/router.ts';
-import { SetMetadata } from "../src/metadata/decorator.ts";
-import { MetadataHelper } from "../src/metadata/helper.ts";
+import { SetMetadata } from '../src/metadata/decorator.ts';
+import { MetadataHelper } from '../src/metadata/helper.ts';
 
 @Injectable()
 class SimpleService {
@@ -40,11 +40,14 @@ class ControllerGuard implements AuthGuard {
 
 	canActivate(context: ExecutionContext) {
 		const controller = context.getClass();
-		const customMetadata = MetadataHelper.getMetadata('customMetadata', controller);
+		const customMetadata = MetadataHelper.getMetadata(
+			'customMetadata',
+			controller,
+		);
 		this.simpleService.doSomething();
 		context.response.body = {
 			passedIncontrollerGuard: true,
-			customMetadata
+			customMetadata,
 		};
 		return true;
 	}
@@ -110,7 +113,7 @@ for (const guardType of ['controller', 'method']) {
 		const json = await res.json();
 		assertEquals(json, {
 			[`passedIn${guardType}Guard`]: true,
-			customMetadata: 'customValue'
+			customMetadata: 'customValue',
 		});
 		await app.close();
 	});

@@ -175,11 +175,12 @@ export function Query(
 			);
 		} else {
 			return Object.fromEntries(
-				Array.from(context.request.url.searchParams.keys())
+				// deno-lint-ignore no-explicit-any
+				Array.from((context.request.url.searchParams as any).keys())
 					.map((key) => [
 						key,
 						formatQueryValue(
-							context.request.url.searchParams.getAll(key),
+							context.request.url.searchParams.getAll(key as string),
 							options?.value || 'first',
 						),
 					]),

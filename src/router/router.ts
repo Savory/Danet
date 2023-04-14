@@ -26,8 +26,8 @@ export type HttpContext = Context;
 
 export type ExecutionContext = HttpContext & {
 	// deno-lint-ignore ban-types
-	getHandler: () => Function,
-	getClass: () => Constructor
+	getHandler: () => Function;
+	getClass: () => Constructor;
 };
 
 export class DanetRouter {
@@ -132,8 +132,9 @@ export class DanetRouter {
 						) as any;
 						const response:
 							| Record<string, unknown>
-							| string =
-								(await controllerInstance[ControllerMethod.name](...params));
+							| string = await controllerInstance[ControllerMethod.name](
+								...params,
+							);
 						await this.sendResponse(response, ControllerMethod, context);
 					},
 				);

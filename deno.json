@@ -10,6 +10,7 @@
 			"exclude": ["no-unused-vars"]
 		}
 	},
+	"importMap": "../fresh/.vscode/import_map.json",
 	"fmt": {
 		"options": {
 			"singleQuote": true,
@@ -20,7 +21,9 @@
 		}
 	},
 	"compilerOptions": {
-		"emitDecoratorMetadata": true
+		"emitDecoratorMetadata": true,
+		"jsx": "react-jsx",
+		"jsxImportSource": "preact"
 	},
 	"tasks": {
 		"test": "NO_LOG=true COOKIE_SECRET_KEY=mysecretkey deno test --allow-env --allow-net --allow-read -A --unstable --coverage=coverage spec",

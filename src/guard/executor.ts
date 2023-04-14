@@ -2,7 +2,7 @@ import { ForbiddenException } from '../exception/http/mod.ts';
 import { Injector } from '../injector/injector.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { ControllerConstructor } from '../router/controller/constructor.ts';
-import { ExecutionContext, Callback, HttpContext } from '../router/router.ts';
+import { Callback, ExecutionContext, HttpContext } from '../router/router.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { GLOBAL_GUARD } from './constants.ts';
 import { guardMetadataKey } from './decorator.ts';
