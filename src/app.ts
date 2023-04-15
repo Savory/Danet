@@ -148,10 +148,13 @@ export class DanetApplication {
 		const manifest = (await import(url + './fresh.gen.ts')).default;
 		const handler = (await ServerContext.fromManifest(manifest, {})).handler();
 		this.app.use(async (ctx, next) => {
-			if (!ctx.request.url.toString().includes(prefix)) {
+			if (!ctx.request.url.toString().includes(prefix) && !ctx.request.url.toString().includes('_frsh')) {
 				return await next();
 			}
-			const newUrl = ctx.request.url.toString().replace(prefix, '/');
+			let newUrl = ctx.request.url.toString().replace(prefix, '');
+			if (newUrl.endsWith('/')) {
+				newUrl = newUrl.slice(0, -1);
+			}
 			const req = new Request(newUrl, {
 				body: ctx.request.originalRequest.getBody().body,
 				headers: ctx.request.headers,
