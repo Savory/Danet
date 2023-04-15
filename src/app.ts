@@ -161,6 +161,7 @@ export class DanetApplication {
 			const res = await handler(req, null as any);
 			ctx.response.body = res.body;
 			ctx.response.status = res.status;
+			ctx.response.headers = res.headers;
 		});
 	}
 }
