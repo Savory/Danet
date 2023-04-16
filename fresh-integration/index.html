@@ -10,33 +10,33 @@
     <meta name="generator" content="Retype 2.4.0">
 
     <!-- Primary Meta Tags -->
-    <title>Security</title>
-    <meta name="title" content="Security">
-    <meta name="description" content="To define which security mechanisms should be used for a specific operation, use the @ApiSecurity() decorator." />
+    <title>Deno&#39;s Fresh Integration</title>
+    <meta name="title" content="Deno's Fresh Integration">
+    <meta name="description" content="Fresh is a next generation web framework, built for speed, reliability, and simplicity." />
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://savory.github.io/Danet/openapi/security/" />
+    <link rel="canonical" href="https://savory.github.io/Danet/fresh-integration/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://savory.github.io/Danet/openapi/security/">
-    <meta property="og:title" content="Security">
-    <meta property="og:description" content="To define which security mechanisms should be used for a specific operation, use the @ApiSecurity() decorator.">
+    <meta property="og:url" content="https://savory.github.io/Danet/fresh-integration/">
+    <meta property="og:title" content="Deno's Fresh Integration">
+    <meta property="og:description" content="Fresh is a next generation web framework, built for speed, reliability, and simplicity.">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://savory.github.io/Danet/openapi/security/">
-    <meta property="twitter:title" content="Security">
-    <meta property="twitter:description" content="To define which security mechanisms should be used for a specific operation, use the @ApiSecurity() decorator.">
+    <meta property="twitter:url" content="https://savory.github.io/Danet/fresh-integration/">
+    <meta property="twitter:title" content="Deno's Fresh Integration">
+    <meta property="twitter:description" content="Fresh is a next generation web framework, built for speed, reliability, and simplicity.">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=2.4.0.734947300831" rel="stylesheet" />
+    <link href="../resources/css/retype.css?v=2.4.0.734947300831" rel="stylesheet" />
 
-    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.734947300831" data-turbo-eval="false" defer></script>
-    <script type="text/javascript" src="../../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.734947300831" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../../resources/js/prism.js?v=2.4.0.734947300831" defer></script>
+    <script type="text/javascript" src="../resources/js/config.js?v=2.4.0.734947300831" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../resources/js/lunr.js?v=2.4.0.734947300831" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../resources/js/prism.js?v=2.4.0.734947300831" defer></script>
 
     <script data-goatcounter="https://danet.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
@@ -54,7 +54,7 @@
                 <!-- Logo -->
                 <div class="flex items-center justify-between h-full py-2 md:w-75">
                     <div class="flex items-center px-2 md:px-6">
-                        <a id="docs-site-logo" href="../../" class="flex items-center leading-snug text-2xl">
+                        <a id="docs-site-logo" href="../" class="flex items-center leading-snug text-2xl">
                             <span class="dark:text-white font-semibold line-clamp-1 md:line-clamp-2">Danet</span>
                         </a><span class="hidden px-2 py-1 ml-4 text-sm font-semibold leading-none text-root-logo-label-text bg-root-logo-label-bg rounded-sm md:inline-block">Docs</span>
                     </div>
@@ -157,89 +157,167 @@
                                 <div id="docs-sidebar-right-toggle"></div>
                 
                                 <!-- Page content  -->
-<doc-anchor-target id="security" class="break-words">
+<doc-anchor-target id="denos-fresh-integration" class="break-words">
     <h1>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#security">#</doc-anchor-trigger>
-        <span>Security</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#denos-fresh-integration">#</doc-anchor-trigger>
+        <span>Deno&#x27;s Fresh Integration</span>
     </h1>
 </doc-anchor-target>
-<p>To define which security mechanisms should be used for a specific operation, use the <code v-pre>@ApiSecurity()</code> decorator.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">@ApiSecurity('basic')
-@Controller('todo')
-export class TodoController {}</code></pre>
-</doc-codeblock></div>
-<p>Before you run your application, remember to add the security definition to your base document using <code v-pre>SpecBuilder</code>:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">const options = new Spec().addSecurity('basic', {
-  type: 'http',
-  scheme: 'basic',
-});</code></pre>
-</doc-codeblock></div>
-<p>Some of the most popular authentication techniques are built-in (e.g., <code v-pre>basic</code> and <code v-pre>bearer</code>) and therefore you don&#x27;t have to define security mechanisms manually as shown above.</p>
-<doc-anchor-target id="basic-authentication">
+<doc-anchor-target id="introduction">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#introduction">#</doc-anchor-trigger>
+        <span>Introduction</span>
+    </h2>
+</doc-anchor-target>
+<p>Fresh is a next generation web framework, built for speed, reliability, and simplicity.</p>
+<p>Some stand-out features:</p>
+<ul>
+<li>Just-in-time rendering on the edge.</li>
+<li>Island based client hydration for maximum interactivity.</li>
+<li>Zero runtime overhead: no JS is shipped to the client by default.</li>
+<li>No build step.</li>
+<li>No configuration necessary.</li>
+<li>TypeScript support out of the box.</li>
+<li>File-system routing à la Next.js.</li>
+</ul>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
+    <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-300" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+            <h5><strong>Hint</strong></h5>
+<p>Learn more on the <a href="https://fresh.deno.dev/">official Deno Fresh website</a></p>
+        </div>
+    </div>
+</div>
+<doc-anchor-target id="integration-with-danet">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#integration-with-danet">#</doc-anchor-trigger>
+        <span>Integration with Danet</span>
+    </h2>
+</doc-anchor-target>
+<p>We believe that Fresh is an awesome framework for frontend thanks to Server-Side-Rendering (SSR) with partial hydration, File-system routing and Typescript support.</p>
+<p>However, in our opinion, it lacks backend specialized features to enable developers to build enterprise grade backend architecture with flexibility and robustness.</p>
+<p>At the same time, Danet lacks specialized features to build awesome frontends.</p>
+<p>This is why we worked towards providing a way to run both, from the same process. Allowing you to render awesome pages with Fresh while have a robust business logic/API code which can also be used in Fresh SSR for the first rendering.</p>
+<p>There are two ways of doing so :</p>
+<ul>
+<li>serve Fresh content from <code v-pre>/</code> path and your API endpoints from a dedicated prefix such as <code v-pre>/api</code></li>
+<li>serve Fresh content from a dedicated prefix, such as <code v-pre>/dashboard</code> and your API endpoints from root <code v-pre>/</code></li>
+</ul>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-300"></div>
+    <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-300" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+            <h5><strong>Warning</strong></h5>
+<p>Until Deno Deploy handles <code v-pre>emitDecoratorMetadata</code> compiler option, or Fresh handles bundling, there is no way to deploy a Danet app with Fresh integration on Deno Deploy if you use an instance of <code v-pre>DanetApplication</code> in Fresh islands.</p>
+        </div>
+    </div>
+</div>
+<doc-anchor-target id="folder-and-files-setup">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#basic-authentication">#</doc-anchor-trigger>
-        <span>Basic authentication</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#folder-and-files-setup">#</doc-anchor-trigger>
+        <span>Folder and Files setup</span>
     </h3>
 </doc-anchor-target>
-<p>To enable basic authentication, use <code v-pre>@ApiBasicAuth()</code>.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">@ApiBasicAuth()
-@Controller('todo')
-export class TodoController {}</code></pre>
-</doc-codeblock></div>
-<p>Add the security definition to your base document using <code v-pre>SpecBuilder</code>:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">const options = new SpecBuilder().addBasicAuth();</code></pre>
-</doc-codeblock></div>
-<doc-anchor-target id="bearer-authentication">
+<p>Good news, there is little to no change in your Danet or Fresh app&#x27;s folder structure !</p>
+<p>Let&#x27;s say you have a <code v-pre>danet-app</code> (generated from our CLI) and a <code v-pre>fresh-app</code> (generated from <a href="https://fresh.deno.dev/#getting-started">fresh getting-started</a> ) next to each other as following :</p>
+<p><figure class="content-center">
+    <img src="..2f..2f..2f..2f..2f..2fvar2ffolders2ffy2fr8tv9_xd5h1bp3nk76vfvbkr0000gn2ft2ftemporaryitems2fnsird_screencaptureui_mxmbpi2fscreenshot202023-04-1620at2016.29.06.png" alt="Screenshot 2023-04-16 at 16.29.06.png" />
+    <figcaption class="caption">Screenshot 2023-04-16 at 16.29.06.png</figcaption>
+</figure>
+</p>
+<p>Move <code v-pre>fresh-app</code> into <code v-pre>danet-app/src</code> (we don&#x27;t show all files that exist for clarity purpose):</p>
+<p><figure class="content-center">
+    <img src="..2f..2f..2f..2f..2f..2fvar2ffolders2ffy2fr8tv9_xd5h1bp3nk76vfvbkr0000gn2ft2ftemporaryitems2fnsird_screencaptureui_k1mxdv2fscreenshot202023-04-1620at2016.31.08.png" alt="Screenshot 2023-04-16 at 16.31.08.png" />
+    <figcaption class="caption">Screenshot 2023-04-16 at 16.31.08.png</figcaption>
+</figure>
+</p>
+<p>You can delete <code v-pre>fresh-app/dev.ts</code> and <code v-pre>fresh-app/main.ts</code>, but remember the plugins you use in <code v-pre>fresh-app/main.ts</code>, to pass them as parameters when enabling Fresh from your Danet app.</p>
+<doc-anchor-target id="fresh-from-root">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#bearer-authentication">#</doc-anchor-trigger>
-        <span>Bearer authentication</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#fresh-from-root">#</doc-anchor-trigger>
+        <span>Fresh from root</span>
     </h3>
 </doc-anchor-target>
-<p>To enable bearer authentication, use <code v-pre>@ApiBearerAuth()</code>.</p>
+<p>To enable Fresh from <code v-pre>/</code>, simply call : <code v-pre>.enableFreshFromRoot</code> from your <code v-pre>DanetApplication</code>, <strong>BEFORE</strong> calling <code v-pre>.init</code>.
+This method argument are:</p>
+<ul>
+<li>Fresh folder URL</li>
+<li>the prefix from where you want your Danet&#x27;s routes to be accessible</li>
+<li>Fresh start configuration object.:</li>
+</ul>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">@ApiBearerAuth()
-@Controller('todo')
-export class TodoController {}</code></pre>
+<div class="codeblock-title">bootstrap.ts</div>
+<pre class="language-typescript"><code v-pre class="language-typescript">import { AppModule } from './app.module.ts';
+import { DanetApplication } from 'danet/mod.ts';
+import { configAsync } from 'dotenv/mod.ts';
+import twindConfig from &quot;./dashboard/twind.config.ts&quot;;
+import twindPlugin from &quot;$fresh/plugins/twind.ts&quot;;
+
+export const application = new DanetApplication();
+export const bootstrap = async () =&gt; {
+ await configAsync({ export: true });
+ 
+ const freshAppDirectory = new URL('./fresh-app/', import.meta.url);
+ await application.enableFreshOnRoot(freshAppDirectory, '/api', { plugins: [twindPlugin(twindConfig)] });
+ 
+ await application.init(AppModule);
+ 
+ return application;
+};
+</code></pre>
 </doc-codeblock></div>
-<p>Before you run your application, remember to add the security definition to your base document using <code v-pre>SpecBuilder</code>:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">const options = new SpecBuilder().addBearerAuth();</code></pre>
-</doc-codeblock></div>
-<doc-anchor-target id="oauth2-authentication">
+<doc-anchor-target id="fresh-from-a-given-path">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#oauth2-authentication">#</doc-anchor-trigger>
-        <span>OAuth2 authentication</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#fresh-from-a-given-path">#</doc-anchor-trigger>
+        <span>Fresh from a given path</span>
     </h3>
 </doc-anchor-target>
-<p>To enable OAuth2, use <code v-pre>@ApiOAuth2()</code>.</p>
+<p>To enable Fresh from a given path, simply call : <code v-pre>.enableFresh</code> from your <code v-pre>DanetApplication</code>, <strong>BEFORE</strong> calling <code v-pre>.init</code>.
+This method argument are:</p>
+<ul>
+<li>Fresh folder URL</li>
+<li>the prefix from where you want your Fresh routes to be accessible</li>
+<li>Fresh start configuration object.:</li>
+</ul>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">@ApiOAuth2(['todos:write'])
-@Controller('todo')
-export class TodoController {}</code></pre>
-</doc-codeblock></div>
-<p>Before you run your application, remember to add the security definition to your base document using <code v-pre>SpecBuilder</code>:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">const options = new SpecBuilder().addOAuth2();</code></pre>
-</doc-codeblock></div>
-<doc-anchor-target id="cookie-authentication">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#cookie-authentication">#</doc-anchor-trigger>
-        <span>Cookie authentication</span>
-    </h3>
-</doc-anchor-target>
-<p>To enable cookie authentication, use <code v-pre>@ApiCookieAuth()</code>.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">@ApiCookieAuth()
-@Controller('todo')
-export class TodoController {}</code></pre>
-</doc-codeblock></div>
-<p>Before you run your application, remember to add the security definition to your base document using <code v-pre>SpecBuilder</code>:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-typescript"><code v-pre class="language-typescript">const options = new SpecBuilder().addCookieAuth('token');</code></pre>
+<div class="codeblock-title">bootstrap.ts</div>
+<pre class="language-typescript"><code v-pre class="language-typescript">import { AppModule } from './app.module.ts';
+import { DanetApplication } from 'danet/mod.ts';
+import { configAsync } from 'dotenv/mod.ts';
+import twindConfig from &quot;./dashboard/twind.config.ts&quot;;
+import twindPlugin from &quot;$fresh/plugins/twind.ts&quot;;
+
+export const application = new DanetApplication();
+export const bootstrap = async () =&gt; {
+ await configAsync({ export: true });
+ 
+ const freshAppDirectory = new URL('./fresh-app/', import.meta.url);
+ await application.enableFresh(freshAppDirectory, '/dashboard', { plugins: [twindPlugin(twindConfig)] });
+ 
+ await application.init(AppModule);
+ 
+ return application;
+};
+</code></pre>
 </doc-codeblock></div>
 
                                 
@@ -250,20 +328,20 @@ export class TodoController {}</code></pre>
                             
                                 <nav class="flex mt-14">
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../openapi/operations/">
+                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../openapi/security/">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                             <span>
                                                 <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
-                                                <span class="block mt-1">Operations</span>
+                                                <span class="block mt-1">Security</span>
                                             </span>
                                         </a>
                                     </div>
                             
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../fresh-integration/">
+                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../deno-deploy/">
                                             <span>
                                                 <span class="block text-xs font-normal text-right text-gray-400 dark:text-dark-400">Next</span>
-                                                <span class="block mt-1">Deno's Fresh Integration</span>
+                                                <span class="block mt-1">Deno Deploy</span>
                                             </span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                         </a>
@@ -307,6 +385,6 @@ export class TodoController {}</code></pre>
 
     <div id="docs-overlay-target"></div>
 
-    <script>window.__DOCS__ = { "title": "Security", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
+    <script>window.__DOCS__ = { "title": "Deno's Fresh Integration", level: 1, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
 </body>
 </html>
