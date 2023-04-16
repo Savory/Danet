@@ -59,8 +59,9 @@ You can delete `fresh-app/dev.ts` and `fresh-app/main.ts`, but remember the plug
 
 ### Fresh from root
 
-To enable Fresh from `/`, simply call : `.enableFreshFromRoot` from your `DanetApplication`, **BEFORE** calling `.init`.
+To enable Fresh from `/`, use our Fresh Module call : `FreshModule.enableFreshFromRoot` from your `DanetApplication`, **BEFORE** calling `.init`.
 This method argument are:
+- Your DanetApplication
 - Fresh folder URL
 - the prefix from where you want your Danet's routes to be accessible
 - Fresh start configuration object.:
@@ -71,17 +72,18 @@ import { DanetApplication } from 'danet/mod.ts';
 import { configAsync } from 'dotenv/mod.ts';
 import twindConfig from "./dashboard/twind.config.ts";
 import twindPlugin from "$fresh/plugins/twind.ts";
+import { FreshModule } from "danet-fresh/mod.ts";
 
 export const application = new DanetApplication();
 export const bootstrap = async () => {
- await configAsync({ export: true });
- 
- const freshAppDirectory = new URL('./fresh-app/', import.meta.url);
- await application.enableFreshOnRoot(freshAppDirectory, '/api', { plugins: [twindPlugin(twindConfig)] });
- 
- await application.init(AppModule);
- 
- return application;
+    await configAsync({export: true});
+
+    const freshAppDirectory = new URL('./fresh-app/', import.meta.url);
+    await FreshModule.enableFreshOnRoot(application, freshAppDirectory, '/api', {plugins: [twindPlugin(twindConfig)]});
+
+    await application.init(AppModule);
+
+    return application;
 };
 
 ```
@@ -91,6 +93,7 @@ export const bootstrap = async () => {
 
 To enable Fresh from a given path, simply call : `.enableFresh` from your `DanetApplication`, **BEFORE** calling `.init`.
 This method argument are:
+- Your DanetApplication
 - Fresh folder URL
 - the prefix from where you want your Fresh routes to be accessible
 - Fresh start configuration object.:
@@ -101,13 +104,14 @@ import { DanetApplication } from 'danet/mod.ts';
 import { configAsync } from 'dotenv/mod.ts';
 import twindConfig from "./dashboard/twind.config.ts";
 import twindPlugin from "$fresh/plugins/twind.ts";
+import { FreshModule } from "danet-fresh/mod.ts";
 
 export const application = new DanetApplication();
 export const bootstrap = async () => {
  await configAsync({ export: true });
  
  const freshAppDirectory = new URL('./fresh-app/', import.meta.url);
- await application.enableFresh(freshAppDirectory, '/dashboard', { plugins: [twindPlugin(twindConfig)] });
+ await FreshModule.enableFresh(application, freshAppDirectory, '/dashboard', { plugins: [twindPlugin(twindConfig)] });
  
  await application.init(AppModule);
  
