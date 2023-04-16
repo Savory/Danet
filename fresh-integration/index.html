@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-root" content="/Danet">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.734948060701">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.734956064885">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
@@ -33,12 +33,12 @@
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../resources/css/retype.css?v=2.4.0.734948060701" rel="stylesheet" />
+    <link href="../resources/css/retype.css?v=2.4.0.734956064885" rel="stylesheet" />
 
-    <script type="text/javascript" src="../resources/js/config.js?v=2.4.0.734948060701" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../resources/js/config.js?v=2.4.0.734956064885" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../resources/js/lunr.js?v=2.4.0.734948060701" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../resources/js/prism.js?v=2.4.0.734948060701" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../resources/js/lunr.js?v=2.4.0.734956064885" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../resources/js/prism.js?v=2.4.0.734956064885" defer></script>
 
     <script data-goatcounter="https://danet.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
@@ -258,9 +258,10 @@
         <span>Fresh from root</span>
     </h3>
 </doc-anchor-target>
-<p>To enable Fresh from <code v-pre>/</code>, simply call : <code v-pre>.enableFreshFromRoot</code> from your <code v-pre>DanetApplication</code>, <strong>BEFORE</strong> calling <code v-pre>.init</code>.
+<p>To enable Fresh from <code v-pre>/</code>, use our Fresh Module call : <code v-pre>FreshModule.enableFreshFromRoot</code> from your <code v-pre>DanetApplication</code>, <strong>BEFORE</strong> calling <code v-pre>.init</code>.
 This method argument are:</p>
 <ul>
+<li>Your DanetApplication</li>
 <li>Fresh folder URL</li>
 <li>the prefix from where you want your Danet&#x27;s routes to be accessible</li>
 <li>Fresh start configuration object.:</li>
@@ -272,17 +273,18 @@ import { DanetApplication } from 'danet/mod.ts';
 import { configAsync } from 'dotenv/mod.ts';
 import twindConfig from &quot;./dashboard/twind.config.ts&quot;;
 import twindPlugin from &quot;$fresh/plugins/twind.ts&quot;;
+import { FreshModule } from &quot;danet-fresh/mod.ts&quot;;
 
 export const application = new DanetApplication();
 export const bootstrap = async () =&gt; {
- await configAsync({ export: true });
- 
- const freshAppDirectory = new URL('./fresh-app/', import.meta.url);
- await application.enableFreshOnRoot(freshAppDirectory, '/api', { plugins: [twindPlugin(twindConfig)] });
- 
- await application.init(AppModule);
- 
- return application;
+    await configAsync({export: true});
+
+    const freshAppDirectory = new URL('./fresh-app/', import.meta.url);
+    await FreshModule.enableFreshOnRoot(application, freshAppDirectory, '/api', {plugins: [twindPlugin(twindConfig)]});
+
+    await application.init(AppModule);
+
+    return application;
 };
 </code></pre>
 </doc-codeblock></div>
@@ -295,6 +297,7 @@ export const bootstrap = async () =&gt; {
 <p>To enable Fresh from a given path, simply call : <code v-pre>.enableFresh</code> from your <code v-pre>DanetApplication</code>, <strong>BEFORE</strong> calling <code v-pre>.init</code>.
 This method argument are:</p>
 <ul>
+<li>Your DanetApplication</li>
 <li>Fresh folder URL</li>
 <li>the prefix from where you want your Fresh routes to be accessible</li>
 <li>Fresh start configuration object.:</li>
@@ -306,13 +309,14 @@ import { DanetApplication } from 'danet/mod.ts';
 import { configAsync } from 'dotenv/mod.ts';
 import twindConfig from &quot;./dashboard/twind.config.ts&quot;;
 import twindPlugin from &quot;$fresh/plugins/twind.ts&quot;;
+import { FreshModule } from &quot;danet-fresh/mod.ts&quot;;
 
 export const application = new DanetApplication();
 export const bootstrap = async () =&gt; {
  await configAsync({ export: true });
  
  const freshAppDirectory = new URL('./fresh-app/', import.meta.url);
- await application.enableFresh(freshAppDirectory, '/dashboard', { plugins: [twindPlugin(twindConfig)] });
+ await FreshModule.enableFresh(application, freshAppDirectory, '/dashboard', { plugins: [twindPlugin(twindConfig)] });
  
  await application.init(AppModule);
  
