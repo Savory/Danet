@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-root" content="/Danet">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.734947432179">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.734947761922">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
@@ -22,21 +22,23 @@
     <meta property="og:url" content="https://savory.github.io/Danet/fresh-integration/">
     <meta property="og:title" content="Deno's Fresh Integration">
     <meta property="og:description" content="Fresh is a next generation web framework, built for speed, reliability, and simplicity.">
+    <meta property="og:image" content="https://user-images.githubusercontent.com/38007824/232283998-89510982-c917-474f-9a25-b80bbb8fc301.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://savory.github.io/Danet/fresh-integration/">
     <meta property="twitter:title" content="Deno's Fresh Integration">
     <meta property="twitter:description" content="Fresh is a next generation web framework, built for speed, reliability, and simplicity.">
+    <meta property="twitter:image" content="https://user-images.githubusercontent.com/38007824/232283998-89510982-c917-474f-9a25-b80bbb8fc301.png">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("/Danet/doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../resources/css/retype.css?v=2.4.0.734947432179" rel="stylesheet" />
+    <link href="../resources/css/retype.css?v=2.4.0.734947761922" rel="stylesheet" />
 
-    <script type="text/javascript" src="../resources/js/config.js?v=2.4.0.734947432179" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../resources/js/config.js?v=2.4.0.734947761922" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../resources/js/lunr.js?v=2.4.0.734947432179" data-turbo-eval="false" defer></script>
-    <script id="prism-js" type="text/javascript" src="../resources/js/prism.js?v=2.4.0.734947432179" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../resources/js/lunr.js?v=2.4.0.734947761922" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../resources/js/prism.js?v=2.4.0.734947761922" defer></script>
 
     <script data-goatcounter="https://danet.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
@@ -239,14 +241,14 @@
 <p>Good news, there is little to no change in your Danet or Fresh app&#x27;s folder structure !</p>
 <p>Let&#x27;s say you have a <code v-pre>danet-app</code> (generated from our CLI) and a <code v-pre>fresh-app</code> (generated from <a href="https://fresh.deno.dev/#getting-started">fresh getting-started</a> ) next to each other as following :</p>
 <p><figure class="content-center">
-    <img src="..2f..2f..2f..2f..2f..2fvar2ffolders2ffy2fr8tv9_xd5h1bp3nk76vfvbkr0000gn2ft2ftemporaryitems2fnsird_screencaptureui_mxmbpi2fscreenshot202023-04-1620at2016.29.06.png" alt="Screenshot 2023-04-16 at 16.29.06.png" />
-    <figcaption class="caption">Screenshot 2023-04-16 at 16.29.06.png</figcaption>
+    <img src="https://user-images.githubusercontent.com/38007824/232283998-89510982-c917-474f-9a25-b80bbb8fc301.png" alt="Screenshot 2023-04-16 at 17 08 48" />
+    <figcaption class="caption">Screenshot 2023-04-16 at 17 08 48</figcaption>
 </figure>
 </p>
 <p>Move <code v-pre>fresh-app</code> into <code v-pre>danet-app/src</code> (we don&#x27;t show all files that exist for clarity purpose):</p>
 <p><figure class="content-center">
-    <img src="..2f..2f..2f..2f..2f..2fvar2ffolders2ffy2fr8tv9_xd5h1bp3nk76vfvbkr0000gn2ft2ftemporaryitems2fnsird_screencaptureui_k1mxdv2fscreenshot202023-04-1620at2016.31.08.png" alt="Screenshot 2023-04-16 at 16.31.08.png" />
-    <figcaption class="caption">Screenshot 2023-04-16 at 16.31.08.png</figcaption>
+    <img src="https://user-images.githubusercontent.com/38007824/232283976-e4551764-8333-463a-a003-47dee910a44b.png" alt="Screenshot 2023-04-16 at 17 08 13" />
+    <figcaption class="caption">Screenshot 2023-04-16 at 17 08 13</figcaption>
 </figure>
 </p>
 <p>You can delete <code v-pre>fresh-app/dev.ts</code> and <code v-pre>fresh-app/main.ts</code>, but remember the plugins you use in <code v-pre>fresh-app/main.ts</code>, to pass them as parameters when enabling Fresh from your Danet app.</p>
