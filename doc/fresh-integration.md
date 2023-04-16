@@ -47,11 +47,13 @@ Good news, there is little to no change in your Danet or Fresh app's folder stru
 
 Let's say you have a `danet-app` (generated from our CLI) and a `fresh-app` (generated from [fresh getting-started](https://fresh.deno.dev/#getting-started) ) next to each other as following :
 
-![Screenshot 2023-04-16 at 16.29.06.png](..%2F..%2F..%2F..%2F..%2F..%2Fvar%2Ffolders%2Ffy%2Fr8tv9_xd5h1bp3nk76vfvbkr0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_mXmbpi%2FScreenshot%202023-04-16%20at%2016.29.06.png)
+![Screenshot 2023-04-16 at 17 08 48](https://user-images.githubusercontent.com/38007824/232283998-89510982-c917-474f-9a25-b80bbb8fc301.png)
+
 
 Move `fresh-app` into `danet-app/src` (we don't show all files that exist for clarity purpose):
 
-![Screenshot 2023-04-16 at 16.31.08.png](..%2F..%2F..%2F..%2F..%2F..%2Fvar%2Ffolders%2Ffy%2Fr8tv9_xd5h1bp3nk76vfvbkr0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_K1MxDv%2FScreenshot%202023-04-16%20at%2016.31.08.png)
+![Screenshot 2023-04-16 at 17 08 13](https://user-images.githubusercontent.com/38007824/232283976-e4551764-8333-463a-a003-47dee910a44b.png)
+
 
 You can delete `fresh-app/dev.ts` and `fresh-app/main.ts`, but remember the plugins you use in `fresh-app/main.ts`, to pass them as parameters when enabling Fresh from your Danet app.
 
