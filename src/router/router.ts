@@ -34,6 +34,8 @@ export class DanetRouter {
 	public router = new Router();
 	private logger: Logger = new Logger('Router');
 
+	public prefix?: string;
+
 	constructor(
 		private injector: Injector,
 		private guardExecutor: GuardExecutor = new GuardExecutor(injector),
@@ -80,8 +82,18 @@ export class DanetRouter {
 				`The method "${httpMethod}" can not be handled by "${basePath}" of controller "${Controller}".`,
 			);
 		}
-		this.logger.log(`Registering [${httpMethod}] ${path ? path : '/'}`);
+		this.logger.log(
+			`Registering [${httpMethod}] ${this.prefix ? this.prefix : ''}${
+				path ? path : '/'
+			}`,
+		);
 		routerFn.call(this.router, path, this.handleRoute(Controller, handler));
+	}
+
+	setPrefix(prefix: string) {
+		prefix = prefix.replace(/\/$/, '');
+		this.router.prefix(prefix);
+		this.prefix = prefix;
 	}
 
 	registerControllers(Controllers: Constructor[]) {
