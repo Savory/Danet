@@ -37,7 +37,7 @@ There are two ways of doing so :
 - serve Fresh content from a dedicated prefix, such as `/dashboard` and your API endpoints from root `/`
 
 
-!!!info **Warning**
+!!!warning **Deploy**
 Until Deno Deploy handles `emitDecoratorMetadata` compiler option, or Fresh handles bundling, there is no way to deploy a Danet app with Fresh integration on Deno Deploy if you use an instance of `DanetApplication` in Fresh islands.
 !!!
 
