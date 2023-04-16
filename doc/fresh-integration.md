@@ -115,3 +115,11 @@ export const bootstrap = async () => {
 };
 
 ```
+
+
+### Working example
+
+There is a [specific branch on our starter project](https://github.com/Savory/Danet-Starter/tree/fresh-integration) with a demo Fresh app in `src/dashboard` folder, served from root. 
+
+Check it out if needed !
+
