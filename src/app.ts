@@ -16,7 +16,7 @@ import { globalMiddlewareContainer } from './router/middleware/global-container.
 import { ModuleConstructor } from './module/constructor.ts';
 import { CorsOptions, oakCors } from 'https://deno.land/x/cors/mod.ts';
 import {
-	ServerContext,
+	ServerContext, StartOptions,
 } from 'https://deno.land/x/fresh@1.1.5/src/server/mod.ts';
 import {
 	collect,
@@ -143,10 +143,10 @@ export class DanetApplication {
 		this.app.use(oakCors(options));
 	}
 
-	async enableFresh(url: URL, prefix: string) {
+	async enableFresh(url: URL, prefix: string, freshOptions: StartOptions = {}) {
 		await generateFreshManifest(url);
 		const manifest = (await import(url + './fresh.gen.ts')).default;
-		const handler = (await ServerContext.fromManifest(manifest, {})).handler();
+		const handler = (await ServerContext.fromManifest(manifest, freshOptions)).handler();
 		this.app.use(async (ctx, next) => {
 			if (!ctx.request.url.toString().includes(prefix) && !ctx.request.url.toString().includes('_frsh')) {
 				return await next();
