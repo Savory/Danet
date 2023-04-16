@@ -87,6 +87,9 @@ export const bootstrap = async () => {
 };
 
 ```
+!!!info **Hint**
+`danet-fresh/mod.ts` is declared in the import map to point to https://deno.land/x/danet_fresh/
+!!!
 
 
 ### Fresh from a given path
@@ -119,6 +122,10 @@ export const bootstrap = async () => {
 };
 
 ```
+
+!!!info **Hint**
+`danet-fresh/mod.ts` is declared in the import map to point to https://deno.land/x/danet_fresh/
+!!!
 
 
 ### Working example
