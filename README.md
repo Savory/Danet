@@ -49,7 +49,7 @@ bug on our [Github Repository](https://github.com/Savory/Danet) and
 
 [Use our CLI](https://github.com/Savory/Danet-CLI)
 
-[Read our documentation](https://savory.github.io/Danet/)
+[Read our documentation](https://docs.danet.land/)
 
 [Read our blog](https://savory.github.io/)
 
