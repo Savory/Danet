@@ -1,8 +1,0 @@
-input: doc/
-output: .retype
-url: https://savory.github.io/Danet/
-branding:
-  title: Danet
-  label: Docs
-footer:
-  copyright: "&copy; MIT LICENSE"
