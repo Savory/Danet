@@ -14,7 +14,6 @@ import {
 	injectionData,
 	SCOPE,
 } from './injectable/decorator.ts';
-import { InjectableHelper } from './injectable/helper.ts';
 import { HttpContext } from '../router/router.ts';
 
 export class Injector {
@@ -24,6 +23,10 @@ export class Injector {
 	>();
 	private availableTypes = new Map<InjectableConstructor, boolean>();
 	private logger: Logger = new Logger('Injector');
+	private resolvedTypes = new Map<
+		Constructor | string,
+		Constructor
+	>();
 
 	public getAll() {
 		return this.resolved;
@@ -90,7 +93,7 @@ export class Injector {
 			}
 			const injectableMetadata = MetadataHelper.getMetadata<InjectableOption>(
 				injectionData,
-				DependencyType,
+				this.resolvedTypes.get(actualType),
 			);
 			if (injectableMetadata?.scope === SCOPE.REQUEST) {
 				canBeSingleton = false;
@@ -107,6 +110,7 @@ export class Injector {
 			}
 			const instance = new Type(...resolvedDependencies);
 			this.resolved.set(Type, () => instance);
+			this.resolvedTypes.set(Type, Type);
 		} else {
 			this.setNonSingleton(Type, Type, dependencies);
 		}
@@ -140,6 +144,7 @@ export class Injector {
 			}
 			const instance = new actualType(...resolvedDependencies);
 			this.resolved.set(actualKey, () => instance);
+			this.resolvedTypes.set(actualKey, actualType);
 		} else {
 			if (ParentConstructor) {
 				MetadataHelper.setMetadata(
@@ -164,6 +169,7 @@ export class Injector {
 		key: string | InjectableConstructor,
 		dependencies: Array<Constructor>,
 	) {
+		this.resolvedTypes.set(key, Type);
 		this.resolved.set(key, async (ctx?: HttpContext) => {
 			const resolvedDependencies = new Array<Constructor>();
 			for (const [idx, Dep] of dependencies.entries()) {

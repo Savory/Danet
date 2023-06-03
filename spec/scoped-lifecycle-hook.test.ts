@@ -9,6 +9,11 @@ import { Inject } from "../src/injector/decorator.ts";
 import { TokenInjector } from "../src/injector/injectable/constructor.ts";
 
 Deno.test('Scoped Lifecycle hooks', async (testContext) => {
+
+	interface ScopedInjectableInterface {
+		somethingThatMatters: string | null;
+	}
+
 	@Injectable({ scope: SCOPE.REQUEST })
 	class ScopedInjectable implements BeforeControllerMethodIsCalled {
 		public somethingThatMatters: string | null = null;
@@ -24,7 +29,7 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 			return this.child1.somethingThatMatters;
 		}
 		constructor(
-			@Inject('SCOPED_TOKEN') public child1: ScopedInjectable,
+			@Inject('SCOPED_TOKEN') public child1: ScopedInjectableInterface,
 		) {
 		}
 	}
