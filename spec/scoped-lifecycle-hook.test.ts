@@ -5,6 +5,8 @@ import { Injectable, SCOPE } from '../src/injector/injectable/decorator.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
+import { Inject } from "../src/injector/decorator.ts";
+import { TokenInjector } from "../src/injector/injectable/constructor.ts";
 
 Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 	@Injectable({ scope: SCOPE.REQUEST })
@@ -22,7 +24,7 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 			return this.child1.somethingThatMatters;
 		}
 		constructor(
-			public child1: ScopedInjectable,
+			@Inject('SCOPED_TOKEN') public child1: ScopedInjectable,
 		) {
 		}
 	}
@@ -30,7 +32,7 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 	@Module({
 		controllers: [ScopedController],
 		injectables: [
-			ScopedInjectable,
+			new TokenInjector(ScopedInjectable, 'SCOPED_TOKEN'),
 		],
 	})
 	class MyModule {}

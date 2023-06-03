@@ -16,7 +16,6 @@ import {
 } from './injectable/decorator.ts';
 import { InjectableHelper } from './injectable/helper.ts';
 import { HttpContext } from '../router/router.ts';
-import { BeforeControllerMethodIsCalled } from '../hook/interfaces.ts';
 
 export class Injector {
 	private resolved = new Map<
@@ -81,7 +80,8 @@ export class Injector {
 		let canBeSingleton = true;
 		const dependencies = this.getDependencies(Type);
 		dependencies.forEach((DependencyType, idx) => {
-			if (!this.resolved.has(this.getParamToken(Type, idx) ?? DependencyType)) {
+			const actualType = this.getParamToken(Type, idx) ?? DependencyType;
+			if (!this.resolved.has(actualType)) {
 				throw new Error(
 					`${Type.name} dependency ${
 						this.getParamToken(Type, idx) ?? DependencyType.name
@@ -126,7 +126,7 @@ export class Injector {
 
 		const injectableMetadata = MetadataHelper.getMetadata<InjectableOption>(
 			injectionData,
-			Type,
+			actualType,
 		);
 		await this.resolveDependencies(dependencies, actualType);
 		if (injectableMetadata?.scope !== SCOPE.REQUEST) {
@@ -205,33 +205,5 @@ export class Injector {
 
 	private getDependencies(Type: Constructor): Constructor[] {
 		return MetadataHelper.getMetadata('design:paramtypes', Type) || [];
-	}
-
-	private async executeOnAppBoostrapHook(
-		Controllers?: ControllerConstructor[],
-		injectables?: Array<InjectableConstructor | TokenInjector>,
-	) {
-		if (Controllers) {
-			for (const controller of Controllers) {
-				if (InjectableHelper.isGlobal(controller)) {
-					// deno-lint-ignore no-explicit-any
-					await (await this.get<any>(controller)).onAppBootstrap?.();
-				}
-			}
-		}
-		if (injectables) {
-			for (const injectable of injectables) {
-				const actualType = injectable instanceof TokenInjector
-					? injectable.useClass
-					: injectable;
-				const actualKey = injectable instanceof TokenInjector
-					? injectable.token
-					: injectable;
-				if (InjectableHelper.isGlobal(actualType)) {
-					// deno-lint-ignore no-explicit-any
-					await (await this.get<any>(actualKey)).onAppBootstrap?.();
-				}
-			}
-		}
 	}
 }
