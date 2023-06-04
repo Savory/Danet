@@ -25,6 +25,7 @@ export type Callback = (...args: any[]) => unknown;
 export type HttpContext = Context;
 
 export type ExecutionContext = HttpContext & {
+	_id: string,
 	// deno-lint-ignore ban-types
 	getHandler: () => Function;
 	getClass: () => Constructor;
@@ -116,30 +117,31 @@ export class DanetRouter {
 		ControllerMethod: Callback,
 	) {
 		return async (context: HttpContext) => {
+			const executionContext = {
+				_id: crypto.randomUUID(),
+				...context,
+				getClass: () => Controller,
+				getHandler: () => ControllerMethod,
+			} as unknown as ExecutionContext;
 			try {
-				context = {
-					...context,
-					getClass: () => Controller,
-					getHandler: () => ControllerMethod,
-				} as unknown as ExecutionContext;
 				await this.middlewareExecutor.executeAllRelevantMiddlewares(
 					context as ExecutionContext,
 					Controller,
 					ControllerMethod,
 					async () => {
 						await this.guardExecutor.executeAllRelevantGuards(
-							context as ExecutionContext,
+							executionContext,
 							Controller,
 							ControllerMethod,
 						);
 						const params = await this.resolveMethodParam(
 							Controller,
 							ControllerMethod,
-							context,
+							executionContext,
 						);
 						const controllerInstance = await this.injector.get(
 							Controller,
-							context,
+							executionContext,
 							// deno-lint-ignore no-explicit-any
 						) as any;
 						const response:
@@ -147,13 +149,13 @@ export class DanetRouter {
 							| string = await controllerInstance[ControllerMethod.name](
 								...params,
 							);
-						await this.sendResponse(response, ControllerMethod, context);
+						await this.sendResponse(response, ControllerMethod, executionContext);
 					},
 				);
 			} catch (error) {
 				const errorIsCaught = await this.filterExecutor
 					.executeControllerAndMethodFilter(
-						context,
+						executionContext,
 						error,
 						Controller,
 						ControllerMethod,
@@ -164,13 +166,14 @@ export class DanetRouter {
 				const status = error.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
 				const message = error.message || 'Internal server error!';
 
-				context.response.body = {
+				executionContext.response.body = {
 					...error,
 					status,
 					message,
 				};
-				context.response.status = status;
+				executionContext.response.status = status;
 			}
+			this.injector.cleanRequestInjectables(executionContext._id);
 		};
 	}
 

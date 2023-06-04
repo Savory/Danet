@@ -14,12 +14,12 @@ import {
 	injectionData,
 	SCOPE,
 } from './injectable/decorator.ts';
-import { HttpContext } from '../router/router.ts';
+import { ExecutionContext, HttpContext } from '../router/router.ts';
 
 export class Injector {
 	private resolved = new Map<
 		Constructor | string,
-		(ctx?: HttpContext) => Promise<unknown> | unknown
+		(ctx?: ExecutionContext) => Promise<unknown> | unknown
 	>();
 	private availableTypes = new Map<Constructor | string, Constructor>();
 	private logger: Logger = new Logger('Injector');
@@ -27,6 +27,7 @@ export class Injector {
 		Constructor | string,
 		Constructor
 	>();
+	private contextInjectables = new Map<string, Map<Constructor | string, unknown>>();
 
 	public getAll() {
 		return this.resolved;
@@ -36,7 +37,7 @@ export class Injector {
 		return this.resolved.has(Type);
 	}
 
-	public get<T>(Type: Constructor<T> | string, ctx?: HttpContext): T {
+	public get<T>(Type: Constructor<T> | string, ctx?: ExecutionContext): T {
 		if (this.resolved.has(Type)) {
 			return this.resolved.get(Type)!(ctx) as T;
 		}
@@ -136,18 +137,16 @@ export class Injector {
 			injectionData,
 			actualType,
 		);
-		let canBeSingleton = injectableMetadata?.scope !== SCOPE.REQUEST;
+		let canBeSingleton = injectableMetadata?.scope !== SCOPE.REQUEST && injectableMetadata?.scope !== SCOPE.TRANSIENT;
 		if (canBeSingleton) {
 			for (const [idx, Dep] of dependencies.entries()) {
 				const token = this.getParamToken(actualType, idx);
 				const type = this.resolvedTypes.get(token ?? Dep);
-				console.log('we got type', type);
 				const dependencyInjectableMetadata = MetadataHelper.getMetadata<InjectableOption>(
 					injectionData,
 					type,
 				);
-				console.log('dependency metdata', dependencyInjectableMetadata);
-				if (dependencyInjectableMetadata?.scope === SCOPE.REQUEST)
+				if (dependencyInjectableMetadata?.scope === SCOPE.REQUEST || dependencyInjectableMetadata?.scope === SCOPE.TRANSIENT)
 					canBeSingleton = false;
 			}
 		}
@@ -164,11 +163,13 @@ export class Injector {
 			this.resolved.set(actualKey, () => instance);
 			this.resolvedTypes.set(actualKey, actualType);
 		} else {
-			MetadataHelper.setMetadata(
-				injectionData,
-				{ scope: SCOPE.REQUEST },
-				actualType,
-			);
+			if (injectableMetadata?.scope !== SCOPE.TRANSIENT && injectableMetadata?.scope !== SCOPE.REQUEST) {
+				MetadataHelper.setMetadata(
+					injectionData,
+					{scope: SCOPE.REQUEST},
+					actualType,
+				);
+			}
 			if (ParentConstructor) {
 				MetadataHelper.setMetadata(
 					injectionData,
@@ -176,7 +177,7 @@ export class Injector {
 					ParentConstructor,
 				);
 			}
-			this.setNonSingleton(actualType, actualKey, dependencies);
+			this.setNonSingleton(actualType, actualKey, dependencies, injectableMetadata?.scope === SCOPE.TRANSIENT);
 		}
 	}
 
@@ -191,9 +192,10 @@ export class Injector {
 		Type: Constructor,
 		key: string | InjectableConstructor,
 		dependencies: Array<Constructor>,
+		transient?: boolean
 	) {
 		this.resolvedTypes.set(key, Type);
-		this.resolved.set(key, async (ctx?: HttpContext) => {
+		this.resolved.set(key, async (ctx?: ExecutionContext) => {
 			const resolvedDependencies = new Array<Constructor>();
 			for (const [idx, Dep] of dependencies.entries()) {
 				resolvedDependencies.push(
@@ -202,10 +204,21 @@ export class Injector {
 					)) as Constructor,
 				);
 			}
+			if (ctx && !transient) {
+				if (!this.contextInjectables.has(ctx._id))
+					this.contextInjectables.set(ctx._id, new Map());
+				const actualRequestInjectables = this.contextInjectables.get(ctx._id);
+				if (actualRequestInjectables?.has(key)) {
+					return actualRequestInjectables.get(key);
+				}
+			}
 			// deno-lint-ignore no-explicit-any
 			const instance: any = new Type(...resolvedDependencies) as any;
 			if (instance.beforeControllerMethodIsCalled && ctx) {
 				await instance.beforeControllerMethodIsCalled(ctx);
+			}
+			if (ctx && !transient) {
+				this.contextInjectables.get(ctx._id)!.set(key, instance);
 			}
 			return instance;
 		});
@@ -235,5 +248,9 @@ export class Injector {
 
 	private getDependencies(Type: Constructor): Constructor[] {
 		return MetadataHelper.getMetadata('design:paramtypes', Type) || [];
+	}
+
+	cleanRequestInjectables(_id: string) {
+		this.contextInjectables.delete(_id);
 	}
 }
