@@ -147,7 +147,7 @@ export class Injector {
 					type,
 				);
 				console.log('dependency metdata', dependencyInjectableMetadata);
-				if (dependencyInjectableMetadata.scope === SCOPE.REQUEST)
+				if (dependencyInjectableMetadata?.scope === SCOPE.REQUEST)
 					canBeSingleton = false;
 			}
 		}
