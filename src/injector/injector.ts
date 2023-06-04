@@ -14,7 +14,7 @@ import {
 	injectionData,
 	SCOPE,
 } from './injectable/decorator.ts';
-import { ExecutionContext, HttpContext } from '../router/router.ts';
+import { ExecutionContext } from '../router/router.ts';
 
 export class Injector {
 	private resolved = new Map<

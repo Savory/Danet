@@ -1,4 +1,4 @@
-import { Context, Router, State } from '../deps.ts';
+import { Context, Router } from '../deps.ts';
 
 import { FilterExecutor } from '../exception/filter/executor.ts';
 import { HTTP_STATUS } from '../exception/http/enum.ts';
