@@ -8,7 +8,7 @@ import { HttpContext } from '../src/router/router.ts';
 import { Inject } from "../src/injector/decorator.ts";
 import { TokenInjector } from "../src/injector/injectable/constructor.ts";
 
-Deno.test('Scoped Lifecycle hooks', async (testContext) => {
+Deno.test('Scoped Lifecycle hooks other order', async (testContext) => {
 
 	interface ScopedInjectableInterface {
 		somethingThatMatters: string | null;
@@ -61,14 +61,14 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 	@Module({
 		controllers: [ScopedController, SideEffectController],
 		injectables: [
-			InjectableUsingScoped,
 			new TokenInjector(ScopedInjectable, 'SCOPED_TOKEN'),
+			InjectableUsingScoped,
 		],
 	})
-	class ParentBeforeScopedModule {}
+	class ParentAfterScopedModule {}
 
 	const app = new DanetApplication();
-	await app.init(ParentBeforeScopedModule);
+	await app.init(ParentAfterScopedModule);
 	await testContext.step(
 		'handleRequest is called before request when defined in a scoped service',
 		async () => {

@@ -21,7 +21,7 @@ export class Injector {
 		Constructor | string,
 		(ctx?: HttpContext) => Promise<unknown> | unknown
 	>();
-	private availableTypes = new Map<InjectableConstructor, boolean>();
+	private availableTypes = new Map<Constructor | string, Constructor>();
 	private logger: Logger = new Logger('Injector');
 	private resolvedTypes = new Map<
 		Constructor | string,
@@ -61,7 +61,9 @@ export class Injector {
 
 	public addAvailableInjectable(injectables: InjectableConstructor[]) {
 		for (const injectable of injectables) {
-			this.availableTypes.set(injectable, true);
+			const actualKey = injectable instanceof TokenInjector ? injectable.token : injectable;
+			const actualType = injectable instanceof TokenInjector ? injectable.useClass : injectable;
+			this.availableTypes.set(actualKey, actualType);
 		}
 	}
 
@@ -119,21 +121,37 @@ export class Injector {
 	private async resolveInjectable(
 		Type: InjectableConstructor | TokenInjector,
 		ParentConstructor?: Constructor,
+		token?: string,
 	) {
 		const actualType = Type instanceof TokenInjector ? Type.useClass : Type;
-		const actualKey = Type instanceof TokenInjector ? Type.token : Type;
+		const actualKey = Type instanceof TokenInjector ? Type.token : (token ?? Type);
 		const dependencies = this.getDependencies(actualType);
 
 		if (this.resolved.has(actualType)) {
 			return;
 		}
 
+		await this.resolveDependencies(dependencies, actualType);
 		const injectableMetadata = MetadataHelper.getMetadata<InjectableOption>(
 			injectionData,
 			actualType,
 		);
-		await this.resolveDependencies(dependencies, actualType);
-		if (injectableMetadata?.scope !== SCOPE.REQUEST) {
+		let canBeSingleton = injectableMetadata?.scope !== SCOPE.REQUEST;
+		if (canBeSingleton) {
+			for (const [idx, Dep] of dependencies.entries()) {
+				const token = this.getParamToken(actualType, idx);
+				const type = this.resolvedTypes.get(token ?? Dep);
+				console.log('we got type', type);
+				const dependencyInjectableMetadata = MetadataHelper.getMetadata<InjectableOption>(
+					injectionData,
+					type,
+				);
+				console.log('dependency metdata', dependencyInjectableMetadata);
+				if (dependencyInjectableMetadata.scope === SCOPE.REQUEST)
+					canBeSingleton = false;
+			}
+		}
+		if (canBeSingleton) {
 			const resolvedDependencies = new Array<Constructor>();
 			for (const [idx, Dep] of dependencies.entries()) {
 				resolvedDependencies.push(
@@ -146,6 +164,11 @@ export class Injector {
 			this.resolved.set(actualKey, () => instance);
 			this.resolvedTypes.set(actualKey, actualType);
 		} else {
+			MetadataHelper.setMetadata(
+				injectionData,
+				{ scope: SCOPE.REQUEST },
+				actualType,
+			);
 			if (ParentConstructor) {
 				MetadataHelper.setMetadata(
 					injectionData,
@@ -193,13 +216,14 @@ export class Injector {
 		ParentConstructor: Constructor,
 	) {
 		for (const [idx, Dependency] of Dependencies.entries()) {
+			const token = this.getParamToken(ParentConstructor, idx);
 			if (
-				!this.resolved.get(
-					this.getParamToken(ParentConstructor, idx) ?? Dependency,
+				!this.resolved.get( token ?? Dependency,
 				)
 			) {
-				if (this.availableTypes.get(Dependency)) {
-					await this.resolveInjectable(Dependency, ParentConstructor);
+				const type = this.availableTypes.get(token ?? Dependency);
+				if (type) {
+					await this.resolveInjectable(type, ParentConstructor, token);
 				} else {
 					throw new Error(
 						`${Dependency.name} is not available in injection context. Did you provide it in module ?`,
