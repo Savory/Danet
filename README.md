@@ -68,11 +68,3 @@ License
 
 <p>
 This project is Licensed under the <a href="./LICENSE">MIT License</a>. Please go through the License atleast once before making your contribution. </p>
-
-## Sponsor
-
-Danet is, for now, maintained by myself
-[(Thomas)](https://github.com/Sorikairox) only. Feel free to donate on the
-project's ko-fi page :
-
-<a href="https://ko-fi.com/danetframework"><img width="620" alt="logo_white_stroke" src="https://user-images.githubusercontent.com/38007824/230703158-84a35961-a05a-40cd-ac76-4a3c26f0e521.png"></a>
