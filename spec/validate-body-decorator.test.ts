@@ -3,11 +3,9 @@ import {
 	assertExists,
 } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 import { DanetApplication } from '../src/mod.ts';
-import { Injectable } from '../src/injector/injectable/mod.ts';
 import { Module } from '../src/module/mod.ts';
 import { Body, Controller, Get, Post } from '../src/router/controller/mod.ts';
-
-import { IsNumber, IsString } from '../validation.ts';
+import { IsNumber, IsString, LengthGreater } from '../validation.ts';
 
 // Utils ---------------
 function jsonWithMessage(msg: string) {
@@ -26,6 +24,7 @@ async function fetchWithBody(url: string, body: any) {
 
 class DTO {
 	@IsString()
+	@LengthGreater(20)
 	name!: string;
 
 	@IsNumber()
@@ -82,7 +81,7 @@ Deno.test('Return 200 if body follows DTO', async (t) => {
 	let res, json;
 
 	res = await fetchWithBody(`http://localhost:${port}/test`, {
-		name: 'James',
+		name: 'James  Very Long Name wow Awesome',
 		age: 23, // A string as number
 	});
 	assertEquals(res.status, 200);
@@ -117,7 +116,7 @@ Deno.test('Return 200 when prop is a class with validators and valid', async (t)
 		`http://localhost:${port}/test/validate-only-prop`,
 		{
 			person: {
-				name: 'James',
+				name: 'James Has A Bery Long Name Be Ready',
 				age: 23, // A string as number
 			},
 		},
@@ -136,6 +135,7 @@ Deno.test('Return 400 if body is NOT following DTO', async (t) => {
 
 	res = await fetchWithBody(`http://localhost:${port}/test`, {
 		name: 'James',
+		age: 23,
 	});
 	assertEquals(res.status, 400);
 
