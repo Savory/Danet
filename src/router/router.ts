@@ -25,7 +25,7 @@ export type Callback = (...args: any[]) => unknown;
 export type HttpContext = Context;
 
 export type ExecutionContext = HttpContext & {
-	_id: string,
+	_id: string;
 	// deno-lint-ignore ban-types
 	getHandler: () => Function;
 	getClass: () => Constructor;
@@ -149,7 +149,11 @@ export class DanetRouter {
 							| string = await controllerInstance[ControllerMethod.name](
 								...params,
 							);
-						await this.sendResponse(response, ControllerMethod, executionContext);
+						await this.sendResponse(
+							response,
+							ControllerMethod,
+							executionContext,
+						);
 					},
 				);
 			} catch (error) {
