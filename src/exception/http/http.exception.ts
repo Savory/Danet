@@ -1,9 +1,3 @@
-// import {
-//   HttpExceptionBody,
-//   HttpExceptionBodyMessage,
-// } from '../interfaces/http/http-exception-body.interface';
-// import { isObject, isString } from '../utils/shared.utils';
-
 import {
 	HttpExceptionBody,
 	HttpExceptionBodyMessage,
@@ -30,7 +24,8 @@ export class HttpException extends Error {
 	// }
 
 	constructor(
-		response: string | Record<string, unknown>,
+		// deno-lint-ignore no-explicit-any
+		response: string | Record<string, any>,
 		status: number,
 		options?: HttpExceptionOptions,
 	) {

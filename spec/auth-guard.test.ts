@@ -7,7 +7,7 @@ import { TokenInjector } from '../src/injector/injectable/constructor.ts';
 import { Injectable } from '../src/injector/injectable/decorator.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
-import { ExecutionContext, HttpContext } from '../src/router/router.ts';
+import { ExecutionContext } from '../src/router/router.ts';
 import { SetMetadata } from '../src/metadata/decorator.ts';
 import { MetadataHelper } from '../src/metadata/helper.ts';
 
@@ -181,8 +181,13 @@ Deno.test('403 when guard is throwing', async () => {
 	assertEquals(errorStatus, 403);
 	const json = await res.json();
 	assertEquals(json, {
-		message: '403 - Forbidden',
+		message: 'Forbidden',
 		name: 'ForbiddenException',
+		options: {},
+		response: {
+			message: 'Forbidden',
+			statusCode: 403,
+		},
 		status: 403,
 	});
 	await app.close();

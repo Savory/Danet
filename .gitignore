@@ -8,3 +8,4 @@ out
 gen
 node_modules
 coverage
+deno.lock
