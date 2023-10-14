@@ -1,3 +1,5 @@
+#V2 is actually being planned. We will remove oak and go with as much web standard as we can. No ETA yet
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/38007824/205580360-fa032554-5e9e-4266-8ec9-c78ca9a233bc.svg" width="250" alt="Danet Logo" />
 </p>
@@ -18,17 +20,17 @@ please, definitely check it out because they deserve a lot of credit. Without
 Nest, we wouldn't be developing Danet.
 
 Danet is a framework for building efficient, scalable Deno server-side
-applications. It is entirely build with Typescript.
+applications. It is entirely built with Typescript.
 
 Under the hood, Danet makes use of [Oak](https://github.com/oakserver/oak). We
-might support other HTTP Web Framework in the future !
+might support other HTTP Web frameworks in the future !
 
 We abstract a lot of things so you can focus on your core business and
 architecture.
 
 ## Philosophy
 
-Deno is a relatively new engine. Nest was one of the greatest framework to
+Deno is a relatively new engine. Nest was one of the greatest frameworks to
 improve the architecture of NodeJS project. We want to bring the same level of
 pro-efficiency and professionalism into Deno's world.
 
@@ -55,7 +57,7 @@ bug on our [Github Repository](https://github.com/Savory/Danet) and
 
 ## Contributing
 
-- Contributions make the open source community such an amazing place to learn,
+- Contributions make the open-source community such an amazing place to learn,
   inspire, and create.
 - Any contributions you make are **truly appreciated**.
 - Check out our [contribution guidelines](/CONTRIBUTING.md) for more
