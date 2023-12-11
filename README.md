@@ -1,4 +1,4 @@
-# V2 is curerently being planned. We will remove oak and go with as much web standard as we can. No ETA yet
+# V2 is currently being planned. We will remove oak and go with as much web standard as we can. No ETA yet
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/38007824/205580360-fa032554-5e9e-4266-8ec9-c78ca9a233bc.svg" width="250" alt="Danet Logo" />
