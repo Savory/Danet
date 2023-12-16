@@ -51,7 +51,7 @@ bug on our [Github Repository](https://github.com/Savory/Danet) and
 
 [Use our CLI](https://github.com/Savory/Danet-CLI)
 
-[Read our documentation](https://docs.danet.land/)
+[Read our documentation](https://danet.land)
 
 [Read our blog](https://savory.github.io/)
 
