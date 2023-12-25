@@ -26,9 +26,9 @@ class GlobalGuard implements AuthGuard {
 
 	canActivate(context: ExecutionContext) {
 		this.simpleService.doSomething();
-		context.response.body = {
+		context.json({
 			passedInglobalGuard: true,
-		};
+		});
 		return true;
 	}
 }
@@ -45,10 +45,10 @@ class ControllerGuard implements AuthGuard {
 			controller,
 		);
 		this.simpleService.doSomething();
-		context.response.body = {
+		context.json({
 			passedIncontrollerGuard: true,
 			customMetadata,
-		};
+		});
 		return true;
 	}
 }
@@ -62,10 +62,10 @@ class MethodGuard implements AuthGuard {
 		this.simpleService.doSomething();
 		const method = context.getHandler();
 		const customMetadata = MetadataHelper.getMetadata('customMetadata', method);
-		context.response.body = {
+		context.json({
 			passedInmethodGuard: true,
 			customMetadata,
-		};
+		});
 		return true;
 	}
 }

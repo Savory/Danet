@@ -28,8 +28,8 @@ class SimpleMiddleware implements DanetMiddleware {
 	}
 
 	async action(ctx: ExecutionContext, next: NextFunction) {
-		ctx.response.body = `${ctx.response.body as string || ''}` +
-			this.simpleInjectable.doSomething();
+		ctx.body(`${(await ctx.res.text()) || ''}` +
+			this.simpleInjectable.doSomething());
 		await next();
 	}
 }
@@ -45,7 +45,7 @@ class ThrowingMiddleware implements DanetMiddleware {
 }
 
 const secondMiddleware = async (ctx: HttpContext, next: NextFunction) => {
-	ctx.response.body = `${ctx.response.body as string || ''}` + ' ' + 'more';
+	ctx.body(`${(await ctx.res.text()) as string || ''}` + ' ' + 'more');
 	await next();
 };
 
@@ -76,8 +76,8 @@ class ControllerWithMiddleware {
 })
 class MyModule {}
 
-const app = new DanetApplication();
 Deno.test('Middleware method decorator', async () => {
+	const app = new DanetApplication();
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
 
@@ -93,6 +93,7 @@ Deno.test('Middleware method decorator', async () => {
 });
 
 Deno.test('Throwing middleware method decorator', async () => {
+	const app = new DanetApplication();
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
 
@@ -108,6 +109,7 @@ Deno.test('Throwing middleware method decorator', async () => {
 });
 
 Deno.test('Middleware controller decorator', async () => {
+	const app = new DanetApplication();
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
 
@@ -126,9 +128,9 @@ Deno.test('Middleware controller decorator', async () => {
 @Injectable()
 class FirstGlobalMiddleware implements DanetMiddleware {
 	async action(ctx: ExecutionContext, next: NextFunction) {
-		ctx.response.body = `${
-			ctx.response.body as string || ''
-		}[first-middleware]`;
+		ctx.body(`${
+			(await ctx.res.text()) as string || ''
+		}[first-middleware]`);
 		await next();
 	}
 }
@@ -136,14 +138,15 @@ class FirstGlobalMiddleware implements DanetMiddleware {
 @Injectable()
 class SecondGlobalMiddleware implements DanetMiddleware {
 	async action(ctx: ExecutionContext, next: NextFunction) {
-		ctx.response.body = `${
-			ctx.response.body as string || ''
-		}[second-middleware]`;
+		ctx.body(`${
+			(await ctx.res.text()) as string || ''
+		}[second-middleware]`);
 		await next();
 	}
 }
 
 Deno.test('Global middlewares', async () => {
+	const app = new DanetApplication();
 	await app.init(MyModule);
 	app.addGlobalMiddlewares(FirstGlobalMiddleware, SecondGlobalMiddleware);
 	const listenEvent = await app.listen(0);
