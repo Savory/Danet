@@ -34,7 +34,8 @@ export class MiddlewareExecutor {
 		) as InjectableConstructor[];
 		let index = -1;
 		await this.injector.registerInjectables(injectablesMiddleware);
-		const dispatch = async (i: number) => {
+		// deno-lint-ignore no-explicit-any
+		const dispatch = async (i: number): Promise<any> => {
 			if (i <= index) {
 				throw new Error('next() called multiple times.');
 			}
@@ -42,8 +43,7 @@ export class MiddlewareExecutor {
 			let fn;
 			if (i === middlewares.length) {
 				fn = next;
-				await fn();
-				return;
+				return await fn();
 			}
 			const currentMiddleware = middlewares[i];
 			if (isMiddlewareClass(currentMiddleware)) {
@@ -61,10 +61,10 @@ export class MiddlewareExecutor {
 			if (!fn) {
 				return;
 			}
-			await fn(context, dispatch.bind(null, i + 1));
+			return await fn(context, dispatch.bind(null, i + 1));
 		};
 
-		await dispatch(0);
+		return await dispatch(0);
 	}
 
 	private getSymbolMiddlewares(

@@ -4,7 +4,6 @@ import {
 	assertNotEquals,
 	assertRejects,
 } from '../src/deps_test.ts';
-import { Route } from '../src/deps.ts';
 import { DanetApplication } from '../src/app.ts';
 import { GLOBAL_GUARD } from '../src/guard/constants.ts';
 import { AuthGuard } from '../src/guard/interface.ts';
@@ -24,7 +23,6 @@ Deno.test('Injection', async (testContext) => {
 	@Injectable()
 	class GlobalGuard implements AuthGuard {
 		canActivate(context: HttpContext): boolean {
-			context.state.coucou = 'coucou';
 			return true;
 		}
 	}
@@ -126,24 +124,6 @@ Deno.test('Injection', async (testContext) => {
 
 	const app = new DanetApplication();
 	await app.init(FirstModule);
-
-	function expectControllerRouterToExist(
-		keys: IterableIterator<Route<string>>,
-		controllerEndpoint: string,
-	) {
-		const firstRouter = keys.next().value;
-		assertEquals(firstRouter.path, controllerEndpoint);
-		assertEquals(firstRouter.methods, ['HEAD', 'GET']);
-		const secondRouter = keys.next().value;
-		assertEquals(secondRouter.path, controllerEndpoint + '/post');
-		assertEquals(secondRouter.methods, ['POST']);
-	}
-
-	await testContext.step('it registers all module controllers', () => {
-		const keys = app.router.keys();
-		expectControllerRouterToExist(keys, '/second-controller');
-		expectControllerRouterToExist(keys, '/first-controller');
-	});
 
 	await testContext.step(
 		'it inject controllers dependencies if they are provided by current module or previously loaded module',

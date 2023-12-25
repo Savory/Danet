@@ -1,4 +1,4 @@
-import { Context, Router } from '../deps.ts';
+import { Context, Application } from '../deps.ts';
 
 import { FilterExecutor } from '../exception/filter/executor.ts';
 import { HTTP_STATUS } from '../exception/http/enum.ts';
@@ -18,6 +18,7 @@ import {
 } from './controller/params/decorators.ts';
 import { trimSlash } from './utils.ts';
 import { MiddlewareExecutor } from './middleware/executor.ts';
+import { HandlerInterface } from 'https://deno.land/x/hono@v3.11.10/types.ts';
 
 // deno-lint-ignore no-explicit-any
 export type Callback = (...args: any[]) => unknown;
@@ -32,31 +33,32 @@ export type ExecutionContext = HttpContext & {
 };
 
 export class DanetRouter {
-	public router = new Router();
 	private logger: Logger = new Logger('Router');
-
+	private methodsMap: Map<string, HandlerInterface>;
 	public prefix?: string;
-
+	private middlewareExecutor: MiddlewareExecutor;
 	constructor(
 		private injector: Injector,
 		private guardExecutor: GuardExecutor = new GuardExecutor(injector),
 		private filterExecutor: FilterExecutor = new FilterExecutor(injector),
 		private viewRenderer: Renderer = new HandlebarRenderer(),
-		private middlewareExecutor: MiddlewareExecutor = new MiddlewareExecutor(
-			injector,
-		),
+		private router: Application,
 	) {
+		this.methodsMap = new Map([
+			['DELETE', this.router.delete],
+			['GET', this.router.get],
+			['PATCH', this.router.patch],
+			['POST', this.router.post],
+			['PUT', this.router.put],
+			['OPTIONS', this.router.options],
+			['HEAD', this.router.head],
+			['ALL', this.router.all],
+		]);
+		this.middlewareExecutor = new MiddlewareExecutor(
+			injector,
+		);
 	}
-	methodsMap = new Map([
-		['DELETE', this.router.delete],
-		['GET', this.router.get],
-		['PATCH', this.router.patch],
-		['POST', this.router.post],
-		['PUT', this.router.put],
-		['OPTIONS', this.router.options],
-		['HEAD', this.router.head],
-		['ALL', this.router.all],
-	]);
+	
 	public createRoute(
 		handlerName: string | hookName,
 		Controller: Constructor,
@@ -93,7 +95,7 @@ export class DanetRouter {
 
 	setPrefix(prefix: string) {
 		prefix = prefix.replace(/\/$/, '');
-		this.router.prefix(prefix);
+		this.router.basePath(prefix);
 		this.prefix = prefix;
 	}
 
@@ -123,8 +125,8 @@ export class DanetRouter {
 				getClass: () => Controller,
 				getHandler: () => ControllerMethod,
 			} as unknown as ExecutionContext;
-			try {
-				await this.middlewareExecutor.executeAllRelevantMiddlewares(
+			try {				
+				return await this.middlewareExecutor.executeAllRelevantMiddlewares(
 					context as ExecutionContext,
 					Controller,
 					ControllerMethod,
@@ -149,7 +151,9 @@ export class DanetRouter {
 							| string = await controllerInstance[ControllerMethod.name](
 								...params,
 							);
-						await this.sendResponse(response, ControllerMethod, executionContext);
+
+						const whatToSend = await this.sendResponse(response, ControllerMethod, executionContext);
+						return whatToSend;
 					},
 				);
 			} catch (error) {
@@ -165,15 +169,14 @@ export class DanetRouter {
 				}
 				const status = error.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
 				const message = error.message || 'Internal server error!';
-
-				executionContext.response.body = {
+				this.injector.cleanRequestInjectables(executionContext._id);
+				executionContext.status(status);
+				return executionContext.json({
 					...error,
 					status,
 					message,
-				};
-				executionContext.response.status = status;
+				});
 			}
-			this.injector.cleanRequestInjectables(executionContext._id);
 		};
 	}
 
@@ -182,18 +185,21 @@ export class DanetRouter {
 		ControllerMethod: Callback,
 		context: HttpContext,
 	) {
+		context.status(200);	
 		if (response) {
 			const fileName = MetadataHelper.getMetadata<string>(
 				rendererViewFile,
 				ControllerMethod,
 			);
 			if (fileName) {
-				context.response.body = await this.viewRenderer.render(
+				return context.html(await this.viewRenderer.render(
 					fileName,
 					response,
-				);
+				));
 			} else {
-				context.response.body = response;
+				if (typeof response !== 'string')
+					return context.json(response);
+				return context.text(response);
 			}
 		}
 	}

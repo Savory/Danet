@@ -18,7 +18,7 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 	class ScopedInjectable implements BeforeControllerMethodIsCalled {
 		public somethingThatMatters: string | null = null;
 		beforeControllerMethodIsCalled(ctx: HttpContext) {
-			this.somethingThatMatters = `Received a ${ctx.request.method} request`;
+			this.somethingThatMatters = `Received a ${ctx.req.method} request`;
 		}
 	}
 
@@ -67,11 +67,12 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 	})
 	class ParentBeforeScopedModule {}
 
-	const app = new DanetApplication();
-	await app.init(ParentBeforeScopedModule);
+
 	await testContext.step(
 		'handleRequest is called before request when defined in a scoped service',
 		async () => {
+			const app = new DanetApplication();
+			await app.init(ParentBeforeScopedModule);
 			const listenEvent = await app.listen(0);
 
 			const res = await fetch(
@@ -89,6 +90,8 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 	await testContext.step(
 		'handleRequest is called before request when defined in a scoped service but thats a side effect',
 		async () => {
+			const app = new DanetApplication();
+			await app.init(ParentBeforeScopedModule);
 			const listenEvent = await app.listen(0);
 
 			const res = await fetch(
