@@ -32,6 +32,11 @@ class SimpleController {
 		return myvalue;
 	}
 
+	@Get('/query/myvalue/default')
+	simpleGetMyValueDefault(@Query('myvalue') myvalue: string[]) {
+		return myvalue;
+	}
+
 	@Get('/query/myvalue/last')
 	simpleGetMyValueLast(@Query('myvalue', { value: 'last' }) myvalue: string) {
 		return myvalue;
@@ -172,6 +177,22 @@ Deno.test(`@Query decorator with value 'first' to return the first value for a g
 
 	const res = await fetch(
 		`http://localhost:${listenEvent.port}/query/myvalue/first?myvalue=foo&myvalue=bar`,
+		{
+			method: 'GET',
+		},
+	);
+	const text = await res.text();
+	assertEquals(text, `foo`);
+
+	await app.close();
+});
+
+Deno.test(`@Query decorator with value and no option to return the first value for a given query parameter`, async () => {
+	await app.init(MyModule);
+	const listenEvent = await app.listen(0);
+
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/query/myvalue/default?myvalue=foo&myvalue=bar`,
 		{
 			method: 'GET',
 		},

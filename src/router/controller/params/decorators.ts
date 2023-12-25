@@ -128,11 +128,11 @@ function formatQueryValue(
 	queryValue: string[] | undefined,
 	value: 'first' | 'last' | 'array' | undefined,
 ) {
-	if (!queryValue || !value) {
+	if (!queryValue) {
 		return undefined;
 	}
 
-	switch (value || 'last') {
+	switch (value) {
 		case 'first':
 			return queryValue[0];
 		case 'last':
@@ -140,7 +140,7 @@ function formatQueryValue(
 		case 'array':
 			return queryValue;
 		default:
-			return undefined;
+			return queryValue[0];
 	}
 }
 
