@@ -44,18 +44,18 @@ export class MiddlewareExecutor {
 			if (i === middlewares.length) {
 				fn = next;
 				return await fn();
-			}
+							}
 			const currentMiddleware = middlewares[i];
 			if (isMiddlewareClass(currentMiddleware)) {
 				const middlewareInstance: DanetMiddleware = this.injector.get<
 					DanetMiddleware
 				>(currentMiddleware as Constructor<DanetMiddleware>);
 				fn = async (ctx: HttpContext, nextFn: NextFunction) => {
-					await middlewareInstance.action(ctx, nextFn);
+					return await middlewareInstance.action(ctx, nextFn);
 				};
 			} else {
 				fn = async (ctx: HttpContext, nextFn: NextFunction) => {
-					await (currentMiddleware as MiddlewareFunction)(ctx, nextFn);
+					return await (currentMiddleware as MiddlewareFunction)(ctx, nextFn);
 				};
 			}
 			if (!fn) {
@@ -65,7 +65,7 @@ export class MiddlewareExecutor {
 		};
 
 		return await dispatch(0);
-	}
+			}
 
 	private getSymbolMiddlewares(
 		symbol: unknown,

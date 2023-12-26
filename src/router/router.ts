@@ -197,6 +197,8 @@ export class DanetRouter {
 				));
 			} else {
 				if (typeof response !== 'string') {
+					this.logger.log('we send back json');
+					console.log(response);
 					return context.json(response);
 				}
 				return context.text(response);
