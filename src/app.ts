@@ -1,4 +1,4 @@
-import { Application, serveStatic, MiddlewareHandler } from './deps.ts';
+import { Application, MiddlewareHandler } from './deps.ts';
 import { FilterExecutor } from './exception/filter/executor.ts';
 import { GuardExecutor } from './guard/executor.ts';
 import { HookExecutor } from './hook/executor.ts';
@@ -14,6 +14,7 @@ import { Constructor } from './utils/constructor.ts';
 import { PossibleMiddlewareType } from './router/middleware/decorator.ts';
 import { globalMiddlewareContainer } from './router/middleware/global-container.ts';
 import { ModuleConstructor } from './module/constructor.ts';
+import { serveStatic } from './utils/serve-static.ts';
 import { cors } from 'https://deno.land/x/hono/middleware.ts'
 
 type CORSOptions = {
