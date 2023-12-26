@@ -27,7 +27,7 @@ export class FilterExecutor {
 		exceptionFilter: ExceptionFilter,
 		context: HttpContext,
 		error: unknown,
-	): Promise<boolean> {
+	): Promise<Response | undefined> {
 		if (exceptionFilter) {
 			const errorTypeCaughtByFilter = this.getErrorTypeCaughtByExceptionFilter(
 				// deno-lint-ignore no-explicit-any
@@ -35,13 +35,12 @@ export class FilterExecutor {
 			);
 			if (errorTypeCaughtByFilter) {
 				if (!(error instanceof errorTypeCaughtByFilter)) {
-					return false;
+					return;
 				}
 			}
-			await exceptionFilter.catch(error, context);
-			return true;
+			return exceptionFilter.catch(error, context);
 		}
-		return false;
+		return;
 	}
 
 	private async executeFilterFromMetadata(
@@ -49,7 +48,7 @@ export class FilterExecutor {
 		error: unknown,
 		// deno-lint-ignore ban-types
 		constructor: Constructor | Function,
-	): Promise<boolean> {
+	): Promise<Response | undefined> {
 		const FilterConstructor: Constructor<ExceptionFilter> = MetadataHelper
 			.getMetadata<Constructor<ExceptionFilter>>(
 				filterExceptionMetadataKey,
@@ -62,7 +61,7 @@ export class FilterExecutor {
 			);
 			return this.executeFilter(filter, context, error);
 		}
-		return false;
+		return;
 	}
 
 	async executeControllerAndMethodFilter(
@@ -70,7 +69,7 @@ export class FilterExecutor {
 		error: unknown,
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
-	): Promise<boolean> {
+	): Promise<Response | undefined> {
 		return (await this.executeFilterFromMetadata(context, error, Controller) ||
 			await this.executeFilterFromMetadata(context, error, ControllerMethod));
 	}

@@ -29,7 +29,7 @@ class ErrorFilter implements ExceptionFilter {
 
 	catch(exception: any, context: HttpContext) {
 		this.simpleService.doSomething();
-		context.json({
+		return context.json({
 			wePassedInFilterCatchingAllErrors: true,
 		});
 	}
@@ -43,7 +43,7 @@ class CustomErrorFilter implements ExceptionFilter {
 
 	catch(exception: any, context: HttpContext) {
 		this.simpleService.doSomething();
-		context.json({
+		return context.json({
 			wePassedInFilterCatchingOnlySomeError: true,
 		});
 	}
