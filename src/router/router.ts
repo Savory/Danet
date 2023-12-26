@@ -151,12 +151,14 @@ export class DanetRouter {
 							| string = await controllerInstance[ControllerMethod.name](
 								...params,
 							);
-						const whatToSend = await this.sendResponse(response, ControllerMethod, executionContext);
+							this.logger.log(`Controller response ${response}`)
+							const whatToSend = await this.sendResponse(response, ControllerMethod, executionContext);
+							this.logger.log(`What to send ${whatToSend}`)
 						return whatToSend;
 					},
 				);
 			} catch (error) {
-				this.logger.error(error);
+				this.logger.error(JSON.stringify(error));
 				const filterResponse = await this.filterExecutor
 					.executeControllerAndMethodFilter(
 						executionContext,
