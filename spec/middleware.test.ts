@@ -7,12 +7,10 @@ import { ExecutionContext, HttpContext } from '../src/router/router.ts';
 import {
 	DanetMiddleware,
 	Middleware,
-	MiddlewareFunction,
 	NextFunction,
 } from '../src/router/middleware/decorator.ts';
 import {
 	BadRequestException,
-	NotFoundException,
 } from '../src/exception/http/exceptions.ts';
 
 @Injectable()
@@ -28,8 +26,10 @@ class SimpleMiddleware implements DanetMiddleware {
 	}
 
 	async action(ctx: ExecutionContext, next: NextFunction) {
-		ctx.body(`${(await ctx.res.text()) || ''}` +
-			this.simpleInjectable.doSomething());
+		if (!ctx.res) {
+			ctx.res = new Response();
+		}
+		ctx.res.headers.append('middlewaredata', this.simpleInjectable.doSomething());
 		await next();
 	}
 }
@@ -45,7 +45,10 @@ class ThrowingMiddleware implements DanetMiddleware {
 }
 
 const secondMiddleware = async (ctx: HttpContext, next: NextFunction) => {
-	ctx.body(`${(await ctx.res.text()) as string || ''}` + ' ' + 'more');
+	if (!ctx.res) {
+		ctx.res = new Response();
+	}
+	ctx.res.headers.append('middlewaredata', (' ' + 'more'));
 	await next();
 };
 
@@ -87,8 +90,9 @@ Deno.test('Middleware method decorator', async () => {
 			method: 'GET',
 		},
 	);
-	const text = await res.text();
+	const text = await res.headers.get('middlewaredata');
 	assertEquals(text, `I did something`);
+	await res.body?.cancel();
 	await app.close();
 });
 
@@ -119,18 +123,17 @@ Deno.test('Middleware controller decorator', async () => {
 			method: 'GET',
 		},
 	);
-	const text = await res.text();
 	//order is mixed up on purpose to check that argument order prevails
-	assertEquals(text, `I did something more`);
+	const text = await res.headers.get('middlewaredata');
+	assertEquals(text, `I did something, more`);
+	await res.body?.cancel();
 	await app.close();
 });
 
 @Injectable()
 class FirstGlobalMiddleware implements DanetMiddleware {
 	async action(ctx: ExecutionContext, next: NextFunction) {
-		ctx.body(`${
-			(await ctx.res.text()) as string || ''
-		}[first-middleware]`);
+		ctx.res.headers.append('middlewaredata', '[first-middleware]');
 		await next();
 	}
 }
@@ -138,9 +141,7 @@ class FirstGlobalMiddleware implements DanetMiddleware {
 @Injectable()
 class SecondGlobalMiddleware implements DanetMiddleware {
 	async action(ctx: ExecutionContext, next: NextFunction) {
-		ctx.body(`${
-			(await ctx.res.text()) as string || ''
-		}[second-middleware]`);
+		ctx.res.headers.append('middlewaredata', '[second-middleware]');
 		await next();
 	}
 }
@@ -157,10 +158,11 @@ Deno.test('Global middlewares', async () => {
 			method: 'GET',
 		},
 	);
-	const text = await res.text();
+	const text = await res.headers.get('middlewaredata');
 	assertEquals(
 		text,
-		`[first-middleware][second-middleware]I did something more`,
+		`[first-middleware], [second-middleware], I did something, more`,
 	);
+	await res.body?.cancel();
 	await app.close();
 });
