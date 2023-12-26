@@ -188,19 +188,24 @@ export class DanetRouter {
 		context: HttpContext,
 	) {
 		if (response) {
+			this.logger.log("We have a response");
 			context.status(200);	
 			const fileName = MetadataHelper.getMetadata<string>(
 				rendererViewFile,
 				ControllerMethod,
 			);
 			if (fileName) {
+				this.logger.log("We have a filename");
 				return context.html(await this.viewRenderer.render(
 					fileName,
 					response,
 				));
 			} else {
-				if (typeof response !== 'string')
+				if (typeof response !== 'string') {
+					this.logger.log("it's not a string");
 					return context.json(response);
+				}
+				this.logger.log("It is a string");
 				return context.text(response);
 			}
 		}
