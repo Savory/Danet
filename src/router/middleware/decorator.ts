@@ -7,7 +7,7 @@ export interface DanetMiddleware {
 	action(ctx: HttpContext, next: NextFunction): Promise<unknown> | unknown;
 }
 
-export type NextFunction = () => Promise<unknown>;
+export type NextFunction = () => Promise<void | Response>;
 
 export type MiddlewareFunction = (
 	ctx: HttpContext,
