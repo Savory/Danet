@@ -1,4 +1,4 @@
-import { assertEquals } from '../src/deps_test.ts';
+import { assertEquals, assertObjectMatch } from '../src/deps_test.ts';
 import { DanetApplication } from '../src/app.ts';
 import { GLOBAL_GUARD } from '../src/guard/constants.ts';
 import { UseGuard } from '../src/guard/decorator.ts';
@@ -26,9 +26,8 @@ class GlobalGuard implements AuthGuard {
 
 	canActivate(context: ExecutionContext) {
 		this.simpleService.doSomething();
-		context.json({
-			passedInglobalGuard: true,
-		});
+		context.res = new Response();
+		context.res.headers.append('passedInglobalGuard', 'true');
 		return true;
 	}
 }
@@ -40,15 +39,14 @@ class ControllerGuard implements AuthGuard {
 
 	canActivate(context: ExecutionContext) {
 		const controller = context.getClass();
-		const customMetadata = MetadataHelper.getMetadata(
+		const customMetadata = MetadataHelper.getMetadata<string>(
 			'customMetadata',
 			controller,
 		);
 		this.simpleService.doSomething();
-		context.json({
-			passedIncontrollerGuard: true,
-			customMetadata,
-		});
+		context.res = new Response();
+		context.res.headers.append('passedIncontrollerGuard', 'true');
+		context.res.headers.append('customMetadata', customMetadata);
 		return true;
 	}
 }
@@ -61,11 +59,10 @@ class MethodGuard implements AuthGuard {
 	canActivate(context: ExecutionContext) {
 		this.simpleService.doSomething();
 		const method = context.getHandler();
-		const customMetadata = MetadataHelper.getMetadata('customMetadata', method);
-		context.json({
-			passedInmethodGuard: true,
-			customMetadata,
-		});
+		const customMetadata = MetadataHelper.getMetadata<string>('customMetadata', method);
+		context.res = new Response();
+		context.res.headers.append('passedInmethodGuard', 'true');
+		context.res.headers.append('customMetadata', customMetadata);
 		return true;
 	}
 }
@@ -110,11 +107,9 @@ for (const guardType of ['controller', 'method']) {
 				method: 'GET',
 			},
 		);
-		const json = await res.json();
-		assertEquals(json, {
-			[`passedIn${guardType}Guard`]: true,
-			customMetadata: 'customValue',
-		});
+		assertEquals(res.headers.get(`passedIn${guardType}guard`), 'true');
+		assertEquals(res.headers.get('custommetadata'), 'customValue');
+		await res?.body?.cancel()
 		await app.close();
 	});
 }
@@ -139,10 +134,8 @@ Deno.test('Global guard', async () => {
 	const res = await fetch(`http://localhost:${listenEvent.port}/global-guard`, {
 		method: 'GET',
 	});
-	const json = await res.json();
-	assertEquals(json, {
-		[`passedInglobalGuard`]: true,
-	});
+	assertEquals(res.headers.get('passedinglobalguard'), 'true');
+	await res?.body?.cancel()
 	await app.close();
 });
 

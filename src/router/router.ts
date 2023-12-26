@@ -151,21 +151,23 @@ export class DanetRouter {
 							| string = await controllerInstance[ControllerMethod.name](
 								...params,
 							);
-
+						console.log('controller response', response);
+						console.log('context response', executionContext.res);
 						const whatToSend = await this.sendResponse(response, ControllerMethod, executionContext);
+						console.log('whatToSend', whatToSend);
 						return whatToSend;
 					},
 				);
 			} catch (error) {
-				const errorIsCaught = await this.filterExecutor
+				const filterResponse = await this.filterExecutor
 					.executeControllerAndMethodFilter(
 						executionContext,
 						error,
 						Controller,
 						ControllerMethod,
 					);
-				if (errorIsCaught) {
-					return;
+				if (filterResponse) {
+					return filterResponse;
 				}
 				const status = error.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
 				const message = error.message || 'Internal server error!';
@@ -185,8 +187,8 @@ export class DanetRouter {
 		ControllerMethod: Callback,
 		context: HttpContext,
 	) {
-		context.status(200);	
 		if (response) {
+			context.status(200);	
 			const fileName = MetadataHelper.getMetadata<string>(
 				rendererViewFile,
 				ControllerMethod,
@@ -202,6 +204,7 @@ export class DanetRouter {
 				return context.text(response);
 			}
 		}
+		return context.res;
 	}
 
 	private async resolveMethodParam(
