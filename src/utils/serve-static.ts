@@ -1,5 +1,6 @@
-import type { Context, Next, getFilepath, getMimeType } from '../deps.ts'
-
+import type { Context, Next } from '../deps.ts'
+import { getFilePath  } from './filepath.ts'
+import { getMimeType } from './get-mime.ts'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const { open } = Deno
@@ -23,13 +24,13 @@ export const serveStatic = (options: ServeStaticOptions = { root: '' }) => {
       let path = getFilePath({
         filename: options.rewriteRequestPath ? options.rewriteRequestPath(filename) : filename,
         root: options.root,
-        defaultDocument: DEFAULT_DOCUMENT,
+        defaultDocument: 'index.html',
       })
   
       if (!path) return await next()
-  
-      path = `./${path}`
-  
+
+      path = `/${path}`;
+
       let file
   
       try {
