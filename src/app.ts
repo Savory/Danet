@@ -70,6 +70,7 @@ export class DanetApplication {
 	}
 
 	async close() {
+		await this.hookExecutor.executeHookForEveryInjectable(hookName.APP_CLOSE);
 		await this.internalHttpServer?.shutdown();
 		this.logger.log('Shutting down');
 	}

@@ -66,7 +66,7 @@ export const Header = (prop?: string) =>
 		if (!context.req.raw.headers) {
 			return null;
 		}
-		return prop ? context.req.header(prop) : context.req.header;
+		return prop ? context.req.header(prop) : context.req.raw.headers;
 	})();
 
 export const BODY_TYPE_KEY = 'body-type';
@@ -176,7 +176,7 @@ export function Query(
 		} else {
 			return Object.fromEntries(
 				// deno-lint-ignore no-explicit-any
-				Array.from((context.req.query as any).keys())
+				Array.from(Object.keys(context.req.query()))
 					.map((key) => [
 						key,
 						formatQueryValue(

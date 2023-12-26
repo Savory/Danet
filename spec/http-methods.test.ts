@@ -49,9 +49,9 @@ class SimpleController {
 })
 class MyModule {}
 
-const app = new DanetApplication();
 for (const method of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
 	Deno.test(method, async () => {
+		const app = new DanetApplication();
 		await app.init(MyModule);
 		const listenEvent = await app.listen(0);
 
@@ -68,6 +68,7 @@ for (const method of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
 }
 
 Deno.test('ALL', async () => {
+	const app = new DanetApplication();
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
 
