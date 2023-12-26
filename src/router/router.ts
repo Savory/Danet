@@ -151,10 +151,7 @@ export class DanetRouter {
 							| string = await controllerInstance[ControllerMethod.name](
 								...params,
 							);
-							this.logger.log(`Controller ${JSON.stringify(response)}`)
-							const whatToSend = await this.sendResponse(response, ControllerMethod, executionContext);
-							this.logger.log(`What to ${JSON.stringify(whatToSend)}`)
-						return whatToSend;
+						return await this.sendResponse(response, ControllerMethod, executionContext);
 					},
 				);
 			} catch (error) {
@@ -188,24 +185,20 @@ export class DanetRouter {
 		context: HttpContext,
 	) {
 		if (response) {
-			this.logger.log("We have a response");
 			context.status(200);	
 			const fileName = MetadataHelper.getMetadata<string>(
 				rendererViewFile,
 				ControllerMethod,
 			);
 			if (fileName) {
-				this.logger.log("We have a filename");
 				return context.html(await this.viewRenderer.render(
 					fileName,
 					response,
 				));
 			} else {
 				if (typeof response !== 'string') {
-					this.logger.log("it's not a string");
 					return context.json(response);
 				}
-				this.logger.log("It is a string");
 				return context.text(response);
 			}
 		}
