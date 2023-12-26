@@ -156,6 +156,7 @@ export class DanetRouter {
 					},
 				);
 			} catch (error) {
+				this.logger.error(error);
 				const filterResponse = await this.filterExecutor
 					.executeControllerAndMethodFilter(
 						executionContext,
