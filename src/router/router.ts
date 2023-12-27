@@ -1,4 +1,4 @@
-import { Context, Application } from '../deps.ts';
+import { Context, Application, type HandlerInterface } from '../deps.ts';
 
 import { FilterExecutor } from '../exception/filter/executor.ts';
 import { HTTP_STATUS } from '../exception/http/enum.ts';
@@ -18,7 +18,6 @@ import {
 } from './controller/params/decorators.ts';
 import { trimSlash } from './utils.ts';
 import { MiddlewareExecutor } from './middleware/executor.ts';
-import { HandlerInterface } from 'https://deno.land/x/hono@v3.11.10/types.ts';
 
 // deno-lint-ignore no-explicit-any
 export type Callback = (...args: any[]) => unknown;
@@ -125,9 +124,10 @@ export class DanetRouter {
 				getClass: () => Controller,
 				getHandler: () => ControllerMethod,
 			} as unknown as ExecutionContext;
+			executionContext.res = new Response();
 			try {				
 				return await this.middlewareExecutor.executeAllRelevantMiddlewares(
-					context as ExecutionContext,
+					executionContext,
 					Controller,
 					ControllerMethod,
 					async () => {
@@ -155,7 +155,6 @@ export class DanetRouter {
 					},
 				);
 			} catch (error) {
-				this.logger.error(JSON.stringify(error));
 				const filterResponse = await this.filterExecutor
 					.executeControllerAndMethodFilter(
 						executionContext,
@@ -185,23 +184,27 @@ export class DanetRouter {
 		context: HttpContext,
 	) {
 		if (response) {
-			context.status(200);	
 			const fileName = MetadataHelper.getMetadata<string>(
 				rendererViewFile,
 				ControllerMethod,
 			);
 			if (fileName) {
-				return context.html(await this.viewRenderer.render(
+				context.res = await context.html(await this.viewRenderer.render(
 					fileName,
 					response,
-				));
+				), {
+					headers: context.res.headers,
+				});
 			} else {
 				if (typeof response !== 'string') {
-					this.logger.log('we send back json');
-					console.log(response);
-					return context.json(response);
+					context.res = await context.json(response, {
+						headers: context.res.headers,
+					});
+				} else {
+					context.res = await context.text(response, {
+						headers: context.res.headers,
+					});
 				}
-				return context.text(response);
 			}
 		}
 		return context.res;

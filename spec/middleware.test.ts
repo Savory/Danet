@@ -26,11 +26,8 @@ class SimpleMiddleware implements DanetMiddleware {
 	}
 
 	async action(ctx: ExecutionContext, next: NextFunction) {
-		if (!ctx.res) {
-			ctx.res = new Response();
-		}
 		ctx.res.headers.append('middlewaredata', this.simpleInjectable.doSomething());
-		await next();
+		return next();
 	}
 }
 
@@ -49,7 +46,7 @@ const secondMiddleware = async (ctx: HttpContext, next: NextFunction) => {
 		ctx.res = new Response();
 	}
 	ctx.res.headers.append('middlewaredata', (' ' + 'more'));
-	await next();
+	return next();
 };
 
 @Controller('simple-controller')
@@ -57,6 +54,7 @@ class SimpleController {
 	@Get('/')
 	@Middleware(SimpleMiddleware)
 	getWithMiddleware() {
+		return 'toto';
 	}
 
 	@Get('/throwing')
@@ -90,9 +88,10 @@ Deno.test('Middleware method decorator', async () => {
 			method: 'GET',
 		},
 	);
-	const text = await res.headers.get('middlewaredata');
+	const text = res.headers.get('middlewaredata');
 	assertEquals(text, `I did something`);
-	await res.body?.cancel();
+	assertEquals(await res.text(), 'toto');
+	assertEquals(res.status, 200);
 	await app.close();
 });
 
@@ -124,7 +123,8 @@ Deno.test('Middleware controller decorator', async () => {
 		},
 	);
 	//order is mixed up on purpose to check that argument order prevails
-	const text = await res.headers.get('middlewaredata');
+	const text = res.headers.get('middlewaredata');
+	assertEquals(res.status, 200);
 	assertEquals(text, `I did something, more`);
 	await res.body?.cancel();
 	await app.close();
@@ -134,7 +134,7 @@ Deno.test('Middleware controller decorator', async () => {
 class FirstGlobalMiddleware implements DanetMiddleware {
 	async action(ctx: ExecutionContext, next: NextFunction) {
 		ctx.res.headers.append('middlewaredata', '[first-middleware]');
-		await next();
+		return await next();
 	}
 }
 
@@ -142,7 +142,7 @@ class FirstGlobalMiddleware implements DanetMiddleware {
 class SecondGlobalMiddleware implements DanetMiddleware {
 	async action(ctx: ExecutionContext, next: NextFunction) {
 		ctx.res.headers.append('middlewaredata', '[second-middleware]');
-		await next();
+		return await next();
 	}
 }
 
@@ -158,7 +158,7 @@ Deno.test('Global middlewares', async () => {
 			method: 'GET',
 		},
 	);
-	const text = await res.headers.get('middlewaredata');
+	const text = res.headers.get('middlewaredata');
 	assertEquals(
 		text,
 		`[first-middleware], [second-middleware], I did something, more`,
