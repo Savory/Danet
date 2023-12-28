@@ -7,13 +7,9 @@ import { ExecutionContext, HttpContext } from '../src/router/router.ts';
 import {
 	DanetMiddleware,
 	Middleware,
-	MiddlewareFunction,
 	NextFunction,
 } from '../src/router/middleware/decorator.ts';
-import {
-	BadRequestException,
-	NotFoundException,
-} from '../src/exception/http/exceptions.ts';
+import { BadRequestException } from '../src/exception/http/exceptions.ts';
 
 @Injectable()
 class SimpleInjectable {
@@ -28,8 +24,10 @@ class SimpleMiddleware implements DanetMiddleware {
 	}
 
 	async action(ctx: ExecutionContext, next: NextFunction) {
-		ctx.response.body = `${ctx.response.body as string || ''}` +
-			this.simpleInjectable.doSomething();
+		ctx.res.headers.append(
+			'middlewaredata',
+			this.simpleInjectable.doSomething(),
+		);
 		await next();
 	}
 }
@@ -45,7 +43,10 @@ class ThrowingMiddleware implements DanetMiddleware {
 }
 
 const secondMiddleware = async (ctx: HttpContext, next: NextFunction) => {
-	ctx.response.body = `${ctx.response.body as string || ''}` + ' ' + 'more';
+	if (!ctx.res) {
+		ctx.res = new Response();
+	}
+	ctx.res.headers.append('middlewaredata', ' ' + 'more');
 	await next();
 };
 
@@ -54,6 +55,7 @@ class SimpleController {
 	@Get('/')
 	@Middleware(SimpleMiddleware)
 	getWithMiddleware() {
+		return 'toto';
 	}
 
 	@Get('/throwing')
@@ -76,8 +78,8 @@ class ControllerWithMiddleware {
 })
 class MyModule {}
 
-const app = new DanetApplication();
 Deno.test('Middleware method decorator', async () => {
+	const app = new DanetApplication();
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
 
@@ -87,12 +89,15 @@ Deno.test('Middleware method decorator', async () => {
 			method: 'GET',
 		},
 	);
-	const text = await res.text();
+	const text = res.headers.get('middlewaredata');
 	assertEquals(text, `I did something`);
+	assertEquals(res.status, 200);
+	assertEquals(await res.text(), 'toto');
 	await app.close();
 });
 
 Deno.test('Throwing middleware method decorator', async () => {
+	const app = new DanetApplication();
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
 
@@ -108,6 +113,7 @@ Deno.test('Throwing middleware method decorator', async () => {
 });
 
 Deno.test('Middleware controller decorator', async () => {
+	const app = new DanetApplication();
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
 
@@ -117,33 +123,32 @@ Deno.test('Middleware controller decorator', async () => {
 			method: 'GET',
 		},
 	);
-	const text = await res.text();
 	//order is mixed up on purpose to check that argument order prevails
-	assertEquals(text, `I did something more`);
+	const text = res.headers.get('middlewaredata');
+	assertEquals(res.status, 200);
+	assertEquals(text, `I did something, more`);
+	await res.body?.cancel();
 	await app.close();
 });
 
 @Injectable()
 class FirstGlobalMiddleware implements DanetMiddleware {
 	async action(ctx: ExecutionContext, next: NextFunction) {
-		ctx.response.body = `${
-			ctx.response.body as string || ''
-		}[first-middleware]`;
-		await next();
+		ctx.res.headers.append('middlewaredata', '[first-middleware]');
+		return await next();
 	}
 }
 
 @Injectable()
 class SecondGlobalMiddleware implements DanetMiddleware {
 	async action(ctx: ExecutionContext, next: NextFunction) {
-		ctx.response.body = `${
-			ctx.response.body as string || ''
-		}[second-middleware]`;
-		await next();
+		ctx.res.headers.append('middlewaredata', '[second-middleware]');
+		return await next();
 	}
 }
 
 Deno.test('Global middlewares', async () => {
+	const app = new DanetApplication();
 	await app.init(MyModule);
 	app.addGlobalMiddlewares(FirstGlobalMiddleware, SecondGlobalMiddleware);
 	const listenEvent = await app.listen(0);
@@ -154,10 +159,12 @@ Deno.test('Global middlewares', async () => {
 			method: 'GET',
 		},
 	);
-	const text = await res.text();
+	const text = res.headers.get('middlewaredata');
+	assertEquals(res.status, 200);
 	assertEquals(
 		text,
-		`[first-middleware][second-middleware]I did something more`,
+		`[first-middleware], [second-middleware], I did something, more`,
 	);
+	await res.body?.cancel();
 	await app.close();
 });

@@ -1,4 +1,4 @@
-import { Context, Router } from '../deps.ts';
+import { Application, Context, type HandlerInterface } from '../deps.ts';
 
 import { FilterExecutor } from '../exception/filter/executor.ts';
 import { HTTP_STATUS } from '../exception/http/enum.ts';
@@ -18,6 +18,7 @@ import {
 } from './controller/params/decorators.ts';
 import { trimSlash } from './utils.ts';
 import { MiddlewareExecutor } from './middleware/executor.ts';
+import { NextFunction } from './middleware/decorator.ts';
 
 // deno-lint-ignore no-explicit-any
 export type Callback = (...args: any[]) => unknown;
@@ -25,38 +26,39 @@ export type Callback = (...args: any[]) => unknown;
 export type HttpContext = Context;
 
 export type ExecutionContext = HttpContext & {
-	_id: string,
+	_id: string;
 	// deno-lint-ignore ban-types
 	getHandler: () => Function;
 	getClass: () => Constructor;
 };
 
 export class DanetRouter {
-	public router = new Router();
 	private logger: Logger = new Logger('Router');
-
+	private methodsMap: Map<string, HandlerInterface>;
 	public prefix?: string;
-
+	private middlewareExecutor: MiddlewareExecutor;
 	constructor(
 		private injector: Injector,
 		private guardExecutor: GuardExecutor = new GuardExecutor(injector),
 		private filterExecutor: FilterExecutor = new FilterExecutor(injector),
 		private viewRenderer: Renderer = new HandlebarRenderer(),
-		private middlewareExecutor: MiddlewareExecutor = new MiddlewareExecutor(
-			injector,
-		),
+		private router: Application,
 	) {
+		this.methodsMap = new Map([
+			['DELETE', this.router.delete],
+			['GET', this.router.get],
+			['PATCH', this.router.patch],
+			['POST', this.router.post],
+			['PUT', this.router.put],
+			['OPTIONS', this.router.options],
+			['HEAD', this.router.head],
+			['ALL', this.router.all],
+		]);
+		this.middlewareExecutor = new MiddlewareExecutor(
+			injector,
+		);
 	}
-	methodsMap = new Map([
-		['DELETE', this.router.delete],
-		['GET', this.router.get],
-		['PATCH', this.router.patch],
-		['POST', this.router.post],
-		['PUT', this.router.put],
-		['OPTIONS', this.router.options],
-		['HEAD', this.router.head],
-		['ALL', this.router.all],
-	]);
+
 	public createRoute(
 		handlerName: string | hookName,
 		Controller: Constructor,
@@ -68,15 +70,21 @@ export class DanetRouter {
 		) {
 			return;
 		}
-		const handler = Controller.prototype[handlerName];
-		let endpoint = MetadataHelper.getMetadata<string>('endpoint', handler);
+		const controllerMethod = Controller.prototype[handlerName];
+		let endpoint = MetadataHelper.getMetadata<string>(
+			'endpoint',
+			controllerMethod,
+		);
 
 		basePath = trimSlash(basePath);
 		endpoint = trimSlash(endpoint);
 		const path = (basePath ? ('/' + basePath) : '') +
 			(endpoint ? '/' + endpoint : '');
 
-		const httpMethod = MetadataHelper.getMetadata<string>('method', handler);
+		const httpMethod = MetadataHelper.getMetadata<string>(
+			'method',
+			controllerMethod,
+		);
 		const routerFn = this.methodsMap.get(httpMethod || 'ALL');
 		if (!routerFn) {
 			throw new Error(
@@ -88,12 +96,39 @@ export class DanetRouter {
 				path ? path : '/'
 			}`,
 		);
-		routerFn.call(this.router, path, this.handleRoute(Controller, handler));
+		routerFn.call(
+			this.router,
+			path,
+			async (context: HttpContext, next: NextFunction) => {
+				const _id = crypto.randomUUID();
+				(context as ExecutionContext)._id = _id;
+				(context as ExecutionContext).getClass = () => Controller;
+				(context as ExecutionContext).getHandler = () => controllerMethod;
+				context.res = new Response();
+				context.set('_id', _id);
+				try {
+					await this.middlewareExecutor.executeAllRelevantMiddlewares(
+						context as unknown as ExecutionContext,
+						Controller,
+						controllerMethod,
+						next,
+					);
+				} catch (error) {
+					return this.handleError(
+						context as ExecutionContext,
+						error,
+						Controller,
+						controllerMethod,
+					);
+				}
+			},
+			this.handleRoute(Controller, controllerMethod),
+		);
 	}
 
 	setPrefix(prefix: string) {
 		prefix = prefix.replace(/\/$/, '');
-		this.router.prefix(prefix);
+		this.router.basePath(prefix);
 		this.prefix = prefix;
 	}
 
@@ -117,64 +152,78 @@ export class DanetRouter {
 		ControllerMethod: Callback,
 	) {
 		return async (context: HttpContext) => {
-			const executionContext = {
-				_id: crypto.randomUUID(),
-				...context,
-				getClass: () => Controller,
-				getHandler: () => ControllerMethod,
-			} as unknown as ExecutionContext;
+			(context as ExecutionContext)._id = context.get('_id');
+			(context as ExecutionContext).getClass = () => Controller;
+			(context as ExecutionContext).getHandler = () => ControllerMethod;
+			if (!context.res) {
+				context.res = new Response();
+			}
 			try {
-				await this.middlewareExecutor.executeAllRelevantMiddlewares(
-					context as ExecutionContext,
+				const executionContext = context as unknown as ExecutionContext;
+				await this.guardExecutor.executeAllRelevantGuards(
+					executionContext,
 					Controller,
 					ControllerMethod,
-					async () => {
-						await this.guardExecutor.executeAllRelevantGuards(
-							executionContext,
-							Controller,
-							ControllerMethod,
-						);
-						const params = await this.resolveMethodParam(
-							Controller,
-							ControllerMethod,
-							executionContext,
-						);
-						const controllerInstance = await this.injector.get(
-							Controller,
-							executionContext,
-							// deno-lint-ignore no-explicit-any
-						) as any;
-						const response:
-							| Record<string, unknown>
-							| string = await controllerInstance[ControllerMethod.name](
-								...params,
-							);
-						await this.sendResponse(response, ControllerMethod, executionContext);
-					},
+				);
+				const params = await this.resolveMethodParam(
+					Controller,
+					ControllerMethod,
+					executionContext,
+				);
+				const controllerInstance = await this.injector.get(
+					Controller,
+					executionContext,
+					// deno-lint-ignore no-explicit-any
+				) as any;
+				const response:
+					| Record<string, unknown>
+					| string = await controllerInstance[ControllerMethod.name](
+						...params,
+					);
+				return await this.sendResponse(
+					response,
+					ControllerMethod,
+					executionContext,
 				);
 			} catch (error) {
-				const errorIsCaught = await this.filterExecutor
-					.executeControllerAndMethodFilter(
-						executionContext,
-						error,
-						Controller,
-						ControllerMethod,
-					);
-				if (errorIsCaught) {
-					return;
-				}
-				const status = error.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
-				const message = error.message || 'Internal server error!';
-
-				executionContext.response.body = {
-					...error,
-					status,
-					message,
-				};
-				executionContext.response.status = status;
+				return this.handleError(
+					context as ExecutionContext,
+					error,
+					Controller,
+					ControllerMethod,
+				);
 			}
-			this.injector.cleanRequestInjectables(executionContext._id);
 		};
+	}
+
+	private async handleError(
+		executionContext: ExecutionContext,
+		// deno-lint-ignore no-explicit-any
+		error: any,
+		Controller: ControllerConstructor,
+		// deno-lint-ignore no-explicit-any
+		ControllerMethod: (...args: any[]) => unknown,
+	) {
+		const filterResponse = await this.filterExecutor
+			.executeControllerAndMethodFilter(
+				executionContext,
+				error,
+				Controller,
+				ControllerMethod,
+			);
+		if (filterResponse) {
+			executionContext.res = filterResponse;
+			return executionContext.res;
+		}
+		const status = error.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
+		const message = error.message || 'Internal server error!';
+		this.injector.cleanRequestInjectables(executionContext._id);
+		executionContext.res = executionContext.json({
+			...error,
+			status,
+			message,
+		}, status);
+		return executionContext.res;
 	}
 
 	private async sendResponse(
@@ -188,14 +237,28 @@ export class DanetRouter {
 				ControllerMethod,
 			);
 			if (fileName) {
-				context.response.body = await this.viewRenderer.render(
-					fileName,
-					response,
+				context.res = await context.html(
+					await this.viewRenderer.render(
+						fileName,
+						response,
+					),
+					{
+						headers: context.res.headers,
+					},
 				);
 			} else {
-				context.response.body = response;
+				if (typeof response !== 'string') {
+					context.res = await context.json(response, {
+						headers: context.res.headers,
+					});
+				} else {
+					context.res = await context.text(response, {
+						headers: context.res.headers,
+					});
+				}
 			}
 		}
+		return context.res;
 	}
 
 	private async resolveMethodParam(

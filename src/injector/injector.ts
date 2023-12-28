@@ -27,7 +27,10 @@ export class Injector {
 		Constructor | string,
 		Constructor
 	>();
-	private contextInjectables = new Map<string, Map<Constructor | string, unknown>>();
+	private contextInjectables = new Map<
+		string,
+		Map<Constructor | string, unknown>
+	>();
 
 	public getAll() {
 		return this.resolved;
@@ -62,8 +65,12 @@ export class Injector {
 
 	public addAvailableInjectable(injectables: InjectableConstructor[]) {
 		for (const injectable of injectables) {
-			const actualKey = injectable instanceof TokenInjector ? injectable.token : injectable;
-			const actualType = injectable instanceof TokenInjector ? injectable.useClass : injectable;
+			const actualKey = injectable instanceof TokenInjector
+				? injectable.token
+				: injectable;
+			const actualType = injectable instanceof TokenInjector
+				? injectable.useClass
+				: injectable;
 			this.availableTypes.set(actualKey, actualType);
 		}
 	}
@@ -125,7 +132,9 @@ export class Injector {
 		token?: string,
 	) {
 		const actualType = Type instanceof TokenInjector ? Type.useClass : Type;
-		const actualKey = Type instanceof TokenInjector ? Type.token : (token ?? Type);
+		const actualKey = Type instanceof TokenInjector
+			? Type.token
+			: (token ?? Type);
 		const dependencies = this.getDependencies(actualType);
 
 		if (this.resolved.has(actualType)) {
@@ -137,17 +146,24 @@ export class Injector {
 			injectionData,
 			actualType,
 		);
-		let canBeSingleton = injectableMetadata?.scope !== SCOPE.REQUEST && injectableMetadata?.scope !== SCOPE.TRANSIENT;
+		let canBeSingleton = injectableMetadata?.scope !== SCOPE.REQUEST &&
+			injectableMetadata?.scope !== SCOPE.TRANSIENT;
 		if (canBeSingleton) {
 			for (const [idx, Dep] of dependencies.entries()) {
 				const token = this.getParamToken(actualType, idx);
 				const type = this.resolvedTypes.get(token ?? Dep);
-				const dependencyInjectableMetadata = MetadataHelper.getMetadata<InjectableOption>(
+				const dependencyInjectableMetadata = MetadataHelper.getMetadata<
+					InjectableOption
+				>(
 					injectionData,
 					type,
 				);
-				if (dependencyInjectableMetadata?.scope === SCOPE.REQUEST || dependencyInjectableMetadata?.scope === SCOPE.TRANSIENT)
+				if (
+					dependencyInjectableMetadata?.scope === SCOPE.REQUEST ||
+					dependencyInjectableMetadata?.scope === SCOPE.TRANSIENT
+				) {
 					canBeSingleton = false;
+				}
 			}
 		}
 		if (canBeSingleton) {
@@ -163,10 +179,13 @@ export class Injector {
 			this.resolved.set(actualKey, () => instance);
 			this.resolvedTypes.set(actualKey, actualType);
 		} else {
-			if (injectableMetadata?.scope !== SCOPE.TRANSIENT && injectableMetadata?.scope !== SCOPE.REQUEST) {
+			if (
+				injectableMetadata?.scope !== SCOPE.TRANSIENT &&
+				injectableMetadata?.scope !== SCOPE.REQUEST
+			) {
 				MetadataHelper.setMetadata(
 					injectionData,
-					{scope: SCOPE.REQUEST},
+					{ scope: SCOPE.REQUEST },
 					actualType,
 				);
 			}
@@ -177,7 +196,12 @@ export class Injector {
 					ParentConstructor,
 				);
 			}
-			this.setNonSingleton(actualType, actualKey, dependencies, injectableMetadata?.scope === SCOPE.TRANSIENT);
+			this.setNonSingleton(
+				actualType,
+				actualKey,
+				dependencies,
+				injectableMetadata?.scope === SCOPE.TRANSIENT,
+			);
 		}
 	}
 
@@ -192,7 +216,7 @@ export class Injector {
 		Type: Constructor,
 		key: string | InjectableConstructor,
 		dependencies: Array<Constructor>,
-		transient?: boolean
+		transient?: boolean,
 	) {
 		this.resolvedTypes.set(key, Type);
 		this.resolved.set(key, async (ctx?: ExecutionContext) => {
@@ -205,8 +229,9 @@ export class Injector {
 				);
 			}
 			if (ctx && !transient) {
-				if (!this.contextInjectables.has(ctx._id))
+				if (!this.contextInjectables.has(ctx._id)) {
 					this.contextInjectables.set(ctx._id, new Map());
+				}
 				const actualRequestInjectables = this.contextInjectables.get(ctx._id);
 				if (actualRequestInjectables?.has(key)) {
 					return actualRequestInjectables.get(key);
@@ -231,8 +256,7 @@ export class Injector {
 		for (const [idx, Dependency] of Dependencies.entries()) {
 			const token = this.getParamToken(ParentConstructor, idx);
 			if (
-				!this.resolved.get( token ?? Dependency,
-				)
+				!this.resolved.get(token ?? Dependency)
 			) {
 				const type = this.availableTypes.get(token ?? Dependency);
 				if (type) {

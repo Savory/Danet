@@ -1,4 +1,4 @@
-import type { Middleware as OakMiddleware } from '../../deps.ts';
+import type { MiddlewareHandler as HonoMiddleware } from '../../deps.ts';
 import { HttpContext } from '../router.ts';
 import { InjectableConstructor } from '../../injector/injectable/constructor.ts';
 import { SetMetadata } from '../../metadata/decorator.ts';
@@ -7,7 +7,7 @@ export interface DanetMiddleware {
 	action(ctx: HttpContext, next: NextFunction): Promise<unknown> | unknown;
 }
 
-export type NextFunction = () => Promise<unknown>;
+export type NextFunction = () => Promise<void | Response>;
 
 export type MiddlewareFunction = (
 	ctx: HttpContext,
@@ -16,7 +16,7 @@ export type MiddlewareFunction = (
 
 export type PossibleMiddlewareType =
 	| InjectableConstructor
-	| OakMiddleware;
+	| HonoMiddleware;
 export const isMiddlewareClass = (s: PossibleMiddlewareType) => !!s.prototype;
 export const middlewareMetadataKey = 'middlewares';
 export const Middleware = (...middlewares: PossibleMiddlewareType[]) =>

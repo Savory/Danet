@@ -29,9 +29,9 @@ class ErrorFilter implements ExceptionFilter {
 
 	catch(exception: any, context: HttpContext) {
 		this.simpleService.doSomething();
-		context.response.body = {
+		return context.json({
 			wePassedInFilterCatchingAllErrors: true,
-		};
+		});
 	}
 }
 
@@ -43,9 +43,9 @@ class CustomErrorFilter implements ExceptionFilter {
 
 	catch(exception: any, context: HttpContext) {
 		this.simpleService.doSomething();
-		context.response.body = {
+		return context.json({
 			wePassedInFilterCatchingOnlySomeError: true,
-		};
+		});
 	}
 }
 

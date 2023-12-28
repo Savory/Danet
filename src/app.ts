@@ -1,9 +1,4 @@
-import {
-	Application,
-	ApplicationListenEvent,
-	Middleware,
-	Router,
-} from './deps.ts';
+import { Application, MiddlewareHandler } from './deps.ts';
 import { FilterExecutor } from './exception/filter/executor.ts';
 import { GuardExecutor } from './guard/executor.ts';
 import { HookExecutor } from './hook/executor.ts';
@@ -19,10 +14,21 @@ import { Constructor } from './utils/constructor.ts';
 import { PossibleMiddlewareType } from './router/middleware/decorator.ts';
 import { globalMiddlewareContainer } from './router/middleware/global-container.ts';
 import { ModuleConstructor } from './module/constructor.ts';
-import { CorsOptions, oakCors } from 'https://deno.land/x/cors/mod.ts';
+import { serveStatic } from './utils/serve-static.ts';
+import { cors } from 'https://deno.land/x/hono/middleware.ts';
+
+type CORSOptions = {
+	origin: string | string[] | ((origin: string) => string | undefined | null);
+	allowMethods?: string[];
+	allowHeaders?: string[];
+	maxAge?: number;
+	credentials?: boolean;
+	exposeHeaders?: string[];
+};
 
 export class DanetApplication {
-	private app = new Application();
+	private app: Application = new Application({ strict: false });
+	private internalHttpServer?: Deno.HttpServer;
 	private injector = new Injector();
 	private hookExecutor = new HookExecutor(this.injector);
 	private renderer = new HandlebarRenderer();
@@ -31,6 +37,7 @@ export class DanetApplication {
 		new GuardExecutor(this.injector),
 		new FilterExecutor(this.injector),
 		this.renderer,
+		this.app,
 	);
 	private controller: AbortController = new AbortController();
 	private logger: Logger = new Logger('DanetApplication');
@@ -65,28 +72,28 @@ export class DanetApplication {
 
 	async close() {
 		await this.hookExecutor.executeHookForEveryInjectable(hookName.APP_CLOSE);
-		this.controller.abort();
+		await this.internalHttpServer?.shutdown();
+		this.logger.log('Shutting down');
 	}
 
-	listen(port = 3000): Promise<ApplicationListenEvent> {
-		const routes = this.router.routes();
-		this.app.use(routes);
+	listen(port = 3000): Promise<{ port: number }> {
 		this.controller = new AbortController();
 		const { signal } = this.controller;
-		const listen = new Promise<ApplicationListenEvent>((resolve) => {
-			this.app.addEventListener('listen', (listen) => {
-				this.logger.log(`Listening on ${listen.port}`);
-				resolve(listen);
-			});
-			this.app.listen({ port, signal }).then(() =>
-				this.logger.log('Shutting down')
-			);
+		const listen = new Promise<{ port: number }>((resolve) => {
+			this.internalHttpServer = Deno.serve({
+				signal,
+				port,
+				onListen: (listen) => {
+					this.logger.log(`Listening on ${listen.port}`);
+					resolve({ ...listen });
+				},
+			}, this.app.fetch);
 		});
 		return listen;
 	}
 
-	get router(): Router {
-		return this.danetRouter.router;
+	get router(): Application {
+		return this.app;
 	}
 
 	setViewEngineDir(path: string) {
@@ -94,13 +101,10 @@ export class DanetApplication {
 	}
 
 	useStaticAssets(path: string) {
-		this.app.use(async (context, next: () => Promise<unknown>) => {
+		console.log(path);
+		this.app.use('*', (context, next: () => Promise<void>) => {
 			const root = path;
-			try {
-				await context.send({ root });
-			} catch {
-				await next();
-			}
+			return (serveStatic({ root })(context, next));
 		});
 	}
 
@@ -108,11 +112,11 @@ export class DanetApplication {
 		globalMiddlewareContainer.push(...middlewares);
 	}
 
-	enableCors(options?: CorsOptions) {
-		this.app.use(oakCors(options));
+	enableCors(options?: CORSOptions) {
+		this.app.use(cors(options));
 	}
 
-	use(middleware: Middleware) {
+	use(middleware: MiddlewareHandler) {
 		this.app.use(middleware);
 	}
 }

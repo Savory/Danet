@@ -23,7 +23,7 @@ export class MiddlewareExecutor {
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
 		next: NextFunction,
-	) {
+	): Promise<unknown> {
 		const middlewares = [...globalMiddlewareContainer];
 		middlewares.push(...this.getSymbolMiddlewares(Controller));
 		middlewares.push(...this.getSymbolMiddlewares(ControllerMethod));
@@ -34,7 +34,8 @@ export class MiddlewareExecutor {
 		) as InjectableConstructor[];
 		let index = -1;
 		await this.injector.registerInjectables(injectablesMiddleware);
-		const dispatch = async (i: number) => {
+		// deno-lint-ignore no-explicit-any
+		const dispatch = async (i: number): Promise<any> => {
 			if (i <= index) {
 				throw new Error('next() called multiple times.');
 			}
@@ -42,8 +43,7 @@ export class MiddlewareExecutor {
 			let fn;
 			if (i === middlewares.length) {
 				fn = next;
-				await fn();
-				return;
+				return fn();
 			}
 			const currentMiddleware = middlewares[i];
 			if (isMiddlewareClass(currentMiddleware)) {
@@ -51,20 +51,20 @@ export class MiddlewareExecutor {
 					DanetMiddleware
 				>(currentMiddleware as Constructor<DanetMiddleware>);
 				fn = async (ctx: HttpContext, nextFn: NextFunction) => {
-					await middlewareInstance.action(ctx, nextFn);
+					return await middlewareInstance.action(ctx, nextFn);
 				};
 			} else {
 				fn = async (ctx: HttpContext, nextFn: NextFunction) => {
-					await (currentMiddleware as MiddlewareFunction)(ctx, nextFn);
+					return await (currentMiddleware as MiddlewareFunction)(ctx, nextFn);
 				};
 			}
 			if (!fn) {
 				return;
 			}
-			await fn(context, dispatch.bind(null, i + 1));
+			return await fn(context, dispatch.bind(null, i + 1));
 		};
 
-		await dispatch(0);
+		return dispatch(0);
 	}
 
 	private getSymbolMiddlewares(

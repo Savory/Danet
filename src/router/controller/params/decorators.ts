@@ -54,19 +54,19 @@ export const createParamDecorator = (
 };
 
 export const Req = createParamDecorator((context: HttpContext) => {
-	return context.request;
+	return context.req;
 });
 
 export const Res = createParamDecorator((context: HttpContext) => {
-	return context.response;
+	return context.res;
 });
 
 export const Header = (prop?: string) =>
 	createParamDecorator((context: HttpContext) => {
-		if (!context.request.headers) {
+		if (!context.req.raw.headers) {
 			return null;
 		}
-		return prop ? context.request.headers.get(prop) : context.request.headers;
+		return prop ? context.req.header(prop) : context.req.raw.headers;
 	})();
 
 export const BODY_TYPE_KEY = 'body-type';
@@ -82,7 +82,7 @@ export const Body = (prop?: string) =>
 
 		let body;
 		try {
-			body = await context.request.body({ type: 'json' })?.value;
+			body = await context.req.json();
 		} catch (e) {
 			throw e;
 		}
@@ -170,17 +170,16 @@ export function Query(
 
 		if (param) {
 			return formatQueryValue(
-				context.request.url.searchParams.getAll(param),
+				context.req.queries(param),
 				options?.value,
 			);
 		} else {
 			return Object.fromEntries(
-				// deno-lint-ignore no-explicit-any
-				Array.from((context.request.url.searchParams as any).keys())
+				Array.from(Object.keys(context.req.query()))
 					.map((key) => [
 						key,
 						formatQueryValue(
-							context.request.url.searchParams.getAll(key as string),
+							context.req.queries(key as string),
 							options?.value || 'first',
 						),
 					]),
@@ -205,9 +204,7 @@ export function Query(
 
 export const Param = (paramName: string) =>
 	createParamDecorator((context: HttpContext) => {
-		// not sure why params is not exposed, but it definitely is the right way to do this
-		// deno-lint-ignore no-explicit-any
-		const params = (context as any).params;
+		const params = context.req.param();
 		if (paramName) {
 			return params?.[paramName];
 		} else {
@@ -215,11 +212,11 @@ export const Param = (paramName: string) =>
 		}
 	})();
 
-export const Session = (prop?: string) =>
-	createParamDecorator((context: HttpContext) => {
-		if (prop) {
-			return context.state.session.get(prop);
-		} else {
-			return context.state.session;
-		}
-	})();
+// export const Session = (prop?: string) =>
+// 	createParamDecorator((context: HttpContext) => {
+// 		if (prop) {
+// 			return context.state.session.get(prop);
+// 		} else {
+// 			return context.state.session;
+// 		}
+// 	})();
