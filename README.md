@@ -1,4 +1,4 @@
-# V2 is available in Alpha, it uses Hono instead of oak for (we hope), better performances
+# This is the V1 branch, if you want up to date code, go to main branch.
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/38007824/205580360-fa032554-5e9e-4266-8ec9-c78ca9a233bc.svg" width="250" alt="Danet Logo" />
@@ -51,7 +51,7 @@ bug on our [Github Repository](https://github.com/Savory/Danet) and
 
 [Use our CLI](https://github.com/Savory/Danet-CLI)
 
-[Read our documentation](https://danet.land)
+[Read our documentation](https://v1.danet.land)
 
 [Read our blog](https://savory.github.io/)
 
