@@ -1,4 +1,4 @@
-# V2 is available in Alpha, it uses Hono instead of oak for (we hope), better performances
+## This is V2 running on Hono, V1 using oak has it's own branch
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/38007824/205580360-fa032554-5e9e-4266-8ec9-c78ca9a233bc.svg" width="250" alt="Danet Logo" />
@@ -22,8 +22,7 @@ Nest, we wouldn't be developing Danet.
 Danet is a framework for building efficient, scalable Deno server-side
 applications. It is entirely built with Typescript.
 
-Under the hood, Danet makes use of [Oak](https://github.com/oakserver/oak). We
-might support other HTTP Web frameworks in the future !
+Under the hood, Danet makes use of [Hono](https://hono.dev/). 
 
 We abstract a lot of things so you can focus on your core business and
 architecture.
@@ -69,4 +68,4 @@ License
 <br>
 
 <p>
-This project is Licensed under the <a href="./LICENSE">MIT License</a>. Please go through the License atleast once before making your contribution. </p>
+This project is Licensed under the <a href="./LICENSE">MIT License</a>. Please go through the License at least once before making your contribution. </p>
