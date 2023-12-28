@@ -27,7 +27,7 @@ class SimpleMiddleware implements DanetMiddleware {
 
 	async action(ctx: ExecutionContext, next: NextFunction) {
 		ctx.res.headers.append('middlewaredata', this.simpleInjectable.doSomething());
-		return next();
+		await next();
 	}
 }
 
@@ -46,7 +46,7 @@ const secondMiddleware = async (ctx: HttpContext, next: NextFunction) => {
 		ctx.res = new Response();
 	}
 	ctx.res.headers.append('middlewaredata', (' ' + 'more'));
-	return next();
+	await next();
 };
 
 @Controller('simple-controller')
@@ -90,8 +90,8 @@ Deno.test('Middleware method decorator', async () => {
 	);
 	const text = res.headers.get('middlewaredata');
 	assertEquals(text, `I did something`);
-	assertEquals(await res.text(), 'toto');
 	assertEquals(res.status, 200);
+	assertEquals(await res.text(), 'toto');
 	await app.close();
 });
 
@@ -159,6 +159,7 @@ Deno.test('Global middlewares', async () => {
 		},
 	);
 	const text = res.headers.get('middlewaredata');
+	assertEquals(res.status, 200);
 	assertEquals(
 		text,
 		`[first-middleware], [second-middleware], I did something, more`,

@@ -21,14 +21,13 @@ export class MiddlewareExecutor {
 	async executeAllRelevantMiddlewares(
 		context: ExecutionContext,
 		Controller: ControllerConstructor,
-		ControllerMethod: Callback,
-		next: NextFunction,
+		ControllerMethod: Callback
 	) {
 		const middlewares = [...globalMiddlewareContainer];
 		middlewares.push(...this.getSymbolMiddlewares(Controller));
 		middlewares.push(...this.getSymbolMiddlewares(ControllerMethod));
 
-		if (middlewares.length === 0) return next();
+		if (middlewares.length === 0) return;
 		const injectablesMiddleware: InjectableConstructor[] = middlewares.filter(
 			isMiddlewareClass,
 		) as InjectableConstructor[];
@@ -42,9 +41,8 @@ export class MiddlewareExecutor {
 			index = i;
 			let fn;
 			if (i === middlewares.length) {
-				fn = next;
-				return await fn();
-							}
+				return;
+			}
 			const currentMiddleware = middlewares[i];
 			if (isMiddlewareClass(currentMiddleware)) {
 				const middlewareInstance: DanetMiddleware = this.injector.get<

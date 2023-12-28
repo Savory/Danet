@@ -18,6 +18,7 @@ import {
 } from './controller/params/decorators.ts';
 import { trimSlash } from './utils.ts';
 import { MiddlewareExecutor } from './middleware/executor.ts';
+import { NextFunction } from './middleware/decorator.ts';
 
 // deno-lint-ignore no-explicit-any
 export type Callback = (...args: any[]) => unknown;
@@ -69,15 +70,15 @@ export class DanetRouter {
 		) {
 			return;
 		}
-		const handler = Controller.prototype[handlerName];
-		let endpoint = MetadataHelper.getMetadata<string>('endpoint', handler);
+		const controllerMethod = Controller.prototype[handlerName];
+		let endpoint = MetadataHelper.getMetadata<string>('endpoint', controllerMethod);
 
 		basePath = trimSlash(basePath);
 		endpoint = trimSlash(endpoint);
 		const path = (basePath ? ('/' + basePath) : '') +
 			(endpoint ? '/' + endpoint : '');
 
-		const httpMethod = MetadataHelper.getMetadata<string>('method', handler);
+		const httpMethod = MetadataHelper.getMetadata<string>('method', controllerMethod);
 		const routerFn = this.methodsMap.get(httpMethod || 'ALL');
 		if (!routerFn) {
 			throw new Error(
@@ -89,7 +90,24 @@ export class DanetRouter {
 				path ? path : '/'
 			}`,
 		);
-		routerFn.call(this.router, path, this.handleRoute(Controller, handler));
+		routerFn.call(this.router, path, async (context: HttpContext, next: NextFunction) => {
+			const _id = crypto.randomUUID();
+			(context as any)._id = _id;
+			(context as any).getClass = () => Controller;
+			(context as any).getHandler = () => controllerMethod;
+			context.res = new Response();
+			context.set('_id', _id);
+			try {
+				await this.middlewareExecutor.executeAllRelevantMiddlewares(
+					context as unknown as ExecutionContext,
+					Controller,
+					controllerMethod);
+			} catch (error) {
+				console.log('middleware threw', error);
+				return await this.handleError(context as ExecutionContext, error, Controller, controllerMethod);
+			}
+			await next();
+		}, this.handleRoute(Controller, controllerMethod));
 	}
 
 	setPrefix(prefix: string) {
@@ -118,19 +136,13 @@ export class DanetRouter {
 		ControllerMethod: Callback,
 	) {
 		return async (context: HttpContext) => {
-			const executionContext = {
-				_id: crypto.randomUUID(),
-				...context,
-				getClass: () => Controller,
-				getHandler: () => ControllerMethod,
-			} as unknown as ExecutionContext;
-			executionContext.res = new Response();
-			try {				
-				return await this.middlewareExecutor.executeAllRelevantMiddlewares(
-					executionContext,
-					Controller,
-					ControllerMethod,
-					async () => {
+			(context as any)._id = context.get('_id');
+			(context as any).getClass = () => Controller;
+			(context as any).getHandler = () => ControllerMethod;
+			if (!context.res)
+				context.res = new Response();
+			const executionContext = context as unknown as ExecutionContext;
+			try {
 						await this.guardExecutor.executeAllRelevantGuards(
 							executionContext,
 							Controller,
@@ -152,30 +164,33 @@ export class DanetRouter {
 								...params,
 							);
 						return await this.sendResponse(response, ControllerMethod, executionContext);
-					},
-				);
 			} catch (error) {
-				const filterResponse = await this.filterExecutor
-					.executeControllerAndMethodFilter(
-						executionContext,
-						error,
-						Controller,
-						ControllerMethod,
-					);
-				if (filterResponse) {
-					return filterResponse;
-				}
-				const status = error.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
-				const message = error.message || 'Internal server error!';
-				this.injector.cleanRequestInjectables(executionContext._id);
-				executionContext.status(status);
-				return executionContext.json({
-					...error,
-					status,
-					message,
-				});
+				return await this.handleError(executionContext, error, Controller, ControllerMethod);
 			}
 		};
+	}
+
+	private async handleError(executionContext: ExecutionContext, error: any, Controller: ControllerConstructor, ControllerMethod: (...args: any[]) => unknown) {
+		const filterResponse = await this.filterExecutor
+			.executeControllerAndMethodFilter(
+				executionContext,
+				error,
+				Controller,
+				ControllerMethod,
+			);
+		if (filterResponse) {
+			executionContext.res = filterResponse;
+			return executionContext.res;
+		}
+		const status = error.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
+		const message = error.message || 'Internal server error!';
+		this.injector.cleanRequestInjectables(executionContext._id);
+		executionContext.res = executionContext.json({
+			...error,
+			status,
+			message,
+		}, status);
+		return executionContext.res;
 	}
 
 	private async sendResponse(

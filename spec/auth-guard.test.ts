@@ -26,7 +26,8 @@ class GlobalGuard implements AuthGuard {
 
 	canActivate(context: ExecutionContext) {
 		this.simpleService.doSomething();
-		context.res = new Response();
+		if (!context.res)
+			context.res = new Response();
 		context.res.headers.append('passedInglobalGuard', 'true');
 		return true;
 	}
@@ -44,7 +45,8 @@ class ControllerGuard implements AuthGuard {
 			controller,
 		);
 		this.simpleService.doSomething();
-		context.res = new Response();
+		if (!context.res)
+			context.res = new Response();
 		context.res.headers.append('passedIncontrollerGuard', 'true');
 		context.res.headers.append('customMetadata', customMetadata);
 		return true;
@@ -60,7 +62,8 @@ class MethodGuard implements AuthGuard {
 		this.simpleService.doSomething();
 		const method = context.getHandler();
 		const customMetadata = MetadataHelper.getMetadata<string>('customMetadata', method);
-		context.res = new Response();
+		if (!context.res)
+			context.res = new Response();
 		context.res.headers.append('passedInmethodGuard', 'true');
 		context.res.headers.append('customMetadata', customMetadata);
 		return true;
@@ -107,6 +110,7 @@ for (const guardType of ['controller', 'method']) {
 				method: 'GET',
 			},
 		);
+		assertEquals(res.status, 200);
 		assertEquals(res.headers.get(`passedIn${guardType}guard`), 'true');
 		assertEquals(res.headers.get('custommetadata'), 'customValue');
 		await res?.body?.cancel()
