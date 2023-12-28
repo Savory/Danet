@@ -1,6 +1,7 @@
 import { assertEquals } from '../src/deps_test.ts';
 import { DanetApplication } from '../src/app.ts';
-// import { Session } from '../src/mod.ts';
+import { Session } from '../src/mod.ts';
+import type { MiddlewareHandler} from '../src/deps.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
 import {
@@ -13,17 +14,19 @@ import { UseGuard } from '../src/guard/decorator.ts';
 import { Injectable } from '../src/injector/injectable/decorator.ts';
 import { AuthGuard } from '../src/guard/interface.ts';
 import { HttpContext } from '../src/router/router.ts';
-import { CookieStore } from 'https://deno.land/x/oak_sessions@v4.0.5/mod.ts';
-import { OakSession } from '../src/deps_test.ts';
-import { MiddlewareFunction } from '../src/router/middleware/decorator.ts';
+import {
+	sessionMiddleware,
+	CookieStore
+} from 'https://deno.land/x/hono_sessions/mod.ts'
 
-// @Injectable()
-// class AddThingToSession implements AuthGuard {
-// 	canActivate(context: HttpContext) {
-// 		context.state.session.set('passed-in-guard', 'yes');
-// 		return true;
-// 	}
-// }
+@Injectable()
+class AddThingToSession implements AuthGuard {
+	canActivate(context: HttpContext) {
+		const session = context.get('session');
+		session.set('passed-in-guard', 'yes');
+		return true;
+	}
+}
 
 @Controller('')
 class SimpleController {
@@ -88,17 +91,17 @@ class SimpleController {
 		return niceValue;
 	}
 
-	// @Get('/whole-session-decorator')
-	// @UseGuard(AddThingToSession)
-	// sessionDecorationTest(@Session() session: Map<unknown, unknown>) {
-	// 	return session.get('passed-in-guard');
-	// }
+	@Get('/whole-session-decorator')
+	@UseGuard(AddThingToSession)
+	sessionDecorationTest(@Session() session: Map<unknown, unknown>) {
+		return session.get('passed-in-guard');
+	}
 
-	// @Get('/session-with-param')
-	// @UseGuard(AddThingToSession)
-	// sessionWithParam(@Session('passed-in-guard') passedInGuard: string) {
-	// 	return passedInGuard;
-	// }
+	@Get('/session-with-param')
+	@UseGuard(AddThingToSession)
+	sessionWithParam(@Session('passed-in-guard') passedInGuard: string) {
+		return passedInGuard;
+	}
 
 	@Post('full-body')
 	wholeBody(@Body() fullBody: unknown) {
@@ -115,12 +118,6 @@ class SimpleController {
 	controllers: [SimpleController],
 })
 class MyModule {}
-
-// app.addGlobalMiddlewares(
-// 	OakSession.initMiddleware(
-// 		new CookieStore(Deno.env.get('COOKIE_SECRET_KEY') as string),
-// 	),
-// );
 
 Deno.test('@Res and @Query decorator', async () => {
 	const app = new DanetApplication();
@@ -373,32 +370,60 @@ Deno.test('@Param decorator', async () => {
 	await app.close();
 });
 
-// Deno.test('@Session decorator without params', async () => {
-// 	await app.init(MyModule);
-// 	const listenEvent = await app.listen(0);
+Deno.test('@Session decorator without params', async () => {
+	const app = new DanetApplication();
+	const store = new CookieStore()
+	app.use(
+		sessionMiddleware({
+			store,
+			encryptionKey: 'password_at_least_32_characters_long', // Required for CookieStore, recommended for others
+			expireAfterSeconds: 900, // Expire session after 15 minutes of inactivity
+			cookieOptions: {
+				sameSite: 'Lax', // Recommended for basic CSRF protection in modern browsers
+				path: '/', // Required for this library to work properly
+				httpOnly: true, // Recommended to avoid XSS attacks
+			},
+		}) as unknown as MiddlewareHandler
+	);
+	await app.init(MyModule);
+	const listenEvent = await app.listen(0);
 
-// 	const res = await fetch(
-// 		`http://localhost:${listenEvent.port}/whole-session-decorator`,
-// 		{
-// 			method: 'GET',
-// 		},
-// 	);
-// 	const text = await res.text();
-// 	assertEquals(text, 'yes');
-// 	await app.close();
-// });
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/whole-session-decorator`,
+		{
+			method: 'GET',
+		},
+	);
+	const text = await res.text();
+	assertEquals(text, 'yes');
+	await app.close();
+});
 
-// Deno.test('@Session decorator with param', async () => {
-// 	await app.init(MyModule);
-// 	const listenEvent = await app.listen(0);
+Deno.test('@Session decorator with param', async () => {
+	const app = new DanetApplication();
+	const store = new CookieStore()
+	app.use(
+		sessionMiddleware({
+			store,
+			encryptionKey: 'password_at_least_32_characters_long', // Required for CookieStore, recommended for others
+			expireAfterSeconds: 900, // Expire session after 15 minutes of inactivity
+			cookieOptions: {
+				sameSite: 'Lax', // Recommended for basic CSRF protection in modern browsers
+				path: '/', // Required for this library to work properly
+				httpOnly: true, // Recommended to avoid XSS attacks
+			},
+		}) as unknown as MiddlewareHandler
+	);
+	await app.init(MyModule);
+	const listenEvent = await app.listen(0);
 
-// 	const res = await fetch(
-// 		`http://localhost:${listenEvent.port}/session-with-param`,
-// 		{
-// 			method: 'GET',
-// 		},
-// 	);
-// 	const text = await res.text();
-// 	assertEquals(text, 'yes');
-// 	await app.close();
-// });
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/session-with-param`,
+		{
+			method: 'GET',
+		},
+	);
+	const text = await res.text();
+	assertEquals(text, 'yes');
+	await app.close();
+});

@@ -113,10 +113,10 @@ export class DanetApplication {
 	}
 
 	enableCors(options?: CORSOptions) {
-		this.app.use(cors(options));
+		this.app.use('*', cors(options));
 	}
 
 	use(middleware: MiddlewareHandler) {
-		this.app.use(middleware);
+		this.app.use('*', middleware);
 	}
 }

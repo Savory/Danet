@@ -212,11 +212,11 @@ export const Param = (paramName: string) =>
 		}
 	})();
 
-// export const Session = (prop?: string) =>
-// 	createParamDecorator((context: HttpContext) => {
-// 		if (prop) {
-// 			return context.state.session.get(prop);
-// 		} else {
-// 			return context.state.session;
-// 		}
-// 	})();
+export const Session = (prop?: string) =>
+	createParamDecorator((context: HttpContext) => {
+		if (prop) {
+			return context.get('session').get(prop);
+		} else {
+			return context.get('session');
+		}
+	})();
