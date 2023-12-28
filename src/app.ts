@@ -102,7 +102,7 @@ export class DanetApplication {
 
 	useStaticAssets(path: string) {
 		console.log(path);
-		this.app.use('*', async (context, next: () => Promise<void>) => {
+		this.app.use('*', (context, next: () => Promise<void>) => {
 			const root = path;
 			return (serveStatic({ root })(context, next));
 		});

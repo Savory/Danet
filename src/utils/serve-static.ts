@@ -1,8 +1,6 @@
 import type { Context, Next } from '../deps.ts';
 import { getFilePath } from './filepath.ts';
 import { getMimeType } from './get-mime.ts';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 const { open } = Deno;
 
 export type ServeStaticOptions = {

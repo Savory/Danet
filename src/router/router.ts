@@ -101,9 +101,9 @@ export class DanetRouter {
 			path,
 			async (context: HttpContext, next: NextFunction) => {
 				const _id = crypto.randomUUID();
-				(context as any)._id = _id;
-				(context as any).getClass = () => Controller;
-				(context as any).getHandler = () => controllerMethod;
+				(context as ExecutionContext)._id = _id;
+				(context as ExecutionContext).getClass = () => Controller;
+				(context as ExecutionContext).getHandler = () => controllerMethod;
 				context.res = new Response();
 				context.set('_id', _id);
 				try {
@@ -152,9 +152,9 @@ export class DanetRouter {
 		ControllerMethod: Callback,
 	) {
 		return async (context: HttpContext) => {
-			(context as any)._id = context.get('_id');
-			(context as any).getClass = () => Controller;
-			(context as any).getHandler = () => ControllerMethod;
+			(context as ExecutionContext)._id = context.get('_id');
+			(context as ExecutionContext).getClass = () => Controller;
+			(context as ExecutionContext).getHandler = () => ControllerMethod;
 			if (!context.res) {
 				context.res = new Response();
 			}
@@ -198,8 +198,10 @@ export class DanetRouter {
 
 	private async handleError(
 		executionContext: ExecutionContext,
+		// deno-lint-ignore no-explicit-any
 		error: any,
 		Controller: ControllerConstructor,
+		// deno-lint-ignore no-explicit-any
 		ControllerMethod: (...args: any[]) => unknown,
 	) {
 		const filterResponse = await this.filterExecutor

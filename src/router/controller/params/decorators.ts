@@ -175,7 +175,6 @@ export function Query(
 			);
 		} else {
 			return Object.fromEntries(
-				// deno-lint-ignore no-explicit-any
 				Array.from(Object.keys(context.req.query()))
 					.map((key) => [
 						key,

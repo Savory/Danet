@@ -23,11 +23,11 @@ export class FilterExecutor {
 		);
 	}
 
-	private async executeFilter(
+	private executeFilter(
 		exceptionFilter: ExceptionFilter,
 		context: HttpContext,
 		error: unknown,
-	): Promise<Response | undefined> {
+	): Response | undefined {
 		if (exceptionFilter) {
 			const errorTypeCaughtByFilter = this.getErrorTypeCaughtByExceptionFilter(
 				// deno-lint-ignore no-explicit-any

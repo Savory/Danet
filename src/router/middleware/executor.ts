@@ -23,7 +23,7 @@ export class MiddlewareExecutor {
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
 		next: NextFunction,
-	) {
+	): Promise<unknown> {
 		const middlewares = [...globalMiddlewareContainer];
 		middlewares.push(...this.getSymbolMiddlewares(Controller));
 		middlewares.push(...this.getSymbolMiddlewares(ControllerMethod));
@@ -51,17 +51,17 @@ export class MiddlewareExecutor {
 					DanetMiddleware
 				>(currentMiddleware as Constructor<DanetMiddleware>);
 				fn = async (ctx: HttpContext, nextFn: NextFunction) => {
-					return middlewareInstance.action(ctx, nextFn);
+					return await middlewareInstance.action(ctx, nextFn);
 				};
 			} else {
 				fn = async (ctx: HttpContext, nextFn: NextFunction) => {
-					return (currentMiddleware as MiddlewareFunction)(ctx, nextFn);
+					return await (currentMiddleware as MiddlewareFunction)(ctx, nextFn);
 				};
 			}
 			if (!fn) {
 				return;
 			}
-			return fn(context, dispatch.bind(null, i + 1));
+			return await fn(context, dispatch.bind(null, i + 1));
 		};
 
 		return dispatch(0);
