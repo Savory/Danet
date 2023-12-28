@@ -29,7 +29,7 @@ Deno.test('it serve static files', async () => {
 	});
 	const blob = await res.blob();
 	const text = await blob.text();
-	console.log(text)
+	console.log(text);
 	assertEquals(text.indexOf('I love pikachu'), 0);
 	await app.close();
 });

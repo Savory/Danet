@@ -5,11 +5,10 @@ import { Injectable, SCOPE } from '../src/injector/injectable/decorator.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
-import { Inject } from "../src/injector/decorator.ts";
-import { TokenInjector } from "../src/injector/injectable/constructor.ts";
+import { Inject } from '../src/injector/decorator.ts';
+import { TokenInjector } from '../src/injector/injectable/constructor.ts';
 
 Deno.test('Scoped Lifecycle hooks other order', async (testContext) => {
-
 	interface ScopedInjectableInterface {
 		somethingThatMatters: string | null;
 	}
@@ -24,7 +23,6 @@ Deno.test('Scoped Lifecycle hooks other order', async (testContext) => {
 
 	@Injectable()
 	class InjectableUsingScoped {
-
 		constructor(
 			@Inject('SCOPED_TOKEN') public child1: ScopedInjectableInterface,
 		) {
@@ -66,7 +64,6 @@ Deno.test('Scoped Lifecycle hooks other order', async (testContext) => {
 		],
 	})
 	class ParentAfterScopedModule {}
-
 
 	await testContext.step(
 		'handleRequest is called before request when defined in a scoped service',

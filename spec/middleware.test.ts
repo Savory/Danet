@@ -9,9 +9,7 @@ import {
 	Middleware,
 	NextFunction,
 } from '../src/router/middleware/decorator.ts';
-import {
-	BadRequestException,
-} from '../src/exception/http/exceptions.ts';
+import { BadRequestException } from '../src/exception/http/exceptions.ts';
 
 @Injectable()
 class SimpleInjectable {
@@ -26,7 +24,10 @@ class SimpleMiddleware implements DanetMiddleware {
 	}
 
 	async action(ctx: ExecutionContext, next: NextFunction) {
-		ctx.res.headers.append('middlewaredata', this.simpleInjectable.doSomething());
+		ctx.res.headers.append(
+			'middlewaredata',
+			this.simpleInjectable.doSomething(),
+		);
 		await next();
 	}
 }
@@ -45,7 +46,7 @@ const secondMiddleware = async (ctx: HttpContext, next: NextFunction) => {
 	if (!ctx.res) {
 		ctx.res = new Response();
 	}
-	ctx.res.headers.append('middlewaredata', (' ' + 'more'));
+	ctx.res.headers.append('middlewaredata', ' ' + 'more');
 	await next();
 };
 

@@ -15,16 +15,16 @@ import { PossibleMiddlewareType } from './router/middleware/decorator.ts';
 import { globalMiddlewareContainer } from './router/middleware/global-container.ts';
 import { ModuleConstructor } from './module/constructor.ts';
 import { serveStatic } from './utils/serve-static.ts';
-import { cors } from 'https://deno.land/x/hono/middleware.ts'
+import { cors } from 'https://deno.land/x/hono/middleware.ts';
 
 type CORSOptions = {
-	origin: string | string[] | ((origin: string) => string | undefined | null)
-	allowMethods?: string[]
-	allowHeaders?: string[]
-	maxAge?: number
-	credentials?: boolean
-	exposeHeaders?: string[]
-  }
+	origin: string | string[] | ((origin: string) => string | undefined | null);
+	allowMethods?: string[];
+	allowHeaders?: string[];
+	maxAge?: number;
+	credentials?: boolean;
+	exposeHeaders?: string[];
+};
 
 export class DanetApplication {
 	private app: Application = new Application({ strict: false });
@@ -80,10 +80,14 @@ export class DanetApplication {
 		this.controller = new AbortController();
 		const { signal } = this.controller;
 		const listen = new Promise<{ port: number }>((resolve) => {
-			this.internalHttpServer = Deno.serve({ signal, port, onListen: (listen) => {
-				this.logger.log(`Listening on ${listen.port}`);
-				resolve({ ...listen });
-			} }, this.app.fetch);
+			this.internalHttpServer = Deno.serve({
+				signal,
+				port,
+				onListen: (listen) => {
+					this.logger.log(`Listening on ${listen.port}`);
+					resolve({ ...listen });
+				},
+			}, this.app.fetch);
 		});
 		return listen;
 	}
@@ -100,7 +104,7 @@ export class DanetApplication {
 		console.log(path);
 		this.app.use('*', async (context, next: () => Promise<void>) => {
 			const root = path;
-			return (serveStatic({root})(context, next));
+			return (serveStatic({ root })(context, next));
 		});
 	}
 

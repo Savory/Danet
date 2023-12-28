@@ -21,13 +21,14 @@ export class MiddlewareExecutor {
 	async executeAllRelevantMiddlewares(
 		context: ExecutionContext,
 		Controller: ControllerConstructor,
-		ControllerMethod: Callback
+		ControllerMethod: Callback,
+		next: NextFunction,
 	) {
 		const middlewares = [...globalMiddlewareContainer];
 		middlewares.push(...this.getSymbolMiddlewares(Controller));
 		middlewares.push(...this.getSymbolMiddlewares(ControllerMethod));
 
-		if (middlewares.length === 0) return;
+		if (middlewares.length === 0) return next();
 		const injectablesMiddleware: InjectableConstructor[] = middlewares.filter(
 			isMiddlewareClass,
 		) as InjectableConstructor[];
@@ -41,7 +42,8 @@ export class MiddlewareExecutor {
 			index = i;
 			let fn;
 			if (i === middlewares.length) {
-				return;
+				fn = next;
+				return fn();
 			}
 			const currentMiddleware = middlewares[i];
 			if (isMiddlewareClass(currentMiddleware)) {
@@ -49,21 +51,21 @@ export class MiddlewareExecutor {
 					DanetMiddleware
 				>(currentMiddleware as Constructor<DanetMiddleware>);
 				fn = async (ctx: HttpContext, nextFn: NextFunction) => {
-					return await middlewareInstance.action(ctx, nextFn);
+					return middlewareInstance.action(ctx, nextFn);
 				};
 			} else {
 				fn = async (ctx: HttpContext, nextFn: NextFunction) => {
-					return await (currentMiddleware as MiddlewareFunction)(ctx, nextFn);
+					return (currentMiddleware as MiddlewareFunction)(ctx, nextFn);
 				};
 			}
 			if (!fn) {
 				return;
 			}
-			return await fn(context, dispatch.bind(null, i + 1));
+			return fn(context, dispatch.bind(null, i + 1));
 		};
 
-		return await dispatch(0);
-			}
+		return dispatch(0);
+	}
 
 	private getSymbolMiddlewares(
 		symbol: unknown,

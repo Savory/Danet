@@ -1,4 +1,4 @@
-import { Context, Application, type HandlerInterface } from '../deps.ts';
+import { Application, Context, type HandlerInterface } from '../deps.ts';
 
 import { FilterExecutor } from '../exception/filter/executor.ts';
 import { HTTP_STATUS } from '../exception/http/enum.ts';
@@ -26,7 +26,7 @@ export type Callback = (...args: any[]) => unknown;
 export type HttpContext = Context;
 
 export type ExecutionContext = HttpContext & {
-	_id: string,
+	_id: string;
 	// deno-lint-ignore ban-types
 	getHandler: () => Function;
 	getClass: () => Constructor;
@@ -58,7 +58,7 @@ export class DanetRouter {
 			injector,
 		);
 	}
-	
+
 	public createRoute(
 		handlerName: string | hookName,
 		Controller: Constructor,
@@ -71,14 +71,20 @@ export class DanetRouter {
 			return;
 		}
 		const controllerMethod = Controller.prototype[handlerName];
-		let endpoint = MetadataHelper.getMetadata<string>('endpoint', controllerMethod);
+		let endpoint = MetadataHelper.getMetadata<string>(
+			'endpoint',
+			controllerMethod,
+		);
 
 		basePath = trimSlash(basePath);
 		endpoint = trimSlash(endpoint);
 		const path = (basePath ? ('/' + basePath) : '') +
 			(endpoint ? '/' + endpoint : '');
 
-		const httpMethod = MetadataHelper.getMetadata<string>('method', controllerMethod);
+		const httpMethod = MetadataHelper.getMetadata<string>(
+			'method',
+			controllerMethod,
+		);
 		const routerFn = this.methodsMap.get(httpMethod || 'ALL');
 		if (!routerFn) {
 			throw new Error(
@@ -90,24 +96,34 @@ export class DanetRouter {
 				path ? path : '/'
 			}`,
 		);
-		routerFn.call(this.router, path, async (context: HttpContext, next: NextFunction) => {
-			const _id = crypto.randomUUID();
-			(context as any)._id = _id;
-			(context as any).getClass = () => Controller;
-			(context as any).getHandler = () => controllerMethod;
-			context.res = new Response();
-			context.set('_id', _id);
-			try {
-				await this.middlewareExecutor.executeAllRelevantMiddlewares(
-					context as unknown as ExecutionContext,
-					Controller,
-					controllerMethod);
-			} catch (error) {
-				console.log('middleware threw', error);
-				return await this.handleError(context as ExecutionContext, error, Controller, controllerMethod);
-			}
-			await next();
-		}, this.handleRoute(Controller, controllerMethod));
+		routerFn.call(
+			this.router,
+			path,
+			async (context: HttpContext, next: NextFunction) => {
+				const _id = crypto.randomUUID();
+				(context as any)._id = _id;
+				(context as any).getClass = () => Controller;
+				(context as any).getHandler = () => controllerMethod;
+				context.res = new Response();
+				context.set('_id', _id);
+				try {
+					await this.middlewareExecutor.executeAllRelevantMiddlewares(
+						context as unknown as ExecutionContext,
+						Controller,
+						controllerMethod,
+						next,
+					);
+				} catch (error) {
+					return this.handleError(
+						context as ExecutionContext,
+						error,
+						Controller,
+						controllerMethod,
+					);
+				}
+			},
+			this.handleRoute(Controller, controllerMethod),
+		);
 	}
 
 	setPrefix(prefix: string) {
@@ -139,38 +155,53 @@ export class DanetRouter {
 			(context as any)._id = context.get('_id');
 			(context as any).getClass = () => Controller;
 			(context as any).getHandler = () => ControllerMethod;
-			if (!context.res)
+			if (!context.res) {
 				context.res = new Response();
-			const executionContext = context as unknown as ExecutionContext;
+			}
 			try {
-						await this.guardExecutor.executeAllRelevantGuards(
-							executionContext,
-							Controller,
-							ControllerMethod,
-						);
-						const params = await this.resolveMethodParam(
-							Controller,
-							ControllerMethod,
-							executionContext,
-						);
-						const controllerInstance = await this.injector.get(
-							Controller,
-							executionContext,
-							// deno-lint-ignore no-explicit-any
-						) as any;
-						const response:
-							| Record<string, unknown>
-							| string = await controllerInstance[ControllerMethod.name](
-								...params,
-							);
-						return await this.sendResponse(response, ControllerMethod, executionContext);
+				const executionContext = context as unknown as ExecutionContext;
+				await this.guardExecutor.executeAllRelevantGuards(
+					executionContext,
+					Controller,
+					ControllerMethod,
+				);
+				const params = await this.resolveMethodParam(
+					Controller,
+					ControllerMethod,
+					executionContext,
+				);
+				const controllerInstance = await this.injector.get(
+					Controller,
+					executionContext,
+					// deno-lint-ignore no-explicit-any
+				) as any;
+				const response:
+					| Record<string, unknown>
+					| string = await controllerInstance[ControllerMethod.name](
+						...params,
+					);
+				return await this.sendResponse(
+					response,
+					ControllerMethod,
+					executionContext,
+				);
 			} catch (error) {
-				return await this.handleError(executionContext, error, Controller, ControllerMethod);
+				return this.handleError(
+					context as ExecutionContext,
+					error,
+					Controller,
+					ControllerMethod,
+				);
 			}
 		};
 	}
 
-	private async handleError(executionContext: ExecutionContext, error: any, Controller: ControllerConstructor, ControllerMethod: (...args: any[]) => unknown) {
+	private async handleError(
+		executionContext: ExecutionContext,
+		error: any,
+		Controller: ControllerConstructor,
+		ControllerMethod: (...args: any[]) => unknown,
+	) {
 		const filterResponse = await this.filterExecutor
 			.executeControllerAndMethodFilter(
 				executionContext,
@@ -204,12 +235,15 @@ export class DanetRouter {
 				ControllerMethod,
 			);
 			if (fileName) {
-				context.res = await context.html(await this.viewRenderer.render(
-					fileName,
-					response,
-				), {
-					headers: context.res.headers,
-				});
+				context.res = await context.html(
+					await this.viewRenderer.render(
+						fileName,
+						response,
+					),
+					{
+						headers: context.res.headers,
+					},
+				);
 			} else {
 				if (typeof response !== 'string') {
 					context.res = await context.json(response, {
