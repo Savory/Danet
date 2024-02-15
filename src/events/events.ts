@@ -17,6 +17,10 @@ export class EventEmitter implements OnAppClose {
 	emmit<P>(channelName: string, payload: P) {
 		const event = new CustomEvent(channelName, { detail: payload });
 		this.eventTarget.dispatchEvent(event);
+
+		this.logger.log(
+			`event send to '${channelName}' channel`,
+		);
 	}
 
 	subscribe<P>(channelName: string, listener: Listener<P>) {
@@ -26,6 +30,10 @@ export class EventEmitter implements OnAppClose {
 		};
 		this.eventTarget.addEventListener(channelName, eventListener);
 		this.listenersRegistered.push([channelName, listener]);
+
+		this.logger.log(
+			`event listener subscribed to '${channelName}' channel`,
+		);
 	}
 
 	unsubscribe(channelName?: string) {
@@ -35,6 +43,10 @@ export class EventEmitter implements OnAppClose {
 				[channel, _listener],
 			) => channelName == channel);
 		}
+
+		this.logger.log(
+			`cleaning up event listeners for '${channelName ?? 'all'}' channel`,
+		);
 
 		return unsubscribeListeners.map((item) =>
 			this.eventTarget.removeEventListener(...item)
