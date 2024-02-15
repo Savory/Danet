@@ -2,6 +2,7 @@ import {
 	Controller,
 	DanetApplication,
 	EventEmitter,
+	EventEmitterModule,
 	Injectable,
 	Module,
 	OnEvent,
@@ -26,12 +27,11 @@ class UserListeners {
 @Controller('user')
 class UserController {
 	constructor(
-		private eventEmitter: EventEmitter<User>,
+		private eventEmitter: EventEmitter,
 	) {}
 
 	@Post()
-	// deno-lint-ignore no-explicit-any
-	create(@Body() body: any) {
+	create() {
 		const user: User = {};
 		this.eventEmitter.emmit('new-user', user);
 		return JSON.stringify(user);
@@ -40,7 +40,7 @@ class UserController {
 
 @Module({
 	controllers: [UserController],
-	injectables: [UserListeners],
+	injectables: [UserListeners, EventEmitterModule],
 })
 class AppModule {}
 
