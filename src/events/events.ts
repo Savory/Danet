@@ -3,38 +3,41 @@ import { Logger, Module, ModuleConstructor } from '../mod.ts';
 // deno-lint-ignore no-explicit-any
 type Listener<P = any> = (payload: P) => void;
 
-// deno-lint-ignore no-explicit-any
-export class EventEmitter<T = any> {
+export class EventEmitter {
 	private logger: Logger = new Logger('EventEmitter');
-	private listenersMap: Map<string, Listener<T>[]>;
+	private listenersRegistered: Array<[string, Listener]>;
+	private eventTarget: EventTarget;
 
 	constructor() {
-		this.listenersMap = new Map<string, Listener[]>();
+		this.listenersRegistered = [];
+		this.eventTarget = new EventTarget();
 	}
 
-	emmit(channelName: string, payload: T) {
-		const listeners = this.getListeners(channelName);
+	emmit<P>(channelName: string, payload: P) {
+		const event = new CustomEvent(channelName, { detail: payload });
+		this.eventTarget.dispatchEvent(event);
+	}
 
-		if (listeners.length === 0) {
-			this.logger.warn(`No listener subscribed for channel '${channelName}'`);
+	subscribe<P>(channelName: string, listener: Listener<P>) {
+		const eventListener = (ev: Event) => {
+			const { detail: payload } = ev as CustomEvent;
+			return listener(payload);
+		};
+		this.eventTarget.addEventListener(channelName, eventListener);
+		this.listenersRegistered.push([channelName, listener]);
+	}
+
+	unsubscribe(channelName?: string) {
+		let unsubscribeListeners = this.listenersRegistered;
+		if (channelName) {
+			unsubscribeListeners = this.listenersRegistered.filter((
+				[channel, _listener],
+			) => channelName == channel);
 		}
 
-		listeners.map((listener) => {
-			listener(payload);
-		});
-	}
-
-	subscribe(channelName: string, listener: Listener) {
-		const listeners = this.getListeners(channelName);
-		this.listenersMap.set(channelName, [...listeners, listener]);
-	}
-
-	unsubscribe(channelName: string) {
-		this.listenersMap.delete(channelName);
-	}
-
-	private getListeners(channelName: string) {
-		return this.listenersMap.get(channelName) ?? [];
+		return unsubscribeListeners.map((item) =>
+			this.eventTarget.removeEventListener(...item)
+		);
 	}
 }
 
