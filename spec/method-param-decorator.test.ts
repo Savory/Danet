@@ -1,7 +1,7 @@
 import { assertEquals } from '../src/deps_test.ts';
 import { DanetApplication } from '../src/app.ts';
 import { Session } from '../src/mod.ts';
-import type { MiddlewareHandler} from '../src/deps.ts';
+import type { MiddlewareHandler } from '../src/deps.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
 import {
@@ -15,9 +15,9 @@ import { Injectable } from '../src/injector/injectable/decorator.ts';
 import { AuthGuard } from '../src/guard/interface.ts';
 import { HttpContext } from '../src/router/router.ts';
 import {
+	CookieStore,
 	sessionMiddleware,
-	CookieStore
-} from 'https://deno.land/x/hono_sessions/mod.ts'
+} from 'https://deno.land/x/hono_sessions/mod.ts';
 
 @Injectable()
 class AddThingToSession implements AuthGuard {
@@ -372,7 +372,7 @@ Deno.test('@Param decorator', async () => {
 
 Deno.test('@Session decorator without params', async () => {
 	const app = new DanetApplication();
-	const store = new CookieStore()
+	const store = new CookieStore();
 	app.use(
 		sessionMiddleware({
 			store,
@@ -383,7 +383,7 @@ Deno.test('@Session decorator without params', async () => {
 				path: '/', // Required for this library to work properly
 				httpOnly: true, // Recommended to avoid XSS attacks
 			},
-		}) as unknown as MiddlewareHandler
+		}) as unknown as MiddlewareHandler,
 	);
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
@@ -401,7 +401,7 @@ Deno.test('@Session decorator without params', async () => {
 
 Deno.test('@Session decorator with param', async () => {
 	const app = new DanetApplication();
-	const store = new CookieStore()
+	const store = new CookieStore();
 	app.use(
 		sessionMiddleware({
 			store,
@@ -412,7 +412,7 @@ Deno.test('@Session decorator with param', async () => {
 				path: '/', // Required for this library to work properly
 				httpOnly: true, // Recommended to avoid XSS attacks
 			},
-		}) as unknown as MiddlewareHandler
+		}) as unknown as MiddlewareHandler,
 	);
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
