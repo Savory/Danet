@@ -15,6 +15,8 @@ import {
 	SCOPE,
 } from './injectable/decorator.ts';
 import { ExecutionContext } from '../router/router.ts';
+import { eventListenerMetadataKey } from '../mod.ts';
+import { EventEmitter } from '../events/mod.ts';
 
 export class Injector {
 	private resolved = new Map<
@@ -128,6 +130,26 @@ export class Injector {
 		}
 	}
 
+	private registerAvailableEventListeners(Type: InjectableConstructor) {
+		const methods = Object.getOwnPropertyNames(Type.prototype);
+
+		for (const method of methods) {
+			const target = Type.prototype[method];
+			const eventListenerMedatada = MetadataHelper.getMetadata<
+				{ channel: string }
+			>(
+				eventListenerMetadataKey,
+				target,
+			);
+			if (!eventListenerMedatada) continue;
+			const { channel } = eventListenerMedatada;
+
+			const emmiter = this.resolved.get(EventEmitter)?.() as EventEmitter;
+			emmiter.subscribe(channel, target);
+			this.logger.log(`registering method '${method}' to event '${channel}'`);
+		}
+	}
+
 	private async resolveInjectable(
 		Type: InjectableConstructor | TokenInjector,
 		ParentConstructor?: Constructor,
@@ -148,6 +170,9 @@ export class Injector {
 			injectionData,
 			actualType,
 		);
+
+		this.registerAvailableEventListeners(actualType);
+
 		let canBeSingleton = injectableMetadata?.scope !== SCOPE.REQUEST &&
 			injectableMetadata?.scope !== SCOPE.TRANSIENT;
 		if (canBeSingleton) {
