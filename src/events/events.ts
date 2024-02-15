@@ -38,19 +38,25 @@ export class EventEmitter implements OnAppClose {
 
 	unsubscribe(channelName?: string) {
 		let unsubscribeListeners = this.listenersRegistered;
+		let remainingListeners: Array<[string, Listener]> = [];
+
 		if (channelName) {
-			unsubscribeListeners = this.listenersRegistered.filter((
-				[channel, _listener],
-			) => channelName == channel);
+			unsubscribeListeners = this.listenersRegistered.filter(([channel]) =>
+				channelName == channel
+			);
+			remainingListeners = this.listenersRegistered.filter(([channel]) =>
+				channelName != channel
+			);
 		}
 
 		this.logger.log(
 			`cleaning up event listeners for '${channelName ?? 'all'}' channel`,
 		);
 
-		return unsubscribeListeners.map((item) =>
+		unsubscribeListeners.map((item) =>
 			this.eventTarget.removeEventListener(...item)
 		);
+		this.listenersRegistered = remainingListeners;
 	}
 
 	onAppClose() {
