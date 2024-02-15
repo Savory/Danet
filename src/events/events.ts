@@ -36,14 +36,9 @@ export class EventEmitter<T = any> {
 	private getListeners(channelName: string) {
 		return this.listenersMap.get(channelName) ?? [];
 	}
-
-	static forRoot(): ModuleConstructor {
-		const moduleDecorator = Module({
-			injectables: [EventEmitter],
-		});
-		class Events {}
-
-		moduleDecorator(Events);
-		return Events;
-	}
 }
+
+@Module({
+	injectables: [EventEmitter],
+})
+export class EventEmitterModule {}
