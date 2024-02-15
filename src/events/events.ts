@@ -1,66 +1,49 @@
-import { MetadataHelper } from '../metadata/mod.ts';
 import { Logger, Module, ModuleConstructor } from '../mod.ts';
-import { eventListenerMetadataKey } from './mod.ts';
 
-type Listener<P> = (payload: P) => void;
+// deno-lint-ignore no-explicit-any
+type Listener<P = any> = (payload: P) => void;
 
 // deno-lint-ignore no-explicit-any
 export class EventEmitter<T = any> {
-  private logger: Logger = new Logger('EventEmitter');
-  private channelsMap: Map<string, BroadcastChannel>;
+	private logger: Logger = new Logger('EventEmitter');
+	private listenersMap: Map<string, Listener<T>[]>;
 
-  constructor() {
-    this.channelsMap = new Map<string, BroadcastChannel>();
-  }
+	constructor() {
+		this.listenersMap = new Map<string, Listener[]>();
+	}
 
-  emmit(channelName: string, payload: T) {
-    const listeners = this.getListeners(channelName);
-    const bc = this.lazyCreateBroadcastChannel(channelName, listeners);
-    bc.postMessage(JSON.stringify(payload));
-  }
+	emmit(channelName: string, payload: T) {
+		const listeners = this.getListeners(channelName);
 
-  private getListeners(channelName: string) {
-    const listeners = MetadataHelper.getMetadata<Listener<T>[]>(
-      eventListenerMetadataKey,
-      channelName,
-    );
-    if (!listeners?.length) {
-      this.logger.warn(`No listener subscribed for channel '${channelName}'`);
-    }
+		if (listeners.length === 0) {
+			this.logger.warn(`No listener subscribed for channel '${channelName}'`);
+		}
 
-    return listeners;
-  }
+		listeners.map((listener) => {
+			listener(payload);
+		});
+	}
 
-  private lazyCreateBroadcastChannel(
-    channelName: string,
-    listeners: Listener<T>[],
-  ): BroadcastChannel {
-    let bc = this.channelsMap.get(channelName);
+	subscribe(channelName: string, listener: Listener) {
+		const listeners = this.getListeners(channelName);
+		this.listenersMap.set(channelName, [...listeners, listener]);
+	}
 
-    if (!bc) {
-      bc = new BroadcastChannel(channelName);
-      this.channelsMap.set(channelName, bc);
+	unsubscribe(channelName: string) {
+		this.listenersMap.delete(channelName);
+	}
 
-      bc.onmessage = ({ data }) => {
-        // parse data
-        const payload = JSON.stringify(data) as T;
-        // call all listeners
-        listeners.map((listener) => {
-          listener(payload);
-        });
-      };
-    }
+	private getListeners(channelName: string) {
+		return this.listenersMap.get(channelName) ?? [];
+	}
 
-    return bc;
-  }
+	static forRoot(): ModuleConstructor {
+		const moduleDecorator = Module({
+			injectables: [EventEmitter],
+		});
+		class Events {}
 
-  static forRoot(): ModuleConstructor {
-    const moduleDecorator = Module({
-      injectables: [EventEmitter],
-    });
-    class Events {}
-
-    moduleDecorator(Events);
-    return Events;
-  }
+		moduleDecorator(Events);
+		return Events;
+	}
 }
