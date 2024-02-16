@@ -19,7 +19,7 @@ export const serveStatic = (options: ServeStaticOptions = { root: '' }) => {
 		// hey tomato love u
 		const url = new URL(c.req.url);
 		const filename = options.path ?? decodeURI(url.pathname);
-		let path = getFilePath({
+		const path = getFilePath({
 			filename: options.rewriteRequestPath
 				? options.rewriteRequestPath(filename)
 				: filename,
@@ -28,8 +28,6 @@ export const serveStatic = (options: ServeStaticOptions = { root: '' }) => {
 		});
 
 		if (!path) return await next();
-
-		path = `/${path}`;
 
 		let file;
 
