@@ -30,7 +30,7 @@ export const serveStatic = (options: ServeStaticOptions = { root: '' }) => {
 		if (!path) return await next();
 
 		if (Deno.build.os !== "windows") {
-			path = `${path}`;
+			path = `/${path}`;
 		}
 		
 		let file;
