@@ -6,11 +6,11 @@ type Listener<P = any> = (payload: P) => void;
 
 export class EventEmitter implements OnAppClose {
 	private logger: Logger = new Logger('EventEmitter');
-	private listenersRegistered: Array<[string, Listener]>;
+	private listenersRegistered: Map<string, Listener[]>;
 	private eventTarget: EventTarget;
 
 	constructor() {
-		this.listenersRegistered = [];
+		this.listenersRegistered = new Map();
 		this.eventTarget = new EventTarget();
 	}
 
@@ -29,7 +29,9 @@ export class EventEmitter implements OnAppClose {
 			return listener(payload);
 		};
 		this.eventTarget.addEventListener(channelName, eventListener);
-		this.listenersRegistered.push([channelName, listener]);
+
+		const listeners = this.listenersRegistered.get(channelName) ?? [];
+		this.listenersRegistered.set(channelName, [...listeners, eventListener]);
 
 		this.logger.log(
 			`event listener subscribed to '${channelName}' channel`,
@@ -37,30 +39,31 @@ export class EventEmitter implements OnAppClose {
 	}
 
 	unsubscribe(channelName?: string) {
-		let unsubscribeListeners = this.listenersRegistered;
-		let remainingListeners: Array<[string, Listener]> = [];
-
-		if (channelName) {
-			unsubscribeListeners = this.listenersRegistered.filter(([channel]) =>
-				channelName == channel
-			);
-			remainingListeners = this.listenersRegistered.filter(([channel]) =>
-				channelName != channel
-			);
-		}
-
 		this.logger.log(
 			`cleaning up event listeners for '${channelName ?? 'all'}' channel`,
 		);
 
-		unsubscribeListeners.map((item) =>
-			this.eventTarget.removeEventListener(...item)
-		);
-		this.listenersRegistered = remainingListeners;
+		if (channelName) {
+			return this.deleteChannel(channelName);
+		}
+
+		for (const channel of this.listenersRegistered.keys()) {
+			this.deleteChannel(channel);
+		}
 	}
 
 	onAppClose() {
 		this.unsubscribe();
+	}
+
+	private deleteChannel(channelName: string) {
+		const listeners = this.listenersRegistered.get(channelName) ?? [];
+
+		listeners.map((listener) =>
+			this.eventTarget.removeEventListener(channelName, listener)
+		);
+
+		this.listenersRegistered.delete(channelName);
 	}
 }
 
