@@ -19,7 +19,7 @@ export const serveStatic = (options: ServeStaticOptions = { root: '' }) => {
 		// hey tomato love u
 		const url = new URL(c.req.url);
 		const filename = options.path ?? decodeURI(url.pathname);
-		const path = getFilePath({
+		let path = getFilePath({
 			filename: options.rewriteRequestPath
 				? options.rewriteRequestPath(filename)
 				: filename,
@@ -29,6 +29,10 @@ export const serveStatic = (options: ServeStaticOptions = { root: '' }) => {
 
 		if (!path) return await next();
 
+		if (Deno.build.os !== "windows") {
+			path = `${path}`;
+		}
+		
 		let file;
 
 		try {
