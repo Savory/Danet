@@ -39,8 +39,9 @@ class UserController {
 }
 
 @Module({
+        imports: [EventEmitterModule],
 	controllers: [UserController],
-	injectables: [UserListeners, EventEmitterModule],
+	injectables: [UserListeners],
 })
 class AppModule {}
 
