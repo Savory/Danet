@@ -51,7 +51,7 @@ export class DanetRouter {
 			['POST', this.router.post],
 			['PUT', this.router.put],
 			['OPTIONS', this.router.options],
-			['HEAD', this.router.head],
+			['HEAD', this.router.get],
 			['ALL', this.router.all],
 		]);
 		this.middlewareExecutor = new MiddlewareExecutor(
