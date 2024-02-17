@@ -66,7 +66,9 @@ export class Injector {
 		this.modules.push(module);
 	}
 
-	public addAvailableInjectable(injectables: (InjectableConstructor | TokenInjector)[]) {
+	public addAvailableInjectable(
+		injectables: (InjectableConstructor | TokenInjector)[],
+	) {
 		for (const injectable of injectables) {
 			const actualKey = injectable instanceof TokenInjector
 				? injectable.token
@@ -144,8 +146,8 @@ export class Injector {
 			if (!eventListenerMedatada) continue;
 			const { channel } = eventListenerMedatada;
 
-			const emmiter = this.resolved.get(EventEmitter)?.() as EventEmitter;
-			emmiter.subscribe(channel, target);
+			const emitter = this.resolved.get(EventEmitter)?.() as EventEmitter;
+			emitter.subscribe(channel, target);
 			this.logger.log(`registering method '${method}' to event '${channel}'`);
 		}
 	}
@@ -309,5 +311,7 @@ export class Injector {
 export let injector: Injector;
 
 // @ts-ignore
-if (!injector)
+if (!injector) {
 	injector = new Injector();
+}
+

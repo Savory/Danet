@@ -14,7 +14,7 @@ export class EventEmitter implements OnAppClose {
 		this.eventTarget = new EventTarget();
 	}
 
-	emmit<P>(channelName: string, payload: P) {
+	emit<P>(channelName: string, payload: P) {
 		const event = new CustomEvent(channelName, { detail: payload });
 		this.eventTarget.dispatchEvent(event);
 

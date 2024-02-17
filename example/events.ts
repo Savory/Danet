@@ -33,13 +33,13 @@ class UserController {
 	@Post()
 	create() {
 		const user: User = {};
-		this.eventEmitter.emmit('new-user', user);
+		this.eventEmitter.emit('new-user', user);
 		return JSON.stringify(user);
 	}
 }
 
 @Module({
-        imports: [EventEmitterModule],
+	imports: [EventEmitterModule],
 	controllers: [UserController],
 	injectables: [UserListeners],
 })
