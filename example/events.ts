@@ -3,7 +3,6 @@ import {
 	DanetApplication,
 	EventEmitter,
 	EventEmitterModule,
-	Injectable,
 	Module,
 	OnEvent,
 	Post,
@@ -11,7 +10,6 @@ import {
 
 type User = {};
 
-@Injectable()
 class UserListeners {
 	@OnEvent('new-user')
 	notifyUser(user: User) {

@@ -10,7 +10,7 @@ import { EventEmitter } from './events.ts';
 export class EventEmitterModule implements OnAppBootstrap, OnAppClose {
 	private logger: Logger = new Logger('EventEmitterModule');
 
-	constructor(private service: EventEmitter) {}
+	constructor() {}
 
 	onAppBootstrap(): void | Promise<void> {
 		for (const types of injector.resolvedTypes.values()) {
@@ -19,7 +19,8 @@ export class EventEmitterModule implements OnAppBootstrap, OnAppClose {
 	}
 
 	onAppClose() {
-		this.service.unsubscribe();
+		const emitter = injector.get<EventEmitter>(EventEmitter);
+		emitter.unsubscribe();
 	}
 
 	private registerAvailableEventListeners(Type: InjectableConstructor) {
