@@ -1,4 +1,12 @@
-import { EventEmitter } from '../mod.ts';
+import {
+	Controller,
+	DanetApplication,
+	EventEmitter,
+	EventEmitterModule,
+	Get,
+	Module,
+	OnEvent,
+} from '../mod.ts';
 import {
 	assertEquals,
 	assertSpyCall,
@@ -100,4 +108,59 @@ Deno.test('EventEmitter Service', async (t) => {
 
 		emitter.unsubscribe();
 	});
+});
+
+Deno.test('EventEmitter Module', async (t) => {
+	const callback = spy((_payload: any) => {});
+	const payload = { name: 'test' };
+
+	class TestListener {
+		@OnEvent('trigger')
+		getSomething(payload: any) {
+			callback(payload);
+		}
+	}
+
+	@Controller('trigger')
+	class TestController {
+		constructor(private emitter: EventEmitter) {}
+
+		@Get()
+		getSomething() {
+			this.emitter.emit('trigger', payload);
+			return 'OK';
+		}
+	}
+
+	@Module({
+		imports: [EventEmitterModule],
+		controllers: [TestController],
+		injectables: [TestListener],
+	})
+	class TestModule {}
+
+	const application = new DanetApplication();
+	await application.init(TestModule);
+	const listenerInfo = await application.listen(0);
+
+	await t.step('validate if api call trigger event', async () => {
+		assertEquals(callback.calls.length, 0);
+
+		let res = await fetch(`http://localhost:${listenerInfo.port}/trigger`);
+
+		assertEquals(res.status, 200);
+		assertEquals(await res.text(), 'OK');
+		assertEquals(callback.calls.length, 1);
+		assertSpyCall(callback, 0, {
+			args: [payload],
+		});
+
+		res = await fetch(`http://localhost:${listenerInfo.port}/trigger`);
+
+		assertEquals(res.status, 200);
+		assertEquals(await res.text(), 'OK');
+		assertEquals(callback.calls.length, 2);
+	});
+
+	await application.close();
 });
