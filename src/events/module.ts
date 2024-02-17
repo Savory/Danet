@@ -13,8 +13,8 @@ export class EventEmitterModule implements OnAppBootstrap, OnAppClose {
 	constructor(private service: EventEmitter) {}
 
 	onAppBootstrap(): void | Promise<void> {
-		for (const injectable of injector.injectables) {
-			this.registerAvailableEventListeners(injectable);
+		for (const types of injector.resolvedTypes.values()) {
+			this.registerAvailableEventListeners(types);
 		}
 	}
 

@@ -22,7 +22,7 @@ export class Injector {
 	>();
 	private availableTypes = new Map<Constructor | string, Constructor>();
 	private logger: Logger = new Logger('Injector');
-	private resolvedTypes = new Map<
+	public resolvedTypes = new Map<
 		Constructor | string,
 		Constructor
 	>();
