@@ -132,26 +132,6 @@ export class Injector {
 		}
 	}
 
-	private registerAvailableEventListeners(Type: InjectableConstructor) {
-		const methods = Object.getOwnPropertyNames(Type.prototype);
-
-		for (const method of methods) {
-			const target = Type.prototype[method];
-			const eventListenerMedatada = MetadataHelper.getMetadata<
-				{ channel: string }
-			>(
-				eventListenerMetadataKey,
-				target,
-			);
-			if (!eventListenerMedatada) continue;
-			const { channel } = eventListenerMedatada;
-
-			const emitter = this.resolved.get(EventEmitter)?.() as EventEmitter;
-			emitter.subscribe(channel, target);
-			this.logger.log(`registering method '${method}' to event '${channel}'`);
-		}
-	}
-
 	private async resolveInjectable(
 		Type: InjectableConstructor | TokenInjector,
 		ParentConstructor?: Constructor,
@@ -172,8 +152,6 @@ export class Injector {
 			injectionData,
 			actualType,
 		);
-
-		this.registerAvailableEventListeners(actualType);
 
 		let canBeSingleton = injectableMetadata?.scope !== SCOPE.REQUEST &&
 			injectableMetadata?.scope !== SCOPE.TRANSIENT;
@@ -314,4 +292,3 @@ export let injector: Injector;
 if (!injector) {
 	injector = new Injector();
 }
-

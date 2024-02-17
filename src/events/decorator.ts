@@ -1,5 +1,5 @@
 import { MetadataHelper } from '../metadata/mod.ts';
-import { eventListenerMetadataKey } from './mod.ts';
+import { eventListenerMetadataKey } from './constants.ts';
 
 export const OnEvent = (channel: string): MethodDecorator => {
 	return (_target, _propertyKey, descriptor) => {

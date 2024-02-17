@@ -1,10 +1,9 @@
-import { OnAppClose } from '../hook/interfaces.ts';
-import { Logger, Module } from '../mod.ts';
+import { Logger } from '../mod.ts';
 
 // deno-lint-ignore no-explicit-any
 type Listener<P = any> = (payload: P) => void;
 
-export class EventEmitter implements OnAppClose {
+export class EventEmitter {
 	private logger: Logger = new Logger('EventEmitter');
 	private listenersRegistered: Map<string, Listener[]>;
 	private eventTarget: EventTarget;
@@ -52,10 +51,6 @@ export class EventEmitter implements OnAppClose {
 		}
 	}
 
-	onAppClose() {
-		this.unsubscribe();
-	}
-
 	private deleteChannel(channelName: string) {
 		const listeners = this.listenersRegistered.get(channelName) ?? [];
 
@@ -66,8 +61,3 @@ export class EventEmitter implements OnAppClose {
 		this.listenersRegistered.delete(channelName);
 	}
 }
-
-@Module({
-	injectables: [EventEmitter],
-})
-export class EventEmitterModule {}
