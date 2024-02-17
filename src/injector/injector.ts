@@ -31,6 +31,9 @@ export class Injector {
 		string,
 		Map<Constructor | string, unknown>
 	>();
+	public modules: Array<ModuleInstance> = [];
+	public controllers: Array<any> = [];
+	public injectables: Array<any> = [];
 
 	public getAll() {
 		return this.resolved;
@@ -58,6 +61,7 @@ export class Injector {
 			await this.resolveControllers(controllers);
 		}
 		this.resolved.set(module.constructor as Constructor, () => module);
+		this.modules.push(module);
 	}
 
 	public addAvailableInjectable(injectables: (InjectableConstructor | TokenInjector)[]) {
@@ -118,6 +122,7 @@ export class Injector {
 			const instance = new Type(...resolvedDependencies);
 			this.resolved.set(Type, () => instance);
 			this.resolvedTypes.set(Type, Type);
+			this.controllers.push(instance);
 		} else {
 			this.setNonSingleton(Type, Type, dependencies);
 		}
@@ -175,6 +180,7 @@ export class Injector {
 			const instance = new actualType(...resolvedDependencies);
 			this.resolved.set(actualKey, () => instance);
 			this.resolvedTypes.set(actualKey, actualType);
+			this.injectables.push(instance);
 		} else {
 			if (
 				injectableMetadata?.scope !== SCOPE.TRANSIENT &&
