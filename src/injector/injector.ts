@@ -275,3 +275,8 @@ export class Injector {
 		this.contextInjectables.delete(_id);
 	}
 }
+export let injector: Injector;
+
+// @ts-ignore
+if (!injector)
+	injector = new Injector();

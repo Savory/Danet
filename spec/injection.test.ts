@@ -13,6 +13,8 @@ import { Injectable, SCOPE } from '../src/injector/injectable/decorator.ts';
 import { Module, ModuleOptions } from '../src/module/decorator.ts';
 import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
+import { injector } from '../src/injector/injector.ts';
+import { Injector } from '../mod.ts';
 
 Deno.test('Injection', async (testContext) => {
 	interface IDBService {
@@ -125,6 +127,14 @@ Deno.test('Injection', async (testContext) => {
 	class ModuleWithMissingProvider {
 	}
 
+	await testContext.step(
+		'it throws if controllers dependencies are not available in context or globally',
+		() => {
+			const failingApp = new DanetApplication();
+			assertRejects(() => failingApp.init(ModuleWithMissingProvider));
+		},
+	);
+	
 	const app = new DanetApplication();
 	await app.init(FirstModule);
 
@@ -173,11 +183,5 @@ Deno.test('Injection', async (testContext) => {
 		assertInstanceOf(globalGuard, GlobalGuard);
 	});
 
-	await testContext.step(
-		'it throws if controllers dependencies are not available in context or globally',
-		() => {
-			const failingApp = new DanetApplication();
-			assertRejects(() => failingApp.init(ModuleWithMissingProvider));
-		},
-	);
+
 });

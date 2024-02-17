@@ -4,12 +4,12 @@ import { GuardExecutor } from './guard/executor.ts';
 import { HookExecutor } from './hook/executor.ts';
 import { hookName } from './hook/interfaces.ts';
 
-import { Injector } from './injector/injector.ts';
+import { injector } from './injector/injector.ts';
 import { Logger } from './logger.ts';
 import { MetadataHelper } from './metadata/helper.ts';
 import { moduleMetadataKey, ModuleOptions } from './module/decorator.ts';
 import { HandlebarRenderer } from './renderer/handlebar.ts';
-import { DanetRouter, HttpContext } from './router/router.ts';
+import { DanetRouter } from './router/router.ts';
 import { Constructor } from './utils/constructor.ts';
 import { PossibleMiddlewareType } from './router/middleware/decorator.ts';
 import { globalMiddlewareContainer } from './router/middleware/global-container.ts';
@@ -30,7 +30,7 @@ type CORSOptions = {
 export class DanetApplication {
 	private app: Application = new Application({ strict: false });
 	private internalHttpServer?: Deno.HttpServer;
-	private injector = new Injector();
+	private injector = injector;
 	private hookExecutor = new HookExecutor(this.injector);
 	private renderer = new HandlebarRenderer();
 	public danetRouter = new DanetRouter(
