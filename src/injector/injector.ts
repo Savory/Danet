@@ -57,6 +57,7 @@ export class Injector {
 		if (controllers) {
 			await this.resolveControllers(controllers);
 		}
+		this.resolved.set(module.constructor as Constructor, () => module);
 	}
 
 	public addAvailableInjectable(injectables: (InjectableConstructor | TokenInjector)[]) {

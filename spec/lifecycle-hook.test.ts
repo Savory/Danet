@@ -6,6 +6,9 @@ import { Module } from '../src/module/decorator.ts';
 import { Controller } from '../src/router/controller/decorator.ts';
 
 Deno.test('Lifecycle hooks', async (testContext) => {
+
+	let moduleOnAppBootstrapCalled = false;
+
 	@Injectable({ scope: SCOPE.GLOBAL })
 	class InjectableWithHook implements OnAppBootstrap, OnAppClose {
 		public appBoostrapCalled = 0;
@@ -41,7 +44,12 @@ Deno.test('Lifecycle hooks', async (testContext) => {
 			InjectableWithHook,
 		],
 	})
-	class MyModule {}
+	class MyModule implements OnAppBootstrap {
+
+		onAppBootstrap(): void | Promise<void> {
+			moduleOnAppBootstrapCalled = true;
+		}
+	}
 
 	const app = new DanetApplication();
 	await app.init(MyModule);
@@ -53,6 +61,12 @@ Deno.test('Lifecycle hooks', async (testContext) => {
 			assertEquals(injectableWithHook.appBoostrapCalled, 1);
 		},
 	);
+
+	await testContext.step('call module onAppBoostrap hook',
+	() => {
+		assertEquals(moduleOnAppBootstrapCalled, true);
+	}
+	)
 
 	await testContext.step(
 		'call global controller onAppBootstrap hook',
