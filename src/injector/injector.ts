@@ -1,7 +1,6 @@
 import { Logger } from '../logger.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
-import { ModuleConstructor } from '../module/constructor.ts';
-import { ModuleInstance, moduleMetadataKey } from '../module/decorator.ts';
+import { ModuleInstance } from '../module/decorator.ts';
 import { ControllerConstructor } from '../router/controller/constructor.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { getInjectionTokenMetadataKey } from './decorator.ts';
@@ -15,8 +14,6 @@ import {
 	SCOPE,
 } from './injectable/decorator.ts';
 import { ExecutionContext } from '../router/router.ts';
-import { eventListenerMetadataKey } from '../mod.ts';
-import { EventEmitter } from '../events/mod.ts';
 
 export class Injector {
 	private resolved = new Map<
