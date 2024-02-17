@@ -14,6 +14,11 @@ export class EventEmitter {
 	}
 
 	emit<P>(channelName: string, payload: P) {
+		const channels = Array.from(this.listenersRegistered.keys());
+		if (!channels.includes(channelName)) {
+			throw new Error(`No listener for '${channelName}' channel`);
+		}
+
 		const event = new CustomEvent(channelName, { detail: payload });
 		this.eventTarget.dispatchEvent(event);
 

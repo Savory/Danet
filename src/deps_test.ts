@@ -1,9 +1,15 @@
 export {
+	assertSpyCall,
+	assertSpyCalls,
+	spy,
+} from 'https://deno.land/std@0.135.0/testing/mock.ts';
+export {
 	assertEquals,
 	assertInstanceOf,
 	assertNotEquals,
 	assertObjectMatch,
 	assertRejects,
+	assertThrows,
 } from 'https://deno.land/std@0.135.0/testing/asserts.ts';
 export * as path from 'https://deno.land/std@0.135.0/path/mod.ts';
 export {
