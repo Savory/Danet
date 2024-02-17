@@ -91,18 +91,21 @@ Deno.test('Injection', async (testContext) => {
 		}
 	}
 
-	@Module({
-		controllers: [SingletonController],
-		injectables: [
-			GlobalInjectable,
-			new TokenInjector(DatabaseService, 'DB_SERVICE'),
-		],
-	})
+	@Module({})
 	class SecondModule {
+		static forRoot() {
+			return {
+				controllers: [SingletonController],
+				injectables: [
+					GlobalInjectable,
+					new TokenInjector(DatabaseService, 'DB_SERVICE'),
+				],
+			};
+		}
 	}
 
 	const firstModuleOption: ModuleOptions = {
-		imports: [SecondModule],
+		imports: [SecondModule.forRoot()],
 		controllers: [FirstController],
 		injectables: [
 			Child1,

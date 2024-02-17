@@ -1,7 +1,7 @@
 import { Logger } from '../logger.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { ModuleConstructor } from '../module/constructor.ts';
-import { moduleMetadataKey } from '../module/decorator.ts';
+import { ModuleInstance, moduleMetadataKey } from '../module/decorator.ts';
 import { ControllerConstructor } from '../router/controller/constructor.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { getInjectionTokenMetadataKey } from './decorator.ts';
@@ -47,13 +47,9 @@ export class Injector {
 		throw Error(`Type ${Type} not injected`);
 	}
 
-	public async bootstrap(ModuleType: ModuleConstructor) {
-		this.logger.log(`Bootstraping ${ModuleType.name}`);
-		// deno-lint-ignore no-explicit-any
-		const { controllers, injectables } = MetadataHelper.getMetadata<any>(
-			moduleMetadataKey,
-			ModuleType,
-		);
+	public async bootstrapModule(module: ModuleInstance) {
+		this.logger.log(`Bootstraping ${module.constructor.name}`);
+		const { controllers, injectables } = module;
 		if (injectables) {
 			this.addAvailableInjectable(injectables);
 			await this.registerInjectables(injectables);
@@ -63,7 +59,7 @@ export class Injector {
 		}
 	}
 
-	public addAvailableInjectable(injectables: InjectableConstructor[]) {
+	public addAvailableInjectable(injectables: (InjectableConstructor | TokenInjector)[]) {
 		for (const injectable of injectables) {
 			const actualKey = injectable instanceof TokenInjector
 				? injectable.token

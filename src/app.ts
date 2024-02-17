@@ -16,6 +16,7 @@ import { globalMiddlewareContainer } from './router/middleware/global-container.
 import { ModuleConstructor } from './module/constructor.ts';
 import { serveStatic } from './utils/serve-static.ts';
 import { cors } from 'https://deno.land/x/hono/middleware.ts';
+import { ModuleInstance } from './mod.ts';
 
 type CORSOptions = {
 	origin: string | string[] | ((origin: string) => string | undefined | null);
@@ -47,18 +48,33 @@ export class DanetApplication {
 		return this.injector.get(Type);
 	}
 
-	async bootstrap(Module: Constructor) {
-		const metadata: ModuleOptions = MetadataHelper.getMetadata<ModuleOptions>(
-			moduleMetadataKey,
-			Module,
-		);
-		for (const module in metadata?.imports) {
-			// deno-lint-ignore no-explicit-any
-			await this.bootstrap(metadata.imports[module as any]);
+	async bootstrap(ModuleInstanceOrConstructor: Constructor | ModuleInstance) {
+		let possibleModuleInstance = ModuleInstanceOrConstructor as any;
+		let instance: ModuleInstance;
+		
+		if (!(possibleModuleInstance).imports
+			&& !(possibleModuleInstance).injectables) {
+				instance = new (ModuleInstanceOrConstructor as Constructor)() as ModuleInstance;
+				const metadata: ModuleOptions = MetadataHelper.getMetadata<ModuleOptions>(
+					moduleMetadataKey,
+					ModuleInstanceOrConstructor,
+				);
+				instance.controllers = metadata.controllers;
+				instance.imports = metadata.imports;
+				instance.injectables = metadata.injectables;
+		} else {
+			instance = ModuleInstanceOrConstructor as ModuleInstance;
 		}
-		await this.injector.bootstrap(Module);
-		if (metadata.controllers) {
-			this.danetRouter.registerControllers(metadata.controllers);
+		
+		for (const module in instance?.imports) {
+			// deno-lint-ignore no-explicit-any
+			await this.bootstrap(instance.imports[module as any]);
+		}
+
+		await this.injector.bootstrapModule(instance);
+
+		if (instance.controllers) {
+			this.danetRouter.registerControllers(instance.controllers);
 		}
 	}
 
