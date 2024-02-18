@@ -31,7 +31,9 @@ export class Injector {
 		Map<Constructor | string, unknown>
 	>();
 	public modules: Array<ModuleInstance> = [];
+	// deno-lint-ignore no-explicit-any
 	public controllers: Array<any> = [];
+	// deno-lint-ignore no-explicit-any
 	public injectables: Array<any> = [];
 
 	public getAll() {
@@ -285,7 +287,7 @@ export class Injector {
 }
 export let injector: Injector;
 
-// @ts-ignore
+// @ts-ignore used before initialization
 if (!injector) {
 	injector = new Injector();
 }
