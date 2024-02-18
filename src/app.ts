@@ -49,7 +49,8 @@ export class DanetApplication {
 	}
 
 	async bootstrap(ModuleInstanceOrConstructor: Constructor | ModuleInstance) {
-		let possibleModuleInstance = ModuleInstanceOrConstructor as any;
+		// deno-lint-ignore no-explicit-any
+		const possibleModuleInstance = ModuleInstanceOrConstructor as any;
 		let instance: ModuleInstance;
 		
 		if (!(possibleModuleInstance).imports
