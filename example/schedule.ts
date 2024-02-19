@@ -5,6 +5,7 @@ import {
 	IntervalExpression,
 	Module,
 	ScheduleModule,
+	Timeout,
 } from '../mod.ts';
 
 class TaskScheduler {
@@ -12,6 +13,11 @@ class TaskScheduler {
 		return {
 			now: new Date(),
 		};
+	}
+
+	@Timeout(IntervalExpression.SECOND)
+	runOnce() {
+		console.log('run once after 1s', this.getNow());
 	}
 
 	@Interval(IntervalExpression.SECOND)
