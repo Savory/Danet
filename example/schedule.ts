@@ -1,12 +1,6 @@
 import { Cron, DanetApplication, Module, ScheduleModule } from '../mod.ts';
 
 class TaskScheduler {
-	constructor() {
-		this.runEachMinute.bind(this);
-		this.runEach2Min.bind(this);
-		this.runEach3Min.bind(this);
-	}
-
 	getNow() {
 		return {
 			now: new Date(),
