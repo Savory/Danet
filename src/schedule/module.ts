@@ -4,9 +4,7 @@ import { InjectableConstructor, injector, Logger, Module } from '../mod.ts';
 import { scheduleMetadataKey } from './constants.ts';
 import { CronMetadataPayload } from './types.ts';
 
-@Module({
-	injectables: [Schedule],
-})
+@Module({})
 export class ScheduleModule implements OnAppBootstrap {
 	private logger: Logger = new Logger('ScheduleModule');
 
@@ -20,7 +18,7 @@ export class ScheduleModule implements OnAppBootstrap {
 		const methods = Object.getOwnPropertyNames(Type.constructor.prototype);
 
 		for (const method of methods) {
-			const target = Type.prototype[method];
+			const target = Type.constructor.prototype[method];
 			const scheduleMedatada = MetadataHelper.getMetadata<CronMetadataPayload>(
 				scheduleMetadataKey,
 				target,
@@ -28,8 +26,15 @@ export class ScheduleModule implements OnAppBootstrap {
 			if (!scheduleMedatada) continue;
 			const { cron } = scheduleMedatada;
 
-			this.logger.log(`Scheduling '${target.name}'`);
-			Deno.cron(target.name, cron, target);
+			this.logger.log(`Scheduling '${target.name}' to run on '${cron}'`);
+			const callback = this.makeCallbackWithScope(Type, target);
+			Deno.cron(target.name, cron, callback);
 		}
+	}
+
+	// Function to ensures we don't lose `this` scope from target
+	// deno-lint-ignore no-explicit-any
+	private makeCallbackWithScope(instance: any, target: any) {
+		return () => instance[target.name]();
 	}
 }
