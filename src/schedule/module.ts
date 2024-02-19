@@ -1,13 +1,14 @@
 import { OnAppBootstrap, OnAppClose } from '../hook/interfaces.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { InjectableConstructor, injector, Logger, Module } from '../mod.ts';
-import { scheduleMetadataKey } from './constants.ts';
-import { CronMetadataPayload } from './types.ts';
+import { intervalMetadataKey, scheduleMetadataKey } from './constants.ts';
+import { CronMetadataPayload, IntervalMetadataPayload } from './types.ts';
 
 @Module({})
 export class ScheduleModule implements OnAppBootstrap, OnAppClose {
 	private logger: Logger = new Logger('ScheduleModule');
 	private abortController = new AbortController();
+	private intervalSet = new Set<number>();
 
 	onAppBootstrap() {
 		for (const types of injector.injectables) {
@@ -16,8 +17,12 @@ export class ScheduleModule implements OnAppBootstrap, OnAppClose {
 	}
 
 	onAppClose() {
-		this.logger.log(`Aborting all scheduled events`);
+		this.logger.log(`Cleaning up all scheduled events`);
 		this.abortController.abort();
+
+		for (const intervalId of this.intervalSet) {
+			clearInterval(intervalId);
+		}
 	}
 
 	private registerAvailableEventListeners(Type: InjectableConstructor) {
@@ -25,7 +30,27 @@ export class ScheduleModule implements OnAppBootstrap, OnAppClose {
 
 		for (const method of methods) {
 			this.registerCronJobs(Type, method);
+			this.registerIntervals(Type, method);
 		}
+	}
+
+	private registerIntervals(Type: InjectableConstructor, method: string) {
+		const target = Type.constructor.prototype[method];
+		const scheduleMedatada = MetadataHelper.getMetadata<
+			IntervalMetadataPayload
+		>(
+			intervalMetadataKey,
+			target,
+		);
+		if (!scheduleMedatada) return;
+		const { interval } = scheduleMedatada;
+
+		this.logger.log(
+			`Scheduling '${target.name}' to run as a interval callback`,
+		);
+		const callback = this.makeCallbackWithScope(Type, target);
+
+		this.intervalSet.add(setInterval(callback, interval));
 	}
 
 	private registerCronJobs(Type: InjectableConstructor, method: string) {

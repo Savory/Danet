@@ -1,10 +1,22 @@
-import { Cron, DanetApplication, Module, ScheduleModule } from '../mod.ts';
+import {
+	Cron,
+	DanetApplication,
+	Interval,
+	IntervalExpression,
+	Module,
+	ScheduleModule,
+} from '../mod.ts';
 
 class TaskScheduler {
 	getNow() {
 		return {
 			now: new Date(),
 		};
+	}
+
+	@Interval(IntervalExpression.SECOND)
+	runEachSecond() {
+		console.log('1 sec', this.getNow());
 	}
 
 	@Cron('*/1 * * * *')
