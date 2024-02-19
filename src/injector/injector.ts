@@ -1,7 +1,6 @@
 import { Logger } from '../logger.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
-import { ModuleConstructor } from '../module/constructor.ts';
-import { ModuleInstance, moduleMetadataKey } from '../module/decorator.ts';
+import { ModuleInstance } from '../module/decorator.ts';
 import { ControllerConstructor } from '../router/controller/constructor.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { getInjectionTokenMetadataKey } from './decorator.ts';
@@ -66,7 +65,9 @@ export class Injector {
 		this.modules.push(module);
 	}
 
-	public addAvailableInjectable(injectables: (InjectableConstructor | TokenInjector)[]) {
+	public addAvailableInjectable(
+		injectables: (InjectableConstructor | TokenInjector)[],
+	) {
 		for (const injectable of injectables) {
 			const actualKey = injectable instanceof TokenInjector
 				? injectable.token
@@ -150,6 +151,7 @@ export class Injector {
 			injectionData,
 			actualType,
 		);
+
 		let canBeSingleton = injectableMetadata?.scope !== SCOPE.REQUEST &&
 			injectableMetadata?.scope !== SCOPE.TRANSIENT;
 		if (canBeSingleton) {
@@ -286,5 +288,6 @@ export class Injector {
 export let injector: Injector;
 
 // @ts-ignore used before initialization
-if (!injector)
+if (!injector) {
 	injector = new Injector();
+}
