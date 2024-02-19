@@ -24,18 +24,22 @@ export class ScheduleModule implements OnAppBootstrap, OnAppClose {
 		const methods = Object.getOwnPropertyNames(Type.constructor.prototype);
 
 		for (const method of methods) {
-			const target = Type.constructor.prototype[method];
-			const scheduleMedatada = MetadataHelper.getMetadata<CronMetadataPayload>(
-				scheduleMetadataKey,
-				target,
-			);
-			if (!scheduleMedatada) continue;
-			const { cron } = scheduleMedatada;
-
-			this.logger.log(`Scheduling '${target.name}' to run on '${cron}'`);
-			const callback = this.makeCallbackWithScope(Type, target);
-			Deno.cron(target.name, cron, this.abortController, callback);
+			this.registerCronJobs(Type, method);
 		}
+	}
+
+	private registerCronJobs(Type: InjectableConstructor, method: string) {
+		const target = Type.constructor.prototype[method];
+		const scheduleMedatada = MetadataHelper.getMetadata<CronMetadataPayload>(
+			scheduleMetadataKey,
+			target,
+		);
+		if (!scheduleMedatada) return;
+		const { cron } = scheduleMedatada;
+
+		this.logger.log(`Scheduling '${target.name}' to run as a cron job`);
+		const callback = this.makeCallbackWithScope(Type, target);
+		Deno.cron(target.name, cron, this.abortController, callback);
 	}
 
 	// Function to ensures we don't lose `this` scope from target
