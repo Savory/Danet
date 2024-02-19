@@ -1,17 +1,23 @@
-import { OnAppBootstrap } from '../hook/interfaces.ts';
+import { OnAppBootstrap, OnAppClose } from '../hook/interfaces.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { InjectableConstructor, injector, Logger, Module } from '../mod.ts';
 import { scheduleMetadataKey } from './constants.ts';
 import { CronMetadataPayload } from './types.ts';
 
 @Module({})
-export class ScheduleModule implements OnAppBootstrap {
+export class ScheduleModule implements OnAppBootstrap, OnAppClose {
 	private logger: Logger = new Logger('ScheduleModule');
+	private abortController = new AbortController();
 
-	onAppBootstrap(): void | Promise<void> {
+	onAppBootstrap() {
 		for (const types of injector.injectables) {
 			this.registerAvailableEventListeners(types);
 		}
+	}
+
+	onAppClose() {
+		this.logger.log(`Aborting all scheduled events`);
+		this.abortController.abort();
 	}
 
 	private registerAvailableEventListeners(Type: InjectableConstructor) {
@@ -28,7 +34,7 @@ export class ScheduleModule implements OnAppBootstrap {
 
 			this.logger.log(`Scheduling '${target.name}' to run on '${cron}'`);
 			const callback = this.makeCallbackWithScope(Type, target);
-			Deno.cron(target.name, cron, callback);
+			Deno.cron(target.name, cron, this.abortController, callback);
 		}
 	}
 
