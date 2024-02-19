@@ -1,5 +1,11 @@
-import { Cron, DanetApplication, Module, ScheduleModule } from '../mod.ts';
-import { assertEquals, assertSpyCall } from '../src/deps_test.ts';
+import {
+	Cron,
+	CronExpression,
+	DanetApplication,
+	Module,
+	ScheduleModule,
+} from '../mod.ts';
+import { assertEquals } from '../src/deps_test.ts';
 
 const TIMEOUT = 1000 * 60 * 1.1; // 1.1 min
 
@@ -8,7 +14,7 @@ Deno.test('Schedule Module', async (t) => {
 	let callbackCalledMinute: number = -1;
 
 	class TestListener {
-		@Cron('*/1 * * * *')
+		@Cron(CronExpression.EVERY_MINUTE)
 		runEachMinute() {
 			callbackCalledMinute = new Date().getMinutes();
 		}
