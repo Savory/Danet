@@ -13,8 +13,8 @@ export class EventEmitterModule implements OnAppBootstrap, OnAppClose {
 	constructor() {}
 
 	onAppBootstrap(): void | Promise<void> {
-		for (const types of injector.resolvedTypes.values()) {
-			this.registerAvailableEventListeners(types);
+		for (const instance of injector.injectables) {
+			this.registerAvailableEventListeners(instance);
 		}
 	}
 
@@ -23,11 +23,12 @@ export class EventEmitterModule implements OnAppBootstrap, OnAppClose {
 		emitter.unsubscribe();
 	}
 
-	private registerAvailableEventListeners(Type: InjectableConstructor) {
-		const methods = Object.getOwnPropertyNames(Type.prototype);
+        // deno-lint-ignore no-explicit-any
+	private registerAvailableEventListeners(injectableInstance: any) {
+		const methods = Object.getOwnPropertyNames(injectableInstance.constructor.prototype);
 
 		for (const method of methods) {
-			const target = Type.prototype[method];
+			const target = injectableInstance[method];
 			const eventListenerMedatada = MetadataHelper.getMetadata<
 				{ channel: string }
 			>(
