@@ -7,18 +7,18 @@ import { KvQueue } from './kv.ts';
 @Module({})
 export class KvQueueModule implements OnAppBootstrap, OnAppClose {
 	private logger: Logger = new Logger('QueueModule');
-    
-    public injectables = [KvQueue];
+
+	public injectables = [KvQueue];
 
 	constructor(private kvName?: string) {}
 
-    public static forRoot(kvName?: string) {
-        return new KvQueueModule(kvName);
-    }
+	public static forRoot(kvName?: string) {
+		return new KvQueueModule(kvName);
+	}
 
 	async onAppBootstrap(): Promise<void> {
-        const queue = injector.get<KvQueue>(KvQueue);
-        await queue.start(this.kvName);
+		const queue = injector.get<KvQueue>(KvQueue);
+		await queue.start(this.kvName);
 		for (const instance of injector.injectables) {
 			this.registerAvailableEventListeners(instance);
 		}
@@ -27,10 +27,12 @@ export class KvQueueModule implements OnAppBootstrap, OnAppClose {
 	onAppClose() {
 	}
 
-        // deno-lint-ignore no-explicit-any
+	// deno-lint-ignore no-explicit-any
 	private registerAvailableEventListeners(injectableInstance: any) {
-		const methods = Object.getOwnPropertyNames(injectableInstance.constructor.prototype);
-        const queue = injector.get<KvQueue>(KvQueue);
+		const methods = Object.getOwnPropertyNames(
+			injectableInstance.constructor.prototype,
+		);
+		const queue = injector.get<KvQueue>(KvQueue);
 
 		for (const method of methods) {
 			const target = injectableInstance[method];
@@ -44,8 +46,10 @@ export class KvQueueModule implements OnAppBootstrap, OnAppClose {
 			const { channel } = queueListenerMetadata;
 
 			queue.addListener(channel, target);
-			this.logger.log(`registering method '${method}' to queue channel '${channel}'`);
+			this.logger.log(
+				`registering method '${method}' to queue channel '${channel}'`,
+			);
 		}
-        queue.attachListeners();
+		queue.attachListeners();
 	}
 }

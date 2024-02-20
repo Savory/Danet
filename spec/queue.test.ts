@@ -1,9 +1,9 @@
 import {
 	Controller,
 	DanetApplication,
+	Get,
 	KvQueue,
 	KvQueueModule,
-	Get,
 	Module,
 	OnEvent,
 	OnQueueMessage,
@@ -15,7 +15,8 @@ import {
 	spy,
 } from '../src/deps_test.ts';
 
-const sleep = (msec: number) => new Promise(resolve => setTimeout(resolve, msec));
+const sleep = (msec: number) =>
+	new Promise((resolve) => setTimeout(resolve, msec));
 
 Deno.test('Queue Module', async (t) => {
 	const callback = spy((_payload: any) => {});
@@ -30,7 +31,7 @@ Deno.test('Queue Module', async (t) => {
 
 		@OnQueueMessage('another-trigger')
 		getSomethingAgain(payload: any) {
-			secondCallback(payload)
+			secondCallback(payload);
 		}
 	}
 
