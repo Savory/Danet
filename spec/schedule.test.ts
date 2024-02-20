@@ -1,24 +1,27 @@
 import {
+	assertSpyCall,
+	assertSpyCallArg,
+	spy,
+} from 'https://deno.land/std@0.135.0/testing/mock.ts';
+import {
 	Cron,
 	CronExpression,
 	DanetApplication,
+	IntervalExpression,
 	Module,
 	ScheduleModule,
 } from '../mod.ts';
-import { assertEquals } from '../src/deps_test.ts';
-
-const TIMEOUT = 1000 * 60 * 1.1; // 1.1 min
 
 Deno.test('Schedule Module', async (t) => {
-	const initialMinute = new Date().getMinutes();
-	let callbackCalledMinute: number = -1;
+	const cron = Deno.cron;
+	// @ts-ignore:next-line
+	Deno.cron = spy();
 
 	class TestListener {
 		@Cron(CronExpression.EVERY_MINUTE)
-		runEachMinute() {
-			callbackCalledMinute = new Date().getMinutes();
-		}
+		runEachMinute() {}
 	}
+	// TODO: add tests for @Interval & @Timeout
 
 	@Module({
 		imports: [ScheduleModule],
@@ -30,28 +33,13 @@ Deno.test('Schedule Module', async (t) => {
 	await application.init(TestModule);
 	await application.listen(0);
 
-	await t.step('call funciton on the next minute', async () => {
-		let timeoutId = -1;
-		let intervalId = -1;
-
-		const calledAt = await new Promise((res, rej) => {
-			timeoutId = setTimeout(
-				() => rej({ msg: 'timed out', callbackCalledMinute }),
-				TIMEOUT,
-			);
-
-			intervalId = setInterval(() => {
-				if (callbackCalledMinute !== -1) {
-					res(callbackCalledMinute);
-				}
-			}, 300);
-		});
-
-		assertEquals(calledAt, initialMinute + 1);
-
-		clearTimeout(timeoutId);
-		clearInterval(intervalId);
+	await t.step('cronjob was called', () => {
+		// @ts-ignore:next-line
+		assertSpyCallArg(Deno.cron, 0, 0, 'runEachMinute');
+		// @ts-ignore:next-line
+		assertSpyCallArg(Deno.cron, 0, 1, CronExpression.EVERY_MINUTE);
 	});
 
 	await application.close();
+	Deno.cron = cron;
 });
