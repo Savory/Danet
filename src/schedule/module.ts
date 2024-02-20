@@ -48,56 +48,69 @@ export class ScheduleModule implements OnAppBootstrap, OnAppClose {
 		}
 	}
 
-	private registerTimeouts(Type: InjectableConstructor, method: string) {
-		const target = Type.constructor.prototype[method];
-		const scheduleMedatada = MetadataHelper.getMetadata<
-			TimeoutMetadataPayload
-		>(
+	private registerTimeouts(
+		injectableInstance: InjectableConstructor,
+		method: string,
+	) {
+		this.registerTimedEvents<TimeoutMetadataPayload>(
 			timeoutMetadataKey,
-			target,
-		);
-		if (!scheduleMedatada) return;
-		const { timeout } = scheduleMedatada;
+			injectableInstance,
+			method,
+			({ timeout }, callback) => {
+				this.logger.log(
+					`Scheduling '${method}' to run as a timeout callback`,
+				);
 
-		this.logger.log(
-			`Scheduling '${target.name}' to run as a timeout callback`,
+				this.timeoutSet.add(setTimeout(callback, timeout));
+			},
 		);
-		const callback = this.makeCallbackWithScope(Type, target);
-
-		this.timeoutSet.add(setTimeout(callback, timeout));
 	}
 
-	private registerIntervals(Type: InjectableConstructor, method: string) {
-		const target = Type.constructor.prototype[method];
-		const scheduleMedatada = MetadataHelper.getMetadata<
-			IntervalMetadataPayload
-		>(
+	private registerIntervals(
+		injectableInstance: InjectableConstructor,
+		method: string,
+	) {
+		this.registerTimedEvents<IntervalMetadataPayload>(
 			intervalMetadataKey,
-			target,
-		);
-		if (!scheduleMedatada) return;
-		const { interval } = scheduleMedatada;
+			injectableInstance,
+			method,
+			({ interval }, callback) => {
+				this.logger.log(
+					`Scheduling '${method}' to run as a interval callback`,
+				);
 
-		this.logger.log(
-			`Scheduling '${target.name}' to run as a interval callback`,
+				this.intervalSet.add(setInterval(callback, interval));
+			},
 		);
-		const callback = this.makeCallbackWithScope(Type, target);
-
-		this.intervalSet.add(setInterval(callback, interval));
 	}
 
-	private registerCronJobs(Type: InjectableConstructor, method: string) {
-		const target = Type.constructor.prototype[method];
-		const scheduleMedatada = MetadataHelper.getMetadata<CronMetadataPayload>(
+	private registerCronJobs(
+		injectableInstance: InjectableConstructor,
+		method: string,
+	) {
+		this.registerTimedEvents<CronMetadataPayload>(
 			scheduleMetadataKey,
-			target,
+			injectableInstance,
+			method,
+			({ cron }, callback) => {
+				this.logger.log(`Scheduling '${method}' to run as a cron job`);
+				Deno.cron(method, cron, this.abortController, callback);
+			},
 		);
-		if (!scheduleMedatada) return;
-		const { cron } = scheduleMedatada;
+	}
 
-		this.logger.log(`Scheduling '${target.name}' to run as a cron job`);
-		const callback = this.makeCallbackWithScope(Type, target);
-		Deno.cron(target.name, cron, this.abortController, callback);
+	private registerTimedEvents<T>(
+		metadataKey: string,
+		injectableInstance: InjectableConstructor,
+		method: string,
+		handler: (metadata: T, cb: () => void) => void,
+	) {
+		const target = injectableInstance.constructor.prototype[method];
+		const metadata = MetadataHelper.getMetadata<T>(metadataKey, target);
+		if (!metadata) return;
+
+		const callback = this.makeCallbackWithScope(injectableInstance, target);
+		handler(metadata, callback);
 	}
 
 	// Function to ensures we don't lose `this` scope from target
