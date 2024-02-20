@@ -10,3 +10,4 @@ export * from './guard/mod.ts';
 export * from './logger.ts';
 export * from './events/mod.ts';
 export * from './schedule/mod.ts';
+export * from './kv-queue/mod.ts';
