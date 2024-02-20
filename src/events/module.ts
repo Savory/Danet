@@ -26,6 +26,7 @@ export class EventEmitterModule implements OnAppBootstrap, OnAppClose {
         // deno-lint-ignore no-explicit-any
 	private registerAvailableEventListeners(injectableInstance: any) {
 		const methods = Object.getOwnPropertyNames(injectableInstance.constructor.prototype);
+		const emitter = injector.get<EventEmitter>(EventEmitter);
 
 		for (const method of methods) {
 			const target = injectableInstance[method];
@@ -38,7 +39,6 @@ export class EventEmitterModule implements OnAppBootstrap, OnAppClose {
 			if (!eventListenerMedatada) continue;
 			const { channel } = eventListenerMedatada;
 
-			const emitter = injector.get<EventEmitter>(EventEmitter);
 			emitter.subscribe(channel, target);
 			this.logger.log(`registering method '${method}' to event '${channel}'`);
 		}
