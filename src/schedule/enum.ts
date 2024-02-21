@@ -1,3 +1,5 @@
+// Copyright (c) 2017-2024 Kamil Mysliwiec MIT
+
 export enum CronExpression {
 	EVERY_MINUTE = '*/1 * * * *',
 	EVERY_5_MINUTES = '*/5 * * * *',
