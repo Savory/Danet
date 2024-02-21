@@ -1,8 +1,10 @@
 export {
 	assertSpyCall,
+	assertSpyCallArg,
 	assertSpyCalls,
 	spy,
 } from 'https://deno.land/std@0.135.0/testing/mock.ts';
+export { FakeTime } from 'https://deno.land/std@0.135.0/testing/time.ts';
 export {
 	assertEquals,
 	assertInstanceOf,
