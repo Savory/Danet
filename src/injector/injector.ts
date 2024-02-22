@@ -6,7 +6,8 @@ import { Constructor } from '../utils/constructor.ts';
 import { getInjectionTokenMetadataKey } from './decorator.ts';
 import {
 	InjectableConstructor,
-	TokenInjector,
+	UseClassInjector,
+	UseValueInjector,
 } from './injectable/constructor.ts';
 import {
 	InjectableOption,
@@ -66,21 +67,16 @@ export class Injector {
 	}
 
 	public addAvailableInjectable(
-		injectables: (InjectableConstructor | TokenInjector)[],
+		injectables: (InjectableConstructor | UseClassInjector | UseValueInjector)[],
 	) {
 		for (const injectable of injectables) {
-			const actualKey = injectable instanceof TokenInjector
-				? injectable.token
-				: injectable;
-			const actualType = injectable instanceof TokenInjector
-				? injectable.useClass
-				: injectable;
-			this.availableTypes.set(actualKey, actualType);
+			const { actualKey, actualType, instance } = this.getKeyAndTypeOrInstance(injectable);
+			this.availableTypes.set(actualKey, actualType ?? instance);
 		}
 	}
 
 	public async registerInjectables(
-		Injectables: Array<InjectableConstructor | TokenInjector>,
+		Injectables: Array<InjectableConstructor | UseClassInjector | UseValueInjector>,
 	) {
 		for (const Provider of Injectables) {
 			await this.resolveInjectable(Provider);
@@ -89,13 +85,13 @@ export class Injector {
 
 	public async resolveControllers(Controllers: ControllerConstructor[]) {
 		for (const Controller of Controllers) {
-			await this.resolveControllerDependencies(Controller);
+			await this.resolveControllerParameters(Controller);
 		}
 	}
 
-	private async resolveControllerDependencies<T>(Type: Constructor<T>) {
+	private async resolveControllerParameters<T>(Type: Constructor<T>) {
 		let canBeSingleton = true;
-		const dependencies = this.getDependencies(Type);
+		const dependencies = this.getParametersTypes(Type);
 		dependencies.forEach((DependencyType, idx) => {
 			const actualType = this.getParamToken(Type, idx) ?? DependencyType;
 			if (!this.resolved.has(actualType)) {
@@ -132,21 +128,27 @@ export class Injector {
 	}
 
 	private async resolveInjectable(
-		Type: InjectableConstructor | TokenInjector,
+		Type: InjectableConstructor | UseClassInjector | UseValueInjector,
 		ParentConstructor?: Constructor,
 		token?: string,
 	) {
-		const actualType = Type instanceof TokenInjector ? Type.useClass : Type;
-		const actualKey = Type instanceof TokenInjector
-			? Type.token
-			: (token ?? Type);
-		const dependencies = this.getDependencies(actualType);
-
-		if (this.resolved.has(actualType)) {
+		const { actualType, actualKey, instance } = this.getKeyAndTypeOrInstance(Type, token);
+		if (!actualType) {
+			this.resolved.set(actualKey, () => instance);
+			this.resolvedTypes.set(actualKey, instance);
+			this.injectables.push(instance);
 			return;
 		}
+		// deno-lint-ignore no-explicit-any
+		const parameters = this.getParametersTypes(actualType);
 
-		await this.resolveDependencies(dependencies, actualType);
+		if (this.resolved.has(actualType ?? instance)) {
+			return;
+		}
+		
+		if (parameters.length > 0) {
+			await this.resolveDependencies(parameters, actualType);
+		}
 		const injectableMetadata = MetadataHelper.getMetadata<InjectableOption>(
 			injectionData,
 			actualType,
@@ -155,7 +157,7 @@ export class Injector {
 		let canBeSingleton = injectableMetadata?.scope !== SCOPE.REQUEST &&
 			injectableMetadata?.scope !== SCOPE.TRANSIENT;
 		if (canBeSingleton) {
-			for (const [idx, Dep] of dependencies.entries()) {
+			for (const [idx, Dep] of parameters.entries()) {
 				const token = this.getParamToken(actualType, idx);
 				const type = this.resolvedTypes.get(token ?? Dep);
 				const dependencyInjectableMetadata = MetadataHelper.getMetadata<
@@ -173,15 +175,15 @@ export class Injector {
 			}
 		}
 		if (canBeSingleton) {
-			const resolvedDependencies = new Array<Constructor>();
-			for (const [idx, Dep] of dependencies.entries()) {
-				resolvedDependencies.push(
+			const resolvedParameters = new Array<Constructor>();
+			for (const [idx, Dep] of parameters.entries()) {
+				resolvedParameters.push(
 					await (this.resolved.get(
 						this.getParamToken(actualType, idx) ?? Dep,
 					)!()) as Constructor,
 				);
 			}
-			const instance = new actualType(...resolvedDependencies);
+			const instance = new actualType(...resolvedParameters);
 			this.resolved.set(actualKey, () => instance);
 			this.resolvedTypes.set(actualKey, actualType);
 			this.injectables.push(instance);
@@ -206,10 +208,22 @@ export class Injector {
 			this.setNonSingleton(
 				actualType,
 				actualKey,
-				dependencies,
+				parameters,
 				injectableMetadata?.scope === SCOPE.TRANSIENT,
 			);
 		}
+	}
+
+	private getKeyAndTypeOrInstance(Type: InjectableConstructor | UseValueInjector | UseClassInjector, token?: string | undefined) {
+		if (Object.hasOwn(Type, 'token')) {
+			const actualKey = (Type as UseClassInjector).token;
+			if (Object.hasOwn(Type, 'useClass')) {
+				return { actualKey, actualType: (Type as UseClassInjector).useClass};
+			} else if (Object.hasOwn(Type, 'useValue')) {
+				return { actualKey, instance: (Type as UseValueInjector).useValue};
+			}
+		}
+		return { actualKey: (token ?? Type as InjectableConstructor), actualType: Type as InjectableConstructor };
 	}
 
 	private getParamToken(Type: Constructor, paramIndex: number) {
@@ -277,7 +291,7 @@ export class Injector {
 		}
 	}
 
-	private getDependencies(Type: Constructor): Constructor[] {
+	private getParametersTypes(Type: Constructor): Constructor[] {
 		return MetadataHelper.getMetadata('design:paramtypes', Type) || [];
 	}
 

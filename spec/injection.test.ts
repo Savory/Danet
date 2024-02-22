@@ -8,7 +8,6 @@ import { DanetApplication } from '../src/app.ts';
 import { GLOBAL_GUARD } from '../src/guard/constants.ts';
 import { AuthGuard } from '../src/guard/interface.ts';
 import { Inject } from '../src/injector/decorator.ts';
-import { TokenInjector } from '../src/injector/injectable/constructor.ts';
 import { Injectable, SCOPE } from '../src/injector/injectable/decorator.ts';
 import { Module, ModuleOptions } from '../src/module/decorator.ts';
 import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
@@ -20,6 +19,11 @@ Deno.test('Injection', async (testContext) => {
 	interface IDBService {
 		data: string;
 		id: string;
+	}
+
+	interface ConfigurationObject {
+		name: string;
+		port: number;
 	}
 
 	@Injectable()
@@ -81,11 +85,13 @@ Deno.test('Injection', async (testContext) => {
 		constructor(
 			public child2: GlobalInjectable,
 			@Inject('DB_SERVICE') public dbService: IDBService,
+			@Inject('CONFIGURATION') public injectedPlainObject: ConfigurationObject,
 		) {
 		}
 
 		@Get('')
 		getMethod() {
+			return `${this.injectedPlainObject.name} and ${this.injectedPlainObject.port}`;
 		}
 
 		@Post('/post/')
@@ -100,7 +106,18 @@ Deno.test('Injection', async (testContext) => {
 				controllers: [SingletonController],
 				injectables: [
 					GlobalInjectable,
-					new TokenInjector(DatabaseService, 'DB_SERVICE'),
+					{
+						token: 'DB_SERVICE',
+						useClass: DatabaseService,
+					},
+					{
+						token: 'CONFIGURATION',
+						useValue: {
+							name: 'toto',
+							port: '4000',
+						}
+					}
+					// new TokenInjector(DatabaseService, 'DB_SERVICE'),
 				],
 			};
 		}
@@ -112,7 +129,10 @@ Deno.test('Injection', async (testContext) => {
 		injectables: [
 			Child1,
 			GlobalInjectable,
-			new TokenInjector(GlobalGuard, GLOBAL_GUARD),
+			{
+				token: GLOBAL_GUARD,
+				useClass: GlobalGuard,
+			}
 		],
 	};
 
@@ -182,6 +202,16 @@ Deno.test('Injection', async (testContext) => {
 		const globalGuard = await app.get(GLOBAL_GUARD);
 		assertInstanceOf(globalGuard, GlobalGuard);
 	});
+
+	await testContext.step(
+		'inject plain object when using useValue',
+		async () => {
+			const firstInstance = await app.get<SingletonController>(
+				SingletonController,
+			)!;
+			assertEquals(firstInstance.getMethod(), "toto and 4000");
+		},
+	);
 
 
 });

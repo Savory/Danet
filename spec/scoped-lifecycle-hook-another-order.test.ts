@@ -6,7 +6,6 @@ import { Module } from '../src/module/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
 import { Inject } from '../src/injector/decorator.ts';
-import { TokenInjector } from '../src/injector/injectable/constructor.ts';
 
 Deno.test('Scoped Lifecycle hooks other order', async (testContext) => {
 	interface ScopedInjectableInterface {
@@ -59,7 +58,11 @@ Deno.test('Scoped Lifecycle hooks other order', async (testContext) => {
 	@Module({
 		controllers: [ScopedController, SideEffectController],
 		injectables: [
-			new TokenInjector(ScopedInjectable, 'SCOPED_TOKEN'),
+			{
+				token: 'SCOPED_TOKEN',
+				useClass: ScopedInjectable
+			},
+			// new TokenInjector(ScopedInjectable, 'SCOPED_TOKEN'),
 			InjectableUsingScoped,
 		],
 	})
