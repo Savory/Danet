@@ -115,8 +115,8 @@ Deno.test('Injection', async (testContext) => {
 						useValue: {
 							name: 'toto',
 							port: '4000',
-						}
-					}
+						},
+					},
 					// new TokenInjector(DatabaseService, 'DB_SERVICE'),
 				],
 			};
@@ -132,7 +132,7 @@ Deno.test('Injection', async (testContext) => {
 			{
 				token: GLOBAL_GUARD,
 				useClass: GlobalGuard,
-			}
+			},
 		],
 	};
 
@@ -154,7 +154,7 @@ Deno.test('Injection', async (testContext) => {
 			assertRejects(() => failingApp.init(ModuleWithMissingProvider));
 		},
 	);
-	
+
 	const app = new DanetApplication();
 	await app.init(FirstModule);
 
@@ -209,9 +209,7 @@ Deno.test('Injection', async (testContext) => {
 			const firstInstance = await app.get<SingletonController>(
 				SingletonController,
 			)!;
-			assertEquals(firstInstance.getMethod(), "toto and 4000");
+			assertEquals(firstInstance.getMethod(), 'toto and 4000');
 		},
 	);
-
-
 });

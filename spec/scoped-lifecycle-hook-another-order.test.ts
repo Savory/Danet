@@ -60,7 +60,7 @@ Deno.test('Scoped Lifecycle hooks other order', async (testContext) => {
 		injectables: [
 			{
 				token: 'SCOPED_TOKEN',
-				useClass: ScopedInjectable
+				useClass: ScopedInjectable,
 			},
 			// new TokenInjector(ScopedInjectable, 'SCOPED_TOKEN'),
 			InjectableUsingScoped,

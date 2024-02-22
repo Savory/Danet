@@ -61,8 +61,8 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 			InjectableUsingScoped,
 			{
 				useClass: ScopedInjectable,
-				token: 'SCOPED_TOKEN'
-			}
+				token: 'SCOPED_TOKEN',
+			},
 		],
 	})
 	class ParentBeforeScopedModule {}

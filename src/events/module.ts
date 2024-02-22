@@ -23,9 +23,11 @@ export class EventEmitterModule implements OnAppBootstrap, OnAppClose {
 		emitter.unsubscribe();
 	}
 
-        // deno-lint-ignore no-explicit-any
+	// deno-lint-ignore no-explicit-any
 	private registerAvailableEventListeners(injectableInstance: any) {
-		const methods = Object.getOwnPropertyNames(injectableInstance.constructor.prototype);
+		const methods = Object.getOwnPropertyNames(
+			injectableInstance.constructor.prototype,
+		);
 		const emitter = injector.get<EventEmitter>(EventEmitter);
 
 		for (const method of methods) {

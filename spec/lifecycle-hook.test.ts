@@ -6,7 +6,6 @@ import { Module } from '../src/module/decorator.ts';
 import { Controller } from '../src/router/controller/decorator.ts';
 
 Deno.test('Lifecycle hooks', async (testContext) => {
-
 	let moduleOnAppBootstrapCalled = false;
 
 	@Injectable({ scope: SCOPE.GLOBAL })
@@ -45,7 +44,6 @@ Deno.test('Lifecycle hooks', async (testContext) => {
 		],
 	})
 	class MyModule implements OnAppBootstrap {
-
 		onAppBootstrap(): void | Promise<void> {
 			moduleOnAppBootstrapCalled = true;
 		}
@@ -62,11 +60,9 @@ Deno.test('Lifecycle hooks', async (testContext) => {
 		},
 	);
 
-	await testContext.step('call module onAppBoostrap hook',
-	() => {
+	await testContext.step('call module onAppBoostrap hook', () => {
 		assertEquals(moduleOnAppBootstrapCalled, true);
-	}
-	)
+	});
 
 	await testContext.step(
 		'call global controller onAppBootstrap hook',

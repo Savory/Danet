@@ -132,7 +132,7 @@ class GlobalAuthController {
 @Module({
 	imports: [],
 	controllers: [GlobalAuthController],
-	injectables: [{useClass: GlobalGuard, token: GLOBAL_GUARD}, SimpleService],
+	injectables: [{ useClass: GlobalGuard, token: GLOBAL_GUARD }, SimpleService],
 })
 class GlobalAuthModule {}
 

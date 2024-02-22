@@ -67,16 +67,21 @@ export class Injector {
 	}
 
 	public addAvailableInjectable(
-		injectables: (InjectableConstructor | UseClassInjector | UseValueInjector)[],
+		injectables:
+			(InjectableConstructor | UseClassInjector | UseValueInjector)[],
 	) {
 		for (const injectable of injectables) {
-			const { actualKey, actualType, instance } = this.getKeyAndTypeOrInstance(injectable);
+			const { actualKey, actualType, instance } = this.getKeyAndTypeOrInstance(
+				injectable,
+			);
 			this.availableTypes.set(actualKey, actualType ?? instance);
 		}
 	}
 
 	public async registerInjectables(
-		Injectables: Array<InjectableConstructor | UseClassInjector | UseValueInjector>,
+		Injectables: Array<
+			InjectableConstructor | UseClassInjector | UseValueInjector
+		>,
 	) {
 		for (const Provider of Injectables) {
 			await this.resolveInjectable(Provider);
@@ -132,20 +137,22 @@ export class Injector {
 		ParentConstructor?: Constructor,
 		token?: string,
 	) {
-		const { actualType, actualKey, instance } = this.getKeyAndTypeOrInstance(Type, token);
+		const { actualType, actualKey, instance } = this.getKeyAndTypeOrInstance(
+			Type,
+			token,
+		);
 		if (!actualType) {
 			this.resolved.set(actualKey, () => instance);
 			this.resolvedTypes.set(actualKey, instance);
 			this.injectables.push(instance);
 			return;
 		}
-		// deno-lint-ignore no-explicit-any
 		const parameters = this.getParametersTypes(actualType);
 
 		if (this.resolved.has(actualType ?? instance)) {
 			return;
 		}
-		
+
 		if (parameters.length > 0) {
 			await this.resolveDependencies(parameters, actualType);
 		}
@@ -214,16 +221,22 @@ export class Injector {
 		}
 	}
 
-	private getKeyAndTypeOrInstance(Type: InjectableConstructor | UseValueInjector | UseClassInjector, token?: string | undefined) {
+	private getKeyAndTypeOrInstance(
+		Type: InjectableConstructor | UseValueInjector | UseClassInjector,
+		token?: string | undefined,
+	) {
 		if (Object.hasOwn(Type, 'token')) {
 			const actualKey = (Type as UseClassInjector).token;
 			if (Object.hasOwn(Type, 'useClass')) {
-				return { actualKey, actualType: (Type as UseClassInjector).useClass};
+				return { actualKey, actualType: (Type as UseClassInjector).useClass };
 			} else if (Object.hasOwn(Type, 'useValue')) {
-				return { actualKey, instance: (Type as UseValueInjector).useValue};
+				return { actualKey, instance: (Type as UseValueInjector).useValue };
 			}
 		}
-		return { actualKey: (token ?? Type as InjectableConstructor), actualType: Type as InjectableConstructor };
+		return {
+			actualKey: (token ?? Type as InjectableConstructor),
+			actualType: Type as InjectableConstructor,
+		};
 	}
 
 	private getParamToken(Type: Constructor, paramIndex: number) {
