@@ -117,7 +117,6 @@ Deno.test('Injection', async (testContext) => {
 							port: '4000',
 						},
 					},
-					// new TokenInjector(DatabaseService, 'DB_SERVICE'),
 				],
 			};
 		}
