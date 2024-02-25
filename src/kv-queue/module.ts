@@ -1,26 +1,28 @@
 import { OnAppBootstrap, OnAppClose } from '../hook/interfaces.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { injector, Logger, Module } from '../mod.ts';
-import { queueListenerMetadataKey } from './constants.ts';
+import { KV_QUEUE_NAME, queueListenerMetadataKey } from './constants.ts';
 import { KvQueue } from './kv.ts';
 
 @Module({})
 export class KvQueueModule implements OnAppBootstrap {
 	private logger: Logger = new Logger('QueueModule');
 
-	public injectables = [KvQueue];
-
-	constructor(private kvName?: string) {}
+	constructor() {}
 
 	public static forRoot(kvName?: string) {
-		return new KvQueueModule(kvName);
+		return {
+			injectables: [{ token: KV_QUEUE_NAME, useValue: kvName }, KvQueue],
+			module: KvQueueModule,
+		}
 	}
 
 	async onAppBootstrap(): Promise<void> {
-		const queue = injector.get<KvQueue>(KvQueue);
-		await queue.start(this.kvName);
-		for (const instance of injector.injectables) {
-			this.registerAvailableEventListeners(instance);
+		for (const instanceOrPlainValue of injector.injectables) {
+			if (!MetadataHelper.IsObject(instanceOrPlainValue)) {
+				continue;
+			}
+			this.registerAvailableEventListeners(instanceOrPlainValue);
 		}
 	}
 

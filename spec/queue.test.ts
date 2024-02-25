@@ -5,13 +5,11 @@ import {
 	KvQueue,
 	KvQueueModule,
 	Module,
-	OnEvent,
 	OnQueueMessage,
 } from '../mod.ts';
 import {
 	assertEquals,
 	assertSpyCall,
-	assertThrows,
 	spy,
 } from '../src/deps_test.ts';
 
@@ -58,12 +56,10 @@ Deno.test('Queue Module', async (t) => {
 		injectables: [TestListener],
 	})
 	class TestModule {}
-
 	const application = new DanetApplication();
+	try {
 	await application.init(TestModule);
 	const listenerInfo = await application.listen(0);
-
-	await t.step('validate if api call send message in queue', async () => {
 		assertEquals(callback.calls.length, 0);
 
 		let res = await fetch(`http://localhost:${listenerInfo.port}/trigger`);
@@ -86,7 +82,9 @@ Deno.test('Queue Module', async (t) => {
 		assertSpyCall(secondCallback, 0, {
 			args: ['toto'],
 		});
-	});
-
-	await application.close();
+		await application.close();
+	} catch (e) {
+		await application.close();
+		throw e;
+	}
 });

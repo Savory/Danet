@@ -9,7 +9,7 @@ import { GLOBAL_GUARD } from '../src/guard/constants.ts';
 import { AuthGuard } from '../src/guard/interface.ts';
 import { Inject } from '../src/injector/decorator.ts';
 import { Injectable, SCOPE } from '../src/injector/injectable/decorator.ts';
-import { Module, ModuleOptions } from '../src/module/decorator.ts';
+import { Module, ModuleMetadata } from '../src/module/decorator.ts';
 import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
 import { injector } from '../src/injector/injector.ts';
@@ -118,11 +118,12 @@ Deno.test('Injection', async (testContext) => {
 						},
 					},
 				],
+				module: SecondModule,
 			};
 		}
 	}
 
-	const firstModuleOption: ModuleOptions = {
+	const firstModuleOption: ModuleMetadata = {
 		imports: [SecondModule.forRoot()],
 		controllers: [FirstController],
 		injectables: [

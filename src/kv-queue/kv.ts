@@ -1,17 +1,25 @@
-import { OnAppClose } from '../hook/mod.ts';
+import { OnAppBootstrap, OnAppClose } from '../hook/mod.ts';
+import { Inject } from '../mod.ts';
 import { Injectable } from '../mod.ts';
-import { QueueEvent } from './constants.ts';
+import { KV_QUEUE_NAME, QueueEvent } from './constants.ts';
 
 // deno-lint-ignore no-explicit-any
 type Listener<P = any> = (payload: P) => void;
 
 @Injectable()
-export class KvQueue implements OnAppClose {
+export class KvQueue implements OnAppClose, OnAppBootstrap {
 	private kv!: Deno.Kv;
 	private listenersMap: Map<string, Listener> = new Map();
 
-	public async start(name?: string) {
-		this.kv = await Deno.openKv(name);
+	constructor(@Inject(KV_QUEUE_NAME) private name: string) {
+	}
+
+	public async onAppClose(): Promise<void> {
+		await this.kv.close();
+	}
+
+	public async onAppBootstrap(): Promise<void> {
+		this.kv = await Deno.openKv(this.name);
 	}
 
 	public sendMessage(type: string, data: unknown) {
@@ -33,7 +41,5 @@ export class KvQueue implements OnAppClose {
 		});
 	}
 
-	public async onAppClose(): Promise<void> {
-		await this.kv.close();
-	}
+
 }

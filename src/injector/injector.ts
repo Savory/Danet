@@ -1,6 +1,5 @@
 import { Logger } from '../logger.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
-import { ModuleInstance } from '../module/decorator.ts';
 import { ControllerConstructor } from '../router/controller/constructor.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { getInjectionTokenMetadataKey } from './decorator.ts';
@@ -15,6 +14,7 @@ import {
 	SCOPE,
 } from './injectable/decorator.ts';
 import { ExecutionContext } from '../router/router.ts';
+import { ModuleMetadata } from '../mod.ts';
 
 export class Injector {
 	private resolved = new Map<
@@ -31,7 +31,7 @@ export class Injector {
 		string,
 		Map<Constructor | string, unknown>
 	>();
-	public modules: Array<ModuleInstance> = [];
+	public modules: Array<any> = [];
 	// deno-lint-ignore no-explicit-any
 	public controllers: Array<any> = [];
 	// deno-lint-ignore no-explicit-any
@@ -52,7 +52,7 @@ export class Injector {
 		throw Error(`Type ${Type} not injected`);
 	}
 
-	public async bootstrapModule(module: ModuleInstance) {
+	public async bootstrapModule(module: ModuleMetadata) {
 		this.logger.log(`Bootstraping ${module.constructor.name}`);
 		const { controllers, injectables } = module;
 		if (injectables) {
@@ -166,12 +166,15 @@ export class Injector {
 		if (canBeSingleton) {
 			for (const [idx, Dep] of parameters.entries()) {
 				const token = this.getParamToken(actualType, idx);
-				const type = this.resolvedTypes.get(token ?? Dep);
+				const typeOrValue = this.resolvedTypes.get(token ?? Dep);
+				if (!MetadataHelper.IsObject(typeOrValue)) {
+					continue;
+				}
 				const dependencyInjectableMetadata = MetadataHelper.getMetadata<
 					InjectableOption
 				>(
 					injectionData,
-					type,
+					typeOrValue,
 				);
 				if (
 					dependencyInjectableMetadata?.scope === SCOPE.REQUEST ||
@@ -230,7 +233,7 @@ export class Injector {
 			if (Object.hasOwn(Type, 'useClass')) {
 				return { actualKey, actualType: (Type as UseClassInjector).useClass };
 			} else if (Object.hasOwn(Type, 'useValue')) {
-				return { actualKey, instance: (Type as UseValueInjector).useValue };
+				return { actualKey, instance: (Type as UseValueInjector).useValue ?? null};
 			}
 		}
 		return {
