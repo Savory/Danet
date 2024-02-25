@@ -5,7 +5,7 @@ import { queueListenerMetadataKey } from './constants.ts';
 import { KvQueue } from './kv.ts';
 
 @Module({})
-export class KvQueueModule implements OnAppBootstrap, OnAppClose {
+export class KvQueueModule implements OnAppBootstrap {
 	private logger: Logger = new Logger('QueueModule');
 
 	public injectables = [KvQueue];
@@ -22,9 +22,6 @@ export class KvQueueModule implements OnAppBootstrap, OnAppClose {
 		for (const instance of injector.injectables) {
 			this.registerAvailableEventListeners(instance);
 		}
-	}
-
-	onAppClose() {
 	}
 
 	// deno-lint-ignore no-explicit-any
