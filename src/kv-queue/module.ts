@@ -14,10 +14,10 @@ export class KvQueueModule implements OnAppBootstrap {
 		return {
 			injectables: [{ token: KV_QUEUE_NAME, useValue: kvName }, KvQueue],
 			module: KvQueueModule,
-		}
+		};
 	}
 
-	async onAppBootstrap(): Promise<void> {
+	onAppBootstrap(): void {
 		for (const instanceOrPlainValue of injector.injectables) {
 			if (!MetadataHelper.IsObject(instanceOrPlainValue)) {
 				continue;

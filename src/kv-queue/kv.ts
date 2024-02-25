@@ -40,6 +40,4 @@ export class KvQueue implements OnAppClose, OnAppBootstrap {
 			throw Error('Unhandled message type');
 		});
 	}
-
-
 }

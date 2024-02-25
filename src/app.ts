@@ -7,7 +7,7 @@ import { hookName } from './hook/interfaces.ts';
 import { injector } from './injector/injector.ts';
 import { Logger } from './logger.ts';
 import { MetadataHelper } from './metadata/helper.ts';
-import { moduleMetadataKey, ModuleMetadata } from './module/decorator.ts';
+import { ModuleMetadata, moduleMetadataKey } from './module/decorator.ts';
 import { HandlebarRenderer } from './renderer/handlebar.ts';
 import { DanetRouter } from './router/router.ts';
 import { Constructor } from './utils/constructor.ts';
@@ -56,9 +56,10 @@ export class DanetApplication {
 		if (
 			!possibleModuleInstance.module
 		) {
-			instance =
-				new (NormalOrDynamicModule as Constructor)() as DynamicModule;
-			const metadata: ModuleMetadata = MetadataHelper.getMetadata<ModuleMetadata>(
+			instance = new (NormalOrDynamicModule as Constructor)() as DynamicModule;
+			const metadata: ModuleMetadata = MetadataHelper.getMetadata<
+				ModuleMetadata
+			>(
 				moduleMetadataKey,
 				NormalOrDynamicModule,
 			);
@@ -66,10 +67,13 @@ export class DanetApplication {
 			instance.imports = metadata.imports;
 			instance.injectables = metadata.injectables;
 		} else {
-			instance = new ((NormalOrDynamicModule as DynamicModule).module)() as ModuleMetadata;
-			instance.controllers = (NormalOrDynamicModule as DynamicModule).controllers;
+			instance = new ((NormalOrDynamicModule as DynamicModule)
+				.module)() as ModuleMetadata;
+			instance.controllers =
+				(NormalOrDynamicModule as DynamicModule).controllers;
 			instance.imports = (NormalOrDynamicModule as DynamicModule).imports;
-			instance.injectables = (NormalOrDynamicModule as DynamicModule).injectables;
+			instance.injectables =
+				(NormalOrDynamicModule as DynamicModule).injectables;
 		}
 
 		for (const module in instance?.imports) {

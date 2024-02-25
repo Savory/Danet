@@ -7,11 +7,7 @@ import {
 	Module,
 	OnQueueMessage,
 } from '../mod.ts';
-import {
-	assertEquals,
-	assertSpyCall,
-	spy,
-} from '../src/deps_test.ts';
+import { assertEquals, assertSpyCall, spy } from '../src/deps_test.ts';
 
 const sleep = (msec: number) =>
 	new Promise((resolve) => setTimeout(resolve, msec));
@@ -58,8 +54,8 @@ Deno.test('Queue Module', async (t) => {
 	class TestModule {}
 	const application = new DanetApplication();
 	try {
-	await application.init(TestModule);
-	const listenerInfo = await application.listen(0);
+		await application.init(TestModule);
+		const listenerInfo = await application.listen(0);
 		assertEquals(callback.calls.length, 0);
 
 		let res = await fetch(`http://localhost:${listenerInfo.port}/trigger`);

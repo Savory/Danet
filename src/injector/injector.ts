@@ -31,6 +31,7 @@ export class Injector {
 		string,
 		Map<Constructor | string, unknown>
 	>();
+	// deno-lint-ignore no-explicit-any
 	public modules: Array<any> = [];
 	// deno-lint-ignore no-explicit-any
 	public controllers: Array<any> = [];
@@ -233,7 +234,10 @@ export class Injector {
 			if (Object.hasOwn(Type, 'useClass')) {
 				return { actualKey, actualType: (Type as UseClassInjector).useClass };
 			} else if (Object.hasOwn(Type, 'useValue')) {
-				return { actualKey, instance: (Type as UseValueInjector).useValue ?? null};
+				return {
+					actualKey,
+					instance: (Type as UseValueInjector).useValue ?? null,
+				};
 			}
 		}
 		return {
