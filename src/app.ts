@@ -52,21 +52,24 @@ export class DanetApplication {
 		// deno-lint-ignore no-explicit-any
 		const possibleModuleInstance = ModuleInstanceOrConstructor as any;
 		let instance: ModuleInstance;
-		
-		if (!(possibleModuleInstance).imports
-			&& !(possibleModuleInstance).injectables) {
-				instance = new (ModuleInstanceOrConstructor as Constructor)() as ModuleInstance;
-				const metadata: ModuleOptions = MetadataHelper.getMetadata<ModuleOptions>(
-					moduleMetadataKey,
-					ModuleInstanceOrConstructor,
-				);
-				instance.controllers = metadata.controllers;
-				instance.imports = metadata.imports;
-				instance.injectables = metadata.injectables;
+
+		if (
+			!possibleModuleInstance.imports &&
+			!possibleModuleInstance.injectables
+		) {
+			instance =
+				new (ModuleInstanceOrConstructor as Constructor)() as ModuleInstance;
+			const metadata: ModuleOptions = MetadataHelper.getMetadata<ModuleOptions>(
+				moduleMetadataKey,
+				ModuleInstanceOrConstructor,
+			);
+			instance.controllers = metadata.controllers;
+			instance.imports = metadata.imports;
+			instance.injectables = metadata.injectables;
 		} else {
 			instance = ModuleInstanceOrConstructor as ModuleInstance;
 		}
-		
+
 		for (const module in instance?.imports) {
 			// deno-lint-ignore no-explicit-any
 			await this.bootstrap(instance.imports[module as any]);

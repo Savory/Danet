@@ -3,7 +3,6 @@ import { DanetApplication } from '../src/app.ts';
 import { GLOBAL_GUARD } from '../src/guard/constants.ts';
 import { UseGuard } from '../src/guard/decorator.ts';
 import { AuthGuard } from '../src/guard/interface.ts';
-import { TokenInjector } from '../src/injector/injectable/constructor.ts';
 import { Injectable } from '../src/injector/injectable/decorator.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
@@ -133,7 +132,7 @@ class GlobalAuthController {
 @Module({
 	imports: [],
 	controllers: [GlobalAuthController],
-	injectables: [new TokenInjector(GlobalGuard, GLOBAL_GUARD), SimpleService],
+	injectables: [{ useClass: GlobalGuard, token: GLOBAL_GUARD }, SimpleService],
 })
 class GlobalAuthModule {}
 

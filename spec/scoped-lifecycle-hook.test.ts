@@ -6,7 +6,6 @@ import { Module } from '../src/module/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
 import { Inject } from '../src/injector/decorator.ts';
-import { TokenInjector } from '../src/injector/injectable/constructor.ts';
 
 Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 	interface ScopedInjectableInterface {
@@ -60,7 +59,10 @@ Deno.test('Scoped Lifecycle hooks', async (testContext) => {
 		controllers: [ScopedController, SideEffectController],
 		injectables: [
 			InjectableUsingScoped,
-			new TokenInjector(ScopedInjectable, 'SCOPED_TOKEN'),
+			{
+				useClass: ScopedInjectable,
+				token: 'SCOPED_TOKEN',
+			},
 		],
 	})
 	class ParentBeforeScopedModule {}
