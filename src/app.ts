@@ -7,7 +7,7 @@ import { hookName } from './hook/interfaces.ts';
 import { injector } from './injector/injector.ts';
 import { Logger } from './logger.ts';
 import { MetadataHelper } from './metadata/helper.ts';
-import { moduleMetadataKey, ModuleOptions } from './module/decorator.ts';
+import { ModuleMetadata, moduleMetadataKey } from './module/decorator.ts';
 import { HandlebarRenderer } from './renderer/handlebar.ts';
 import { DanetRouter } from './router/router.ts';
 import { Constructor } from './utils/constructor.ts';
@@ -16,7 +16,7 @@ import { globalMiddlewareContainer } from './router/middleware/global-container.
 import { ModuleConstructor } from './module/constructor.ts';
 import { serveStatic } from './utils/serve-static.ts';
 import { cors } from 'https://deno.land/x/hono/middleware.ts';
-import { ModuleInstance } from './mod.ts';
+import { DynamicModule } from './mod.ts';
 
 type CORSOptions = {
 	origin: string | string[] | ((origin: string) => string | undefined | null);
@@ -48,26 +48,32 @@ export class DanetApplication {
 		return this.injector.get(Type);
 	}
 
-	async bootstrap(ModuleInstanceOrConstructor: Constructor | ModuleInstance) {
+	async bootstrap(NormalOrDynamicModule: Constructor | DynamicModule) {
 		// deno-lint-ignore no-explicit-any
-		const possibleModuleInstance = ModuleInstanceOrConstructor as any;
-		let instance: ModuleInstance;
+		const possibleModuleInstance = NormalOrDynamicModule as any;
+		let instance: ModuleMetadata;
 
 		if (
-			!possibleModuleInstance.imports &&
-			!possibleModuleInstance.injectables
+			!possibleModuleInstance.module
 		) {
-			instance =
-				new (ModuleInstanceOrConstructor as Constructor)() as ModuleInstance;
-			const metadata: ModuleOptions = MetadataHelper.getMetadata<ModuleOptions>(
+			instance = new (NormalOrDynamicModule as Constructor)() as DynamicModule;
+			const metadata: ModuleMetadata = MetadataHelper.getMetadata<
+				ModuleMetadata
+			>(
 				moduleMetadataKey,
-				ModuleInstanceOrConstructor,
+				NormalOrDynamicModule,
 			);
 			instance.controllers = metadata.controllers;
 			instance.imports = metadata.imports;
 			instance.injectables = metadata.injectables;
 		} else {
-			instance = ModuleInstanceOrConstructor as ModuleInstance;
+			instance = new ((NormalOrDynamicModule as DynamicModule)
+				.module)() as ModuleMetadata;
+			instance.controllers =
+				(NormalOrDynamicModule as DynamicModule).controllers;
+			instance.imports = (NormalOrDynamicModule as DynamicModule).imports;
+			instance.injectables =
+				(NormalOrDynamicModule as DynamicModule).injectables;
 		}
 
 		for (const module in instance?.imports) {
