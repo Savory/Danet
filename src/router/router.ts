@@ -8,7 +8,7 @@ import { Injector } from '../injector/injector.ts';
 import { Logger } from '../logger.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { rendererViewFile } from '../renderer/decorator.ts';
-import { HandlebarRenderer } from '../renderer/handlebar.ts';
+// import { HandlebarRenderer } from '../renderer/handlebar.ts';
 import { Renderer } from '../renderer/interface.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { ControllerConstructor } from './controller/constructor.ts';
@@ -30,6 +30,7 @@ export type ExecutionContext = HttpContext & {
 	// deno-lint-ignore ban-types
 	getHandler: () => Function;
 	getClass: () => Constructor;
+	websocket?: WebSocket;
 };
 
 export class DanetRouter {
@@ -41,7 +42,7 @@ export class DanetRouter {
 		private injector: Injector,
 		private guardExecutor: GuardExecutor = new GuardExecutor(injector),
 		private filterExecutor: FilterExecutor = new FilterExecutor(injector),
-		private viewRenderer: Renderer = new HandlebarRenderer(),
+		private viewRenderer: Renderer | null,
 		private router: Application,
 	) {
 		this.methodsMap = new Map([
@@ -133,11 +134,67 @@ export class DanetRouter {
 	}
 
 	registerControllers(Controllers: Constructor[]) {
-		Controllers.forEach((controller) => this.registerController(controller));
+		Controllers.forEach((Controller) => {
+			const httpEndpoint = MetadataHelper.getMetadata<string>('endpoint', Controller);
+			const webSocketEndpoint = MetadataHelper.getMetadata<string>('websocket-endpoint', Controller);
+			if (httpEndpoint)
+				return this.registerController(Controller, httpEndpoint)
+			if (webSocketEndpoint)
+				return this.registerWebSocketController(Controller, webSocketEndpoint);
+		});
 	}
 
-	private registerController(Controller: Constructor) {
-		const basePath = MetadataHelper.getMetadata<string>('endpoint', Controller);
+	private registerWebSocketController(Controller: Constructor, endpoint: string) {
+		endpoint = trimSlash(endpoint);
+		const path = (endpoint ? ('/' + endpoint) : '');
+		const methods = Object.getOwnPropertyNames(Controller.prototype);
+		// deno-lint-ignore no-explicit-any
+		const topicToMethodNameMap: Record<string, any> = {};
+		for (const method of methods) {
+			if (
+				method === 'constructor' ||
+				(Object.values(hookName) as string[]).includes(method)
+			) {
+				continue;
+			}
+			const controllerMethod = Controller.prototype[method];
+			const topic = MetadataHelper.getMetadata<string>(
+				'websocket-topic',
+				controllerMethod,
+			);
+			topicToMethodNameMap[topic] = method;
+		}
+		this.router.get(path,
+			async (context: HttpContext, next: NextFunction) => {
+				console.log('we get a request');
+				const { response, socket } = Deno.upgradeWebSocket(context.req.raw)
+				const _id = crypto.randomUUID();
+				(context as ExecutionContext)._id = _id;
+				(context as ExecutionContext).getClass = () => Controller;
+				context.res = new Response();
+				context.set('_id', _id);
+				(context as ExecutionContext).websocket = socket;
+				const executionContext = context as unknown as ExecutionContext;
+				const controllerInstance = await this.injector.get(
+					Controller,
+					executionContext,
+					// deno-lint-ignore no-explicit-any
+				) as any;
+				socket.onopen = async () => {
+					await controllerInstance['onWebsocketOpen']?.();
+				  };
+				  socket.onmessage = async (event) => {
+					const { topic, data } = JSON.parse(event.data);
+					console.log(topicToMethodNameMap[topic]);
+					const response = await controllerInstance[topicToMethodNameMap[topic]]();
+					socket.send(JSON.stringify(response));
+				  };
+				return response;
+			}
+		);
+	}
+
+	private registerController(Controller: Constructor, basePath: string) {
 		const methods = Object.getOwnPropertyNames(Controller.prototype);
 		this.logger.log(
 			`Registering ${Controller.name} ${basePath ? basePath : '/'}`,
@@ -237,15 +294,15 @@ export class DanetRouter {
 				ControllerMethod,
 			);
 			if (fileName) {
-				context.res = await context.html(
-					await this.viewRenderer.render(
-						fileName,
-						response,
-					),
-					{
-						headers: context.res.headers,
-					},
-				);
+				// context.res = await context.html(
+				// // 	await this.viewRenderer.render(
+				// // 		fileName,
+				// // 		response,
+				// // 	),
+				// // 	{
+				// // 		headers: context.res.headers,
+				// // 	},
+				// );
 			} else {
 				if (typeof response !== 'string') {
 					context.res = await context.json(response, {
