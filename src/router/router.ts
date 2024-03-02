@@ -209,7 +209,6 @@ export class DanetRouter {
 							controllerInstance[topicToMethodNameMap[topic]],
 						);
 					} catch (e) {
-						console.log('non autorisé')
 						socket.close(1008, 'Unauthorized');
 						return;
 					}
