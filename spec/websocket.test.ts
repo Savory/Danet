@@ -1,6 +1,25 @@
-import { DanetApplication, Module, Injectable } from '../mod.ts';
+import { DanetApplication, Module, Injectable, AuthGuard, ExecutionContext, UseGuard, ExpectationFailedException } from '../mod.ts';
 import { assertEquals } from '../src/deps_test.ts';
 import { OnWebSocketMessage, WebSocketController } from '../src/router/websocket/decorator.ts';
+
+@Injectable()
+class ExampleAuthGuard implements AuthGuard {
+    async canActivate(context: ExecutionContext) {
+        if (context.req.query('token') !== 'goodToken')
+            return false;
+        return true;
+    }
+}
+
+@Injectable()
+class ControllerGuard implements AuthGuard {
+    async canActivate(context: ExecutionContext) {
+        if (context.websocketMessage.secret === 'whateversecret') {
+            return true;
+        }
+        return false;
+    }
+}
 
 @Injectable()
 class ExampleService {
@@ -11,6 +30,7 @@ class ExampleService {
 
 }
 
+@UseGuard(ExampleAuthGuard)
 @WebSocketController('ws')
 class ExampleController {
 
@@ -18,10 +38,12 @@ class ExampleController {
 
     }
 
+    @UseGuard(ControllerGuard)
     @OnWebSocketMessage('hello')
     sayHello() {
         return { topic: 'hello', data: this.service.sayHello()};
     }
+
 }
 
 
@@ -38,7 +60,19 @@ Deno.test('Websocket', async () => {
         await app.init(ExampleModule);
         const listenEvent = await app.listen(0);
     
-        const websocket = new WebSocket(`ws://localhost:${listenEvent.port}/ws`,);
+        const unauthorizedWebsocket = new WebSocket(`ws://localhost:${listenEvent.port}/ws?token=notagoodtoken`);
+        unauthorizedWebsocket.onclose = (e) => {
+            assertEquals(e.reason, 'Unauthorized');
+        }
+
+        const missingSecretwebsocket = new WebSocket(`ws://localhost:${listenEvent.port}/ws?token=goodToken`);
+        missingSecretwebsocket.onopen = (e) => {
+            missingSecretwebsocket.send(JSON.stringify({topic: 'hello', data: { secret: 'notagoodsecret' }}))
+        };
+        unauthorizedWebsocket.onclose = (e) => {
+            assertEquals(e.reason, 'Unauthorized');
+        }
+        const websocket = new WebSocket(`ws://localhost:${listenEvent.port}/ws?token=goodToken`);
         websocket.onmessage = async (e) => {
             const parsedResponse = JSON.parse(e.data);
             assertEquals(parsedResponse.topic, 'hello');
@@ -48,7 +82,7 @@ Deno.test('Websocket', async () => {
             resolve();
         };
         websocket.onopen = (e) => {
-            websocket.send(JSON.stringify({topic: 'hello'}))
+            websocket.send(JSON.stringify({topic: 'hello', data: { secret: 'whateversecret' }}))
         };
     
     });

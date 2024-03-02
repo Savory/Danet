@@ -31,6 +31,10 @@ export type ExecutionContext = HttpContext & {
 	getHandler: () => Function;
 	getClass: () => Constructor;
 	websocket?: WebSocket;
+	// deno-lint-ignore no-explicit-any
+	websocketMessage?: any;
+	// deno-lint-ignore no-explicit-any
+	websocketTopic?: string;
 };
 
 export class DanetRouter {
@@ -166,12 +170,10 @@ export class DanetRouter {
 		}
 		this.router.get(path,
 			async (context: HttpContext, next: NextFunction) => {
-				console.log('we get a request');
 				const { response, socket } = Deno.upgradeWebSocket(context.req.raw)
 				const _id = crypto.randomUUID();
 				(context as ExecutionContext)._id = _id;
 				(context as ExecutionContext).getClass = () => Controller;
-				context.res = new Response();
 				context.set('_id', _id);
 				(context as ExecutionContext).websocket = socket;
 				const executionContext = context as unknown as ExecutionContext;
@@ -181,14 +183,39 @@ export class DanetRouter {
 					// deno-lint-ignore no-explicit-any
 				) as any;
 				socket.onopen = async () => {
-					await controllerInstance['onWebsocketOpen']?.();
-				  };
-				  socket.onmessage = async (event) => {
+					try {
+						await this.guardExecutor.executeAllRelevantGuards(
+							executionContext,
+							Controller,
+							() => ({}),
+						);
+					} catch (e) {
+						socket.close(1008, 'Unauthorized');
+					}
+				};
+				socket.onmessage = async (event) => {
 					const { topic, data } = JSON.parse(event.data);
-					console.log(topicToMethodNameMap[topic]);
+					const messageExecutionContext = {} as ExecutionContext;
+					const _id = crypto.randomUUID();
+					messageExecutionContext._id = _id;
+					messageExecutionContext.getClass = () => Controller;
+					messageExecutionContext.getHandler = () => controllerInstance[topicToMethodNameMap[topic]];
+					messageExecutionContext.websocketTopic = topic;
+					messageExecutionContext.websocketMessage = data;
+					try {
+						await this.guardExecutor.executeAllRelevantGuards(
+							messageExecutionContext,
+							(() => ({})) as any,
+							controllerInstance[topicToMethodNameMap[topic]],
+						);
+					} catch (e) {
+						console.log('non autorisé')
+						socket.close(1008, 'Unauthorized');
+						return;
+					}
 					const response = await controllerInstance[topicToMethodNameMap[topic]]();
 					socket.send(JSON.stringify(response));
-				  };
+				};
 				return response;
 			}
 		);
