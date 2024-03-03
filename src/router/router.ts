@@ -156,8 +156,6 @@ export class DanetRouter {
 		endpoint = trimSlash(endpoint);
 		const path = (endpoint ? ('/' + endpoint) : '');
 		const methods = Object.getOwnPropertyNames(Controller.prototype);
-		// deno-lint-ignore no-explicit-any
-		const topicToMethodNameMap: Record<string, any> = {};
 		const smartRouter = new SmartRouter({
 			routers: [new RegExpRouter(), new TrieRouter()],
 		  });
@@ -173,11 +171,10 @@ export class DanetRouter {
 				'websocket-topic',
 				controllerMethod,
 			);
-			topicToMethodNameMap[topic] = methodName;
 			smartRouter.add('POST', topic, methodName);
 		}
 		this.router.get(path,
-			async (context: HttpContext, next: NextFunction) => {
+			async (context: HttpContext) => {
 				const { response, socket } = Deno.upgradeWebSocket(context.req.raw)
 				const _id = crypto.randomUUID();
 				(context as ExecutionContext)._id = _id;
@@ -202,11 +199,13 @@ export class DanetRouter {
 					}
 				};
 				socket.onmessage = async (event) => {
-					const { topic, data } = JSON.parse(event.data);
-					const messageExecutionContext = {} as ExecutionContext;
+					
+					const { topic, data } = JSON.parse(event.data);					
 					const fakeRequest = new Request(`https://fakerequest.com/${topic}`, { method: 'POST', body: JSON.stringify(data) });
 					const [methods, foundParam] = smartRouter.match('POST', topic);
 					const methodName = methods[0][0] as string;
+					const messageExecutionContext = {} as ExecutionContext;
+
 					messageExecutionContext.req = new HonoRequest(fakeRequest, getPath(fakeRequest), [methods, foundParam] as any);
 					const _id = crypto.randomUUID();
 					messageExecutionContext._id = _id;
