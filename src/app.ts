@@ -8,7 +8,7 @@ import { injector } from './injector/injector.ts';
 import { Logger } from './logger.ts';
 import { MetadataHelper } from './metadata/helper.ts';
 import { ModuleMetadata, moduleMetadataKey } from './module/decorator.ts';
-// import { HandlebarRenderer } from './renderer/handlebar.ts';
+import { HandlebarRenderer } from './renderer/handlebar.ts';
 import { DanetRouter } from './router/router.ts';
 import { Constructor } from './utils/constructor.ts';
 import { PossibleMiddlewareType } from './router/middleware/decorator.ts';
@@ -32,12 +32,12 @@ export class DanetApplication {
 	private internalHttpServer?: Deno.HttpServer;
 	private injector = injector;
 	private hookExecutor = new HookExecutor(this.injector);
-	// private renderer = new HandlebarRenderer();
+	private renderer = new HandlebarRenderer();
 	public danetRouter = new DanetRouter(
 		this.injector,
 		new GuardExecutor(this.injector),
 		new FilterExecutor(this.injector),
-		null,
+		this.renderer,
 		this.app,
 	);
 	private controller: AbortController = new AbortController();
@@ -123,7 +123,7 @@ export class DanetApplication {
 	}
 
 	setViewEngineDir(path: string) {
-		// this.renderer.setRootDir(path);
+		this.renderer.setRootDir(path);
 	}
 
 	useStaticAssets(path: string) {

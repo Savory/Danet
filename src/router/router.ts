@@ -8,7 +8,7 @@ import { Injector } from '../injector/injector.ts';
 import { Logger } from '../logger.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { rendererViewFile } from '../renderer/decorator.ts';
-// import { HandlebarRenderer } from '../renderer/handlebar.ts';
+import { HandlebarRenderer } from '../renderer/handlebar.ts';
 import { Renderer } from '../renderer/interface.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { ControllerConstructor } from './controller/constructor.ts';
@@ -49,7 +49,7 @@ export class DanetRouter {
 		private injector: Injector,
 		private guardExecutor: GuardExecutor = new GuardExecutor(injector),
 		private filterExecutor: FilterExecutor = new FilterExecutor(injector),
-		private viewRenderer: Renderer | null,
+		private viewRenderer: Renderer = new HandlebarRenderer(),
 		private router: Application,
 	) {
 		this.methodsMap = new Map([
@@ -337,15 +337,15 @@ export class DanetRouter {
 				ControllerMethod,
 			);
 			if (fileName) {
-				// context.res = await context.html(
-				// // 	await this.viewRenderer.render(
-				// // 		fileName,
-				// // 		response,
-				// // 	),
-				// // 	{
-				// // 		headers: context.res.headers,
-				// // 	},
-				// );
+				context.res = await context.html(
+					await this.viewRenderer.render(
+						fileName,
+						response,
+					),
+					{
+						headers: context.res.headers,
+					},
+				);
 			} else {
 				if (typeof response !== 'string') {
 					context.res = await context.json(response, {
