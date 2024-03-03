@@ -214,35 +214,41 @@ export class DanetRouter {
 					messageExecutionContext.getHandler = () => controllerInstance[methodName];
 					messageExecutionContext.websocketTopic = topic;
 					messageExecutionContext.websocketMessage = data;
-					try {
-						await this.guardExecutor.executeAllRelevantGuards(
-							messageExecutionContext,
-							(() => ({})) as any,
-							controllerInstance[methodName],
-						);
-					} catch (e) {
-						socket.close(1008, 'Unauthorized');
-						return;
-					}
-					const params = await this.resolveMethodParam(
+					await this.middlewareExecutor.executeAllRelevantMiddlewares(
+						context as unknown as ExecutionContext,
 						Controller,
 						controllerInstance[methodName],
-						messageExecutionContext,
-					);
-					let response;
-					try {
-						response = await controllerInstance[methodName](...params);
-					} catch (error) {
-						response = await this.filterExecutor
-							.executeControllerAndMethodFilter(
-								executionContext,
-								error,
+						async () => {
+							try {
+								await this.guardExecutor.executeAllRelevantGuards(
+									messageExecutionContext,
+									(() => ({})) as any,
+									controllerInstance[methodName],
+								);
+							} catch (e) {
+								socket.close(1008, 'Unauthorized');
+								return;
+							}
+							const params = await this.resolveMethodParam(
 								Controller,
 								controllerInstance[methodName],
+								messageExecutionContext,
 							);
-					}
-					if (response)
-						socket.send(JSON.stringify(response));
+							let response;
+							try {
+								response = await controllerInstance[methodName](...params);
+							} catch (error) {
+								response = await this.filterExecutor
+									.executeControllerAndMethodFilter(
+										executionContext,
+										error,
+										Controller,
+										controllerInstance[methodName],
+									);
+							}
+							if (response)
+								socket.send(JSON.stringify(response));
+						});
 				};
 				return response;
 			}

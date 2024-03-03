@@ -50,11 +50,11 @@ export class MiddlewareExecutor {
 				const middlewareInstance: DanetMiddleware = this.injector.get<
 					DanetMiddleware
 				>(currentMiddleware as Constructor<DanetMiddleware>);
-				fn = async (ctx: HttpContext, nextFn: NextFunction) => {
+				fn = async (ctx: ExecutionContext, nextFn: NextFunction) => {
 					return await middlewareInstance.action(ctx, nextFn);
 				};
 			} else {
-				fn = async (ctx: HttpContext, nextFn: NextFunction) => {
+				fn = async (ctx: ExecutionContext, nextFn: NextFunction) => {
 					return await (currentMiddleware as MiddlewareFunction)(ctx, nextFn);
 				};
 			}
