@@ -229,8 +229,20 @@ export class DanetRouter {
 						controllerInstance[methodName],
 						messageExecutionContext,
 					);
-					const response = await controllerInstance[methodName](...params);
-					socket.send(JSON.stringify(response));
+					let response;
+					try {
+						response = await controllerInstance[methodName](...params);
+					} catch (error) {
+						response = await this.filterExecutor
+							.executeControllerAndMethodFilter(
+								executionContext,
+								error,
+								Controller,
+								controllerInstance[methodName],
+							);
+					}
+					if (response)
+						socket.send(JSON.stringify(response));
 				};
 				return response;
 			}
@@ -312,7 +324,7 @@ export class DanetRouter {
 				ControllerMethod,
 			);
 		if (filterResponse) {
-			executionContext.res = filterResponse;
+			executionContext.res = filterResponse as Response;
 			return executionContext.res;
 		}
 		const status = error.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
