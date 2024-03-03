@@ -1,5 +1,5 @@
 import { MetadataHelper } from '../../../metadata/helper.ts';
-import { HttpContext } from '../../router.ts';
+import { ExecutionContext } from '../../router.ts';
 import { validateObject } from '../../../deps.ts';
 import { Constructor } from '../../../mod.ts';
 import { NotValidBodyException } from '../../../exception/mod.ts';
@@ -12,7 +12,7 @@ export type OptionsResolver = {
 };
 
 export type Resolver = (
-	context: HttpContext,
+	context: ExecutionContext,
 	opts?: OptionsResolver,
 ) => unknown | Promise<unknown>;
 
@@ -53,16 +53,16 @@ export const createParamDecorator = (
 	}
 };
 
-export const Req = createParamDecorator((context: HttpContext) => {
+export const Req = createParamDecorator((context: ExecutionContext) => {
 	return context.req;
 });
 
-export const Res = createParamDecorator((context: HttpContext) => {
+export const Res = createParamDecorator((context: ExecutionContext) => {
 	return context.res;
 });
 
 export const Header = (prop?: string) =>
-	createParamDecorator((context: HttpContext) => {
+	createParamDecorator((context: ExecutionContext) => {
 		if (!context.req.raw.headers) {
 			return null;
 		}
@@ -72,7 +72,7 @@ export const Header = (prop?: string) =>
 export const BODY_TYPE_KEY = 'body-type';
 
 export const Body = (prop?: string) =>
-	createParamDecorator(async (context: HttpContext, opts?: OptionsResolver) => {
+	createParamDecorator(async (context: ExecutionContext, opts?: OptionsResolver) => {
 		if (!opts) {
 			throw {
 				status: 500,
@@ -160,7 +160,7 @@ export function Query(
 	pParamOrOptions?: string | QueryOption,
 	pOptions?: QueryOption,
 ) {
-	return (createParamDecorator((context: HttpContext) => {
+	return (createParamDecorator((context: ExecutionContext) => {
 		const param = typeof pParamOrOptions === 'string'
 			? pParamOrOptions
 			: undefined;
@@ -203,7 +203,7 @@ export function Query(
 }
 
 export const Param = (paramName: string) =>
-	createParamDecorator((context: HttpContext) => {
+	createParamDecorator((context: ExecutionContext) => {
 		const params = context.req.param();
 		if (paramName) {
 			return params?.[paramName];
@@ -213,7 +213,7 @@ export const Param = (paramName: string) =>
 	})();
 
 export const Session = (prop?: string) =>
-	createParamDecorator((context: HttpContext) => {
+	createParamDecorator((context: ExecutionContext) => {
 		if (prop) {
 			return context.get('session').get(prop);
 		} else {

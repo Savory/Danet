@@ -141,10 +141,11 @@ export class DanetRouter {
 		Controllers.forEach((Controller) => {
 			const httpEndpoint = MetadataHelper.getMetadata<string>('endpoint', Controller);
 			const webSocketEndpoint = MetadataHelper.getMetadata<string>('websocket-endpoint', Controller);
-			if (httpEndpoint)
-				return this.registerController(Controller, httpEndpoint)
 			if (webSocketEndpoint)
-				return this.registerWebSocketController(Controller, webSocketEndpoint);
+				this.registerWebSocketController(Controller, webSocketEndpoint);
+			else
+				this.registerController(Controller, httpEndpoint)
+			
 		});
 	}
 
@@ -348,7 +349,7 @@ export class DanetRouter {
 		Controller: ControllerConstructor,
 		// deno-lint-ignore no-explicit-any
 		ControllerMethod: (...args: any[]) => unknown,
-		context: HttpContext,
+		context: ExecutionContext,
 	) {
 		const paramResolverMap: Map<number, Resolver> = MetadataHelper.getMetadata(
 			argumentResolverFunctionsMetadataKey,
