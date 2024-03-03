@@ -61,6 +61,10 @@ export const Res = createParamDecorator((context: ExecutionContext) => {
 	return context.res;
 });
 
+export const WebSocket = createParamDecorator((context: ExecutionContext) => {
+	return context.websocket;
+});
+
 export const Header = (prop?: string) =>
 	createParamDecorator((context: ExecutionContext) => {
 		if (!context.req.raw.headers) {

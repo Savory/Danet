@@ -1,6 +1,6 @@
-import { DanetApplication, Module, Injectable, AuthGuard, ExecutionContext, UseGuard, ExpectationFailedException } from '../mod.ts';
-import { assertEquals } from '../src/deps_test.ts';
-import { OnWebSocketMessage, WebSocketController } from '../src/router/websocket/decorator.ts';
+import { DanetApplication, Module, Injectable, AuthGuard, ExecutionContext, UseGuard, ExpectationFailedException } from '../../mod.ts';
+import { assertEquals } from '../../src/deps_test.ts';
+import { OnWebSocketMessage, WebSocketController } from '../../src/router/websocket/decorator.ts';
 
 @Injectable()
 class ExampleAuthGuard implements AuthGuard {

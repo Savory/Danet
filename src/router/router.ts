@@ -19,6 +19,9 @@ import {
 import { trimSlash } from './utils.ts';
 import { MiddlewareExecutor } from './middleware/executor.ts';
 import { NextFunction } from './middleware/decorator.ts';
+import { HonoRequest } from 'https://deno.land/x/hono@v4.0.8/request.ts';
+import { getPath } from 'https://deno.land/x/hono@v4.0.8/utils/url.ts';
+import { RegExpRouter, SmartRouter, TrieRouter } from 'https://deno.land/x/hono@v4.0.8/mod.ts';
 
 // deno-lint-ignore no-explicit-any
 export type Callback = (...args: any[]) => unknown;
@@ -155,19 +158,23 @@ export class DanetRouter {
 		const methods = Object.getOwnPropertyNames(Controller.prototype);
 		// deno-lint-ignore no-explicit-any
 		const topicToMethodNameMap: Record<string, any> = {};
-		for (const method of methods) {
+		const smartRouter = new SmartRouter({
+			routers: [new RegExpRouter(), new TrieRouter()],
+		  });
+		for (const methodName of methods) {
 			if (
-				method === 'constructor' ||
-				(Object.values(hookName) as string[]).includes(method)
+				methodName === 'constructor' ||
+				(Object.values(hookName) as string[]).includes(methodName)
 			) {
 				continue;
 			}
-			const controllerMethod = Controller.prototype[method];
+			const controllerMethod = Controller.prototype[methodName];
 			const topic = MetadataHelper.getMetadata<string>(
 				'websocket-topic',
 				controllerMethod,
 			);
-			topicToMethodNameMap[topic] = method;
+			topicToMethodNameMap[topic] = methodName;
+			smartRouter.add('POST', topic, methodName);
 		}
 		this.router.get(path,
 			async (context: HttpContext, next: NextFunction) => {
@@ -197,23 +204,32 @@ export class DanetRouter {
 				socket.onmessage = async (event) => {
 					const { topic, data } = JSON.parse(event.data);
 					const messageExecutionContext = {} as ExecutionContext;
+					const fakeRequest = new Request(`https://fakerequest.com/${topic}`, { method: 'POST', body: JSON.stringify(data) });
+					const [methods, foundParam] = smartRouter.match('POST', topic);
+					const methodName = methods[0][0] as string;
+					messageExecutionContext.req = new HonoRequest(fakeRequest, getPath(fakeRequest), [methods, foundParam] as any);
 					const _id = crypto.randomUUID();
 					messageExecutionContext._id = _id;
 					messageExecutionContext.getClass = () => Controller;
-					messageExecutionContext.getHandler = () => controllerInstance[topicToMethodNameMap[topic]];
+					messageExecutionContext.getHandler = () => controllerInstance[methodName];
 					messageExecutionContext.websocketTopic = topic;
 					messageExecutionContext.websocketMessage = data;
 					try {
 						await this.guardExecutor.executeAllRelevantGuards(
 							messageExecutionContext,
 							(() => ({})) as any,
-							controllerInstance[topicToMethodNameMap[topic]],
+							controllerInstance[methodName],
 						);
 					} catch (e) {
 						socket.close(1008, 'Unauthorized');
 						return;
 					}
-					const response = await controllerInstance[topicToMethodNameMap[topic]]();
+					const params = await this.resolveMethodParam(
+						Controller,
+						controllerInstance[methodName],
+						messageExecutionContext,
+					);
+					const response = await controllerInstance[methodName](...params);
 					socket.send(JSON.stringify(response));
 				};
 				return response;

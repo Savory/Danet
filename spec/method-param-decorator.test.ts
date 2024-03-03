@@ -138,7 +138,6 @@ Deno.test('@Res and @Query decorator', async () => {
 
 Deno.test(`@Query decorator with value 'array' to return all values for a given query parameter`, async () => {
 	const app = new DanetApplication();
-	try {
 	await app.init(MyModule);
 	const listenEvent = await app.listen(0);
 
@@ -148,12 +147,8 @@ Deno.test(`@Query decorator with value 'array' to return all values for a given 
 			method: 'GET',
 		},
 	);
-	console.log(await res.text());
 	const json = await res.json();
 	assertEquals(json, ['foo', 'bar']);
-	} catch(e) {
-		console.log(e);
-	}
 	await app.close();
 });
 
