@@ -96,11 +96,11 @@ export class WebSocketRouter {
 		};
 	}
 
-	// deno-lint-ignore no-explicit-any
 	private onMessage(
 		topicRouter: SmartRouter<unknown>,
 		Controller: Constructor,
-		controllerInstance: any,
+	    // deno-lint-ignore no-explicit-any
+        controllerInstance: any,
 		socket: WebSocket,
 	) {
 		return async (event: MessageEvent) => {
@@ -113,10 +113,10 @@ export class WebSocketRouter {
 			const methodName = methods[0][0] as string;
 			const messageExecutionContext = {} as ExecutionContext;
 
-			// deno-lint-ignore no-explicit-any
 			messageExecutionContext.req = new HonoRequest(
 				fakeRequest,
 				getPath(fakeRequest),
+    			// deno-lint-ignore no-explicit-any
 				[methods, foundParam] as any,
 			);
 			const _id = crypto.randomUUID();
