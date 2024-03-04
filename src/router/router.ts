@@ -34,7 +34,6 @@ export type ExecutionContext = HttpContext & {
 	websocket?: WebSocket;
 	// deno-lint-ignore no-explicit-any
 	websocketMessage?: any;
-	// deno-lint-ignore no-explicit-any
 	websocketTopic?: string;
 };
 
@@ -261,6 +260,4 @@ export class DanetHTTPRouter {
 		}
 		return context.res;
 	}
-
-
 }

@@ -94,13 +94,22 @@ export class DanetApplication {
 
 		if (instance.controllers) {
 			instance.controllers.forEach((Controller) => {
-				const httpEndpoint = MetadataHelper.getMetadata<string>('endpoint', Controller);
-				const webSocketEndpoint = MetadataHelper.getMetadata<string>('websocket-endpoint', Controller);
-				if (webSocketEndpoint)
-					this.websocketRouter.registerController(Controller, webSocketEndpoint);
-				else
-					this.httpRouter.registerController(Controller, httpEndpoint)
-				
+				const httpEndpoint = MetadataHelper.getMetadata<string>(
+					'endpoint',
+					Controller,
+				);
+				const webSocketEndpoint = MetadataHelper.getMetadata<string>(
+					'websocket-endpoint',
+					Controller,
+				);
+				if (webSocketEndpoint) {
+					this.websocketRouter.registerController(
+						Controller,
+						webSocketEndpoint,
+					);
+				} else {
+					this.httpRouter.registerController(Controller, httpEndpoint);
+				}
 			});
 		}
 	}

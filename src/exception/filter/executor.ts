@@ -27,7 +27,7 @@ export class FilterExecutor {
 		exceptionFilter: ExceptionFilter,
 		context: HttpContext,
 		error: unknown,
-	): Response | undefined | { topic: string, data: unknown } {
+	): Response | undefined | { topic: string; data: unknown } {
 		if (exceptionFilter) {
 			const errorTypeCaughtByFilter = this.getErrorTypeCaughtByExceptionFilter(
 				// deno-lint-ignore no-explicit-any
@@ -48,7 +48,7 @@ export class FilterExecutor {
 		error: unknown,
 		// deno-lint-ignore ban-types
 		constructor: Constructor | Function,
-	): Promise<Response | undefined | { topic: string, data: unknown }> {
+	): Promise<Response | undefined | { topic: string; data: unknown }> {
 		const FilterConstructor: Constructor<ExceptionFilter> = MetadataHelper
 			.getMetadata<Constructor<ExceptionFilter>>(
 				filterExceptionMetadataKey,
@@ -69,7 +69,7 @@ export class FilterExecutor {
 		error: unknown,
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
-	): Promise<Response | undefined | { topic: string, data: unknown }> {
+	): Promise<Response | undefined | { topic: string; data: unknown }> {
 		return (await this.executeFilterFromMetadata(context, error, Controller) ||
 			await this.executeFilterFromMetadata(context, error, ControllerMethod));
 	}
