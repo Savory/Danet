@@ -1,10 +1,3 @@
-import { HonoRequest } from 'https://deno.land/x/hono@v4.0.8/request.ts';
-import { getPath } from 'https://deno.land/x/hono@v4.0.8/utils/url.ts';
-import {
-	RegExpRouter,
-	SmartRouter,
-	TrieRouter,
-} from 'https://deno.land/x/hono@v4.0.8/mod.ts';
 import { trimSlash } from '../utils.ts';
 import { Constructor } from '../../utils/constructor.ts';
 import { hookName } from '../../hook/interfaces.ts';
@@ -14,7 +7,14 @@ import {
 	HttpContext,
 	Injector,
 } from '../../mod.ts';
-import { Application } from '../../deps.ts';
+import {
+	Application,
+	getPath,
+	HonoRequest,
+	RegExpRouter,
+	SmartRouter,
+	TrieRouter,
+} from '../../deps.ts';
 import { MetadataHelper } from '../../metadata/helper.ts';
 import {
 	ControllerConstructor,
@@ -99,8 +99,8 @@ export class WebSocketRouter {
 	private onMessage(
 		topicRouter: SmartRouter<unknown>,
 		Controller: Constructor,
-	    // deno-lint-ignore no-explicit-any
-        controllerInstance: any,
+		// deno-lint-ignore no-explicit-any
+		controllerInstance: any,
 		socket: WebSocket,
 	) {
 		return async (event: MessageEvent) => {
@@ -116,9 +116,10 @@ export class WebSocketRouter {
 			messageExecutionContext.req = new HonoRequest(
 				fakeRequest,
 				getPath(fakeRequest),
-    			// deno-lint-ignore no-explicit-any
+				// deno-lint-ignore no-explicit-any
 				[methods, foundParam] as any,
-			);
+				// deno-lint-ignore no-explicit-any
+			) as any;
 			const _id = crypto.randomUUID();
 			messageExecutionContext._id = _id;
 			messageExecutionContext.getClass = () => Controller;

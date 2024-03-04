@@ -13,3 +13,10 @@ export {
 	type Next,
 } from 'https://deno.land/x/hono/mod.ts';
 export { type HandlerInterface } from 'https://deno.land/x/hono/types.ts';
+export { HonoRequest } from 'https://deno.land/x/hono/request.ts';
+export { getPath } from 'https://deno.land/x/hono/utils/url.ts';
+export {
+	RegExpRouter,
+	SmartRouter,
+	TrieRouter,
+} from 'https://deno.land/x/hono/mod.ts';
