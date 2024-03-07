@@ -41,7 +41,7 @@ jobs:
       - name: Run tests
         run: deno task test
       - name: Create coverage report
-        run: deno --unstable coverage ./coverage --lcov --exclude="test\.(ts|tsx|mts|js|mjs|jsx|cjs|cts)|exceptions\.ts"  > coverage.lcov
+        run: deno --unstable coverage ./coverage --lcov --exclude="test\.(ts|tsx|mts|js|mjs|jsx|cjs|cts)|exceptions\.ts|logger\.ts"  > coverage.lcov
       - name: Collect coverage
         uses: codecov/codecov-action@v1.0.10 # upload the report on Codecov
         with:
