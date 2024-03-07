@@ -13,7 +13,7 @@ import { Module, ModuleMetadata } from '../src/module/decorator.ts';
 import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
 import { HttpContext } from '../src/router/router.ts';
 import { injector } from '../src/injector/injector.ts';
-import { Injector } from '../mod.ts';
+import { Injector, TokenInjector } from '../mod.ts';
 
 Deno.test('Injection', async (testContext) => {
 	interface IDBService {
@@ -106,10 +106,7 @@ Deno.test('Injection', async (testContext) => {
 				controllers: [SingletonController],
 				injectables: [
 					GlobalInjectable,
-					{
-						token: 'DB_SERVICE',
-						useClass: DatabaseService,
-					},
+					new TokenInjector(DatabaseService, 'DB_SERVICE'),
 					{
 						token: 'CONFIGURATION',
 						useValue: {
