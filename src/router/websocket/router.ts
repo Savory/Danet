@@ -24,17 +24,13 @@ import {
 import { resolveMethodParam } from '../controller/params/resolver.ts';
 
 export class WebSocketRouter {
-	private middlewareExecutor: MiddlewareExecutor;
 	constructor(
 		private injector: Injector,
 		private guardExecutor: GuardExecutor = new GuardExecutor(injector),
 		private filterExecutor: FilterExecutor = new FilterExecutor(injector),
 		private router: Application,
-	) {
-		this.middlewareExecutor = new MiddlewareExecutor(
-			injector,
-		);
-	}
+		private middlewareExecutor = new MiddlewareExecutor(injector),
+	) {}
 
 	public registerController(Controller: Constructor, endpoint: string) {
 		endpoint = trimSlash(endpoint);
