@@ -80,7 +80,7 @@ Deno.test('Websocket', async () => {
 				JSON.stringify({ topic: 'hello', data: { secret: 'notagoodsecret' } }),
 			);
 		};
-		unauthorizedWebsocket.onclose = (e) => {
+		missingSecretwebsocket.onclose = (e) => {
 			assertEquals(e.reason, 'Unauthorized');
 		};
 		const websocket = new WebSocket(

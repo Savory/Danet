@@ -8,6 +8,7 @@ import {
 } from './decorator.ts';
 import { ExceptionFilter } from './interface.ts';
 import { Injector } from '../../injector/injector.ts';
+import { WebSocketPayload } from '../../router/websocket/payload.ts';
 
 export class FilterExecutor {
 	constructor(private injector: Injector) {
@@ -48,7 +49,7 @@ export class FilterExecutor {
 		error: unknown,
 		// deno-lint-ignore ban-types
 		constructor: Constructor | Function,
-	): Promise<Response | undefined | { topic: string; data: unknown }> {
+	): Promise<Response | undefined | WebSocketPayload> {
 		const FilterConstructor: Constructor<ExceptionFilter> = MetadataHelper
 			.getMetadata<Constructor<ExceptionFilter>>(
 				filterExceptionMetadataKey,
@@ -69,7 +70,7 @@ export class FilterExecutor {
 		error: unknown,
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
-	): Promise<Response | undefined | { topic: string; data: unknown }> {
+	): Promise<Response | undefined | WebSocketPayload> {
 		return (await this.executeFilterFromMetadata(context, error, Controller) ||
 			await this.executeFilterFromMetadata(context, error, ControllerMethod));
 	}

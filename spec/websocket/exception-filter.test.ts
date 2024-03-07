@@ -65,11 +65,6 @@ class ControllerWithCustomFilter {
 	customError() {
 		throw new CustomException('an error');
 	}
-
-	@OnWebSocketMessage('unexpected')
-	unexpectedError() {
-		throw Error('unexpected');
-	}
 }
 @Module({
 	controllers: [ControllerWithFilter, ControllerWithCustomFilter],
