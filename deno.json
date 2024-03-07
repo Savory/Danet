@@ -26,7 +26,7 @@
 		"jsxImportSource": "preact"
 	},
 	"tasks": {
-		"test": "NO_LOG=true COOKIE_SECRET_KEY=mysecretkey deno test -A --unstable --coverage=coverage spec",
+		"test": "NO_LOG=true COOKIE_SECRET_KEY=mysecretkey deno test -A --unstable --coverage=coverage spec/**/*.test.ts",
 		"start:example": "deno run --allow-net --allow-env --watch example/run.ts"
 	}
 }

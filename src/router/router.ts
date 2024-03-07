@@ -19,6 +19,7 @@ import {
 import { trimSlash } from './utils.ts';
 import { MiddlewareExecutor } from './middleware/executor.ts';
 import { NextFunction } from './middleware/decorator.ts';
+import { resolveMethodParam } from './controller/params/resolver.ts';
 
 // deno-lint-ignore no-explicit-any
 export type Callback = (...args: any[]) => unknown;
@@ -30,9 +31,13 @@ export type ExecutionContext = HttpContext & {
 	// deno-lint-ignore ban-types
 	getHandler: () => Function;
 	getClass: () => Constructor;
+	websocket?: WebSocket;
+	// deno-lint-ignore no-explicit-any
+	websocketMessage?: any;
+	websocketTopic?: string;
 };
 
-export class DanetRouter {
+export class DanetHTTPRouter {
 	private logger: Logger = new Logger('Router');
 	private methodsMap: Map<string, HandlerInterface>;
 	public prefix?: string;
@@ -132,12 +137,7 @@ export class DanetRouter {
 		this.prefix = prefix;
 	}
 
-	registerControllers(Controllers: Constructor[]) {
-		Controllers.forEach((controller) => this.registerController(controller));
-	}
-
-	private registerController(Controller: Constructor) {
-		const basePath = MetadataHelper.getMetadata<string>('endpoint', Controller);
+	public registerController(Controller: Constructor, basePath: string) {
 		const methods = Object.getOwnPropertyNames(Controller.prototype);
 		this.logger.log(
 			`Registering ${Controller.name} ${basePath ? basePath : '/'}`,
@@ -165,7 +165,7 @@ export class DanetRouter {
 					Controller,
 					ControllerMethod,
 				);
-				const params = await this.resolveMethodParam(
+				const params = await resolveMethodParam(
 					Controller,
 					ControllerMethod,
 					executionContext,
@@ -212,7 +212,7 @@ export class DanetRouter {
 				ControllerMethod,
 			);
 		if (filterResponse) {
-			executionContext.res = filterResponse;
+			executionContext.res = filterResponse as Response;
 			return executionContext.res;
 		}
 		const status = error.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
@@ -259,25 +259,5 @@ export class DanetRouter {
 			}
 		}
 		return context.res;
-	}
-
-	private async resolveMethodParam(
-		Controller: ControllerConstructor,
-		// deno-lint-ignore no-explicit-any
-		ControllerMethod: (...args: any[]) => unknown,
-		context: HttpContext,
-	) {
-		const paramResolverMap: Map<number, Resolver> = MetadataHelper.getMetadata(
-			argumentResolverFunctionsMetadataKey,
-			Controller,
-			ControllerMethod.name,
-		);
-		const params: unknown[] = [];
-		if (paramResolverMap) {
-			for (const [key, value] of paramResolverMap) {
-				params[key] = await value(context);
-			}
-		}
-		return params;
 	}
 }

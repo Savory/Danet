@@ -149,7 +149,6 @@ Deno.test(`@Query decorator with value 'array' to return all values for a given 
 	);
 	const json = await res.json();
 	assertEquals(json, ['foo', 'bar']);
-
 	await app.close();
 });
 

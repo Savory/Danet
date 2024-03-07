@@ -1,5 +1,5 @@
 import { MetadataHelper } from '../../../metadata/helper.ts';
-import { HttpContext } from '../../router.ts';
+import { ExecutionContext } from '../../router.ts';
 import { validateObject } from '../../../deps.ts';
 import { Constructor } from '../../../mod.ts';
 import { NotValidBodyException } from '../../../exception/mod.ts';
@@ -12,7 +12,7 @@ export type OptionsResolver = {
 };
 
 export type Resolver = (
-	context: HttpContext,
+	context: ExecutionContext,
 	opts?: OptionsResolver,
 ) => unknown | Promise<unknown>;
 
@@ -53,16 +53,20 @@ export const createParamDecorator = (
 	}
 };
 
-export const Req = createParamDecorator((context: HttpContext) => {
+export const Req = createParamDecorator((context: ExecutionContext) => {
 	return context.req;
 });
 
-export const Res = createParamDecorator((context: HttpContext) => {
+export const Res = createParamDecorator((context: ExecutionContext) => {
 	return context.res;
 });
 
+export const WebSocket = createParamDecorator((context: ExecutionContext) => {
+	return context.websocket;
+});
+
 export const Header = (prop?: string) =>
-	createParamDecorator((context: HttpContext) => {
+	createParamDecorator((context: ExecutionContext) => {
 		if (!context.req.raw.headers) {
 			return null;
 		}
@@ -72,57 +76,60 @@ export const Header = (prop?: string) =>
 export const BODY_TYPE_KEY = 'body-type';
 
 export const Body = (prop?: string) =>
-	createParamDecorator(async (context: HttpContext, opts?: OptionsResolver) => {
-		if (!opts) {
-			throw {
-				status: 500,
-				message: 'Options of Body not taken by Body decorator function',
-			};
-		}
-
-		let body;
-		try {
-			body = await context.req.json();
-		} catch (e) {
-			throw e;
-		}
-
-		if (!body) {
-			return null;
-		}
-
-		// Extract Class type of Parameter with @Body
-		const { parameterIndex } = opts;
-		const paramsTypesDTO: Constructor[] = MetadataHelper.getMetadata(
-			'design:paramtypes',
-			opts.target,
-			opts.propertyKey,
-		);
-
-		const param = prop ? body[prop] : body;
-		// Make the validation of body
-		if (paramsTypesDTO.length > 0) {
-			const errors = validateObject(param, paramsTypesDTO[parameterIndex]);
-			if (errors.length > 0) {
-				throw new NotValidBodyException(errors);
+	createParamDecorator(
+		async (context: ExecutionContext, opts?: OptionsResolver) => {
+			if (!opts) {
+				throw {
+					status: 500,
+					message: 'Options of Body not taken by Body decorator function',
+				};
 			}
-		}
-		return param;
-	}, (target, propertyKey: string | symbol | undefined, parameterIndex) => {
-		if (!prop) {
+
+			let body;
+			try {
+				body = await context.req.json();
+			} catch (e) {
+				throw e;
+			}
+
+			if (!body) {
+				return null;
+			}
+
+			// Extract Class type of Parameter with @Body
+			const { parameterIndex } = opts;
 			const paramsTypesDTO: Constructor[] = MetadataHelper.getMetadata(
 				'design:paramtypes',
-				target,
-				propertyKey,
+				opts.target,
+				opts.propertyKey,
 			);
-			MetadataHelper.setMetadata(
-				BODY_TYPE_KEY,
-				paramsTypesDTO[parameterIndex],
-				target,
-				propertyKey,
-			);
-		}
-	})();
+
+			const param = prop ? body[prop] : body;
+			// Make the validation of body
+			if (paramsTypesDTO.length > 0) {
+				const errors = validateObject(param, paramsTypesDTO[parameterIndex]);
+				if (errors.length > 0) {
+					throw new NotValidBodyException(errors);
+				}
+			}
+			return param;
+		},
+		(target, propertyKey: string | symbol | undefined, parameterIndex) => {
+			if (!prop) {
+				const paramsTypesDTO: Constructor[] = MetadataHelper.getMetadata(
+					'design:paramtypes',
+					target,
+					propertyKey,
+				);
+				MetadataHelper.setMetadata(
+					BODY_TYPE_KEY,
+					paramsTypesDTO[parameterIndex],
+					target,
+					propertyKey,
+				);
+			}
+		},
+	)();
 
 function formatQueryValue(
 	queryValue: string[] | undefined,
@@ -160,7 +167,7 @@ export function Query(
 	pParamOrOptions?: string | QueryOption,
 	pOptions?: QueryOption,
 ) {
-	return (createParamDecorator((context: HttpContext) => {
+	return (createParamDecorator((context: ExecutionContext) => {
 		const param = typeof pParamOrOptions === 'string'
 			? pParamOrOptions
 			: undefined;
@@ -203,7 +210,7 @@ export function Query(
 }
 
 export const Param = (paramName: string) =>
-	createParamDecorator((context: HttpContext) => {
+	createParamDecorator((context: ExecutionContext) => {
 		const params = context.req.param();
 		if (paramName) {
 			return params?.[paramName];
@@ -213,7 +220,7 @@ export const Param = (paramName: string) =>
 	})();
 
 export const Session = (prop?: string) =>
-	createParamDecorator((context: HttpContext) => {
+	createParamDecorator((context: ExecutionContext) => {
 		if (prop) {
 			return context.get('session').get(prop);
 		} else {

@@ -9,7 +9,8 @@ import { Logger } from './logger.ts';
 import { MetadataHelper } from './metadata/helper.ts';
 import { ModuleMetadata, moduleMetadataKey } from './module/decorator.ts';
 import { HandlebarRenderer } from './renderer/handlebar.ts';
-import { DanetRouter } from './router/router.ts';
+import { DanetHTTPRouter } from './router/router.ts';
+import { WebSocketRouter } from './router/websocket/router.ts';
 import { Constructor } from './utils/constructor.ts';
 import { PossibleMiddlewareType } from './router/middleware/decorator.ts';
 import { globalMiddlewareContainer } from './router/middleware/global-container.ts';
@@ -33,11 +34,19 @@ export class DanetApplication {
 	private injector = injector;
 	private hookExecutor = new HookExecutor(this.injector);
 	private renderer = new HandlebarRenderer();
-	public danetRouter = new DanetRouter(
+	private guardExecutor = new GuardExecutor(this.injector);
+	private filterExecutor = new FilterExecutor(this.injector);
+	public httpRouter = new DanetHTTPRouter(
 		this.injector,
-		new GuardExecutor(this.injector),
-		new FilterExecutor(this.injector),
+		this.guardExecutor,
+		this.filterExecutor,
 		this.renderer,
+		this.app,
+	);
+	public websocketRouter = new WebSocketRouter(
+		this.injector,
+		this.guardExecutor,
+		this.filterExecutor,
 		this.app,
 	);
 	private controller: AbortController = new AbortController();
@@ -84,7 +93,24 @@ export class DanetApplication {
 		await this.injector.bootstrapModule(instance);
 
 		if (instance.controllers) {
-			this.danetRouter.registerControllers(instance.controllers);
+			instance.controllers.forEach((Controller) => {
+				const httpEndpoint = MetadataHelper.getMetadata<string>(
+					'endpoint',
+					Controller,
+				);
+				const webSocketEndpoint = MetadataHelper.getMetadata<string>(
+					'websocket-endpoint',
+					Controller,
+				);
+				if (webSocketEndpoint) {
+					this.websocketRouter.registerController(
+						Controller,
+						webSocketEndpoint,
+					);
+				} else {
+					this.httpRouter.registerController(Controller, httpEndpoint);
+				}
+			});
 		}
 	}
 

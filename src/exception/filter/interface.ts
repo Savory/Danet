@@ -1,5 +1,8 @@
 import { HttpContext } from '../../router/router.ts';
 
 export interface ExceptionFilter {
-	catch(exception: unknown, context: HttpContext): undefined | Response;
+	catch(
+		exception: unknown,
+		context: HttpContext,
+	): undefined | Response | { topic: string; data: unknown };
 }
