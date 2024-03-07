@@ -1,5 +1,3 @@
-## This is V2 running on Hono, V1 using oak has it's own branch
-
 <p align="center">
   <img src="https://user-images.githubusercontent.com/38007824/205580360-fa032554-5e9e-4266-8ec9-c78ca9a233bc.svg" width="250" alt="Danet Logo" />
 </p>
