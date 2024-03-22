@@ -1,4 +1,4 @@
-import { Application, Context, type HandlerInterface } from '../deps.ts';
+import { Application, Context, type HandlerInterface, streamSSE, SSEStreamingApi } from '../deps.ts';
 
 import { FilterExecutor } from '../exception/filter/executor.ts';
 import { HTTP_STATUS } from '../exception/http/enum.ts';
@@ -12,14 +12,12 @@ import { HandlebarRenderer } from '../renderer/handlebar.ts';
 import { Renderer } from '../renderer/interface.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { ControllerConstructor } from './controller/constructor.ts';
-import {
-	argumentResolverFunctionsMetadataKey,
-	Resolver,
-} from './controller/params/decorators.ts';
 import { trimSlash } from './utils.ts';
 import { MiddlewareExecutor } from './middleware/executor.ts';
 import { NextFunction } from './middleware/decorator.ts';
 import { resolveMethodParam } from './controller/params/resolver.ts';
+import { SSEMessage } from '../sse/message.ts';
+import { SSEEvent } from '../sse/event.ts';
 
 // deno-lint-ignore no-explicit-any
 export type Callback = (...args: any[]) => unknown;
@@ -180,6 +178,11 @@ export class DanetHTTPRouter {
 					| string = await controllerInstance[ControllerMethod.name](
 						...params,
 					);
+				const isSSE = MetadataHelper.getMetadata('SSE', ControllerMethod);
+				if (isSSE) {
+					context.res = this.handleSSE(executionContext, response as unknown as EventTarget);
+					return context.res;
+				}
 				return await this.sendResponse(
 					response,
 					ControllerMethod,
@@ -194,6 +197,28 @@ export class DanetHTTPRouter {
 				);
 			}
 		};
+	}
+
+	private handleSSE(executionContext: ExecutionContext, response: EventTarget) {
+		return streamSSE(executionContext, async (stream: SSEStreamingApi) => {
+			let canContinue = true;
+			(response as unknown as EventTarget).addEventListener('message', async (event) => {
+				const { detail: payload } = event as SSEEvent;
+				await stream.writeSSE({
+					data: payload.data,
+					event: payload.event,
+					id: payload.id,
+					retry: payload.retry,
+				  })
+				if (payload.event === 'close') {
+					canContinue = false;
+				}
+			});
+			while (canContinue) {
+				await stream.sleep(1)
+			}
+			await stream.close();
+		});
 	}
 
 	private async handleError(
