@@ -32,10 +32,10 @@ export const Options = createMappingDecorator('OPTIONS');
 export const Head = createMappingDecorator('HEAD');
 export const All = createMappingDecorator();
 export const SSE = (endpoint = ''): MethodDecorator => {
-		return (_target, _propertyKey, descriptor) => {
-			MetadataHelper.setMetadata('endpoint', endpoint, descriptor.value);
-			MetadataHelper.setMetadata('method', 'GET', descriptor.value);
-			MetadataHelper.setMetadata('SSE', true, descriptor.value);
-			return descriptor;
-		};
-}
+	return (_target, _propertyKey, descriptor) => {
+		MetadataHelper.setMetadata('endpoint', endpoint, descriptor.value);
+		MetadataHelper.setMetadata('method', 'GET', descriptor.value);
+		MetadataHelper.setMetadata('SSE', true, descriptor.value);
+		return descriptor;
+	};
+};

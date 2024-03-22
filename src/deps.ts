@@ -20,4 +20,4 @@ export {
 	SmartRouter,
 	TrieRouter,
 } from 'https://deno.land/x/hono/mod.ts';
-export { streamSSE, SSEStreamingApi } from 'https://deno.land/x/hono/helper.ts';
+export { SSEStreamingApi, streamSSE } from 'https://deno.land/x/hono/helper.ts';

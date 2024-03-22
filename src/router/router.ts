@@ -1,4 +1,10 @@
-import { Application, Context, type HandlerInterface, streamSSE, SSEStreamingApi } from '../deps.ts';
+import {
+	Application,
+	Context,
+	type HandlerInterface,
+	SSEStreamingApi,
+	streamSSE,
+} from '../deps.ts';
 
 import { FilterExecutor } from '../exception/filter/executor.ts';
 import { HTTP_STATUS } from '../exception/http/enum.ts';
@@ -180,7 +186,10 @@ export class DanetHTTPRouter {
 					);
 				const isSSE = MetadataHelper.getMetadata('SSE', ControllerMethod);
 				if (isSSE) {
-					context.res = this.handleSSE(executionContext, response as unknown as EventTarget);
+					context.res = this.handleSSE(
+						executionContext,
+						response as unknown as EventTarget,
+					);
 					return context.res;
 				}
 				return await this.sendResponse(
@@ -202,20 +211,23 @@ export class DanetHTTPRouter {
 	private handleSSE(executionContext: ExecutionContext, response: EventTarget) {
 		return streamSSE(executionContext, async (stream: SSEStreamingApi) => {
 			let canContinue = true;
-			(response as unknown as EventTarget).addEventListener('message', async (event) => {
-				const { detail: payload } = event as SSEEvent;
-				await stream.writeSSE({
-					data: payload.data,
-					event: payload.event,
-					id: payload.id,
-					retry: payload.retry,
-				  })
-				if (payload.event === 'close') {
-					canContinue = false;
-				}
-			});
+			(response as unknown as EventTarget).addEventListener(
+				'message',
+				async (event) => {
+					const { detail: payload } = event as SSEEvent;
+					await stream.writeSSE({
+						data: payload.data,
+						event: payload.event,
+						id: payload.id,
+						retry: payload.retry,
+					});
+					if (payload.event === 'close') {
+						canContinue = false;
+					}
+				},
+			);
 			while (canContinue) {
-				await stream.sleep(1)
+				await stream.sleep(1);
 			}
 			await stream.close();
 		});
