@@ -211,7 +211,7 @@ export class DanetHTTPRouter {
 	private handleSSE(executionContext: ExecutionContext, response: EventTarget) {
 		return streamSSE(executionContext, async (stream: SSEStreamingApi) => {
 			let canContinue = true;
-			(response as unknown as EventTarget).addEventListener(
+			response.addEventListener(
 				'message',
 				async (event) => {
 					const { detail: payload } = event as SSEEvent;
