@@ -105,10 +105,8 @@ export class DanetHTTPRouter {
 				path ? path : '/'
 			}`,
 		);
-		routerFn.call(
-			this.router,
+		routerFn(
 			path,
-			// @ts-ignore From hono 4.1.5, typescript says it expects 2 arguments but we got 4. Yet it works ? 
 			async (context: HttpContext, next: NextFunction) => {
 				const _id = crypto.randomUUID();
 				(context as ExecutionContext)._id = _id;
