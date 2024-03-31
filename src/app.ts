@@ -16,7 +16,7 @@ import { PossibleMiddlewareType } from './router/middleware/decorator.ts';
 import { globalMiddlewareContainer } from './router/middleware/global-container.ts';
 import { ModuleConstructor } from './module/constructor.ts';
 import { serveStatic } from './utils/serve-static.ts';
-import { cors } from 'https://deno.land/x/hono/middleware.ts';
+import { cors } from './deps.ts';
 import { DynamicModule } from './mod.ts';
 
 type CORSOptions = {

@@ -21,3 +21,4 @@ export {
 	TrieRouter,
 } from 'https://deno.land/x/hono/mod.ts';
 export { SSEStreamingApi, streamSSE } from 'https://deno.land/x/hono/helper.ts';
+export { cors } from 'https://deno.land/x/hono/middleware.ts'
