@@ -11,12 +11,14 @@ export {
 	Hono as Application,
 	type MiddlewareHandler,
 	type Next,
-} from 'https://deno.land/x/hono/mod.ts';
-export { type HandlerInterface } from 'https://deno.land/x/hono/types.ts';
-export { HonoRequest } from 'https://deno.land/x/hono/request.ts';
-export { getPath } from 'https://deno.land/x/hono/utils/url.ts';
+} from 'https://deno.land/x/hono@v4.1.5/mod.ts';
+export { type HandlerInterface } from 'https://deno.land/x/hono@v4.1.5/types.ts';
+export { HonoRequest } from 'https://deno.land/x/hono@v4.1.5/request.ts';
+export { getPath } from 'https://deno.land/x/hono@v4.1.5/utils/url.ts';
 export {
 	RegExpRouter,
 	SmartRouter,
 	TrieRouter,
-} from 'https://deno.land/x/hono/mod.ts';
+} from 'https://deno.land/x/hono@v4.1.5/mod.ts';
+export { SSEStreamingApi, streamSSE } from 'https://deno.land/x/hono@v4.1.5/helper.ts';
+export { cors } from 'https://deno.land/x/hono@v4.1.5/middleware.ts'
