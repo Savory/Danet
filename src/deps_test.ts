@@ -3,8 +3,8 @@ export {
 	assertSpyCallArg,
 	assertSpyCalls,
 	spy,
-} from 'https://deno.land/std@0.223.0/testing/mock.ts';
-export { FakeTime } from 'https://deno.land/std@0.223.0/testing/time.ts';
+} from 'https://deno.land/std@0.224.0/testing/mock.ts';
+export { FakeTime } from 'https://deno.land/std@0.224.0/testing/time.ts';
 export {
 	assertEquals,
 	assertInstanceOf,
@@ -12,8 +12,8 @@ export {
 	assertObjectMatch,
 	assertRejects,
 	assertThrows,
-} from 'https://deno.land/std@0.223.0/testing/asserts.ts';
-export * as path from 'https://deno.land/std@0.223.0/path/mod.ts';
+} from 'https://deno.land/std@0.224.0/testing/asserts.ts';
+export * as path from 'https://deno.land/std@0.224.0/path/mod.ts';
 export {
 	CookieStore,
 	Session as OakSession,
