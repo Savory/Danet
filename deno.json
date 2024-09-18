@@ -3,10 +3,8 @@
 	"version": "2.3.0",
 	"exports": "./mod.ts",
 	"lint": {
-		"files": {
-			"include": ["src/"],
-			"exclude": ["node_modules/", "./**/*.test.ts"]
-		},
+		"include": ["src/"],
+		"exclude": ["node_modules/", "./**/*.test.ts"],
 		"rules": {
 			"tags": ["recommended"],
 			"include": ["ban-untagged-todo"],
