@@ -21,7 +21,10 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        version: ["v1.x", canary]
+        
     steps:
       - name: Setup repo
         uses: actions/checkout@v3
@@ -30,7 +33,7 @@ jobs:
         # uses: denoland/setup-deno@v1
         uses: denoland/setup-deno@v1
         with:
-          deno-version: vx.x.x
+          deno-version: ${{ matrix.version }}
 
       # Uncomment this step to verify the use of 'deno fmt' on each commit.
       # - name: Verify formatting
