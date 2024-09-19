@@ -1,33 +1,57 @@
 {
-	"name": "@danet/core",
-	"version": "2.3.0",
-	"exports": "./mod.ts",
-	"lint": {
-		"include": ["src/"],
-		"exclude": ["node_modules/", "./**/*.test.ts"],
-		"rules": {
-			"tags": ["recommended"],
-			"include": ["ban-untagged-todo"],
-			"exclude": ["no-unused-vars"]
-		}
-	},
-	"fmt": {
-		"options": {
-			"singleQuote": true,
-			"useTabs": true
-		},
-		"files": {
-			"exclude": ["./node_modules/", "./coverage/", "./doc/"]
-		}
-	},
-	"compilerOptions": {
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
-		"jsx": "react-jsx",
-		"jsxImportSource": "preact"
-	},
-	"tasks": {
-		"test": "NO_LOG=true COOKIE_SECRET_KEY=mysecretkey deno test -A --unstable-kv --unstable-cron --coverage=coverage spec/**/*.test.ts",
-		"start:example": "deno run --allow-net --allow-env --watch example/run.ts"
-	}
+  "name": "@danet/core",
+  "version": "2.3.0",
+  "exports": "./mod.ts",
+  "lint": {
+    "include": [
+      "src/"
+    ],
+    "exclude": [
+      "node_modules/",
+      "./**/*.test.ts"
+    ],
+    "rules": {
+      "tags": [
+        "recommended"
+      ],
+      "include": [
+        "ban-untagged-todo"
+      ],
+      "exclude": [
+        "no-unused-vars"
+      ]
+    }
+  },
+  "fmt": {
+    "options": {
+      "singleQuote": true,
+      "useTabs": true
+    },
+    "files": {
+      "exclude": [
+        "./node_modules/",
+        "./coverage/",
+        "./doc/"
+      ]
+    }
+  },
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
+  },
+  "tasks": {
+    "test": "NO_LOG=true COOKIE_SECRET_KEY=mysecretkey deno test -A --unstable-kv --unstable-cron --coverage=coverage spec/**/*.test.ts",
+    "start:example": "deno run --allow-net --allow-env --watch example/run.ts"
+  },
+  "imports": {
+    "@std/testing": "jsr:@std/testing@0.223.0",
+    "validatte/": "https://deno.land/x/validatte@0.7.2/",
+    "@std/path": "jsr:@std/path@0.223.0",
+    "@std/fmt": "jsr:@std/fmt@0.223.0",
+    "deno_reflect/": "https://deno.land/x/deno_reflect/",
+    "@hono": "jsr:@hono/hono@4.6.3",
+    "handlebars/": "https://deno.land/x/handlebars/"
+  }
 }

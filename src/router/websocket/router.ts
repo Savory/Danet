@@ -108,7 +108,7 @@ export class WebSocketRouter {
 			const methodName = methods[0][0] as string;
 			const messageExecutionContext = {} as ExecutionContext;
 
-			messageExecutionContext.req = new HonoRequest(
+			(messageExecutionContext.req as any) = new HonoRequest(
 				fakeRequest,
 				getPath(fakeRequest),
 				// deno-lint-ignore no-explicit-any
