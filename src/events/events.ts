@@ -13,7 +13,7 @@ export class EventEmitter {
 		this.eventTarget = new EventTarget();
 	}
 
-	emit<P>(channelName: string, payload: P) {
+	emit<P>(channelName: string, payload: P): void {
 		const channels = Array.from(this.listenersRegistered.keys());
 		if (!channels.includes(channelName)) {
 			throw new Error(`No listener for '${channelName}' channel`);
@@ -27,7 +27,7 @@ export class EventEmitter {
 		);
 	}
 
-	subscribe<P>(channelName: string, listener: Listener<P>) {
+	subscribe<P>(channelName: string, listener: Listener<P>): void {
 		const eventListener = (ev: Event) => {
 			const { detail: payload } = ev as CustomEvent;
 			return listener(payload);
@@ -42,7 +42,7 @@ export class EventEmitter {
 		);
 	}
 
-	unsubscribe(channelName?: string) {
+	unsubscribe(channelName?: string): void {
 		this.logger.log(
 			`cleaning up event listeners for '${channelName ?? 'all'}' channel`,
 		);

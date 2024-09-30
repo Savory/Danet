@@ -7,7 +7,7 @@ import {
 	Module,
 	OnQueueMessage,
 } from '../mod.ts';
-import { assertEquals, assertSpyCall, spy } from '../src/deps_test.ts';
+import { assertEquals, assertSpyCall, spy, assertSpyCalls } from '../src/deps_test.ts';
 
 const sleep = (msec: number) =>
 	new Promise((resolve) => setTimeout(resolve, msec));
@@ -64,7 +64,7 @@ Deno.test('Queue Module', async (t) => {
 		assertEquals(await res.text(), 'OK');
 
 		await sleep(500);
-		assertEquals(callback.calls.length, 1);
+		assertSpyCalls(callback, 1)
 		assertSpyCall(callback, 0, {
 			args: [payload],
 		});

@@ -1,1 +1,1 @@
-export * from 'validatte/mod.ts';
+export * from 'validatte';

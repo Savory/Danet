@@ -4,6 +4,13 @@ import { validateObject } from '../../../deps.ts';
 import { Constructor } from '../../../mod.ts';
 import { NotValidBodyException } from '../../../exception/mod.ts';
 
+export type DecoratorFunction = (
+	// deno-lint-ignore no-explicit-any
+	target: Constructor | any,
+	propertyKey: string | symbol | undefined,
+	parameterIndex: number,
+) => void;
+
 export type OptionsResolver = {
 	// deno-lint-ignore no-explicit-any
 	target: Constructor | any;
@@ -17,55 +24,56 @@ export type Resolver = (
 ) => unknown | Promise<unknown>;
 
 export const argumentResolverFunctionsMetadataKey = 'argumentResolverFunctions';
-export const createParamDecorator = (
+export function createParamDecorator(
 	parameterResolver: Resolver,
 	additionalDecoratorAction?: ParameterDecorator,
-) =>
-() =>
-(
-	// deno-lint-ignore no-explicit-any
-	target: Constructor | any,
-	propertyKey: string | symbol | undefined,
-	parameterIndex: number,
-) => {
-	const argumentsResolverMap: Map<number, Resolver> =
-		MetadataHelper.getMetadata(
+): () => DecoratorFunction {
+	return () =>
+	(
+		// deno-lint-ignore no-explicit-any
+		target: Constructor | any,
+		propertyKey: string | symbol | undefined,
+		parameterIndex: number,
+	) => {
+		const argumentsResolverMap: Map<number, Resolver> =
+			MetadataHelper.getMetadata(
+				argumentResolverFunctionsMetadataKey,
+				target.constructor,
+				propertyKey,
+			) || new Map<number, Resolver>();
+
+		argumentsResolverMap.set(
+			parameterIndex,
+			(context) =>
+				parameterResolver(context, { target, propertyKey, parameterIndex }),
+		);
+
+		MetadataHelper.setMetadata(
 			argumentResolverFunctionsMetadataKey,
+			argumentsResolverMap,
 			target.constructor,
 			propertyKey,
-		) || new Map<number, Resolver>();
+		);
 
-	argumentsResolverMap.set(
-		parameterIndex,
-		(context) =>
-			parameterResolver(context, { target, propertyKey, parameterIndex }),
-	);
+		if (additionalDecoratorAction) {
+			additionalDecoratorAction(target, propertyKey, parameterIndex);
+		}
+	};
+}
 
-	MetadataHelper.setMetadata(
-		argumentResolverFunctionsMetadataKey,
-		argumentsResolverMap,
-		target.constructor,
-		propertyKey,
-	);
-
-	if (additionalDecoratorAction) {
-		additionalDecoratorAction(target, propertyKey, parameterIndex);
-	}
-};
-
-export const Req = createParamDecorator((context: ExecutionContext) => {
+export const Req: DecoratorFunction = createParamDecorator((context: ExecutionContext) => {
 	return context.req;
 });
 
-export const Res = createParamDecorator((context: ExecutionContext) => {
+export const Res: DecoratorFunction = createParamDecorator((context: ExecutionContext) => {
 	return context.res;
 });
 
-export const WebSocket = createParamDecorator((context: ExecutionContext) => {
+export const WebSocket: DecoratorFunction = createParamDecorator((context: ExecutionContext) => {
 	return context.websocket;
 });
 
-export const Header = (prop?: string) =>
+export const Header: ((prop?: string) => DecoratorFunction)  = (prop?: string) =>
 	createParamDecorator((context: ExecutionContext) => {
 		if (!context.req.raw.headers) {
 			return null;
@@ -75,7 +83,7 @@ export const Header = (prop?: string) =>
 
 export const BODY_TYPE_KEY = 'body-type';
 
-export const Body = (prop?: string) =>
+export const Body: ((prop?: string) => DecoratorFunction) = (prop?: string) =>
 	createParamDecorator(
 		async (context: ExecutionContext, opts?: OptionsResolver) => {
 			if (!opts) {
