@@ -22,4 +22,4 @@ jobs:
           deno-version: canary
 
       - name: Publish package
-        run: deno publish --allow-slow-types
+        run: deno publish
