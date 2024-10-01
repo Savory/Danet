@@ -1,11 +1,12 @@
 {
 	"name": "@danet/core",
-	"version": "2.4.3",
+	"version": "2.4.4",
 	"exports": {
 		".": "./mod.ts",
 		"./metadata": "./src/metadata/mod.ts",
 		"./validation": "./validation.ts",
-		"./hook": "./src/hook/mod.ts"
+		"./hook": "./src/hook/mod.ts",
+		"./logger": "./src/logger.ts"
   	},
 	"lint": {
 		"include": [
