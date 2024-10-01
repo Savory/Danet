@@ -51,5 +51,8 @@
 		"deno_reflect": "jsr:@dx/reflect@0.2.14",
 		"@hono": "jsr:@hono/hono@4.6.3",
 		"@danet/handlebars": "jsr:@danet/handlebars@0.0.1"
+	},
+	"publish": {
+		"exclude": ["./coverage/", "./spec", ".github", ".vscode", "./example"]
 	}
 }
