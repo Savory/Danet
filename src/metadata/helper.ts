@@ -23,7 +23,7 @@ export class MetadataHelper {
 		value: unknown,
 		target: unknown,
 		property?: string | symbol,
-	) {
+	): void {
 		if (property) {
 			return Reflect.defineMetadata(key, value, target, property);
 		}
