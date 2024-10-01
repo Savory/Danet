@@ -50,6 +50,6 @@
 		"@std/fmt": "jsr:@std/fmt@0.223.0",
 		"deno_reflect": "jsr:@dx/reflect@0.2.14",
 		"@hono": "jsr:@hono/hono@4.6.3",
-		"handlebars/": "https://deno.land/x/handlebars/"
+		"@danet/handlebars": "jsr:@danet/handlebars@0.0.1"
 	}
 }

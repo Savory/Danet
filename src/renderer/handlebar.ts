@@ -1,5 +1,5 @@
 import { Renderer } from './interface.ts';
-import { Handlebars } from 'handlebars/mod.ts';
+import { Handlebars } from '@danet/handlebars';
 
 const defaultOption = {
 	baseDir: 'views',
