@@ -217,8 +217,8 @@ export function Query(
 	}))();
 }
 
-export const Param = (paramName: string) =>
-	createParamDecorator((context: ExecutionContext) => {
+export function Param(paramName: string): DecoratorFunction {
+	return createParamDecorator((context: ExecutionContext) => {
 		const params = context.req.param();
 		if (paramName) {
 			return params?.[paramName];
@@ -226,12 +226,14 @@ export const Param = (paramName: string) =>
 			return params;
 		}
 	})();
+}
 
-export const Session = (prop?: string) =>
-	createParamDecorator((context: ExecutionContext) => {
+export function Session(prop?: string): DecoratorFunction {
+	return createParamDecorator((context: ExecutionContext) => {
 		if (prop) {
 			return context.get('session').get(prop);
 		} else {
 			return context.get('session');
 		}
-	})();
+	})()
+};

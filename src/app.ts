@@ -36,14 +36,14 @@ export class DanetApplication {
 	private renderer = new HandlebarRenderer();
 	private guardExecutor = new GuardExecutor(this.injector);
 	private filterExecutor = new FilterExecutor(this.injector);
-	public httpRouter = new DanetHTTPRouter(
+	public httpRouter: DanetHTTPRouter = new DanetHTTPRouter(
 		this.injector,
 		this.guardExecutor,
 		this.filterExecutor,
 		this.renderer,
 		this.app,
 	);
-	public websocketRouter = new WebSocketRouter(
+	public websocketRouter: WebSocketRouter = new WebSocketRouter(
 		this.injector,
 		this.guardExecutor,
 		this.filterExecutor,

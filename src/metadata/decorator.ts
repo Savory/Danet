@@ -1,13 +1,15 @@
 import { ControllerConstructor } from '../router/controller/constructor.ts';
 import { MetadataHelper } from './helper.ts';
 
-export const SetMetadata = (key: string, value: unknown): (
+export type MetadataFunction =  (
 	// deno-lint-ignore ban-types
 	target: ControllerConstructor | Object,
 	propertyKey?: string | symbol,
 	// deno-lint-ignore no-explicit-any
 	descriptor?: TypedPropertyDescriptor<any>,
-) => void =>
+) => void;
+
+export const SetMetadata = (key: string, value: unknown): MetadataFunction =>
 (
 	// deno-lint-ignore ban-types
 	target: ControllerConstructor | Object,

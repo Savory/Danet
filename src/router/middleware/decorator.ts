@@ -1,7 +1,7 @@
 import type { MiddlewareHandler as HonoMiddleware } from '../../deps.ts';
 import { ExecutionContext } from '../router.ts';
 import { InjectableConstructor } from '../../injector/injectable/constructor.ts';
-import { SetMetadata } from '../../metadata/decorator.ts';
+import { MetadataFunction, SetMetadata } from '../../metadata/decorator.ts';
 
 export interface DanetMiddleware {
 	action(ctx: ExecutionContext, next: NextFunction): Promise<unknown> | unknown;
@@ -20,5 +20,6 @@ export type PossibleMiddlewareType =
 	| MiddlewareFunction;
 export const isMiddlewareClass = (s: PossibleMiddlewareType) => !!s.prototype;
 export const middlewareMetadataKey = 'middlewares';
-export const Middleware = (...middlewares: PossibleMiddlewareType[]) =>
-	SetMetadata(middlewareMetadataKey, middlewares);
+export function Middleware(...middlewares: PossibleMiddlewareType[]): MetadataFunction{
+	return SetMetadata(middlewareMetadataKey, middlewares);
+}

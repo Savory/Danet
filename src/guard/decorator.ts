@@ -1,6 +1,7 @@
 import { Constructor } from '../utils/constructor.ts';
-import { SetMetadata } from '../metadata/decorator.ts';
+import { MetadataFunction, SetMetadata } from '../metadata/decorator.ts';
 
 export const guardMetadataKey = 'authGuards';
-export const UseGuard = (guard: Constructor) =>
-	SetMetadata(guardMetadataKey, guard);
+export function UseGuard(guard: Constructor): MetadataFunction {
+	return SetMetadata(guardMetadataKey, guard);
+}

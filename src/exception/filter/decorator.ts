@@ -1,9 +1,11 @@
 import { Constructor } from '../../utils/constructor.ts';
-import { SetMetadata } from '../../metadata/decorator.ts';
+import { MetadataFunction, SetMetadata } from '../../metadata/decorator.ts';
 
 export const filterExceptionMetadataKey = 'filterException';
-export const UseFilter = (filter: Constructor) =>
-	SetMetadata(filterExceptionMetadataKey, filter);
+export function UseFilter(filter: Constructor): MetadataFunction {
+	return SetMetadata(filterExceptionMetadataKey, filter);
+}
 export const filterCatchTypeMetadataKey = 'errorCaught';
-export const Catch = (ErrorType: Constructor) =>
-	SetMetadata(filterCatchTypeMetadataKey, ErrorType);
+export function Catch(ErrorType: Constructor): MetadataFunction {
+	return	SetMetadata(filterCatchTypeMetadataKey, ErrorType);
+}

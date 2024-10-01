@@ -22,15 +22,15 @@ export class KvQueue implements OnAppClose, OnAppBootstrap {
 		this.kv = await Deno.openKv(this.name);
 	}
 
-	public sendMessage(type: string, data: unknown) {
+	public sendMessage(type: string, data: unknown): Promise<unknown> {
 		return this.kv.enqueue({ type, data });
 	}
 
-	public addListener(type: string, callback: Listener) {
+	public addListener(type: string, callback: Listener): void {
 		this.listenersMap.set(type, callback);
 	}
 
-	public attachListeners() {
+	public attachListeners(): void {
 		this.kv.listenQueue((msg: QueueEvent) => {
 			const type = msg.type;
 			const callback = this.listenersMap.get(type);

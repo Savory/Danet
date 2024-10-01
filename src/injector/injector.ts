@@ -38,7 +38,7 @@ export class Injector {
 	// deno-lint-ignore no-explicit-any
 	public injectables: Array<any> = [];
 
-	public getAll() {
+	public getAll(): typeof this.resolved {
 		return this.resolved;
 	}
 

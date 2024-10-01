@@ -1,4 +1,4 @@
-import { SetMetadata } from '../../metadata/decorator.ts';
+import { MetadataFunction, SetMetadata } from '../../metadata/decorator.ts';
 
 export enum SCOPE {
 	GLOBAL = 'GLOBAL',
@@ -12,6 +12,8 @@ export interface InjectableOption {
 
 export const injectionData = 'dependency-injection';
 
-export const Injectable = <T>(
+export function Injectable<T>(
 	options: InjectableOption = { scope: SCOPE.GLOBAL },
-) => SetMetadata(injectionData, options);
+): MetadataFunction {
+	return SetMetadata(injectionData, options)
+}

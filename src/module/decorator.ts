@@ -19,7 +19,7 @@ export interface DynamicModule extends ModuleMetadata {
 
 export const moduleMetadataKey = 'module';
 
-export function Module<T>(options: ModuleMetadata) {
+export function Module<T>(options: ModuleMetadata): ((Type: Constructor<T>) => void)  {
 	return (Type: Constructor<T>): void => {
 		MetadataHelper.setMetadata(moduleMetadataKey, options, Type);
 	};

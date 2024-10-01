@@ -153,7 +153,7 @@ export class DanetHTTPRouter {
 	public handleRoute(
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
-	) {
+	): ((context: HttpContext) => Promise<Response>) {
 		return async (context: HttpContext) => {
 			(context as ExecutionContext)._id = context.get('_id');
 			(context as ExecutionContext).getClass = () => Controller;
