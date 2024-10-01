@@ -6,6 +6,10 @@
 [![codecov](https://codecov.io/gh/Savory/Danet/branch/main/graph/badge.svg?token=R6WXVC669Z)](https://codecov.io/gh/Savory/Danet)
 ![Made for Deno](https://img.shields.io/badge/made%20for-Deno-6B82F6?style=flat-square)
 
+## Warning
+
+From version 2.4.0, Danet is only available via [JSR](https://jsr.io/) at [@danet/core](https://jsr.io/@danet/core). It's a step closer to runtime agnosticism. 
+
 ## Description
 
 Danet is a framework heavily inspired by a NodeJS Framework called
