@@ -12,7 +12,9 @@ export type HttpMethod =
 export function Controller<T>(endpoint = ''): MetadataFunction {
 	return SetMetadata('endpoint', endpoint);
 }
-function createMappingDecorator(method?: HttpMethod): ((endpoint: string) => MethodDecorator) {
+type MappingDecoratorFunction = ((endpoint?: string) => MethodDecorator);
+
+function createMappingDecorator(method?: HttpMethod): MappingDecoratorFunction {
 	return (endpoint = ''): MethodDecorator => {
 		return (_target, _propertyKey, descriptor) => {
 			MetadataHelper.setMetadata('endpoint', endpoint, descriptor.value);
@@ -24,15 +26,15 @@ function createMappingDecorator(method?: HttpMethod): ((endpoint: string) => Met
 	};
 }
 
-export const Get: ((endpoint: string) => MethodDecorator) = createMappingDecorator('GET');
-export const Post: ((endpoint: string) => MethodDecorator) = createMappingDecorator('POST');
-export const Put: ((endpoint: string) => MethodDecorator) = createMappingDecorator('PUT');
-export const Patch: ((endpoint: string) => MethodDecorator) = createMappingDecorator('PATCH');
-export const Delete: ((endpoint: string) => MethodDecorator) = createMappingDecorator('DELETE');
-export const Options: ((endpoint: string) => MethodDecorator) = createMappingDecorator('OPTIONS');
-export const Head: ((endpoint: string) => MethodDecorator) = createMappingDecorator('HEAD');
-export const All: ((endpoint: string) => MethodDecorator) = createMappingDecorator();
-export const SSE: ((endpoint: string) => MethodDecorator) = (endpoint = ''): MethodDecorator => {
+export const Get: MappingDecoratorFunction = createMappingDecorator('GET');
+export const Post: MappingDecoratorFunction = createMappingDecorator('POST');
+export const Put: MappingDecoratorFunction = createMappingDecorator('PUT');
+export const Patch: MappingDecoratorFunction = createMappingDecorator('PATCH');
+export const Delete: MappingDecoratorFunction = createMappingDecorator('DELETE');
+export const Options: MappingDecoratorFunction = createMappingDecorator('OPTIONS');
+export const Head: MappingDecoratorFunction = createMappingDecorator('HEAD');
+export const All: MappingDecoratorFunction = createMappingDecorator();
+export const SSE: MappingDecoratorFunction = (endpoint = ''): MethodDecorator => {
 	return (_target, _propertyKey, descriptor) => {
 		MetadataHelper.setMetadata('endpoint', endpoint, descriptor.value);
 		MetadataHelper.setMetadata('method', 'GET', descriptor.value);
