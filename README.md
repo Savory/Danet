@@ -49,13 +49,21 @@ We always welcome contributors, feel free to submit a new feature or report a
 bug on our [Github Repository](https://github.com/Savory/Danet) and
 [join our discord](https://discord.gg/Q7ZHuDPgjA)
 
-## How to start
+## Installation
+
+```sh
+  deno install --global -A -n danet jsr:@danet/cli
+  danet new <my-project>
+```
+
+## Documentation
 
 [Use our CLI](https://github.com/Savory/Danet-CLI)
 
 [Read our documentation](https://danet.land)
 
 [Read our blog](https://savory.github.io/)
+
 
 ## Contributing
 
