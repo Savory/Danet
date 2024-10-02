@@ -1,9 +1,10 @@
 import { OnAppBootstrap, OnAppClose } from '../hook/interfaces.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
-import { InjectableConstructor, injector, Logger, Module } from '../mod.ts';
+import { injector, Logger, Module } from '../mod.ts';
 import { eventListenerMetadataKey } from './constants.ts';
 import { EventEmitter } from './events.ts';
 
+/* Use this module if you want to use EventEmitter https://danet.land/techniques/events.html */
 @Module({
 	injectables: [EventEmitter],
 })
