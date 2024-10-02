@@ -7,7 +7,7 @@
 		"./validation": "./validation.ts",
 		"./hook": "./src/hook/mod.ts",
 		"./logger": "./src/logger.ts"
-  	},
+	},
 	"lint": {
 		"include": [
 			"src/"

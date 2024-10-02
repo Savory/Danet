@@ -19,5 +19,5 @@ export const filterCatchTypeMetadataKey = 'errorCaught';
  * @returns A metadata function that sets the metadata for the error type to catch.
  */
 export function Catch(ErrorType: Constructor): MetadataFunction {
-	return	SetMetadata(filterCatchTypeMetadataKey, ErrorType);
+	return SetMetadata(filterCatchTypeMetadataKey, ErrorType);
 }

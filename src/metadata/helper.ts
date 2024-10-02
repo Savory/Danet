@@ -1,14 +1,32 @@
-/** 
+/**
  * metadata
  * Provides metadata helper functions
  * Dependencies: Reflect
  * @module
-*/ 
+ */
 
 import { Reflect } from '../deps.ts';
 
+/**
+ * A helper class for managing metadata on objects and their properties.
+ *
+ * This class provides static methods to determine if a value is an object,
+ * retrieve metadata from an object or its property, and set metadata on an
+ * object or its property.
+ *
+ * @example
+ * ```ts
+ * // Check if a value is an object
+ * const isObject = MetadataHelper.IsObject(someValue);
+ *
+ * // Retrieve metadata from an object
+ * const metadataValue = MetadataHelper.getMetadata<string>('metadataKey', someObject);
+ *
+ * // Set metadata on an object
+ * MetadataHelper.setMetadata('metadataKey', 'metadataValue', someObject);
+ * ```
+ */
 export class MetadataHelper {
-
 	/**
 	 * Determines if the provided value is an object.
 	 *
@@ -53,7 +71,7 @@ export class MetadataHelper {
 	 * @param target - The target object to set the metadata on.
 	 * @param property - Optional. The property of the target object to set the metadata on.
 	 * If not provided, the metadata is set on the target object itself.
-	 * 
+	 *
 	 * @returns void
 	 */
 	static setMetadata(

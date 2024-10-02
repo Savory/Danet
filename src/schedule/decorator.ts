@@ -8,7 +8,7 @@ import { CronString } from './types.ts';
 
 /**
  * Assigns a cron schedule to a method. The method will be executed according to the provided cron schedule.
- * 
+ *
  * @param cron - A string representing the cron schedule.
  * @returns A method decorator that sets the metadata key with the provided cron schedule.
  */

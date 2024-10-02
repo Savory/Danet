@@ -1,8 +1,8 @@
-/**   
-** metadataDecorator
-** Provides decorator to set Metadata
-** @module
-*/
+/**
+ ** metadataDecorator
+ ** Provides decorator to set Metadata
+ ** @module
+ */
 
 import { ControllerConstructor } from '../router/controller/constructor.ts';
 import { MetadataHelper } from './helper.ts';
@@ -14,7 +14,7 @@ import { MetadataHelper } from './helper.ts';
  * @param propertyKey - An optional property key for the target.
  * @param descriptor - An optional property descriptor for the target.
  */
-export type MetadataFunction =  (
+export type MetadataFunction = (
 	// deno-lint-ignore ban-types
 	target: ControllerConstructor | Object,
 	propertyKey?: string | symbol,

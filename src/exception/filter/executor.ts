@@ -11,11 +11,9 @@ import { Injector } from '../../injector/injector.ts';
 import { WebSocketPayload } from '../../router/websocket/payload.ts';
 
 /**
- * @class FilterExecutor
- * @description
- * The `FilterExecutor` class is responsible for executing exception filters
+ * Responsible for executing exception filters
  * based on metadata and handling errors within the context of an HTTP request.
- * It utilizes an injector to manage dependencies and retrieve filter instances.
+ * It utilizes the injector to manage dependencies and retrieve filter instances.
  *
  * @constructor
  * @param {Injector} injector - The dependency injector used to manage and retrieve filter instances.

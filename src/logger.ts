@@ -9,12 +9,12 @@ import { Injectable } from './injector/injectable/decorator.ts';
 
 /**
  * A Logger class to handle logging with optional namespace and color-coded output.
- * 
+ *
  * @remarks
  * This class provides methods to log messages with different severity levels (log, error, warn).
  * It supports optional namespaces for better context in logs and uses color functions to
  * differentiate log types.
- * 
+ *
  * @example
  * ```typescript
  * const logger = new Logger('MyNamespace');

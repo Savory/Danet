@@ -1,6 +1,6 @@
 /**
  * @module
- * 
+ *
  * A probably too big module that exports almost everything.
  */
 

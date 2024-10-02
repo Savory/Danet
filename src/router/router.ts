@@ -27,11 +27,14 @@ import { SSEEvent } from '../sse/event.ts';
 // deno-lint-ignore no-explicit-any
 export type Callback = (...args: any[]) => unknown;
 
+/**
+ * Type Alias for Hono's Context
+ */
 export type HttpContext = Context;
 
 /**
  * Represents Danet's execution context for an HTTP request, extending Hono's HttpContext.
- * 
+ *
  * @typedef {Object} ExecutionContext
  * @property {string} _id - Unique identifier for the execution context.
  * @property {Function} getHandler - Function to retrieve the handler for the current context.
@@ -54,7 +57,7 @@ export type ExecutionContext = HttpContext & {
 /**
  * The `DanetHTTPRouter` class is responsible for managing HTTP routes and their associated handlers.
  * It provides methods to register controllers, set route prefixes, and handle middleware, guards, filters, and responses.
- * 
+ *
  * @class DanetHTTPRouter
  */
 export class DanetHTTPRouter {
@@ -180,7 +183,7 @@ export class DanetHTTPRouter {
 	private handleRoute(
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
-	): ((context: HttpContext) => Promise<Response>) {
+	): (context: HttpContext) => Promise<Response> {
 		return async (context: HttpContext) => {
 			(context as ExecutionContext)._id = context.get('_id');
 			(context as ExecutionContext).getClass = () => Controller;

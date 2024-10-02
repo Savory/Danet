@@ -12,16 +12,16 @@ import { HTTP_STATUS } from './enum.ts';
  * @extends {Error}
  */
 export class HttpException extends Error {
-    /**
-     * Creates an instance of HttpException.
-     * 
-     * @param {number} status - The HTTP status code associated with the exception.
-     * @param {string} description - A brief description of the exception.
-     */
-    constructor(readonly status: number, description: string) {
-        super(`${status} - ${description}`);
-        this.name = this.constructor.name;
-    }
+	/**
+	 * Creates an instance of HttpException.
+	 *
+	 * @param {number} status - The HTTP status code associated with the exception.
+	 * @param {string} description - A brief description of the exception.
+	 */
+	constructor(readonly status: number, description: string) {
+		super(`${status} - ${description}`);
+		this.name = this.constructor.name;
+	}
 }
 
 /**
@@ -32,12 +32,12 @@ export class HttpException extends Error {
  * @extends {HttpException}
  */
 export class ForbiddenException extends HttpException {
-    /**
-     * Creates an instance of ForbiddenException.
-     */
-    constructor() {
-        super(HTTP_STATUS.FORBIDDEN, 'Forbidden');
-    }
+	/**
+	 * Creates an instance of ForbiddenException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.FORBIDDEN, 'Forbidden');
+	}
 }
 
 /**
@@ -48,12 +48,12 @@ export class ForbiddenException extends HttpException {
  * @extends {HttpException}
  */
 export class BadRequestException extends HttpException {
-    /**
-     * Creates an instance of BadRequestException.
-     */
-    constructor() {
-        super(HTTP_STATUS.BAD_REQUEST, 'Bad request');
-    }
+	/**
+	 * Creates an instance of BadRequestException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.BAD_REQUEST, 'Bad request');
+	}
 }
 
 /**
@@ -64,12 +64,12 @@ export class BadRequestException extends HttpException {
  * @extends {HttpException}
  */
 export class UnauthorizedException extends HttpException {
-    /**
-     * Creates an instance of UnauthorizedException.
-     */
-    constructor() {
-        super(HTTP_STATUS.UNAUTHORIZED, 'Unauthorized');
-    }
+	/**
+	 * Creates an instance of UnauthorizedException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.UNAUTHORIZED, 'Unauthorized');
+	}
 }
 
 /**
@@ -80,12 +80,12 @@ export class UnauthorizedException extends HttpException {
  * @extends {HttpException}
  */
 export class PaymentRequiredException extends HttpException {
-    /**
-     * Creates an instance of PaymentRequiredException.
-     */
-    constructor() {
-        super(HTTP_STATUS.PAYMENT_REQUIRED, 'Payment required');
-    }
+	/**
+	 * Creates an instance of PaymentRequiredException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.PAYMENT_REQUIRED, 'Payment required');
+	}
 }
 
 /**
@@ -96,12 +96,12 @@ export class PaymentRequiredException extends HttpException {
  * @extends {HttpException}
  */
 export class NotFoundException extends HttpException {
-    /**
-     * Creates an instance of NotFoundException.
-     */
-    constructor() {
-        super(HTTP_STATUS.NOT_FOUND, 'Not found');
-    }
+	/**
+	 * Creates an instance of NotFoundException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.NOT_FOUND, 'Not found');
+	}
 }
 
 /**
@@ -112,12 +112,12 @@ export class NotFoundException extends HttpException {
  * @extends {HttpException}
  */
 export class MethodNotAllowedException extends HttpException {
-    /**
-     * Creates an instance of MethodNotAllowedException.
-     */
-    constructor() {
-        super(HTTP_STATUS.METHOD_NOT_ALLOWED, 'Method not allowed');
-    }
+	/**
+	 * Creates an instance of MethodNotAllowedException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.METHOD_NOT_ALLOWED, 'Method not allowed');
+	}
 }
 
 /**
@@ -128,12 +128,12 @@ export class MethodNotAllowedException extends HttpException {
  * @extends {HttpException}
  */
 export class NotAcceptableException extends HttpException {
-    /**
-     * Creates an instance of NotAcceptableException.
-     */
-    constructor() {
-        super(HTTP_STATUS.NOT_ACCEPTABLE, 'Not acceptable');
-    }
+	/**
+	 * Creates an instance of NotAcceptableException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.NOT_ACCEPTABLE, 'Not acceptable');
+	}
 }
 
 /**
@@ -144,15 +144,15 @@ export class NotAcceptableException extends HttpException {
  * @extends {HttpException}
  */
 export class ProxyAuthenticationRequiredException extends HttpException {
-    /**
-     * Creates an instance of ProxyAuthenticationRequiredException.
-     */
-    constructor() {
-        super(
-            HTTP_STATUS.PROXY_AUTHENTICATION_REQUIRED,
-            'Proxy authentication required',
-        );
-    }
+	/**
+	 * Creates an instance of ProxyAuthenticationRequiredException.
+	 */
+	constructor() {
+		super(
+			HTTP_STATUS.PROXY_AUTHENTICATION_REQUIRED,
+			'Proxy authentication required',
+		);
+	}
 }
 
 /**
@@ -163,12 +163,12 @@ export class ProxyAuthenticationRequiredException extends HttpException {
  * @extends {HttpException}
  */
 export class RequestTimeoutException extends HttpException {
-    /**
-     * Creates an instance of RequestTimeoutException.
-     */
-    constructor() {
-        super(HTTP_STATUS.REQUEST_TIMEOUT, 'Request timeout');
-    }
+	/**
+	 * Creates an instance of RequestTimeoutException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.REQUEST_TIMEOUT, 'Request timeout');
+	}
 }
 
 /**
@@ -179,12 +179,12 @@ export class RequestTimeoutException extends HttpException {
  * @extends {HttpException}
  */
 export class ConflictException extends HttpException {
-    /**
-     * Creates an instance of ConflictException.
-     */
-    constructor() {
-        super(HTTP_STATUS.CONFLICT, 'Conflict');
-    }
+	/**
+	 * Creates an instance of ConflictException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.CONFLICT, 'Conflict');
+	}
 }
 
 /**
@@ -195,12 +195,12 @@ export class ConflictException extends HttpException {
  * @extends {HttpException}
  */
 export class GoneException extends HttpException {
-    /**
-     * Creates an instance of GoneException.
-     */
-    constructor() {
-        super(HTTP_STATUS.GONE, 'Gone');
-    }
+	/**
+	 * Creates an instance of GoneException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.GONE, 'Gone');
+	}
 }
 
 /**
@@ -211,12 +211,12 @@ export class GoneException extends HttpException {
  * @extends {HttpException}
  */
 export class LengthRequiredException extends HttpException {
-    /**
-     * Creates an instance of LengthRequiredException.
-     */
-    constructor() {
-        super(HTTP_STATUS.LENGTH_REQUIRED, 'Length required');
-    }
+	/**
+	 * Creates an instance of LengthRequiredException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.LENGTH_REQUIRED, 'Length required');
+	}
 }
 
 /**
@@ -227,12 +227,12 @@ export class LengthRequiredException extends HttpException {
  * @extends {HttpException}
  */
 export class PreconditionFailedException extends HttpException {
-    /**
-     * Creates an instance of PreconditionFailedException.
-     */
-    constructor() {
-        super(HTTP_STATUS.PRECONDITION_FAILED, 'Precondition failed');
-    }
+	/**
+	 * Creates an instance of PreconditionFailedException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.PRECONDITION_FAILED, 'Precondition failed');
+	}
 }
 
 /**
@@ -243,12 +243,12 @@ export class PreconditionFailedException extends HttpException {
  * @extends {HttpException}
  */
 export class PayloadTooLargeException extends HttpException {
-    /**
-     * Creates an instance of PayloadTooLargeException.
-     */
-    constructor() {
-        super(HTTP_STATUS.PAYLOAD_TOO_LARGE, 'Payload too large');
-    }
+	/**
+	 * Creates an instance of PayloadTooLargeException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.PAYLOAD_TOO_LARGE, 'Payload too large');
+	}
 }
 
 /**
@@ -259,12 +259,12 @@ export class PayloadTooLargeException extends HttpException {
  * @extends {HttpException}
  */
 export class URITooLongException extends HttpException {
-    /**
-     * Creates an instance of URITooLongException.
-     */
-    constructor() {
-        super(HTTP_STATUS.URI_TOO_LONG, 'URI too long');
-    }
+	/**
+	 * Creates an instance of URITooLongException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.URI_TOO_LONG, 'URI too long');
+	}
 }
 
 /**
@@ -275,12 +275,12 @@ export class URITooLongException extends HttpException {
  * @extends {HttpException}
  */
 export class UnsupportedMediaTypeException extends HttpException {
-    /**
-     * Creates an instance of UnsupportedMediaTypeException.
-     */
-    constructor() {
-        super(HTTP_STATUS.UNSUPPORTED_MEDIA_TYPE, 'Unsupported media type');
-    }
+	/**
+	 * Creates an instance of UnsupportedMediaTypeException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.UNSUPPORTED_MEDIA_TYPE, 'Unsupported media type');
+	}
 }
 
 /**
@@ -291,15 +291,15 @@ export class UnsupportedMediaTypeException extends HttpException {
  * @extends {HttpException}
  */
 export class RequestedRangeNotSatisfiableException extends HttpException {
-    /**
-     * Creates an instance of RequestedRangeNotSatisfiableException.
-     */
-    constructor() {
-        super(
-            HTTP_STATUS.REQUESTED_RANGE_NOT_SATISFIABLE,
-            'Requested range not statisfiable',
-        );
-    }
+	/**
+	 * Creates an instance of RequestedRangeNotSatisfiableException.
+	 */
+	constructor() {
+		super(
+			HTTP_STATUS.REQUESTED_RANGE_NOT_SATISFIABLE,
+			'Requested range not statisfiable',
+		);
+	}
 }
 
 /**
@@ -310,12 +310,12 @@ export class RequestedRangeNotSatisfiableException extends HttpException {
  * @extends {HttpException}
  */
 export class ExpectationFailedException extends HttpException {
-    /**
-     * Creates an instance of ExpectationFailedException.
-     */
-    constructor() {
-        super(HTTP_STATUS.EXPECTATION_FAILED, 'Expectation failed');
-    }
+	/**
+	 * Creates an instance of ExpectationFailedException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.EXPECTATION_FAILED, 'Expectation failed');
+	}
 }
 
 /**
@@ -326,12 +326,12 @@ export class ExpectationFailedException extends HttpException {
  * @extends {HttpException}
  */
 export class IAmATeapotException extends HttpException {
-    /**
-     * Creates an instance of IAmATeapotException.
-     */
-    constructor() {
-        super(HTTP_STATUS.I_AM_A_TEAPOT, 'I am a teapot');
-    }
+	/**
+	 * Creates an instance of IAmATeapotException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.I_AM_A_TEAPOT, 'I am a teapot');
+	}
 }
 
 /**
@@ -342,12 +342,12 @@ export class IAmATeapotException extends HttpException {
  * @extends {HttpException}
  */
 export class MisdirectedException extends HttpException {
-    /**
-     * Creates an instance of MisdirectedException.
-     */
-    constructor() {
-        super(HTTP_STATUS.MISDIRECTED, 'Misdirected');
-    }
+	/**
+	 * Creates an instance of MisdirectedException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.MISDIRECTED, 'Misdirected');
+	}
 }
 
 /**
@@ -358,12 +358,12 @@ export class MisdirectedException extends HttpException {
  * @extends {HttpException}
  */
 export class UnprocessableEntityException extends HttpException {
-    /**
-     * Creates an instance of UnprocessableEntityException.
-     */
-    constructor() {
-        super(HTTP_STATUS.UNPROCESSABLE_ENTITY, 'Unprocessable entity');
-    }
+	/**
+	 * Creates an instance of UnprocessableEntityException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.UNPROCESSABLE_ENTITY, 'Unprocessable entity');
+	}
 }
 
 /**
@@ -374,12 +374,12 @@ export class UnprocessableEntityException extends HttpException {
  * @extends {HttpException}
  */
 export class FailedDependencyException extends HttpException {
-    /**
-     * Creates an instance of FailedDependencyException.
-     */
-    constructor() {
-        super(HTTP_STATUS.FAILED_DEPENDENCY, 'Failed dependency');
-    }
+	/**
+	 * Creates an instance of FailedDependencyException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.FAILED_DEPENDENCY, 'Failed dependency');
+	}
 }
 
 /**
@@ -390,12 +390,12 @@ export class FailedDependencyException extends HttpException {
  * @extends {HttpException}
  */
 export class PreconditionRequiredException extends HttpException {
-    /**
-     * Creates an instance of PreconditionRequiredException.
-     */
-    constructor() {
-        super(HTTP_STATUS.PRECONDITION_REQUIRED, 'Precondition required');
-    }
+	/**
+	 * Creates an instance of PreconditionRequiredException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.PRECONDITION_REQUIRED, 'Precondition required');
+	}
 }
 
 /**
@@ -406,12 +406,12 @@ export class PreconditionRequiredException extends HttpException {
  * @extends {HttpException}
  */
 export class TooManyRequestsException extends HttpException {
-    /**
-     * Creates an instance of TooManyRequestsException.
-     */
-    constructor() {
-        super(HTTP_STATUS.TOO_MANY_REQUESTS, 'Too many requests');
-    }
+	/**
+	 * Creates an instance of TooManyRequestsException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.TOO_MANY_REQUESTS, 'Too many requests');
+	}
 }
 
 /**
@@ -422,12 +422,12 @@ export class TooManyRequestsException extends HttpException {
  * @extends {HttpException}
  */
 export class InternalServerErrorException extends HttpException {
-    /**
-     * Creates an instance of InternalServerErrorException.
-     */
-    constructor() {
-        super(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'Internal server error');
-    }
+	/**
+	 * Creates an instance of InternalServerErrorException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'Internal server error');
+	}
 }
 
 /**
@@ -438,12 +438,12 @@ export class InternalServerErrorException extends HttpException {
  * @extends {HttpException}
  */
 export class NotImplementedException extends HttpException {
-    /**
-     * Creates an instance of NotImplementedException.
-     */
-    constructor() {
-        super(HTTP_STATUS.NOT_IMPLEMENTED, 'Not implemented');
-    }
+	/**
+	 * Creates an instance of NotImplementedException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.NOT_IMPLEMENTED, 'Not implemented');
+	}
 }
 
 /**
@@ -454,12 +454,12 @@ export class NotImplementedException extends HttpException {
  * @extends {HttpException}
  */
 export class BadGatewayException extends HttpException {
-    /**
-     * Creates an instance of BadGatewayException.
-     */
-    constructor() {
-        super(HTTP_STATUS.BAD_GATEWAY, 'Bad gateway');
-    }
+	/**
+	 * Creates an instance of BadGatewayException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.BAD_GATEWAY, 'Bad gateway');
+	}
 }
 
 /**
@@ -470,12 +470,12 @@ export class BadGatewayException extends HttpException {
  * @extends {HttpException}
  */
 export class ServiceUnavailableException extends HttpException {
-    /**
-     * Creates an instance of ServiceUnavailableException.
-     */
-    constructor() {
-        super(HTTP_STATUS.SERVICE_UNAVAILABLE, 'Service unavailable');
-    }
+	/**
+	 * Creates an instance of ServiceUnavailableException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.SERVICE_UNAVAILABLE, 'Service unavailable');
+	}
 }
 
 /**
@@ -486,12 +486,12 @@ export class ServiceUnavailableException extends HttpException {
  * @extends {HttpException}
  */
 export class GatewayTimeoutException extends HttpException {
-    /**
-     * Creates an instance of GatewayTimeoutException.
-     */
-    constructor() {
-        super(HTTP_STATUS.GATEWAY_TIMEOUT, 'Gateway timeout');
-    }
+	/**
+	 * Creates an instance of GatewayTimeoutException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.GATEWAY_TIMEOUT, 'Gateway timeout');
+	}
 }
 
 /**
@@ -502,12 +502,12 @@ export class GatewayTimeoutException extends HttpException {
  * @extends {HttpException}
  */
 export class HttpVersionNotSupportedException extends HttpException {
-    /**
-     * Creates an instance of HttpVersionNotSupportedException.
-     */
-    constructor() {
-        super(HTTP_STATUS.HTTP_VERSION_NOT_SUPPORTED, 'Http version not supported');
-    }
+	/**
+	 * Creates an instance of HttpVersionNotSupportedException.
+	 */
+	constructor() {
+		super(HTTP_STATUS.HTTP_VERSION_NOT_SUPPORTED, 'Http version not supported');
+	}
 }
 
 /**
@@ -519,14 +519,14 @@ export class HttpVersionNotSupportedException extends HttpException {
  * @template T
  */
 export class NotValidBodyException<T> extends HttpException {
-    reasons: T;
-    /**
-     * Creates an instance of NotValidBodyException.
-     * 
-     * @param {T} reasons - The reasons why the body is not valid.
-     */
-    constructor(reasons: T) {
-        super(HTTP_STATUS.BAD_REQUEST, 'Body bad formatted');
-        this.reasons = reasons;
-    }
+	reasons: T;
+	/**
+	 * Creates an instance of NotValidBodyException.
+	 *
+	 * @param {T} reasons - The reasons why the body is not valid.
+	 */
+	constructor(reasons: T) {
+		super(HTTP_STATUS.BAD_REQUEST, 'Body bad formatted');
+		this.reasons = reasons;
+	}
 }

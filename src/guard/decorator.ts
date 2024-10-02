@@ -4,9 +4,9 @@ import { MetadataFunction, SetMetadata } from '../metadata/decorator.ts';
 export const guardMetadataKey = 'authGuards';
 /**
  * Applies a guard to a route handler or controller.
- * 
+ *
  * https://danet.land/overview/guards.html
- * 
+ *
  * @param guard - The constructor of the guard to be applied.
  * @returns A function that sets the metadata for the guard.
  */

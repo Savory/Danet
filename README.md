@@ -9,7 +9,9 @@
 
 ## Warning
 
-From version 2.4.0, Danet is only available via [JSR](https://jsr.io/) at [@danet/core](https://jsr.io/@danet/core). It's a step closer to runtime agnosticism. 
+From version 2.4.0, Danet is only available via [JSR](https://jsr.io/) at
+[@danet/core](https://jsr.io/@danet/core). It's a step closer to runtime
+agnosticism.
 
 ## Description
 
@@ -52,8 +54,8 @@ bug on our [Github Repository](https://github.com/Savory/Danet) and
 ## Installation
 
 ```sh
-  deno install --global -A -n danet jsr:@danet/cli
-  danet new <my-project>
+deno install --global -A -n danet jsr:@danet/cli
+danet new <my-project>
 ```
 
 ## Documentation
@@ -63,7 +65,6 @@ bug on our [Github Repository](https://github.com/Savory/Danet) and
 [Read our documentation](https://danet.land)
 
 [Read our blog](https://savory.github.io/)
-
 
 ## Contributing
 

@@ -4,22 +4,23 @@ import { Logger } from '../mod.ts';
 type Listener<P = any> = (payload: P) => void;
 
 /**
- * @class EventEmitter
- * @description A class that provides a simple event-driven architecture for subscribing, emitting, and unsubscribing events.
- * 
+ * Provides event-driven architecture for subscribing, emitting, and unsubscribing events.
+ *
  * @example
+ * ```ts
  * const emitter = new EventEmitter();
- * 
+ *
  * // Subscribe to an event
  * emitter.subscribe('eventName', (payload) => {
  *   console.log(payload);
  * });
- * 
+ *
  * // Emit an event
  * emitter.emit('eventName', { key: 'value' });
- * 
+ *
  * // Unsubscribe from an event
  * emitter.unsubscribe('eventName');
+ * ```
  */
 export class EventEmitter {
 	private logger: Logger = new Logger('EventEmitter');

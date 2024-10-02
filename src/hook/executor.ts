@@ -4,7 +4,6 @@
  * Provides a class to execute hooks for every injectable.
  */
 
-
 import { InjectableHelper } from '../injector/injectable/helper.ts';
 import { Injector } from '../injector/injector.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
@@ -26,7 +25,7 @@ export class HookExecutor {
 	 * Executes a specified hook on every injectable retrieved from the injector.
 	 * It iterates through all injectables, checks if they are objects, and then
 	 * executes the hook on each instance.
-	 * 
+	 *
 	 * @param hookName - The name of the hook to be executed.
 	 */
 	public async executeHookForEveryInjectable(hookName: hookName) {
@@ -42,11 +41,11 @@ export class HookExecutor {
 
 	/**
 	 * Executes a specified hook on a given instance if the instance is marked as global.
-	 * 
+	 *
 	 * @param instance - The instance on which the hook is to be executed.
 	 * @param hookName - The name of the hook to be executed.
 	 */
-	
+
 	// deno-lint-ignore no-explicit-any
 	private async executeInstanceHook(instance: any, hookName: hookName) {
 		if (InjectableHelper.isGlobal(instance?.constructor)) {

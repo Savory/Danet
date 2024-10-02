@@ -22,7 +22,7 @@ import { ModuleMetadata } from '../mod.ts';
  * available types, and context-specific injectables. It also handles the
  * bootstrapping of modules, resolving of controllers and injectables, and
  * managing the lifecycle of dependencies.
- * 
+ *
  * @class
  * @property {Map<Constructor | string, (ctx?: ExecutionContext) => Promise<unknown> | unknown>} resolved - A map of resolved instances.
  * @property {Map<Constructor | string, Constructor>} availableTypes - A map of available types for injection.
@@ -77,7 +77,7 @@ export class Injector {
 
 	/**
 	 * Retrieves an instance of the specified type from the injector.
-	 * 
+	 *
 	 * @template T - The type of the instance to retrieve.
 	 * @param {Constructor<T> | string} Type - The constructor function or string identifier of the type to retrieve.
 	 * @param {ExecutionContext} [ctx] - Optional execution context to pass to the instance.
@@ -93,7 +93,7 @@ export class Injector {
 
 	/**
 	 * Bootstraps the given module by registering its injectables and resolving its controllers.
-	 * 
+	 *
 	 * @param module - The module metadata to bootstrap, containing controllers and injectables.
 	 * @returns A promise that resolves when the module has been fully bootstrapped.
 	 */

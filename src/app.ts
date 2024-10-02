@@ -4,41 +4,39 @@
  * @example
  * ```typescript
  * import {
- *		Controller,
- *		DanetApplication,
- *		Get,
- *		Module,
- *		Query,
- *	} from '../src/mod.ts';
+ * 		Controller,
+ * 		DanetApplication,
+ * 		Get,
+ * 		Module,
+ * 		Query,
+ * 	} from '../src/mod.ts';
  *
+ * 	@Controller('')
+ * 	class FirstController {
+ * 		constructor() {
+ * 		}
  *
- *	@Controller('')
- *	class FirstController {
- *		constructor() {
- *		}
+ * 		@Get('hello-world/:name')
+ * 		getHelloWorld(
+ * 			@Param('name') name: string,
+ * 		) {
+ * 			return `Hello World ${name}`;
+ * 		}
+ * 	}
  *
+ * 	@Module({
+ * 		controllers: [FirstController]
+ * 	})
+ * 	class FirstModule {}
  *
- *		@Get('hello-world/:name')
- *		getHelloWorld(
- *			@Param('name') name: string,
- *		) {
- *			return `Hello World ${name}`;
- *		}
- *	}
+ * 	const app = new DanetApplication();
+ * 	await app.init(FirstModule);
  *
- *	@Module({
- *		controllers: [FirstController]
- *	})
- *	class FirstModule {}
- *
- *	const app = new DanetApplication();
- *	await app.init(FirstModule);
- *
- *	let port = Number(Deno.env.get('PORT'));
- *	if (isNaN(port)) {
- *		port = 3000;
- *	}
- *	app.listen(port);
+ * 	let port = Number(Deno.env.get('PORT'));
+ * 	if (isNaN(port)) {
+ * 		port = 3000;
+ * 	}
+ * 	app.listen(port);
  * ```
  */
 
@@ -188,7 +186,7 @@ export class DanetApplication {
 
 	/**
 	 * Initializes the application with the provided module.
-	 * 
+	 *
 	 * @param Module - The constructor of the module to initialize.
 	 * @returns A promise that resolves when the initialization process is complete.
 	 */
@@ -202,7 +200,7 @@ export class DanetApplication {
 
 	/**
 	 * Closes the application by executing the necessary hooks and shutting down the internal HTTP server.
-	 * 
+	 *
 	 * @async
 	 * @returns {Promise<void>} A promise that resolves when the application has been closed.
 	 */
@@ -214,18 +212,18 @@ export class DanetApplication {
 
 	/**
 	 * Starts the HTTP server and begins listening on the specified port.
-	 * 
+	 *
 	 * @param {number} [port=3000] - The port number on which the server will listen.
 	 * @returns {Promise<{ port: number }>} A promise that resolves with an object containing the port number.
-	 * 
+	 *
 	 * @remarks
 	 * This method initializes an `AbortController` to manage the server's lifecycle and uses Deno's `serve` function to start the server.
 	 * The server will log a message indicating the port it is listening on.
-	 * 
+	 *
 	 * @example
 	 * ```typescript
 	 * const app = new DanetApplication();
- 	 * await app.init(FirstModule);
+	 * await app.init(FirstModule);
 	 * const { port } = app.listen(3000);
 	 * ```
 	 */
@@ -247,7 +245,7 @@ export class DanetApplication {
 
 	/**
 	 * Get hono application instance.
-	 * 
+	 *
 	 * @returns {Application} The hono instance.
 	 */
 	get router(): Application {

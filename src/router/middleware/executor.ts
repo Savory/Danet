@@ -21,14 +21,14 @@ import { globalMiddlewareContainer } from './global-container.ts';
 export class MiddlewareExecutor {
 	/**
 	 * Constructs a new `MiddlewareExecutor` instance.
-	 * 
+	 *
 	 * @param injector - The injector used to manage dependencies.
 	 */
 	constructor(private injector: Injector) {}
 
 	/**
 	 * Executes all relevant middlewares for the given context, controller, and controller method.
-	 * 
+	 *
 	 * @param context - The execution context.
 	 * @param Controller - The controller constructor.
 	 * @param ControllerMethod - The controller method callback.

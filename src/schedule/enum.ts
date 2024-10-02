@@ -2,7 +2,7 @@
 
 /**
  * Enum representing various cron expressions for scheduling tasks.
- * 
+ *
  * @enum {string}
  * @readonly
  * @property {string} EVERY_MINUTE - Runs every minute.
@@ -167,6 +167,17 @@ export enum CronExpression {
 	MONDAY_TO_FRIDAY_AT_11PM = '0 0 23 * * 1-5',
 }
 
+/**
+ * Various time intervals in milliseconds.
+ *
+ * @enum {number}
+ * @readonly
+ * @property {number} MILISECOND - Represents one millisecond.
+ * @property {number} SECOND - Represents one second (1000 milliseconds).
+ * @property {number} MINUTE - Represents one minute (60,000 milliseconds).
+ * @property {number} HOUR - Represents one hour (3,600,000 milliseconds).
+ * @property {number} DAY - Represents one day (86,400,000 milliseconds).
+ */
 export enum IntervalExpression {
 	MILISECOND = 1,
 	SECOND = 1000,

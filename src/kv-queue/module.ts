@@ -1,6 +1,14 @@
 import { OnAppBootstrap, OnAppClose } from '../hook/interfaces.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
-import { InjectableConstructor, injector, Logger, Module, ModuleConstructor, TokenInjector, UseValueInjector } from '../mod.ts';
+import {
+	InjectableConstructor,
+	injector,
+	Logger,
+	Module,
+	ModuleConstructor,
+	TokenInjector,
+	UseValueInjector,
+} from '../mod.ts';
 import { KV_QUEUE_NAME, queueListenerMetadataKey } from './constants.ts';
 import { KvQueue } from './kv.ts';
 
@@ -12,8 +20,10 @@ export class KvQueueModule implements OnAppBootstrap {
 	constructor() {}
 
 	public static forRoot(kvName?: string): {
-		injectables: Array<InjectableConstructor | TokenInjector | UseValueInjector>,
-		module: typeof KvQueueModule
+		injectables: Array<
+			InjectableConstructor | TokenInjector | UseValueInjector
+		>;
+		module: typeof KvQueueModule;
 	} {
 		return {
 			injectables: [{ token: KV_QUEUE_NAME, useValue: kvName }, KvQueue],

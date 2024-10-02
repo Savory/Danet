@@ -32,7 +32,7 @@ export interface BeforeControllerMethodIsCalled {
 
 /**
  * Enum representing the names of various hooks in the application.
- * 
+ *
  * @enum {string}
  * @property {string} APP_CLOSE - Hook triggered when the application is closing.
  * @property {string} APP_BOOTSTRAP - Hook triggered when the application is bootstrapping.

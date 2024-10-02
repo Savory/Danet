@@ -9,11 +9,9 @@ import { guardMetadataKey } from './decorator.ts';
 import { AuthGuard } from './interface.ts';
 
 /**
- * @class GuardExecutor
- * @description
- * The `GuardExecutor` class is responsible for executing various guards in a given execution context.
+ * Responsible for executing various guards in a given execution context.
  * It handles the execution of global guards, controller-level guards, and method-level guards.
- * 
+ * https://danet.land/overview/guards.html
  * @constructor
  * @param {Injector} injector - The injector instance used to retrieve and manage dependencies.
  */

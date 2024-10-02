@@ -84,31 +84,36 @@ export function createParamDecorator(
 }
 
 /**
- * Get current request 
-*/
-export const Req: DecoratorFunction = createParamDecorator((context: ExecutionContext) => {
-	return context.req;
-});
+ * Get current request
+ */
+export const Req: DecoratorFunction = createParamDecorator(
+	(context: ExecutionContext) => {
+		return context.req;
+	},
+);
 
 /**
  * Get current response
-*/
-export const Res: DecoratorFunction = createParamDecorator((context: ExecutionContext) => {
-	return context.res;
-});
-
-
-/**
- *  Get current request websocket instance 
-*/
-export const WebSocket: DecoratorFunction = createParamDecorator((context: ExecutionContext) => {
-	return context.websocket;
-});
+ */
+export const Res: DecoratorFunction = createParamDecorator(
+	(context: ExecutionContext) => {
+		return context.res;
+	},
+);
 
 /**
- *  Get all headers or a specific header 
-*/
-export const Header: ((prop?: string) => DecoratorFunction)  = (prop?: string) =>
+ *  Get current request websocket instance
+ */
+export const WebSocket: DecoratorFunction = createParamDecorator(
+	(context: ExecutionContext) => {
+		return context.websocket;
+	},
+);
+
+/**
+ *  Get all headers or a specific header
+ */
+export const Header: (prop?: string) => DecoratorFunction = (prop?: string) =>
 	createParamDecorator((context: ExecutionContext) => {
 		if (!context.req.raw.headers) {
 			return null;
@@ -119,9 +124,9 @@ export const Header: ((prop?: string) => DecoratorFunction)  = (prop?: string) =
 export const BODY_TYPE_KEY = 'body-type';
 
 /**
- *  Get request's body or a given property 
- **/
-export const Body: ((prop?: string) => DecoratorFunction) = (prop?: string) =>
+ *  Get request's body or a given property
+ */
+export const Body: (prop?: string) => DecoratorFunction = (prop?: string) =>
 	createParamDecorator(
 		async (context: ExecutionContext, opts?: OptionsResolver) => {
 			if (!opts) {
@@ -204,7 +209,7 @@ export interface QueryOption {
 }
 /**
  * Get all query params or a given query param
-*/
+ */
 export function Query(
 	options?: QueryOption,
 ): ReturnType<ReturnType<typeof createParamDecorator>>;
@@ -260,7 +265,7 @@ export function Query(
 
 /**
  *  Get an url param for example /user/:userId
-*/
+ */
 export function Param(paramName: string): DecoratorFunction {
 	return createParamDecorator((context: ExecutionContext) => {
 		const params = context.req.param();
@@ -274,7 +279,7 @@ export function Param(paramName: string): DecoratorFunction {
 
 /**
  * Get Session or a given property of session
-*/
+ */
 export function Session(prop?: string): DecoratorFunction {
 	return createParamDecorator((context: ExecutionContext) => {
 		if (prop) {
@@ -282,5 +287,5 @@ export function Session(prop?: string): DecoratorFunction {
 		} else {
 			return context.get('session');
 		}
-	})()
-};
+	})();
+}

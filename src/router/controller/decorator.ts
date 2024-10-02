@@ -2,9 +2,9 @@ import { MetadataHelper } from '../../metadata/helper.ts';
 import { MetadataFunction, SetMetadata } from '../../metadata/decorator.ts';
 /**
  * Represents the HTTP methods that can be used in routing.
- * 
+ *
  * @typedef {('GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'HEAD')} HttpMethod
- * 
+ *
  * @example
  * // Example usage:
  * const method: HttpMethod = 'GET';
@@ -28,7 +28,7 @@ export type HttpMethod =
 export function Controller<T>(endpoint = ''): MetadataFunction {
 	return SetMetadata('endpoint', endpoint);
 }
-type MappingDecoratorFunction = ((endpoint?: string) => MethodDecorator);
+type MappingDecoratorFunction = (endpoint?: string) => MethodDecorator;
 
 function createMappingDecorator(method?: HttpMethod): MappingDecoratorFunction {
 	return (endpoint = ''): MethodDecorator => {
@@ -44,9 +44,9 @@ function createMappingDecorator(method?: HttpMethod): MappingDecoratorFunction {
 
 /**
  * Define a method as a GET request handler.
- * 
+ *
  * This decorator can be used to annotate controller methods to handle HTTP GET requests.
- * 
+ *
  * @example
  * ```typescript
  * @Get('/path')
@@ -54,12 +54,12 @@ function createMappingDecorator(method?: HttpMethod): MappingDecoratorFunction {
  *   return 'This is a GET request';
  * }
  * ```
- * 
+ *
  * @type {MappingDecoratorFunction}
  */
 export const Get: MappingDecoratorFunction = createMappingDecorator('GET');
 /**
- * Define a method as a POST request handler . 
+ * Define a method as a POST request handler .
  *  * @example
  * ```typescript
  * @Post('/path')
@@ -70,7 +70,7 @@ export const Get: MappingDecoratorFunction = createMappingDecorator('GET');
  */
 export const Post: MappingDecoratorFunction = createMappingDecorator('POST');
 /**
- * Define a method as a PUT request handler . 
+ * Define a method as a PUT request handler .
  *  * @example
  * ```typescript
  * @Put('/path')
@@ -81,7 +81,7 @@ export const Post: MappingDecoratorFunction = createMappingDecorator('POST');
  */
 export const Put: MappingDecoratorFunction = createMappingDecorator('PUT');
 /**
- * Define a method as a PATCH request handler . 
+ * Define a method as a PATCH request handler .
  *  * @example
  * ```typescript
  * @Patch('/path')
@@ -92,7 +92,7 @@ export const Put: MappingDecoratorFunction = createMappingDecorator('PUT');
  */
 export const Patch: MappingDecoratorFunction = createMappingDecorator('PATCH');
 /**
- * Define a method as a DELETE request handler . 
+ * Define a method as a DELETE request handler .
  *  * @example
  * ```typescript
  * @Delete('/path')
@@ -101,9 +101,11 @@ export const Patch: MappingDecoratorFunction = createMappingDecorator('PATCH');
  * }
  * ```
  */
-export const Delete: MappingDecoratorFunction = createMappingDecorator('DELETE');
+export const Delete: MappingDecoratorFunction = createMappingDecorator(
+	'DELETE',
+);
 /**
- * Define a method as an OPTIONS request handler . 
+ * Define a method as an OPTIONS request handler .
  *  * @example
  * ```typescript
  * @Options('/path')
@@ -112,9 +114,11 @@ export const Delete: MappingDecoratorFunction = createMappingDecorator('DELETE')
  * }
  * ```
  */
-export const Options: MappingDecoratorFunction = createMappingDecorator('OPTIONS');
+export const Options: MappingDecoratorFunction = createMappingDecorator(
+	'OPTIONS',
+);
 /**
- * Define a method as an HEAD request handler . 
+ * Define a method as an HEAD request handler .
  *  * @example
  * ```typescript
  * @Head('/path')
@@ -125,7 +129,7 @@ export const Options: MappingDecoratorFunction = createMappingDecorator('OPTIONS
  */
 export const Head: MappingDecoratorFunction = createMappingDecorator('HEAD');
 /**
- * Define a method as a request handler for all HTTP METHOD . 
+ * Define a method as a request handler for all HTTP METHOD .
  *  * @example
  * ```typescript
  * @All('/path')
@@ -136,7 +140,7 @@ export const Head: MappingDecoratorFunction = createMappingDecorator('HEAD');
  */
 export const All: MappingDecoratorFunction = createMappingDecorator();
 /**
- * Define a method as a request handler that will send event with SSE. 
+ * Define a method as a request handler that will send event with SSE.
  *  * @example
  * ```typescript
  * @SSE('/path')
@@ -168,7 +172,9 @@ export const All: MappingDecoratorFunction = createMappingDecorator();
  * }
  * ```
  */
-export const SSE: MappingDecoratorFunction = (endpoint = ''): MethodDecorator => {
+export const SSE: MappingDecoratorFunction = (
+	endpoint = '',
+): MethodDecorator => {
 	return (_target, _propertyKey, descriptor) => {
 		MetadataHelper.setMetadata('endpoint', endpoint, descriptor.value);
 		MetadataHelper.setMetadata('method', 'GET', descriptor.value);

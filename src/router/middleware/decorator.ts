@@ -5,9 +5,9 @@ import { MetadataFunction, SetMetadata } from '../../metadata/decorator.ts';
 
 /**
  * Interface representing a middleware.
- * 
+ *
  * @interface DanetMiddleware
- * 
+ *
  * @method action
  * @param {ExecutionContext} ctx - The execution context for the middleware.
  * @param {NextFunction} next - The next function to call in the middleware chain.
@@ -19,7 +19,7 @@ export interface DanetMiddleware {
 
 /**
  * Represents a function that, when called, proceeds to the next middleware in the chain.
- * 
+ *
  * @returns A promise that resolves to either void or a Response object.
  */
 export type NextFunction = () => Promise<void | Response>;
@@ -37,10 +37,12 @@ export const isMiddlewareClass = (s: PossibleMiddlewareType) => !!s.prototype;
 export const middlewareMetadataKey = 'middlewares';
 /**
  * A decorator function that attaches middleware to a route handler or controller.
- * 
+ *
  * @param {...PossibleMiddlewareType[]} middlewares - A list of middleware functions to be applied.
  * @returns {MetadataFunction} - A function that sets the metadata for the middleware.
  */
-export function Middleware(...middlewares: PossibleMiddlewareType[]): MetadataFunction{
+export function Middleware(
+	...middlewares: PossibleMiddlewareType[]
+): MetadataFunction {
 	return SetMetadata(middlewareMetadataKey, middlewares);
 }

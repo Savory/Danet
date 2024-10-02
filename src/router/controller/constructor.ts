@@ -1,4 +1,6 @@
 import { Constructor } from '../../utils/constructor.ts';
 
-/* A simple Constructor */
+/**
+ * Type Alias for Constructor
+ */
 export type ControllerConstructor = Constructor;
