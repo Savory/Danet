@@ -1,9 +1,9 @@
-/* 
-** metadata
-** Provides metadata helper functions
-** Dependencies: Reflect
-** @module
-*/
+/** 
+ * metadata
+ * Provides metadata helper functions
+ * Dependencies: Reflect
+ * @module
+*/ 
 
 import { Reflect } from '../deps.ts';
 
