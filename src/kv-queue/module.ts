@@ -4,6 +4,7 @@ import { InjectableConstructor, injector, Logger, Module, ModuleConstructor, Tok
 import { KV_QUEUE_NAME, queueListenerMetadataKey } from './constants.ts';
 import { KvQueue } from './kv.ts';
 
+/* Use this module if you want to use KV Queue https://danet.land/techniques/kvQueue.html */
 @Module({})
 export class KvQueueModule implements OnAppBootstrap {
 	private logger: Logger = new Logger('QueueModule');
