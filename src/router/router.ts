@@ -22,7 +22,6 @@ import { trimSlash } from './utils.ts';
 import { MiddlewareExecutor } from './middleware/executor.ts';
 import { NextFunction } from './middleware/decorator.ts';
 import { resolveMethodParam } from './controller/params/resolver.ts';
-import { SSEMessage } from '../sse/message.ts';
 import { SSEEvent } from '../sse/event.ts';
 
 // deno-lint-ignore no-explicit-any
@@ -30,6 +29,17 @@ export type Callback = (...args: any[]) => unknown;
 
 export type HttpContext = Context;
 
+/**
+ * Represents Danet's execution context for an HTTP request, extending Hono's HttpContext.
+ * 
+ * @typedef {Object} ExecutionContext
+ * @property {string} _id - Unique identifier for the execution context.
+ * @property {Function} getHandler - Function to retrieve the handler for the current context.
+ * @property {Constructor} getClass - Function to retrieve the class constructor for the current context.
+ * @property {WebSocket} [websocket] - Optional WebSocket instance associated with the context.
+ * @property {any} [websocketMessage] - Optional message received via WebSocket.
+ * @property {string} [websocketTopic] - Optional topic associated with the WebSocket message.
+ */
 export type ExecutionContext = HttpContext & {
 	_id: string;
 	// deno-lint-ignore ban-types
@@ -41,6 +51,12 @@ export type ExecutionContext = HttpContext & {
 	websocketTopic?: string;
 };
 
+/**
+ * The `DanetHTTPRouter` class is responsible for managing HTTP routes and their associated handlers.
+ * It provides methods to register controllers, set route prefixes, and handle middleware, guards, filters, and responses.
+ * 
+ * @class DanetHTTPRouter
+ */
 export class DanetHTTPRouter {
 	private logger: Logger = new Logger('Router');
 	private methodsMap: Map<string, HandlerInterface>;
@@ -68,7 +84,7 @@ export class DanetHTTPRouter {
 		);
 	}
 
-	public createRoute(
+	private createRoute(
 		handlerName: string | hookName,
 		Controller: Constructor,
 		basePath: string,
@@ -134,12 +150,23 @@ export class DanetHTTPRouter {
 		);
 	}
 
+	/**
+	 * Sets the prefix for the router, ensuring that it does not end with a trailing slash.
+	 *
+	 * @param prefix - The prefix string to set for the router.
+	 */
 	setPrefix(prefix: string) {
 		prefix = prefix.replace(/\/$/, '');
 		this.router.basePath(prefix);
 		this.prefix = prefix;
 	}
 
+	/**
+	 * Registers a controller and its methods as routes.
+	 *
+	 * @param Controller - The controller class to register.
+	 * @param basePath - The base path for the controller's routes.
+	 */
 	public registerController(Controller: Constructor, basePath: string) {
 		const methods = Object.getOwnPropertyNames(Controller.prototype);
 		this.logger.log(
@@ -150,7 +177,7 @@ export class DanetHTTPRouter {
 		});
 	}
 
-	public handleRoute(
+	private handleRoute(
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
 	): ((context: HttpContext) => Promise<Response>) {
