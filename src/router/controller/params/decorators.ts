@@ -3,6 +3,7 @@ import { ExecutionContext } from '../../router.ts';
 import { validateObject } from '../../../deps.ts';
 import { Constructor } from '../../../mod.ts';
 import { NotValidBodyException } from '../../../exception/mod.ts';
+import { argumentResolverFunctionsMetadataKey } from './constants.ts';
 
 /**
  * A type representing a decorator function.
@@ -37,7 +38,7 @@ export type Resolver = (
 	opts?: OptionsResolver,
 ) => unknown | Promise<unknown>;
 
-export const argumentResolverFunctionsMetadataKey = 'argumentResolverFunctions';
+
 /**
  * Creates a parameter decorator that resolves a parameter using the provided resolver function.
  * Optionally, an additional decorator action can be executed.
@@ -121,6 +122,11 @@ export const Header: (prop?: string) => DecoratorFunction = (prop?: string) =>
 		return prop ? context.req.header(prop) : context.req.raw.headers;
 	})();
 
+/**
+ * Used to identify the type of the body in request parameters.
+ * 
+ * @constant {string} BODY_TYPE_KEY
+ */
 export const BODY_TYPE_KEY = 'body-type';
 
 /**
@@ -202,6 +208,11 @@ function formatQueryValue(
 	}
 }
 
+/**
+ * Identify the type of query in the router controller parameters.
+ * 
+ * @constant {string} QUERY_TYPE_KEY
+ */
 export const QUERY_TYPE_KEY = 'query-type';
 
 export interface QueryOption {

@@ -1,10 +1,10 @@
 import { MetadataHelper } from '../../../metadata/helper.ts';
 import { ControllerConstructor } from '../constructor.ts';
 import {
-	argumentResolverFunctionsMetadataKey,
 	Resolver,
 } from './decorators.ts';
 import { ExecutionContext } from '../../mod.ts';
+import { argumentResolverFunctionsMetadataKey } from './constants.ts';
 
 /**
  * Resolves the parameters for a given controller method by using metadata to map

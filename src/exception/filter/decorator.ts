@@ -1,6 +1,11 @@
 import { Constructor } from '../../utils/constructor.ts';
 import { MetadataFunction, SetMetadata } from '../../metadata/decorator.ts';
 
+/**
+ * Metadata key used to mark and identify exception filters.
+ * 
+ * @constant {string} filterExceptionMetadataKey
+ */
 export const filterExceptionMetadataKey = 'filterException';
 /**
  * A decorator function that applies a specified filter to the metadata of a class or method.
@@ -11,6 +16,12 @@ export const filterExceptionMetadataKey = 'filterException';
 export function UseFilter(filter: Constructor): MetadataFunction {
 	return SetMetadata(filterExceptionMetadataKey, filter);
 }
+/**
+ * Used to store metadata for the type of errors caught by a filter.
+ *
+ * @constant
+ * @type {string}
+ */
 export const filterCatchTypeMetadataKey = 'errorCaught';
 /**
  * A decorator function to specify the error type to catch for an exception filter.

@@ -24,6 +24,9 @@ import { NextFunction } from './middleware/decorator.ts';
 import { resolveMethodParam } from './controller/params/resolver.ts';
 import { SSEEvent } from '../sse/event.ts';
 
+/**
+ * Type to define a callback function.
+ */
 // deno-lint-ignore no-explicit-any
 export type Callback = (...args: any[]) => unknown;
 
