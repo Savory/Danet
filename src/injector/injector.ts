@@ -16,6 +16,23 @@ import {
 import { ExecutionContext } from '../router/router.ts';
 import { ModuleMetadata } from '../mod.ts';
 
+/**
+ * The `Injector` class is responsible for managing the dependency injection
+ * within the application. It maintains a registry of resolved instances,
+ * available types, and context-specific injectables. It also handles the
+ * bootstrapping of modules, resolving of controllers and injectables, and
+ * managing the lifecycle of dependencies.
+ * 
+ * @class
+ * @property {Map<Constructor | string, (ctx?: ExecutionContext) => Promise<unknown> | unknown>} resolved - A map of resolved instances.
+ * @property {Map<Constructor | string, Constructor>} availableTypes - A map of available types for injection.
+ * @property {Logger} logger - Logger instance for logging purposes.
+ * @property {Map<Constructor | string, Constructor>} resolvedTypes - A map of resolved types.
+ * @property {Map<string, Map<Constructor | string, unknown>>} contextInjectables - A map of context-specific injectables.
+ * @property {Array<any>} modules - An array of registered modules.
+ * @property {Array<any>} controllers - An array of registered controllers.
+ * @property {Array<any>} injectables - An array of registered injectables.
+ */
 export class Injector {
 	private resolved = new Map<
 		Constructor | string,
@@ -38,14 +55,35 @@ export class Injector {
 	// deno-lint-ignore no-explicit-any
 	public injectables: Array<any> = [];
 
+	/**
+	 * Retrieves all resolved dependencies.
+	 *
+	 * @returns An object containing all resolved dependencies.
+	 */
 	public getAll(): typeof this.resolved {
 		return this.resolved;
 	}
 
+	/**
+	 * Checks if a given type or identifier is present in the resolved dependencies.
+	 *
+	 * @template T - The type of the dependency to check.
+	 * @param {Constructor<T> | string} Type - The constructor of the type or a string identifier to check.
+	 * @returns {boolean} - Returns `true` if the type or identifier is present, otherwise `false`.
+	 */
 	public has<T>(Type: Constructor<T> | string): boolean {
 		return this.resolved.has(Type);
 	}
 
+	/**
+	 * Retrieves an instance of the specified type from the injector.
+	 * 
+	 * @template T - The type of the instance to retrieve.
+	 * @param {Constructor<T> | string} Type - The constructor function or string identifier of the type to retrieve.
+	 * @param {ExecutionContext} [ctx] - Optional execution context to pass to the instance.
+	 * @returns {T} The instance of the specified type.
+	 * @throws {Error} If the type has not been injected.
+	 */
 	public get<T>(Type: Constructor<T> | string, ctx?: ExecutionContext): T {
 		if (this.resolved.has(Type)) {
 			return this.resolved.get(Type)!(ctx) as T;
@@ -53,6 +91,12 @@ export class Injector {
 		throw Error(`Type ${Type} not injected`);
 	}
 
+	/**
+	 * Bootstraps the given module by registering its injectables and resolving its controllers.
+	 * 
+	 * @param module - The module metadata to bootstrap, containing controllers and injectables.
+	 * @returns A promise that resolves when the module has been fully bootstrapped.
+	 */
 	public async bootstrapModule(module: ModuleMetadata) {
 		this.logger.log(`Bootstraping ${module.constructor.name}`);
 		const { controllers, injectables } = module;
@@ -67,7 +111,7 @@ export class Injector {
 		this.modules.push(module);
 	}
 
-	public addAvailableInjectable(
+	private addAvailableInjectable(
 		injectables:
 			(InjectableConstructor | UseClassInjector | UseValueInjector)[],
 	) {
@@ -79,6 +123,12 @@ export class Injector {
 		}
 	}
 
+	/**
+	 * Registers an array of injectables by resolving each one.
+	 *
+	 * @param Injectables - An array of injectable constructors or injector instances.
+	 * @returns A promise that resolves when all injectables have been registered.
+	 */
 	public async registerInjectables(
 		Injectables: Array<
 			InjectableConstructor | UseClassInjector | UseValueInjector
@@ -89,7 +139,7 @@ export class Injector {
 		}
 	}
 
-	public async resolveControllers(Controllers: ControllerConstructor[]) {
+	private async resolveControllers(Controllers: ControllerConstructor[]) {
 		for (const Controller of Controllers) {
 			await this.resolveControllerParameters(Controller);
 		}
