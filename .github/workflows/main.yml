@@ -1,8 +1,8 @@
 name: Publish
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "*"
   workflow_dispatch:
 
 jobs:
