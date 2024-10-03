@@ -1,5 +1,90 @@
 // Copyright (c) 2017-2024 Kamil Mysliwiec MIT
 
+/**
+ * Enum representing various cron expressions for scheduling tasks.
+ *
+ * @enum {string}
+ * @readonly
+ * @property {string} EVERY_MINUTE - Runs every minute.
+ * @property {string} EVERY_5_MINUTES - Runs every 5 minutes.
+ * @property {string} EVERY_10_MINUTES - Runs every 10 minutes.
+ * @property {string} EVERY_30_MINUTES - Runs every 30 minutes.
+ * @property {string} EVERY_HOUR - Runs every hour.
+ * @property {string} EVERY_2_HOURS - Runs every 2 hours.
+ * @property {string} EVERY_3_HOURS - Runs every 3 hours.
+ * @property {string} EVERY_4_HOURS - Runs every 4 hours.
+ * @property {string} EVERY_5_HOURS - Runs every 5 hours.
+ * @property {string} EVERY_6_HOURS - Runs every 6 hours.
+ * @property {string} EVERY_7_HOURS - Runs every 7 hours.
+ * @property {string} EVERY_8_HOURS - Runs every 8 hours.
+ * @property {string} EVERY_9_HOURS - Runs every 9 hours.
+ * @property {string} EVERY_10_HOURS - Runs every 10 hours.
+ * @property {string} EVERY_11_HOURS - Runs every 11 hours.
+ * @property {string} EVERY_12_HOURS - Runs every 12 hours.
+ * @property {string} EVERY_DAY_AT_1AM - Runs every day at 1 AM.
+ * @property {string} EVERY_DAY_AT_2AM - Runs every day at 2 AM.
+ * @property {string} EVERY_DAY_AT_3AM - Runs every day at 3 AM.
+ * @property {string} EVERY_DAY_AT_4AM - Runs every day at 4 AM.
+ * @property {string} EVERY_DAY_AT_5AM - Runs every day at 5 AM.
+ * @property {string} EVERY_DAY_AT_6AM - Runs every day at 6 AM.
+ * @property {string} EVERY_DAY_AT_7AM - Runs every day at 7 AM.
+ * @property {string} EVERY_DAY_AT_8AM - Runs every day at 8 AM.
+ * @property {string} EVERY_DAY_AT_9AM - Runs every day at 9 AM.
+ * @property {string} EVERY_DAY_AT_10AM - Runs every day at 10 AM.
+ * @property {string} EVERY_DAY_AT_11AM - Runs every day at 11 AM.
+ * @property {string} EVERY_DAY_AT_NOON - Runs every day at noon.
+ * @property {string} EVERY_DAY_AT_1PM - Runs every day at 1 PM.
+ * @property {string} EVERY_DAY_AT_2PM - Runs every day at 2 PM.
+ * @property {string} EVERY_DAY_AT_3PM - Runs every day at 3 PM.
+ * @property {string} EVERY_DAY_AT_4PM - Runs every day at 4 PM.
+ * @property {string} EVERY_DAY_AT_5PM - Runs every day at 5 PM.
+ * @property {string} EVERY_DAY_AT_6PM - Runs every day at 6 PM.
+ * @property {string} EVERY_DAY_AT_7PM - Runs every day at 7 PM.
+ * @property {string} EVERY_DAY_AT_8PM - Runs every day at 8 PM.
+ * @property {string} EVERY_DAY_AT_9PM - Runs every day at 9 PM.
+ * @property {string} EVERY_DAY_AT_10PM - Runs every day at 10 PM.
+ * @property {string} EVERY_DAY_AT_11PM - Runs every day at 11 PM.
+ * @property {string} EVERY_DAY_AT_MIDNIGHT - Runs every day at midnight.
+ * @property {string} EVERY_WEEK - Runs every week.
+ * @property {string} EVERY_WEEKDAY - Runs every weekday.
+ * @property {string} EVERY_WEEKEND - Runs every weekend.
+ * @property {string} EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT - Runs on the 1st day of every month at midnight.
+ * @property {string} EVERY_1ST_DAY_OF_MONTH_AT_NOON - Runs on the 1st day of every month at noon.
+ * @property {string} EVERY_2ND_HOUR - Runs every 2nd hour.
+ * @property {string} EVERY_2ND_HOUR_FROM_1AM_THROUGH_11PM - Runs every 2nd hour from 1 AM through 11 PM.
+ * @property {string} EVERY_2ND_MONTH - Runs every 2nd month.
+ * @property {string} EVERY_QUARTER - Runs every quarter.
+ * @property {string} EVERY_6_MONTHS - Runs every 6 months.
+ * @property {string} EVERY_YEAR - Runs every year.
+ * @property {string} EVERY_30_MINUTES_BETWEEN_9AM_AND_5PM - Runs every 30 minutes between 9 AM and 5 PM.
+ * @property {string} EVERY_30_MINUTES_BETWEEN_9AM_AND_6PM - Runs every 30 minutes between 9 AM and 6 PM.
+ * @property {string} EVERY_30_MINUTES_BETWEEN_10AM_AND_7PM - Runs every 30 minutes between 10 AM and 7 PM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_1AM - Runs Monday to Friday at 1 AM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_2AM - Runs Monday to Friday at 2 AM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_3AM - Runs Monday to Friday at 3 AM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_4AM - Runs Monday to Friday at 4 AM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_5AM - Runs Monday to Friday at 5 AM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_6AM - Runs Monday to Friday at 6 AM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_7AM - Runs Monday to Friday at 7 AM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_8AM - Runs Monday to Friday at 8 AM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_9AM - Runs Monday to Friday at 9 AM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_09_30AM - Runs Monday to Friday at 9:30 AM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_10AM - Runs Monday to Friday at 10 AM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_11AM - Runs Monday to Friday at 11 AM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_11_30AM - Runs Monday to Friday at 11:30 AM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_12PM - Runs Monday to Friday at 12 PM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_1PM - Runs Monday to Friday at 1 PM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_2PM - Runs Monday to Friday at 2 PM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_3PM - Runs Monday to Friday at 3 PM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_4PM - Runs Monday to Friday at 4 PM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_5PM - Runs Monday to Friday at 5 PM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_6PM - Runs Monday to Friday at 6 PM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_7PM - Runs Monday to Friday at 7 PM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_8PM - Runs Monday to Friday at 8 PM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_9PM - Runs Monday to Friday at 9 PM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_10PM - Runs Monday to Friday at 10 PM.
+ * @property {string} MONDAY_TO_FRIDAY_AT_11PM - Runs Monday to Friday at 11 PM.
+ */
 export enum CronExpression {
 	EVERY_MINUTE = '*/1 * * * *',
 	EVERY_5_MINUTES = '*/5 * * * *',
@@ -82,6 +167,17 @@ export enum CronExpression {
 	MONDAY_TO_FRIDAY_AT_11PM = '0 0 23 * * 1-5',
 }
 
+/**
+ * Various time intervals in milliseconds.
+ *
+ * @enum {number}
+ * @readonly
+ * @property {number} MILISECOND - Represents one millisecond.
+ * @property {number} SECOND - Represents one second (1000 milliseconds).
+ * @property {number} MINUTE - Represents one minute (60,000 milliseconds).
+ * @property {number} HOUR - Represents one hour (3,600,000 milliseconds).
+ * @property {number} DAY - Represents one day (86,400,000 milliseconds).
+ */
 export enum IntervalExpression {
 	MILISECOND = 1,
 	SECOND = 1000,

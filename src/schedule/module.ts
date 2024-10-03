@@ -12,6 +12,8 @@ import {
 	TimeoutMetadataPayload,
 } from './types.ts';
 
+/* Use this module if you want to run CRON https://danet.land/techniques/task-scheduling.html */
+
 @Module({})
 export class ScheduleModule implements OnAppBootstrap, OnAppClose {
 	private logger: Logger = new Logger('ScheduleModule');

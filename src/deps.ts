@@ -1,24 +1,17 @@
-export {
-	green,
-	red,
-	white,
-	yellow,
-} from 'https://deno.land/std@0.224.0/fmt/colors.ts';
-export { Reflect } from 'https://deno.land/x/deno_reflect@v0.2.1/mod.ts';
+export { green, red, white, yellow } from '@std/fmt/colors';
+export { Reflect } from 'deno_reflect';
 export { validateObject } from '../validation.ts';
 export {
 	type Context,
 	Hono as Application,
 	type MiddlewareHandler,
 	type Next,
-} from 'https://deno.land/x/hono@v4.3.11/mod.ts';
-export { type HandlerInterface } from 'https://deno.land/x/hono@v4.3.11/types.ts';
-export { HonoRequest } from 'https://deno.land/x/hono@v4.3.11/request.ts';
-export { getPath } from 'https://deno.land/x/hono@v4.3.11/utils/url.ts';
-export {
-	RegExpRouter,
-	SmartRouter,
-	TrieRouter,
-} from 'https://deno.land/x/hono@v4.3.11/mod.ts';
-export { SSEStreamingApi, streamSSE } from 'https://deno.land/x/hono@v4.3.11/helper.ts';
-export { cors } from 'https://deno.land/x/hono@v4.3.11/middleware.ts'
+} from '@hono';
+export { type HandlerInterface } from '@hono/types';
+export { HonoRequest } from '@hono/request';
+export { getPath } from '@hono/utils/url';
+export { RegExpRouter } from '@hono/router/reg-exp-router';
+export { SmartRouter } from '@hono/router/smart-router';
+export { TrieRouter } from '@hono/router/trie-router';
+export { SSEStreamingApi, streamSSE } from '@hono/streaming';
+export { cors } from '@hono/cors';

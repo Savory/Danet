@@ -3,6 +3,21 @@ import { ExecutionContext } from '../../router.ts';
 import { validateObject } from '../../../deps.ts';
 import { Constructor } from '../../../mod.ts';
 import { NotValidBodyException } from '../../../exception/mod.ts';
+import { argumentResolverFunctionsMetadataKey } from './constants.ts';
+
+/**
+ * A type representing a decorator function.
+ *
+ * @param target - The target constructor or any other type.
+ * @param propertyKey - The property key of the method or undefined.
+ * @param parameterIndex - The index of the parameter in the method's parameter list.
+ */
+export type DecoratorFunction = (
+	// deno-lint-ignore no-explicit-any
+	target: Constructor | any,
+	propertyKey: string | symbol | undefined,
+	parameterIndex: number,
+) => void;
 
 export type OptionsResolver = {
 	// deno-lint-ignore no-explicit-any
@@ -11,61 +26,95 @@ export type OptionsResolver = {
 	parameterIndex: number;
 };
 
+/**
+ * A type alias for a function that resolves a value based on the provided execution context and optional resolver options.
+ *
+ * @param context - The execution context in which the resolver is invoked.
+ * @param opts - Information about which class/property the decorator was attached to.
+ * @returns The resolved value, which can be either a synchronous value or a promise that resolves to a value.
+ */
 export type Resolver = (
 	context: ExecutionContext,
 	opts?: OptionsResolver,
 ) => unknown | Promise<unknown>;
 
-export const argumentResolverFunctionsMetadataKey = 'argumentResolverFunctions';
-export const createParamDecorator = (
+
+/**
+ * Creates a parameter decorator that resolves a parameter using the provided resolver function.
+ * Optionally, an additional decorator action can be executed.
+ *
+ * @param parameterResolver - A function that resolves the parameter value.
+ * @param additionalDecoratorAction - An optional additional decorator action to be executed.
+ * @returns A decorator function that can be used to decorate a parameter.
+ */
+export function createParamDecorator(
 	parameterResolver: Resolver,
 	additionalDecoratorAction?: ParameterDecorator,
-) =>
-() =>
-(
-	// deno-lint-ignore no-explicit-any
-	target: Constructor | any,
-	propertyKey: string | symbol | undefined,
-	parameterIndex: number,
-) => {
-	const argumentsResolverMap: Map<number, Resolver> =
-		MetadataHelper.getMetadata(
+): () => DecoratorFunction {
+	return () =>
+	(
+		// deno-lint-ignore no-explicit-any
+		target: Constructor | any,
+		propertyKey: string | symbol | undefined,
+		parameterIndex: number,
+	) => {
+		const argumentsResolverMap: Map<number, Resolver> =
+			MetadataHelper.getMetadata(
+				argumentResolverFunctionsMetadataKey,
+				target.constructor,
+				propertyKey,
+			) || new Map<number, Resolver>();
+
+		argumentsResolverMap.set(
+			parameterIndex,
+			(context) =>
+				parameterResolver(context, { target, propertyKey, parameterIndex }),
+		);
+
+		MetadataHelper.setMetadata(
 			argumentResolverFunctionsMetadataKey,
+			argumentsResolverMap,
 			target.constructor,
 			propertyKey,
-		) || new Map<number, Resolver>();
+		);
 
-	argumentsResolverMap.set(
-		parameterIndex,
-		(context) =>
-			parameterResolver(context, { target, propertyKey, parameterIndex }),
-	);
+		if (additionalDecoratorAction) {
+			additionalDecoratorAction(target, propertyKey, parameterIndex);
+		}
+	};
+}
 
-	MetadataHelper.setMetadata(
-		argumentResolverFunctionsMetadataKey,
-		argumentsResolverMap,
-		target.constructor,
-		propertyKey,
-	);
+/**
+ * Get current request
+ */
+export const Req: DecoratorFunction = createParamDecorator(
+	(context: ExecutionContext) => {
+		return context.req;
+	},
+);
 
-	if (additionalDecoratorAction) {
-		additionalDecoratorAction(target, propertyKey, parameterIndex);
-	}
-};
+/**
+ * Get current response
+ */
+export const Res: DecoratorFunction = createParamDecorator(
+	(context: ExecutionContext) => {
+		return context.res;
+	},
+);
 
-export const Req = createParamDecorator((context: ExecutionContext) => {
-	return context.req;
-});
+/**
+ *  Get current request websocket instance
+ */
+export const WebSocket: DecoratorFunction = createParamDecorator(
+	(context: ExecutionContext) => {
+		return context.websocket;
+	},
+);
 
-export const Res = createParamDecorator((context: ExecutionContext) => {
-	return context.res;
-});
-
-export const WebSocket = createParamDecorator((context: ExecutionContext) => {
-	return context.websocket;
-});
-
-export const Header = (prop?: string) =>
+/**
+ *  Get all headers or a specific header
+ */
+export const Header: (prop?: string) => DecoratorFunction = (prop?: string) =>
 	createParamDecorator((context: ExecutionContext) => {
 		if (!context.req.raw.headers) {
 			return null;
@@ -73,9 +122,17 @@ export const Header = (prop?: string) =>
 		return prop ? context.req.header(prop) : context.req.raw.headers;
 	})();
 
+/**
+ * Used to identify the type of the body in request parameters.
+ * 
+ * @constant {string} BODY_TYPE_KEY
+ */
 export const BODY_TYPE_KEY = 'body-type';
 
-export const Body = (prop?: string) =>
+/**
+ *  Get request's body or a given property
+ */
+export const Body: (prop?: string) => DecoratorFunction = (prop?: string) =>
 	createParamDecorator(
 		async (context: ExecutionContext, opts?: OptionsResolver) => {
 			if (!opts) {
@@ -151,11 +208,19 @@ function formatQueryValue(
 	}
 }
 
+/**
+ * Identify the type of query in the router controller parameters.
+ * 
+ * @constant {string} QUERY_TYPE_KEY
+ */
 export const QUERY_TYPE_KEY = 'query-type';
 
 export interface QueryOption {
 	value?: 'first' | 'last' | 'array';
 }
+/**
+ * Get all query params or a given query param
+ */
 export function Query(
 	options?: QueryOption,
 ): ReturnType<ReturnType<typeof createParamDecorator>>;
@@ -209,8 +274,11 @@ export function Query(
 	}))();
 }
 
-export const Param = (paramName: string) =>
-	createParamDecorator((context: ExecutionContext) => {
+/**
+ *  Get an url param for example /user/:userId
+ */
+export function Param(paramName: string): DecoratorFunction {
+	return createParamDecorator((context: ExecutionContext) => {
 		const params = context.req.param();
 		if (paramName) {
 			return params?.[paramName];
@@ -218,12 +286,17 @@ export const Param = (paramName: string) =>
 			return params;
 		}
 	})();
+}
 
-export const Session = (prop?: string) =>
-	createParamDecorator((context: ExecutionContext) => {
+/**
+ * Get Session or a given property of session
+ */
+export function Session(prop?: string): DecoratorFunction {
+	return createParamDecorator((context: ExecutionContext) => {
 		if (prop) {
 			return context.get('session').get(prop);
 		} else {
 			return context.get('session');
 		}
 	})();
+}

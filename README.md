@@ -5,6 +5,13 @@
 [![CI](https://github.com/savory/Danet/actions/workflows/run-tests.yml/badge.svg)](https://github.com/savory/Danet/actions/workflows/run-tests.yml)
 [![codecov](https://codecov.io/gh/Savory/Danet/branch/main/graph/badge.svg?token=R6WXVC669Z)](https://codecov.io/gh/Savory/Danet)
 ![Made for Deno](https://img.shields.io/badge/made%20for-Deno-6B82F6?style=flat-square)
+[![JSR](https://jsr.io/badges/@danet/core)](https://jsr.io/@danet/core)
+
+## Warning
+
+From version 2.4.0, Danet is only available via [JSR](https://jsr.io/) at
+[@danet/core](https://jsr.io/@danet/core). It's a step closer to runtime
+agnosticism.
 
 ## Description
 
@@ -44,7 +51,14 @@ We always welcome contributors, feel free to submit a new feature or report a
 bug on our [Github Repository](https://github.com/Savory/Danet) and
 [join our discord](https://discord.gg/Q7ZHuDPgjA)
 
-## How to start
+## Installation
+
+```sh
+deno install --global -A -n danet jsr:@danet/cli
+danet new <my-project>
+```
+
+## Documentation
 
 [Use our CLI](https://github.com/Savory/Danet-CLI)
 

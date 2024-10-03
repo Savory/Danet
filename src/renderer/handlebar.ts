@@ -1,5 +1,5 @@
 import { Renderer } from './interface.ts';
-import { Handlebars } from 'https://deno.land/x/handlebars@v0.10.0/mod.ts';
+import { Handlebars } from '@danet/handlebars';
 
 const defaultOption = {
 	baseDir: 'views',

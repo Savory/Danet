@@ -10,6 +10,14 @@ import { ExceptionFilter } from './interface.ts';
 import { Injector } from '../../injector/injector.ts';
 import { WebSocketPayload } from '../../router/websocket/payload.ts';
 
+/**
+ * Responsible for executing exception filters
+ * based on metadata and handling errors within the context of an HTTP request.
+ * It utilizes the injector to manage dependencies and retrieve filter instances.
+ *
+ * @constructor
+ * @param {Injector} injector - The dependency injector used to manage and retrieve filter instances.
+ */
 export class FilterExecutor {
 	constructor(private injector: Injector) {
 	}
@@ -65,6 +73,15 @@ export class FilterExecutor {
 		return;
 	}
 
+	/**
+	 * Executes filters for both the controller and the controller method.
+	 *
+	 * @param context - The HTTP context for the current request.
+	 * @param error - The error that occurred.
+	 * @param Controller - The constructor of the controller.
+	 * @param ControllerMethod - The method of the controller to be executed.
+	 * @returns A promise that resolves to a `Response`, `undefined`, or `WebSocketPayload`.
+	 */
 	async executeControllerAndMethodFilter(
 		context: HttpContext,
 		error: unknown,

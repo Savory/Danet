@@ -29,7 +29,9 @@ export class WebSocketRouter {
 		private guardExecutor: GuardExecutor = new GuardExecutor(injector),
 		private filterExecutor: FilterExecutor = new FilterExecutor(injector),
 		private router: Application,
-		private middlewareExecutor = new MiddlewareExecutor(injector),
+		private middlewareExecutor: MiddlewareExecutor = new MiddlewareExecutor(
+			injector,
+		),
 	) {}
 
 	public registerController(Controller: Constructor, endpoint: string) {
@@ -108,7 +110,8 @@ export class WebSocketRouter {
 			const methodName = methods[0][0] as string;
 			const messageExecutionContext = {} as ExecutionContext;
 
-			messageExecutionContext.req = new HonoRequest(
+			// deno-lint-ignore no-explicit-any
+			(messageExecutionContext.req as any) = new HonoRequest(
 				fakeRequest,
 				getPath(fakeRequest),
 				// deno-lint-ignore no-explicit-any

@@ -8,10 +8,29 @@ import { GLOBAL_GUARD } from './constants.ts';
 import { guardMetadataKey } from './decorator.ts';
 import { AuthGuard } from './interface.ts';
 
+/**
+ * Responsible for executing various guards in a given execution context.
+ * It handles the execution of global guards, controller-level guards, and method-level guards.
+ * https://danet.land/overview/guards.html
+ * @constructor
+ * @param {Injector} injector - The injector instance used to retrieve and manage dependencies.
+ */
 export class GuardExecutor {
 	constructor(private injector: Injector) {
 	}
 
+	/**
+	 * https://danet.land/overview/guards.html
+	 * Executes all relevant guards for the given context, controller, and controller method.
+	 *
+	 * This method first executes the global guard, followed by the controller and method-specific
+	 * authentication guards.
+	 *
+	 * @param context - The execution context which provides details about the current request.
+	 * @param Controller - The constructor of the controller being executed.
+	 * @param ControllerMethod - The method of the controller being executed.
+	 * @returns A promise that resolves when all relevant guards have been executed.
+	 */
 	async executeAllRelevantGuards(
 		context: ExecutionContext,
 		Controller: ControllerConstructor,
@@ -25,14 +44,14 @@ export class GuardExecutor {
 		);
 	}
 
-	async executeGlobalGuard(context: ExecutionContext) {
+	private async executeGlobalGuard(context: ExecutionContext) {
 		if (this.injector.has(GLOBAL_GUARD)) {
 			const globalGuard: AuthGuard = await this.injector.get(GLOBAL_GUARD);
 			await this.executeGuard(globalGuard, context);
 		}
 	}
 
-	async executeControllerAndMethodAuthGuards(
+	private async executeControllerAndMethodAuthGuards(
 		context: ExecutionContext,
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
@@ -41,7 +60,7 @@ export class GuardExecutor {
 		await this.executeGuardFromMetadata(context, ControllerMethod);
 	}
 
-	async executeGuard(guard: AuthGuard, context: ExecutionContext) {
+	private async executeGuard(guard: AuthGuard, context: ExecutionContext) {
 		if (guard) {
 			const canActivate = await guard.canActivate(context);
 			if (!canActivate) {
@@ -50,7 +69,7 @@ export class GuardExecutor {
 		}
 	}
 
-	async executeGuardFromMetadata(
+	private async executeGuardFromMetadata(
 		context: ExecutionContext,
 		// deno-lint-ignore ban-types
 		constructor: Constructor | Function,

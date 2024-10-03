@@ -1,1 +1,6 @@
-export * from 'https://deno.land/x/validatte@0.7.2/mod.ts';
+/**
+ * @module
+ * Validation module.
+ * Export everything from https://jsr.io/@danet/validatte
+ */
+export * from 'validatte';

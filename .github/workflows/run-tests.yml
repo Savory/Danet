@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ["v1.x", canary]
+        version: ['v1.x', canary]
     steps:
       - name: Setup repo
         uses: actions/checkout@v3

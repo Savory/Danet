@@ -9,15 +9,32 @@ import {
 	MiddlewareFunction,
 	middlewareMetadataKey,
 	NextFunction,
-	PossibleMiddlewareType,
 } from './decorator.ts';
 import { Constructor } from '../../utils/constructor.ts';
 import { globalMiddlewareContainer } from './global-container.ts';
 
+/**
+ * The `MiddlewareExecutor` class is responsible for executing a series of middleware functions
+ * in a specified order. It utilizes an injector to manage dependencies and ensures that all
+ * relevant middlewares are executed for a given context, controller, and controller method.
+ */
 export class MiddlewareExecutor {
-	constructor(private injector: Injector) {
-	}
+	/**
+	 * Constructs a new `MiddlewareExecutor` instance.
+	 *
+	 * @param injector - The injector used to manage dependencies.
+	 */
+	constructor(private injector: Injector) {}
 
+	/**
+	 * Executes all relevant middlewares for the given context, controller, and controller method.
+	 *
+	 * @param context - The execution context.
+	 * @param Controller - The controller constructor.
+	 * @param ControllerMethod - The controller method callback.
+	 * @param next - The next function to be called after all middlewares have been executed.
+	 * @returns A promise that resolves to the result of the next function or the middleware chain.
+	 */
 	async executeAllRelevantMiddlewares(
 		context: ExecutionContext,
 		Controller: ControllerConstructor,

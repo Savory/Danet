@@ -1,4 +1,8 @@
-// created from ctix
+/**
+ * @module
+ *
+ * A probably too big module that exports almost everything.
+ */
 
 export * from './app.ts';
 export * from './utils/mod.ts';

@@ -1,3 +1,6 @@
+/**
+ * Enum for HTTP status codes
+ */
 export enum HTTP_STATUS {
 	CONTINUE = 100,
 	SWITCHING_PROTOCOLS = 101,

@@ -1,7 +1,4 @@
-import {
-	assertEquals,
-	assertExists,
-} from 'https://deno.land/std@0.224.0/testing/asserts.ts';
+import { assertEquals, assertExists } from '@std/testing/asserts';
 import { DanetApplication } from '../src/mod.ts';
 import { Module } from '../src/module/mod.ts';
 import { Body, Controller, Get, Post } from '../src/router/controller/mod.ts';
