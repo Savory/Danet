@@ -4,4 +4,4 @@
  */
 
 export * from './helper.ts';
-export * from './metadata.ts';
+export * from './decorator.ts';
