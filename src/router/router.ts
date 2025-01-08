@@ -122,13 +122,14 @@ export class DanetHTTPRouter {
 				`The method "${httpMethod}" can not be handled by "${basePath}" of controller "${Controller}".`,
 			);
 		}
+		const routePath = `${this.prefix ? this.prefix : ''}${
+			path ? path : '/'
+		}`;
 		this.logger.log(
-			`Registering [${httpMethod}] ${this.prefix ? this.prefix : ''}${
-				path ? path : '/'
-			}`,
+			`Registering [${httpMethod}] ${routePath}`,
 		);
 		routerFn(
-			path,
+			routePath,
 			async (context: HttpContext, next: NextFunction) => {
 				const _id = crypto.randomUUID();
 				(context as ExecutionContext)._id = _id;
@@ -162,8 +163,9 @@ export class DanetHTTPRouter {
 	 * @param prefix - The prefix string to set for the router.
 	 */
 	setPrefix(prefix: string) {
-		prefix = prefix.replace(/\/$/, '');
-		this.router.basePath(prefix);
+		if (prefix.endsWith('/')) {
+			prefix = prefix.slice(0, -1);
+		}
 		this.prefix = prefix;
 	}
 

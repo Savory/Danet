@@ -299,4 +299,14 @@ export class DanetApplication {
 	use(middleware: MiddlewareHandler) {
 		this.app.use('*', middleware);
 	}
+
+
+	/**
+	 * Register a base path for the application.
+	 *
+	 * @param basePath - The base path to be registered.
+	 */
+	registerBasePath(basePath: string) {
+		this.httpRouter.setPrefix(basePath);
+	}
 }
