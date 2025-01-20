@@ -1,7 +1,9 @@
 import { SetMetadata } from '../../metadata/decorator.ts';
 
-export const WebSocketController: MappingDecoratorFunction = (endpoint = '') =>
-	SetMetadata('websocket-endpoint', endpoint);
+export function WebSocketController(endpoint = ''): MethodDecorator {
+	return SetMetadata('websocket-endpoint', endpoint);
+}
 
-export const OnWebSocketMessage: MappingDecoratorFunction = (topic: string) =>
-	SetMetadata('websocket-topic', topic);
+export function OnWebSocketMessage(topic: string): MethodDecorator {
+	return SetMetadata('websocket-topic', topic);
+}
