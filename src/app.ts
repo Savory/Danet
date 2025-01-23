@@ -50,7 +50,6 @@ import { injector } from './injector/injector.ts';
 import { Logger } from './logger.ts';
 import { MetadataHelper } from './metadata/helper.ts';
 import { ModuleMetadata, moduleMetadataKey } from './module/decorator.ts';
-import { HandlebarRenderer } from './renderer/handlebar.ts';
 import { DanetHTTPRouter } from './router/router.ts';
 import { WebSocketRouter } from './router/websocket/router.ts';
 import { Constructor } from './utils/constructor.ts';
@@ -60,6 +59,7 @@ import { ModuleConstructor } from './module/constructor.ts';
 import { serveStatic } from './utils/serve-static.ts';
 import { cors } from './deps.ts';
 import { DynamicModule } from './mod.ts';
+import type { HandlebarRenderer } from './renderer/handlebar.ts';
 
 type CORSOptions = {
 	origin: string | string[] | ((origin: string) => string | undefined | null);
@@ -80,7 +80,7 @@ export class DanetApplication {
 	private internalHttpServer?: Deno.HttpServer;
 	private injector = injector;
 	private hookExecutor = new HookExecutor(this.injector);
-	private renderer = new HandlebarRenderer();
+	private renderer: HandlebarRenderer | undefined = undefined;
 	private guardExecutor = new GuardExecutor(this.injector);
 	private filterExecutor = new FilterExecutor(this.injector);
 	public httpRouter: DanetHTTPRouter = new DanetHTTPRouter(
@@ -253,12 +253,22 @@ export class DanetApplication {
 	}
 
 	/**
+	 * Set renderer
+	 */
+	setRenderer(renderer: any) {
+		this.renderer = renderer;
+		this.httpRouter.setRenderer(this.renderer);
+	}
+
+	/**
 	 * Sets the directory for the view engine.
 	 *
 	 * @param path - The path to the directory to be set as the root for the view engine.
 	 */
 	setViewEngineDir(path: string) {
-		this.renderer.setRootDir(path);
+		if (this.renderer) {
+			this.renderer.setRootDir(path);
+		}
 	}
 
 	/**

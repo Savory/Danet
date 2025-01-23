@@ -14,7 +14,6 @@ import { Injector } from '../injector/injector.ts';
 import { Logger } from '../logger.ts';
 import { MetadataHelper } from '../metadata/helper.ts';
 import { rendererViewFile } from '../renderer/decorator.ts';
-import { HandlebarRenderer } from '../renderer/handlebar.ts';
 import { Renderer } from '../renderer/interface.ts';
 import { Constructor } from '../utils/constructor.ts';
 import { ControllerConstructor } from './controller/constructor.ts';
@@ -72,7 +71,7 @@ export class DanetHTTPRouter {
 		private injector: Injector,
 		private guardExecutor: GuardExecutor = new GuardExecutor(injector),
 		private filterExecutor: FilterExecutor = new FilterExecutor(injector),
-		private viewRenderer: Renderer = new HandlebarRenderer(),
+		private viewRenderer: Renderer | undefined,
 		private router: Application,
 	) {
 		this.methodsMap = new Map([
@@ -88,6 +87,10 @@ export class DanetHTTPRouter {
 		this.middlewareExecutor = new MiddlewareExecutor(
 			injector,
 		);
+	}
+
+	setRenderer(renderer: any) {
+		this.viewRenderer = renderer;
 	}
 
 	private createRoute(
@@ -307,7 +310,7 @@ export class DanetHTTPRouter {
 				rendererViewFile,
 				ControllerMethod,
 			);
-			if (fileName) {
+			if (fileName && this.viewRenderer) {
 				context.res = await context.html(
 					await this.viewRenderer.render(
 						fileName,

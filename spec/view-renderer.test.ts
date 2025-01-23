@@ -3,6 +3,7 @@ import { DanetApplication } from '../src/app.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Render } from '../src/renderer/decorator.ts';
 import { Controller, Get } from '../src/router/controller/decorator.ts';
+import { HandlebarRenderer } from '../src/renderer/handlebar.ts';
 
 @Controller('nice-controller')
 class SimpleController {
@@ -22,6 +23,7 @@ Deno.test('Hbs renderer', async () => {
 	const app = new DanetApplication();
 	await app.init(MyModule);
 	const viewPath = path.dirname(path.fromFileUrl(import.meta.url)) + '/views';
+	app.setRenderer(new HandlebarRenderer())
 	app.setViewEngineDir(viewPath);
 	const listenEvent = await app.listen(0);
 
