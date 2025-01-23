@@ -89,7 +89,7 @@ export class DanetHTTPRouter {
 		);
 	}
 
-	setRenderer(renderer: any) {
+	setRenderer(renderer: Renderer) {
 		this.viewRenderer = renderer;
 	}
 

@@ -59,7 +59,7 @@ import { ModuleConstructor } from './module/constructor.ts';
 import { serveStatic } from './utils/serve-static.ts';
 import { cors } from './deps.ts';
 import { DynamicModule } from './mod.ts';
-import type { HandlebarRenderer } from './renderer/handlebar.ts';
+import { Renderer } from './renderer/interface.ts';
 
 type CORSOptions = {
 	origin: string | string[] | ((origin: string) => string | undefined | null);
@@ -80,7 +80,7 @@ export class DanetApplication {
 	private internalHttpServer?: Deno.HttpServer;
 	private injector = injector;
 	private hookExecutor = new HookExecutor(this.injector);
-	private renderer: HandlebarRenderer | undefined = undefined;
+	private renderer: Renderer | undefined = undefined;
 	private guardExecutor = new GuardExecutor(this.injector);
 	private filterExecutor = new FilterExecutor(this.injector);
 	public httpRouter: DanetHTTPRouter = new DanetHTTPRouter(
@@ -255,7 +255,7 @@ export class DanetApplication {
 	/**
 	 * Set renderer
 	 */
-	setRenderer(renderer: any) {
+	setRenderer(renderer: Renderer) {
 		this.renderer = renderer;
 		this.httpRouter.setRenderer(this.renderer);
 	}
