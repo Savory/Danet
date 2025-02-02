@@ -1,5 +1,5 @@
 export interface SSEMessage {
-	data: string;
+	data: string | object;
 	event?: string;
 	id?: string;
 	retry?: number;

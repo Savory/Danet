@@ -252,8 +252,9 @@ export class DanetHTTPRouter {
 				'message',
 				async (event) => {
 					const { detail: payload } = event as SSEEvent;
+					const dataAsString = typeof payload.data === 'object' ? JSON.stringify(payload.data) : payload.data;
 					await stream.writeSSE({
-						data: payload.data,
+						data: dataAsString,
 						event: payload.event,
 						id: payload.id,
 						retry: payload.retry,
