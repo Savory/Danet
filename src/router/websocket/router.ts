@@ -5,7 +5,7 @@ import {
 	FilterExecutor,
 	GuardExecutor,
 	HttpContext,
-	Injector,
+	Injector, WebSocketInstance,
 } from '../../mod.ts';
 import {
 	Application,
@@ -57,7 +57,7 @@ export class WebSocketRouter {
 			const _id = crypto.randomUUID();
 			(context as ExecutionContext)._id = _id;
 			(context as ExecutionContext).getClass = () => Controller;
-			(context as ExecutionContext).websocket = socket;
+			(context as ExecutionContext).websocket = { ...socket, id: _id };
 			const executionContext = context as unknown as ExecutionContext;
 			const controllerInstance = await this.injector.get(
 				Controller,
@@ -69,7 +69,7 @@ export class WebSocketRouter {
 				topicRouter,
 				Controller,
 				controllerInstance,
-				socket,
+				(context as ExecutionContext).websocket!,
 			);
 			return response;
 		};
@@ -98,7 +98,7 @@ export class WebSocketRouter {
 		Controller: Constructor,
 		// deno-lint-ignore no-explicit-any
 		controllerInstance: any,
-		socket: WebSocket,
+		socket: WebSocketInstance,
 	) {
 		return async (event: MessageEvent) => {
 			const { topic, data } = JSON.parse(event.data);

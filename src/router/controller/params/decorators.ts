@@ -109,7 +109,7 @@ export const WebSocket: DecoratorFunction = createParamDecorator(
 	(context: ExecutionContext) => {
 		return context.websocket;
 	},
-);
+)();
 
 /**
  *  Get all headers or a specific header

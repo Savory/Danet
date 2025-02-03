@@ -34,6 +34,9 @@ export type Callback = (...args: any[]) => unknown;
  */
 export type HttpContext = Context;
 
+/** Type for WebSocket instance */
+export type WebSocketInstance = WebSocket & { id: string };
+
 /**
  * Represents Danet's execution context for an HTTP request, extending Hono's HttpContext.
  *
@@ -41,7 +44,7 @@ export type HttpContext = Context;
  * @property {string} _id - Unique identifier for the execution context.
  * @property {Function} getHandler - Function to retrieve the handler for the current context.
  * @property {Constructor} getClass - Function to retrieve the class constructor for the current context.
- * @property {WebSocket} [websocket] - Optional WebSocket instance associated with the context.
+ * @property {WebSocketInstance} [websocket] - Optional WebSocket instance associated with the context.
  * @property {any} [websocketMessage] - Optional message received via WebSocket.
  * @property {string} [websocketTopic] - Optional topic associated with the WebSocket message.
  */
@@ -50,7 +53,7 @@ export type ExecutionContext = HttpContext & {
 	// deno-lint-ignore ban-types
 	getHandler: () => Function;
 	getClass: () => Constructor;
-	websocket?: WebSocket;
+	websocket?: WebSocketInstance;
 	// deno-lint-ignore no-explicit-any
 	websocketMessage?: any;
 	websocketTopic?: string;
