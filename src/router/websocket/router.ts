@@ -57,7 +57,8 @@ export class WebSocketRouter {
 			const _id = crypto.randomUUID();
 			(context as ExecutionContext)._id = _id;
 			(context as ExecutionContext).getClass = () => Controller;
-			(context as ExecutionContext).websocket = { ...socket, id: _id };
+			(context as ExecutionContext).websocket = socket as WebSocketInstance;
+			(context as ExecutionContext).websocket!.id = _id;
 			const executionContext = context as unknown as ExecutionContext;
 			const controllerInstance = await this.injector.get(
 				Controller,
