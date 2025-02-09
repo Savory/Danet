@@ -154,7 +154,7 @@ export class Injector {
 				throw new Error(
 					`${Type.name} dependency ${
 						this.getParamToken(Type, idx) ?? DependencyType.name
-					} is not available in injection context. Did you provide it in module ?`,
+					} is not available in injection context. Did you provide it in module ? If so, make sure you are not doing "import type" (which means it won't exist at runtime)`,
 				);
 			}
 			const injectableMetadata = MetadataHelper.getMetadata<InjectableOption>(
@@ -354,7 +354,7 @@ export class Injector {
 					await this.resolveInjectable(type, ParentConstructor, token);
 				} else {
 					throw new Error(
-						`${Dependency.name} is not available in injection context. Did you provide it in module ?`,
+						`${Dependency.name} is not available in injection context. Did you provide it in module ? If so, make sure you are not doing "import type" (which means it won't exist at runtime)`,
 					);
 				}
 			}
