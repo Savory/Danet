@@ -132,3 +132,24 @@ Deno.test('throw 500 on unexpected error', async () => {
 	await res.json();
 	await app.close();
 });
+
+
+Deno.test('global exception filter', async () => {
+	const app = new DanetApplication();
+	await app.init(ModuleWithFilter);
+	const simpleService = app.get(SimpleService);
+	app.useGlobalExceptionFilter(new ErrorFilter(simpleService));
+	const listenEvent = await app.listen(0);
+
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/custom-error/unexpected-error`,
+		{
+			method: 'GET',
+		},
+	);
+	const json = await res.json();
+	assertEquals(json, {
+		wePassedInFilterCatchingAllErrors: true,
+	});
+	await app.close();
+});

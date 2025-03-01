@@ -9,6 +9,7 @@ import {
 import { ExceptionFilter } from './interface.ts';
 import { Injector } from '../../injector/injector.ts';
 import { WebSocketPayload } from '../../router/websocket/payload.ts';
+import { globalExceptionFilterContainer } from './global-container.ts';
 
 /**
  * Responsible for executing exception filters
@@ -88,7 +89,23 @@ export class FilterExecutor {
 		Controller: ControllerConstructor,
 		ControllerMethod: Callback,
 	): Promise<Response | undefined | WebSocketPayload> {
-		return (await this.executeFilterFromMetadata(context, error, Controller) ||
-			await this.executeFilterFromMetadata(context, error, ControllerMethod));
+		let response: Response | undefined | WebSocketPayload;
+		response = await this.executeFilterFromMetadata(context, error, Controller);
+
+		if (response) return response;
+
+		response = await this.executeFilterFromMetadata(
+			context,
+			error,
+			ControllerMethod,
+		);
+		if (response) return response;
+
+		for (const filter of globalExceptionFilterContainer) {
+			response = this.executeFilter(filter, context, error);
+			if (response) return response;
+		}
+
+		return;
 	}
 }

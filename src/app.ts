@@ -58,8 +58,9 @@ import { globalMiddlewareContainer } from './router/middleware/global-container.
 import { ModuleConstructor } from './module/constructor.ts';
 import { serveStatic } from './utils/serve-static.ts';
 import { cors } from './deps.ts';
-import { DynamicModule } from './mod.ts';
+import { DynamicModule, ExceptionFilter } from './mod.ts';
 import { Renderer } from './renderer/interface.ts';
+import { globalExceptionFilterContainer } from './exception/filter/global-container.ts';
 
 type CORSOptions = {
 	origin: string | string[] | ((origin: string) => string | undefined | null);
@@ -319,4 +320,8 @@ export class DanetApplication {
 	registerBasePath(basePath: string) {
 		this.httpRouter.setPrefix(basePath);
 	}
+
+    useGlobalExceptionFilter(errorFilter: ExceptionFilter) {
+		globalExceptionFilterContainer.push(errorFilter);
+    }
 }
