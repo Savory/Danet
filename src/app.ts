@@ -321,6 +321,11 @@ export class DanetApplication {
 		this.httpRouter.setPrefix(basePath);
 	}
 
+	/**
+	 * Add a global exception filter to the global exception filter container.
+	 *
+	 * @param errorFilter - The exception filter to be added.
+	 */
     useGlobalExceptionFilter(errorFilter: ExceptionFilter) {
 		globalExceptionFilterContainer.push(errorFilter);
     }
