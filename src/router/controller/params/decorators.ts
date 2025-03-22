@@ -300,3 +300,13 @@ export function Session(prop?: string): DecoratorFunction {
 		}
 	})();
 }
+
+
+/**
+ * Injects the current execution context into the controller method.
+ */
+export function Context(): DecoratorFunction {
+	return createParamDecorator((context: ExecutionContext) => {
+		return context;
+	})();
+}

@@ -1,7 +1,7 @@
 import { assertEquals } from '../src/deps_test.ts';
 import { DanetApplication } from '../src/app.ts';
-import { Session } from '../src/mod.ts';
-import type { MiddlewareHandler } from '../src/deps.ts';
+import { type ExecutionContext, Session } from '../src/mod.ts';
+import { MiddlewareHandler } from '../src/deps.ts';
 import { Module } from '../src/module/decorator.ts';
 import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
 import {
@@ -9,6 +9,7 @@ import {
 	Header,
 	Param,
 	Query,
+	Context
 } from '../src/router/controller/params/decorators.ts';
 import { UseGuard } from '../src/guard/decorator.ts';
 import { Injectable } from '../src/injector/injectable/decorator.ts';
@@ -108,10 +109,16 @@ class SimpleController {
 		return fullBody;
 	}
 
+	@Get('/context')
+	contextHandlerWithSpecificNameToTest(@Context() context: ExecutionContext) {
+		return context.getHandler().name;
+	}
+
 	@Get('/:myparam')
 	queryParam(@Param('myparam') niceValue: string) {
 		return niceValue;
 	}
+
 }
 
 @Module({
@@ -424,5 +431,21 @@ Deno.test('@Session decorator with param', async () => {
 	);
 	const text = await res.text();
 	assertEquals(text, 'yes');
+	await app.close();
+});
+
+Deno.test('@Context decorator', async () => {
+	const app = new DanetApplication();
+	await app.init(MyModule);
+	const listenEvent = await app.listen(0);
+
+	const res = await fetch(`http://localhost:${listenEvent.port}/context`, {
+		method: 'GET',
+		headers: {
+			'content-type': 'application/json',
+		},
+	});
+	const text = await res.text();
+	assertEquals(text, 'contextHandlerWithSpecificNameToTest');
 	await app.close();
 });
