@@ -29,9 +29,9 @@ class ErrorFilter implements ExceptionFilter {
 
 	catch(exception: any, context: HttpContext) {
 		this.simpleService.doSomething();
-		return context.json({
+		return context.newResponse(JSON.stringify({
 			wePassedInFilterCatchingAllErrors: true,
-		});
+		}), 401);
 	}
 }
 
@@ -111,6 +111,7 @@ Deno.test('Controller filter works', async () => {
 		method: 'GET',
 	});
 	const json = await res.json();
+	assertEquals(res.status, 401);
 	assertEquals(json, {
 		wePassedInFilterCatchingAllErrors: true,
 	});
@@ -147,6 +148,7 @@ Deno.test('global exception filter', async () => {
 			method: 'GET',
 		},
 	);
+	assertEquals(res.status, 401);
 	const json = await res.json();
 	assertEquals(json, {
 		wePassedInFilterCatchingAllErrors: true,
