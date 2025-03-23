@@ -309,6 +309,7 @@ export class DanetHTTPRouter {
 		ControllerMethod: Callback,
 		context: HttpContext,
 	) {
+		const status = MetadataHelper.getMetadata<number>('status', ControllerMethod) || 200;
 		if (response) {
 			const fileName = MetadataHelper.getMetadata<string>(
 				rendererViewFile,
@@ -328,10 +329,12 @@ export class DanetHTTPRouter {
 				if (typeof response !== 'string') {
 					context.res = await context.json(response, {
 						headers: context.res.headers,
+						status,
 					});
 				} else {
 					context.res = await context.text(response, {
 						headers: context.res.headers,
+						status,
 					});
 				}
 			}

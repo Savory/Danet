@@ -182,3 +182,26 @@ export const SSE: MappingDecoratorFunction = (
 		return descriptor;
 	};
 };
+
+
+/**
+ * Define response status code for a request handler.
+ *
+ * @param {number} statusCode - The status code to set for the request handler.
+ * @returns {MethodDecorator} A method decorator that sets the status code for the request handler.
+ *
+ * @example
+ * ```typescript
+ * @HttpCode(203)
+ * @Get('/path')
+ * public myMethod(): string {
+ *   return 'This is a GET request';
+ * }
+ * ```
+ */
+export function HttpCode(statusCode: number): MethodDecorator {
+	return (_target, _propertyKey, descriptor) => {
+		MetadataHelper.setMetadata('status', statusCode, descriptor.value);
+		return descriptor;
+	};
+}

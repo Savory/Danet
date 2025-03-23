@@ -8,7 +8,7 @@ import {
 	Get,
 	Patch,
 	Post,
-	Put,
+	Put, HttpCode,
 } from '../src/router/controller/decorator.ts';
 
 @Controller('nice-controller')
@@ -41,6 +41,12 @@ class SimpleController {
 	@All('/all')
 	all() {
 		return 'OK ALL';
+	}
+
+	@HttpCode(203)
+	@Get('/custom-http-status')
+	customHttpStatus() {
+		return 'OK';
 	}
 }
 
@@ -82,5 +88,22 @@ Deno.test('ALL', async () => {
 		const text = await res.text();
 		assertEquals(text, `OK ALL`);
 	}
+	await app.close();
+});
+
+Deno.test('Custom HTTP status', async () => {
+	const app = new DanetApplication();
+	await app.init(MyModule);
+	const listenEvent = await app.listen(0);
+
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/nice-controller/custom-http-status`,
+		{
+			method: 'GET',
+		},
+	);
+	const text = await res.text();
+	assertEquals(text, 'OK');
+	assertEquals(res.status, 203);
 	await app.close();
 });
