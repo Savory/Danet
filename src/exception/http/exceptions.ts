@@ -525,8 +525,8 @@ export class NotValidBodyException<T> extends HttpException {
 	 *
 	 * @param {T} reasons - The reasons why the body is not valid.
 	 */
-	constructor(reasons: T) {
-		super(HTTP_STATUS.BAD_REQUEST, 'Body bad formatted');
+	constructor(reasons: T, message = 'Body bad formatted') {
+		super(HTTP_STATUS.BAD_REQUEST, message);
 		this.reasons = reasons;
 	}
 }
