@@ -327,18 +327,22 @@ export class DanetHTTPRouter {
 				);
 			} else {
 				if (typeof response !== 'string') {
-					context.res = await context.json(response, {
+					context.res = context.json(response, {
 						headers: context.res.headers,
 						status,
 					});
 				} else {
-					context.res = await context.text(response, {
+					context.res = context.text(response, {
 						headers: context.res.headers,
 						status,
 					});
 				}
 			}
 		}
+		context.res = context.body(context.res.body, {
+			headers: context.res.headers,
+			status,
+		});
 		return context.res;
 	}
 }

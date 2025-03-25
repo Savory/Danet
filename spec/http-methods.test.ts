@@ -48,6 +48,11 @@ class SimpleController {
 	customHttpStatus() {
 		return 'OK';
 	}
+
+	@HttpCode(204)
+	@Delete('/custom-http-status')
+	async delete() {
+	}
 }
 
 @Module({
@@ -105,5 +110,21 @@ Deno.test('Custom HTTP status', async () => {
 	const text = await res.text();
 	assertEquals(text, 'OK');
 	assertEquals(res.status, 203);
+	await app.close();
+});
+
+Deno.test('Delete Custom HTTP status', async () => {
+	const app = new DanetApplication();
+	await app.init(MyModule);
+	const listenEvent = await app.listen(0);
+
+	const res = await fetch(
+		`http://localhost:${listenEvent.port}/nice-controller/custom-http-status`,
+		{
+			method: 'DELETE',
+		},
+	);
+	const text = await res.text();
+	assertEquals(res.status, 204);
 	await app.close();
 });
