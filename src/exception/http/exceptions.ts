@@ -18,7 +18,7 @@ export class HttpException extends Error {
 	 * @param {number} status - The HTTP status code associated with the exception.
 	 * @param {string} description - A brief description of the exception.
 	 */
-	constructor(readonly status: number, description: string) {
+	constructor(readonly status: number, readonly description: string) {
 		super(`${status} - ${description}`);
 		this.name = this.constructor.name;
 	}
