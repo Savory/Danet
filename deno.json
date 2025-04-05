@@ -1,6 +1,6 @@
 {
 	"name": "@danet/core",
-	"version": "2.9.2",
+	"version": "2.9.3",
 	"exports": {
 		".": "./mod.ts",
 		"./metadata": "./src/metadata/mod.ts",
