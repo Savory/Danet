@@ -42,7 +42,7 @@ export class EventEmitterModule implements OnAppBootstrap, OnAppClose {
 			if (!eventListenerMedatada) continue;
 			const { channel } = eventListenerMedatada;
 
-			emitter.subscribe(channel, target);
+			emitter.subscribe(channel, target.bind(injectableInstance));
 			this.logger.log(`registering method '${method}' to event '${channel}'`);
 		}
 	}

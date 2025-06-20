@@ -115,9 +115,14 @@ Deno.test('EventEmitter Module', async (t) => {
 	const payload = { name: 'test' };
 
 	class TestListener {
+		public somethingDone = 0;
+		private doSomething() {
+			this.somethingDone++;
+		}
 		@OnEvent('trigger')
 		getSomething(payload: any) {
 			callback(payload);
+			this.doSomething();
 		}
 	}
 
