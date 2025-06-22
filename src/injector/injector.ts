@@ -354,7 +354,7 @@ export class Injector {
 					await this.resolveInjectable(type, ParentConstructor, token);
 				} else {
 					throw new Error(
-						`${Dependency.name} is not available in injection context. Did you provide it in module ? If so, make sure you are not doing "import type" (which means it won't exist at runtime)`,
+						`Failed to resolve param ${idx} of ${ParentConstructor.name}. ${Dependency.name} is not available in injection context. Did you provide it in module ? If so, make sure you are not doing "import type" (which means it won't exist at runtime)`,
 					);
 				}
 			}
