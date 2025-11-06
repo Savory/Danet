@@ -221,7 +221,7 @@ export class DanetHTTPRouter {
 				) as any;
 				const response:
 					| Record<string, unknown>
-					| string = await controllerInstance[ControllerMethod.name](
+					| string | Response = await controllerInstance[ControllerMethod.name](
 						...params,
 					);
 				const isSSE = MetadataHelper.getMetadata('SSE', ControllerMethod);
@@ -230,6 +230,10 @@ export class DanetHTTPRouter {
 						executionContext,
 						response as unknown as EventTarget,
 					);
+					return context.res;
+				}
+				if (response instanceof Response) {
+					context.res = response;
 					return context.res;
 				}
 				return await this.sendResponse(

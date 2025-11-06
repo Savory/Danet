@@ -1,6 +1,6 @@
 {
 	"name": "@danet/core",
-	"version": "2.9.5",
+	"version": "2.9.6",
 	"exports": {
 		".": "./mod.ts",
 		"./metadata": "./src/metadata/mod.ts",
@@ -46,7 +46,7 @@
 		"jsxImportSource": "preact"
 	},
 	"tasks": {
-		"test": "NO_LOG=true COOKIE_SECRET_KEY=mysecretkey deno test -A --unstable-kv --unstable-cron --coverage=coverage spec/**/*.test.ts",
+		"test": "NO_LOG=true deno test -A --unstable-kv --unstable-cron --coverage=coverage spec/**/*.test.ts",
 		"start:example": "deno run --allow-net --allow-env --watch example/run.ts"
 	},
 	"imports": {
