@@ -13,7 +13,7 @@ import { TooManyRequestsException } from '../exception/http/exceptions.ts';
 export class ThrottleGuard implements AuthGuard {
   constructor(private throttler: ThrottlerService) {}
 
-  async canActivate(context: ExecutionContext) {
+canActivate(context: ExecutionContext) {
     const handler = context.getHandler();
     const controller = context.getClass();
 
