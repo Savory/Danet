@@ -16,3 +16,4 @@ export * from './events/mod.ts';
 export * from './schedule/mod.ts';
 export * from './kv-queue/mod.ts';
 export * from './sse/mod.ts';
+export * from './throttler/mod.ts';
