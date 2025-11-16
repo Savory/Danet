@@ -32,7 +32,7 @@ canActivate(context: ExecutionContext) {
     }
 
     // default key: X-Forwarded-For header, fallbacks to remote address or global
-    const ip = context.req.header('x-forwarded-for') || context.req.header('x-real-ip') || context.req.connection?.remoteAddress || 'global';
+    const ip = context.req.header('x-forwarded-for') || context.req.header('x-real-ip') || 'global';
     const key = `${ip}:${context.getHandler().name}`;
 
     const count = this.throttler.consume(key, options.ttl || 60);
