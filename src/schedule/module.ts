@@ -18,8 +18,8 @@ import {
 export class ScheduleModule implements OnAppBootstrap, OnAppClose {
 	private logger: Logger = new Logger('ScheduleModule');
 	private abortController = new AbortController();
-	private intervalSet = new Set<number>();
-	private timeoutSet = new Set<number>();
+	private intervalSet = new Set<ReturnType<typeof setInterval>>();
+	private timeoutSet = new Set<ReturnType<typeof setTimeout>>();
 
 	onAppBootstrap() {
 		for (const types of injector.injectables) {

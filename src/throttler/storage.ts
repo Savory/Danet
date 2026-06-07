@@ -13,7 +13,11 @@ import { ThrottlerStorage, ThrottlerStorageRecord } from './interface.ts';
 export class InMemoryThrottlerStorage implements ThrottlerStorage, OnAppClose {
 	private readonly records = new Map<
 		string,
-		{ totalHits: number; expiresAt: number; timeoutId: number }
+		{
+			totalHits: number;
+			expiresAt: number;
+			timeoutId: ReturnType<typeof setTimeout>;
+		}
 	>();
 
 	/**
