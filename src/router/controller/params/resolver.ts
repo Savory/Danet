@@ -20,7 +20,7 @@ export async function resolveMethodParam(
 	// deno-lint-ignore no-explicit-any
 	ControllerMethod: (...args: any[]) => unknown,
 	context: ExecutionContext,
-): Promise<unknown> {
+): Promise<unknown[]> {
 	const paramResolverMap: Map<number, Resolver> = MetadataHelper.getMetadata(
 		argumentResolverFunctionsMetadataKey,
 		Controller,
