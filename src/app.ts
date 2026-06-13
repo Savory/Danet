@@ -72,6 +72,18 @@ type CORSOptions = {
 };
 
 /**
+ * A pluggable transport that can take ownership of controllers carrying a
+ * given metadata key (e.g. a gRPC server living in a separate package).
+ *
+ * External transports register themselves via {@link DanetApplication.useTransport}
+ * before {@link DanetApplication.init} so that, during bootstrap, matching
+ * controllers are delegated to them instead of the default HTTP/WebSocket routers.
+ */
+export interface TransportRouter {
+	registerController(Controller: Constructor, metadataValue: unknown): void;
+}
+
+/**
  * DanetApplication is the main application class for initializing and managing the lifecycle of the application.
  * It provides methods for bootstrapping modules, registering controllers, and configuring middleware.
  * It also provides methods for starting and stopping the application.
@@ -100,6 +112,22 @@ export class DanetApplication {
 	private controller: AbortController = new AbortController();
 	private logger: Logger = new Logger('DanetApplication');
 	public entryModule!: ModuleConstructor;
+	private externalTransports: Array<
+		{ metadataKey: string; transport: TransportRouter }
+	> = [];
+
+	/**
+	 * Registers an external transport (e.g. a gRPC server) that takes ownership
+	 * of controllers carrying the given metadata key. Must be called before
+	 * {@link init} so matching controllers are delegated during bootstrap
+	 * instead of being registered on the default HTTP/WebSocket routers.
+	 *
+	 * @param metadataKey - The controller metadata key this transport handles.
+	 * @param transport - The transport receiving matching controllers.
+	 */
+	useTransport(metadataKey: string, transport: TransportRouter) {
+		this.externalTransports.push({ metadataKey, transport });
+	}
 
 	/**
 	 * Retrieves an instance of the specified type from the injector.
@@ -165,6 +193,19 @@ export class DanetApplication {
 
 		if (instance.controllers) {
 			instance.controllers.forEach((Controller) => {
+				const externalTransport = this.externalTransports.find((
+					{ metadataKey },
+				) => MetadataHelper.getMetadata(metadataKey, Controller) !== undefined);
+				if (externalTransport) {
+					externalTransport.transport.registerController(
+						Controller,
+						MetadataHelper.getMetadata(
+							externalTransport.metadataKey,
+							Controller,
+						),
+					);
+					return;
+				}
 				const httpEndpoint = MetadataHelper.getMetadata<string>(
 					'endpoint',
 					Controller,

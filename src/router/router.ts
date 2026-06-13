@@ -47,6 +47,9 @@ export type WebSocketInstance = WebSocket & { id: string };
  * @property {WebSocketInstance} [websocket] - Optional WebSocket instance associated with the context.
  * @property {any} [websocketMessage] - Optional message received via WebSocket.
  * @property {string} [websocketTopic] - Optional topic associated with the WebSocket message.
+ * @property {any} [grpcPayload] - Optional decoded request message for a gRPC call.
+ * @property {any} [grpcMetadata] - Optional gRPC call metadata (headers).
+ * @property {any} [grpcCall] - Optional underlying gRPC call object.
  */
 export type ExecutionContext = HttpContext & {
 	_id: string;
@@ -57,6 +60,12 @@ export type ExecutionContext = HttpContext & {
 	// deno-lint-ignore no-explicit-any
 	websocketMessage?: any;
 	websocketTopic?: string;
+	// deno-lint-ignore no-explicit-any
+	grpcPayload?: any;
+	// deno-lint-ignore no-explicit-any
+	grpcMetadata?: any;
+	// deno-lint-ignore no-explicit-any
+	grpcCall?: any;
 };
 
 /**
