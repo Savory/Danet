@@ -33,9 +33,8 @@ class SimpleController {
 
     @Get('with-context')
     setBodyWithContext(@Context() ctx: ExecutionContext) {
-        const data = new TextEncoder().encode('hello context');
         ctx.header('X-Custom-Header', 'from-context');
-        return ctx.body(data);
+        return ctx.body('hello context');
     }
 }
 
