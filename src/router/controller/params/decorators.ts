@@ -87,7 +87,7 @@ export function createParamDecorator(
 /**
  * Get current request
  */
-export const Req: DecoratorFunction = createParamDecorator(
+export const Req: () => DecoratorFunction = createParamDecorator(
 	(context: ExecutionContext) => {
 		return context.req;
 	},
@@ -96,7 +96,7 @@ export const Req: DecoratorFunction = createParamDecorator(
 /**
  * Get current response
  */
-export const Res: DecoratorFunction = createParamDecorator(
+export const Res: () => DecoratorFunction = createParamDecorator(
 	(context: ExecutionContext) => {
 		return context.res;
 	},
