@@ -3,6 +3,7 @@ export {
 	assertSpyCallArg,
 	assertSpyCalls,
 	spy,
+	stub,
 } from '@std/testing/mock';
 export { FakeTime } from '@std/testing/time';
 export {
