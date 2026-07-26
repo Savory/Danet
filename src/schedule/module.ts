@@ -23,6 +23,7 @@ export class ScheduleModule implements OnAppBootstrap, OnAppClose {
 
 	onAppBootstrap() {
 		for (const types of injector.injectables) {
+			if (!MetadataHelper.IsObject(types)) continue;
 			this.registerAvailableEventListeners(types);
 		}
 	}
