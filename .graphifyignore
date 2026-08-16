@@ -1,0 +1,6 @@
+.claude/
+graphify-out/
+.idea/
+.vscode/
+coverage/
+openspec/

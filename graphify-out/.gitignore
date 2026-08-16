@@ -1,0 +1,6 @@
+# Machine-local: absolute paths to this checkout and its Python interpreter
+.graphify_python
+.graphify_root
+# Local extraction cache — rebuilt on demand, not worth syncing
+cache/
+.needs_update
