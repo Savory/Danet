@@ -37,7 +37,10 @@
 		"exclude": [
 			"./node_modules/",
 			"./coverage/",
-			"./doc/"
+			"./doc/",
+			"./graphify-out/",
+			"./.claude/",
+			"./openspec/"
 		]
 	},
 	"compilerOptions": {
@@ -60,6 +63,15 @@
 		"@danet/handlebars": "jsr:@danet/handlebars@0.0.1"
 	},
 	"publish": {
-		"exclude": ["./coverage/", "./spec", ".github", ".vscode", "./example"]
+		"exclude": [
+			"./coverage/",
+			"./spec",
+			".github",
+			".vscode",
+			"./example",
+			"./graphify-out/",
+			"./.claude/",
+			"./openspec/"
+		]
 	}
 }

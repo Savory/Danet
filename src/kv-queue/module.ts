@@ -49,6 +49,12 @@ export class KvQueueModule implements OnAppBootstrap {
 
 		for (const method of methods) {
 			const target = injectableInstance[method];
+			// Only methods can carry listener metadata. A plain-value injectable
+			// (`useValue: { ... }`) has `Object.prototype` as its
+			// `constructor.prototype`, so this loop also walks that object's own
+			// property names. Since Deno 2.9 that list includes `__proto__`, which
+			// reads back as a non-object and makes `Reflect.getMetadata` throw.
+			if (typeof target !== 'function') continue;
 			const queueListenerMetadata = MetadataHelper.getMetadata<
 				{ channel: string }
 			>(

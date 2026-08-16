@@ -4,3 +4,6 @@
 # Local extraction cache — rebuilt on demand, not worth syncing
 cache/
 .needs_update
+# Dated snapshot of the previous graph, written by `graphify update` on each run
+20??-??-??/
+*.sig

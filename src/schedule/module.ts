@@ -109,6 +109,12 @@ export class ScheduleModule implements OnAppBootstrap, OnAppClose {
 		handler: (metadata: T, cb: () => void) => void,
 	) {
 		const target = injectableInstance.constructor.prototype[method];
+		// Only methods can carry scheduling metadata. A plain-value injectable
+		// (`useValue: { ... }`) has `Object.prototype` as its
+		// `constructor.prototype`, so the caller also walks that object's own
+		// property names. Since Deno 2.9 that list includes `__proto__`, which
+		// reads back as a non-object and makes `Reflect.getMetadata` throw.
+		if (typeof target !== 'function') return;
 		const metadata = MetadataHelper.getMetadata<T>(metadataKey, target);
 		if (!metadata) return;
 
