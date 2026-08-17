@@ -3,7 +3,7 @@ import { MetadataFunction, SetMetadata } from '../../metadata/decorator.ts';
 
 /**
  * Metadata key used to mark and identify exception filters.
- * 
+ *
  * @constant {string} filterExceptionMetadataKey
  */
 export const filterExceptionMetadataKey = 'filterException';

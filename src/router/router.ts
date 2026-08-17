@@ -137,9 +137,7 @@ export class DanetHTTPRouter {
 				`The method "${httpMethod}" can not be handled by "${basePath}" of controller "${Controller}".`,
 			);
 		}
-		const routePath = `${this.prefix ? this.prefix : ''}${
-			path ? path : '/'
-		}`;
+		const routePath = `${this.prefix ? this.prefix : ''}${path ? path : '/'}`;
 		this.logger.log(
 			`Registering [${httpMethod}] ${routePath}`,
 		);
@@ -230,7 +228,8 @@ export class DanetHTTPRouter {
 				) as any;
 				const response:
 					| Record<string, unknown>
-					| string | Response = await controllerInstance[ControllerMethod.name](
+					| string
+					| Response = await controllerInstance[ControllerMethod.name](
 						...params,
 					);
 				const isSSE = MetadataHelper.getMetadata('SSE', ControllerMethod);
@@ -268,7 +267,9 @@ export class DanetHTTPRouter {
 				'message',
 				async (event) => {
 					const { detail: payload } = event as SSEEvent;
-					const dataAsString = typeof payload.data === 'object' ? JSON.stringify(payload.data) : payload.data;
+					const dataAsString = typeof payload.data === 'object'
+						? JSON.stringify(payload.data)
+						: payload.data;
 					await stream.writeSSE({
 						data: dataAsString,
 						event: payload.event,
@@ -322,7 +323,8 @@ export class DanetHTTPRouter {
 		ControllerMethod: Callback,
 		context: HttpContext,
 	) {
-		const status = MetadataHelper.getMetadata<number>('status', ControllerMethod) || 200;
+		const status =
+			MetadataHelper.getMetadata<number>('status', ControllerMethod) || 200;
 		if (response) {
 			const fileName = MetadataHelper.getMetadata<string>(
 				rendererViewFile,

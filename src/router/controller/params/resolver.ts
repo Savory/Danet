@@ -1,8 +1,6 @@
 import { MetadataHelper } from '../../../metadata/helper.ts';
 import { ControllerConstructor } from '../constructor.ts';
-import {
-	Resolver,
-} from './decorators.ts';
+import { Resolver } from './decorators.ts';
 import { ExecutionContext } from '../../mod.ts';
 import { argumentResolverFunctionsMetadataKey } from './constants.ts';
 

@@ -6,9 +6,10 @@ import {
 	Controller,
 	Delete,
 	Get,
+	HttpCode,
 	Patch,
 	Post,
-	Put, HttpCode,
+	Put,
 } from '../src/router/controller/decorator.ts';
 
 @Controller('nice-controller')

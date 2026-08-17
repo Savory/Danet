@@ -23,7 +23,7 @@ Deno.test('Hbs renderer', async () => {
 	const app = new DanetApplication();
 	await app.init(MyModule);
 	const viewPath = path.dirname(path.fromFileUrl(import.meta.url)) + '/views';
-	app.setRenderer(new HandlebarRenderer())
+	app.setRenderer(new HandlebarRenderer());
 	app.setViewEngineDir(viewPath);
 	const listenEvent = await app.listen(0);
 

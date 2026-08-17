@@ -42,18 +42,19 @@ against Deno `v1.x` and `canary`. Run both locally before pushing.
 
 ## Architecture
 
-Entry point: `mod.ts` → re-exports `src/mod.ts` (the public API barrel).
-Main app class: `src/app.ts` (`DanetApplication`).
+Entry point: `mod.ts` → re-exports `src/mod.ts` (the public API barrel). Main
+app class: `src/app.ts` (`DanetApplication`).
 
 Source layout under `src/`:
 
 - `injector/` — dependency injection engine (`injector.ts`) and `@Injectable` /
   `@Inject` decorators. Constructor injection via `design:paramtypes` metadata.
-- `module/` — `@Module({ controllers, injectables, imports })` + `DynamicModule`.
+- `module/` — `@Module({ controllers, injectables, imports })` +
+  `DynamicModule`.
 - `router/controller/` — `@Controller`, HTTP method decorators (`@Get`, `@Post`,
-  `@Put`, `@Patch`, `@Delete`, `@Options`, `@Head`, `@All`, `@SSE`, `@HttpCode`),
-  and param decorators in `params/decorators.ts` (`@Param`, `@Query`, `@Body`,
-  `@Req`, `@Res`, `@Header`, `@Session`, `@Context`).
+  `@Put`, `@Patch`, `@Delete`, `@Options`, `@Head`, `@All`, `@SSE`,
+  `@HttpCode`), and param decorators in `params/decorators.ts` (`@Param`,
+  `@Query`, `@Body`, `@Req`, `@Res`, `@Header`, `@Session`, `@Context`).
 - `router/middleware/` — `@Middleware(...)`; supports Danet middleware classes,
   Hono middleware, and plain functions. Globals in `global-container.ts`.
 - `guard/` — `@UseGuard(Guard)` + `AuthGuard.canActivate(context)`.
@@ -63,15 +64,14 @@ Source layout under `src/`:
 - `metadata/`, `events/` (`@OnEvent`), `schedule/` (`@Schedule`), `kv-queue/`,
   `sse/`, `renderer/`, `utils/`.
 
-Request flow:
-global middleware → route middleware → guards → param resolution →
+Request flow: global middleware → route middleware → guards → param resolution →
 controller method → response / exception filter.
 
 ### Conventions
 
 - Per-folder file naming: `decorator.ts` (decorators), `executor.ts` (run-time
-  logic for guards/filters/middleware), `interface.ts`, `constants.ts`,
-  `mod.ts` (barrel exports).
+  logic for guards/filters/middleware), `interface.ts`, `constants.ts`, `mod.ts`
+  (barrel exports).
 - Heavily metadata-driven via `reflect-metadata` (`@dx/reflect`). Decorators
   stash metadata on constructors/methods; executors read it at request time.
 - DI scopes: `SCOPE.GLOBAL` (singleton), `SCOPE.REQUEST` (per-request),
@@ -103,28 +103,29 @@ import { Controller, Get } from '../src/router/controller/decorator.ts';
 
 @Controller('nice-controller')
 class SimpleController {
-  @Get('/')
-  simpleGet() {
-    return 'OK GET';
-  }
+	@Get('/')
+	simpleGet() {
+		return 'OK GET';
+	}
 }
 
 @Module({ controllers: [SimpleController] })
 class MyModule {}
 
 Deno.test('GET', async () => {
-  const app = new DanetApplication();
-  await app.init(MyModule);
-  const { port } = await app.listen(0); // 0 = random free port
+	const app = new DanetApplication();
+	await app.init(MyModule);
+	const { port } = await app.listen(0); // 0 = random free port
 
-  const res = await fetch(`http://localhost:${port}/nice-controller`);
-  assertEquals(await res.text(), 'OK GET');
+	const res = await fetch(`http://localhost:${port}/nice-controller`);
+	assertEquals(await res.text(), 'OK GET');
 
-  await app.close(); // always clean up
+	await app.close(); // always clean up
 });
 ```
 
 Conventions for new tests:
+
 - Use `app.listen(0)` to get a random port; always `await app.close()`.
 - Prefer end-to-end `fetch()` against a booted app over unit-testing internals.
 - Use `testContext.step(...)` to group related assertions in one `Deno.test`.
@@ -141,10 +142,19 @@ Discord community before large PRs.
 
 ## graphify
 
-This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+This project has a knowledge graph at graphify-out/ with god nodes, community
+structure, and cross-file relationships.
 
 Rules:
-- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
-- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
-- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
-- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+
+- For codebase questions, first run `graphify query "<question>"` when
+  graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for
+  relationships and `graphify explain "<concept>"` for focused concepts. These
+  return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw
+  grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of
+  raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when
+  query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current
+  (AST-only, no API cost).

@@ -38,7 +38,6 @@ export type Resolver = (
 	opts?: OptionsResolver,
 ) => unknown | Promise<unknown>;
 
-
 /**
  * Creates a parameter decorator that resolves a parameter using the provided resolver function.
  * Optionally, an additional decorator action can be executed.
@@ -124,7 +123,7 @@ export const Header: (prop?: string) => DecoratorFunction = (prop?: string) =>
 
 /**
  * Used to identify the type of the body in request parameters.
- * 
+ *
  * @constant {string} BODY_TYPE_KEY
  */
 export const BODY_TYPE_KEY = 'body-type';
@@ -210,7 +209,7 @@ function formatQueryValue(
 
 /**
  * Identify the type of query in the router controller parameters.
- * 
+ *
  * @constant {string} QUERY_TYPE_KEY
  */
 export const QUERY_TYPE_KEY = 'query-type';
@@ -300,7 +299,6 @@ export function Session(prop?: string): DecoratorFunction {
 		}
 	})();
 }
-
 
 /**
  * Injects the current execution context into the controller method.

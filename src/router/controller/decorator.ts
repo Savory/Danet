@@ -183,7 +183,6 @@ export const SSE: MappingDecoratorFunction = (
 	};
 };
 
-
 /**
  * Define response status code for a request handler.
  *
