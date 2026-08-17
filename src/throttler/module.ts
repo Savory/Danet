@@ -1,4 +1,4 @@
-import { Module, DynamicModule } from '../module/decorator.ts';
+import { DynamicModule, Module } from '../module/decorator.ts';
 import { THROTTLER_OPTIONS, THROTTLER_STORAGE } from './constants.ts';
 import { InMemoryThrottlerStorage } from './storage.ts';
 import { ThrottlerOptions, ThrottlerStorage } from './interface.ts';

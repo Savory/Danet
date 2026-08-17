@@ -5,7 +5,8 @@ import {
 	FilterExecutor,
 	GuardExecutor,
 	HttpContext,
-	Injector, WebSocketInstance,
+	Injector,
+	WebSocketInstance,
 } from '../../mod.ts';
 import {
 	Application,

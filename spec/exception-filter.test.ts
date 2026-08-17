@@ -29,9 +29,12 @@ class ErrorFilter implements ExceptionFilter {
 
 	catch(exception: any, context: HttpContext) {
 		this.simpleService.doSomething();
-		return context.newResponse(JSON.stringify({
-			wePassedInFilterCatchingAllErrors: true,
-		}), 401);
+		return context.newResponse(
+			JSON.stringify({
+				wePassedInFilterCatchingAllErrors: true,
+			}),
+			401,
+		);
 	}
 }
 
@@ -133,7 +136,6 @@ Deno.test('throw 500 on unexpected error', async () => {
 	await res.json();
 	await app.close();
 });
-
 
 Deno.test('global exception filter', async () => {
 	const app = new DanetApplication();

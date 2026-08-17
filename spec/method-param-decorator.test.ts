@@ -6,10 +6,10 @@ import { Module } from '../src/module/decorator.ts';
 import { Controller, Get, Post } from '../src/router/controller/decorator.ts';
 import {
 	Body,
+	Context,
 	Header,
 	Param,
 	Query,
-	Context
 } from '../src/router/controller/params/decorators.ts';
 import { UseGuard } from '../src/guard/decorator.ts';
 import { Injectable } from '../src/injector/injectable/decorator.ts';
@@ -118,7 +118,6 @@ class SimpleController {
 	queryParam(@Param('myparam') niceValue: string) {
 		return niceValue;
 	}
-
 }
 
 @Module({

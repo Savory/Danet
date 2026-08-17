@@ -291,7 +291,7 @@ export class Injector {
 			}
 		}
 		return {
-			actualKey: (token ?? Type as InjectableConstructor),
+			actualKey: token ?? Type as InjectableConstructor,
 			actualType: Type as InjectableConstructor,
 		};
 	}
