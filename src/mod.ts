@@ -5,6 +5,7 @@
  */
 
 export * from './app.ts';
+export * from './app-host/mod.ts';
 export * from './utils/mod.ts';
 export * from './exception/mod.ts';
 export * from './router/mod.ts';

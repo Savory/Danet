@@ -61,6 +61,7 @@ import { cors } from './deps.ts';
 import { DynamicModule, ExceptionFilter } from './mod.ts';
 import { Renderer } from './renderer/interface.ts';
 import { globalExceptionFilterContainer } from './exception/filter/global-container.ts';
+import { APPLICATION_HOST } from './app-host/constants.ts';
 
 type CORSOptions = {
 	origin: string | string[] | ((origin: string) => string | undefined | null);
@@ -115,6 +116,22 @@ export class DanetApplication {
 	private externalTransports: Array<
 		{ metadataKey: string; transport: TransportRouter }
 	> = [];
+
+	constructor() {
+		void this.registerApplicationHost();
+	}
+
+	private async registerApplicationHost(): Promise<void> {
+		if (
+			this.injector.has(APPLICATION_HOST) &&
+			this.injector.get(APPLICATION_HOST) === this
+		) {
+			return;
+		}
+		await this.injector.registerInjectables([
+			{ token: APPLICATION_HOST, useValue: this },
+		]);
+	}
 
 	/**
 	 * Registers an external transport (e.g. a gRPC server) that takes ownership
@@ -233,6 +250,7 @@ export class DanetApplication {
 	 * @returns A promise that resolves when the initialization process is complete.
 	 */
 	async init(Module: Constructor) {
+		await this.registerApplicationHost();
 		this.entryModule = Module;
 		await this.bootstrap(Module);
 		await this.hookExecutor.executeHookForEveryInjectable(
@@ -352,7 +370,6 @@ export class DanetApplication {
 		this.app.use('*', middleware);
 	}
 
-
 	/**
 	 * Register a base path for the application.
 	 *
@@ -367,7 +384,7 @@ export class DanetApplication {
 	 *
 	 * @param errorFilter - The exception filter to be added.
 	 */
-    useGlobalExceptionFilter(errorFilter: ExceptionFilter) {
+	useGlobalExceptionFilter(errorFilter: ExceptionFilter) {
 		globalExceptionFilterContainer.push(errorFilter);
-    }
+	}
 }

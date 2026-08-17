@@ -12,6 +12,7 @@ export {
 	assertNotEquals,
 	assertObjectMatch,
 	assertRejects,
+	assertStrictEquals,
 	assertThrows,
 } from '@std/testing/asserts';
 export * as path from '@std/path';
